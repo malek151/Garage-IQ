@@ -18,14 +18,12 @@
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--light); min-height: 100vh; }
 
-    /* NAV */
     nav { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--dark); z-index: 100; backdrop-filter: blur(10px); }
     .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 3px; }
     .nav-logo span { color: var(--red); }
     .nav-pro-btn { background: var(--gold); color: var(--dark2); font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1.5px; border: none; border-radius: 6px; padding: 8px 20px; cursor: pointer; transition: all 0.15s; }
     .nav-pro-btn:hover { background: var(--gold-dark); color: white; }
 
-    /* HERO */
     .hero { text-align: center; padding: 5rem 1.5rem 3rem; max-width: 700px; margin: 0 auto; }
     .hero-tag { display: inline-block; background: #ffffff10; border: 1px solid #ffffff15; color: var(--gold); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 1.5rem; }
     .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(48px, 10vw, 80px); letter-spacing: 4px; line-height: 1; margin-bottom: 1rem; }
@@ -33,14 +31,12 @@
     .hero p { font-size: 16px; color: #B4B2A9; line-height: 1.6; max-width: 480px; margin: 0 auto 2.5rem; }
     .hero-note { font-size: 12px; color: #444440; text-align: center; margin-top: 10px; }
 
-    /* REG INPUT */
     .reg-wrap { display: flex; gap: 10px; max-width: 480px; margin: 0 auto; }
     .reg-input { flex: 1; font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 5px; text-transform: uppercase; text-align: center; background: var(--gold); color: var(--dark2); border: 2px solid var(--gold-dark); border-radius: var(--radius-sm); padding: 12px 16px; outline: none; }
     .reg-input::placeholder { color: #85503066; }
     .reg-btn { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; background: var(--red); color: white; border: none; border-radius: var(--radius-sm); padding: 0 28px; cursor: pointer; transition: background 0.15s; }
     .reg-btn:hover { background: var(--red-dark); }
 
-    /* APP AREA */
     .app { max-width: 700px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
     .card { background: var(--dark3); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
     .card-title { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
@@ -52,7 +48,6 @@
     .stat-val.red { color: var(--red); }
     .stat-val.amber { color: var(--gold); }
 
-    /* MOT */
     .mot-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ffffff08; font-size: 13px; flex-wrap: wrap; gap: 6px; }
     .mot-row:last-child { border-bottom: none; }
     .badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
@@ -60,7 +55,6 @@
     .b-fail { background: #3A0A0A; color: #FF6B6B; }
     .b-advisory { background: #3A2A0A; color: var(--gold); }
 
-    /* MODS */
     .mods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .mod-btn { background: var(--dark); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.15s; position: relative; }
     .mod-btn:hover:not(.locked) { border-color: var(--red); background: #2A1A1A; }
@@ -74,7 +68,6 @@
     .analyze-btn:hover:not(:disabled) { background: var(--red-dark); }
     .analyze-btn:disabled { background: #333330; color: #555552; cursor: default; }
 
-    /* RESULT */
     .result-card { background: var(--dark3); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
     .result-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
     .delta-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #ffffff08; font-size: 14px; flex-wrap: wrap; gap: 4px; }
@@ -87,15 +80,12 @@
     .verdict-box { background: var(--dark); border-left: 3px solid var(--red); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 14px; margin-top: 14px; font-size: 13px; color: #B4B2A9; line-height: 1.5; }
     .verdict-box strong { color: var(--light); }
 
-    /* SHARE BUTTON */
     .share-btn { width: 100%; background: transparent; border: 1px solid var(--green); color: var(--green); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; border-radius: var(--radius-sm); padding: 12px; cursor: pointer; margin-top: 10px; transition: all 0.15s; }
     .share-btn:hover { background: var(--green); color: var(--dark); }
 
-    /* SOUND BAR */
     .sound-bar { display: flex; gap: 3px; align-items: flex-end; height: 28px; }
     .s-bar { width: 5px; border-radius: 2px; background: var(--red); }
 
-    /* PREMIUM */
     .premium-banner { background: linear-gradient(135deg, #2C2C2A, #1A1A18); border: 1px solid var(--gold-dark); border-radius: var(--radius); padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 1rem; }
     .premium-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--gold); }
     .premium-perks { margin-top: 8px; list-style: none; }
@@ -104,7 +94,6 @@
     .premium-btn { background: var(--gold); color: var(--dark2); font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px; border: none; border-radius: var(--radius-sm); padding: 12px 24px; cursor: pointer; white-space: nowrap; transition: all 0.15s; flex-shrink: 0; text-align: center; line-height: 1.4; }
     .premium-btn:hover { background: var(--gold-dark); color: white; }
 
-    /* HOW IT WORKS */
     .how-section { padding: 4rem 1.5rem; max-width: 700px; margin: 0 auto; }
     .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 3px; margin-bottom: 2rem; text-align: center; }
     .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
@@ -113,20 +102,16 @@
     .step-title { font-weight: 600; font-size: 14px; margin: 8px 0 4px; }
     .step-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
 
-    /* STATS STRIP */
     .stats-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 700px; margin: 0 auto 4rem; padding: 0 1.5rem; }
     .strip-stat { background: var(--dark3); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; text-align: center; }
     .strip-num { font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--red); }
     .strip-label { font-size: 12px; color: var(--text2); margin-top: 4px; }
 
-    /* FOOTER */
     footer { text-align: center; padding: 2rem; border-top: 1px solid var(--border); color: #444440; font-size: 12px; line-height: 1.8; }
 
-    /* UTILS */
     .hidden { display: none; }
     .loading { text-align: center; padding: 2rem; color: var(--text2); font-size: 14px; }
     .error-box { background: #3A0A0A; color: #FF6B6B; border-radius: var(--radius-sm); padding: 12px 16px; font-size: 13px; margin-bottom: 1rem; }
-    .api-pending { background: #3A2A0A; color: var(--gold); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
 
     @media (max-width: 520px) {
       .grid4 { grid-template-columns: repeat(2, 1fr); }
@@ -161,7 +146,7 @@
   <div class="app">
     <div id="errorBox" class="error-box hidden"></div>
     <div id="loadingBox" class="loading hidden"><i class="ti ti-loader-2"></i> Fetching real vehicle data...</div>
-    
+
     <div id="vehicleSection" class="hidden">
 
       <div class="card">
@@ -306,8 +291,8 @@
   async function lookupVehicle() {
     const reg = document.getElementById('regInput').value.replace(/\s/g,'').toUpperCase();
     if (!reg || reg.length < 2) return;
+
     document.getElementById('errorBox').classList.add('hidden');
-    document.getElementById('apiPending').classList.add('hidden');
     document.getElementById('loadingBox').classList.remove('hidden');
     document.getElementById('vehicleSection').classList.add('hidden');
     document.getElementById('resultSection').classList.add('hidden');
@@ -331,9 +316,11 @@
     } catch(e) {}
 
     if (!dvlaOk) {
-      document.getElementById('apiPending').classList.remove('hidden');
-      vehicleData = { make:'FORD', model:'FOCUS ST', yearOfManufacture:'2019', engineCapacity:'1999', colour:'BLUE', fuelType:'PETROL', taxStatus:'Taxed', motStatus:'Valid', reg, hp:280, torque:420, value:14500 };
-      renderVehicle(vehicleData);
+      const errBox = document.getElementById('errorBox');
+      errBox.textContent = 'Could not fetch vehicle data — check the reg and try again.';
+      errBox.classList.remove('hidden');
+      document.getElementById('loadingBox').classList.add('hidden');
+      return;
     }
 
     await loadMot(reg);
