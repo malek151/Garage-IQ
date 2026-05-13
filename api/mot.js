@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   try {
     // Step 1 — get OAuth2 token
-    const tokenRes = await fetch('https://login.microsoftonline.com/a077c245-f9ce-4f9d-8a2a-6e0f1f6dc2e6/oauth2/v2.0/token', {
+    const tokenRes = await fetch('https://login.microsoftonline.com/a455b827-244f-4c97-b5b4-ce5d13b4d00c/oauth2/v2.0/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
