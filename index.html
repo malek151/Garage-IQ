@@ -18,11 +18,10 @@
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--light); min-height: 100vh; }
 
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--dark); z-index: 100; backdrop-filter: blur(10px); }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--dark); z-index: 100; }
     .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 3px; }
     .nav-logo span { color: var(--red); }
-    .nav-pro-btn { background: var(--gold); color: var(--dark2); font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1.5px; border: none; border-radius: 6px; padding: 8px 20px; cursor: pointer; transition: all 0.15s; }
-    .nav-pro-btn:hover { background: var(--gold-dark); color: white; }
+    .nav-badge { background: #ffffff10; border: 1px solid #ffffff15; color: var(--gold); font-size: 11px; letter-spacing: 1.5px; padding: 5px 12px; border-radius: 20px; }
 
     .hero { text-align: center; padding: 5rem 1.5rem 3rem; max-width: 700px; margin: 0 auto; }
     .hero-tag { display: inline-block; background: #ffffff10; border: 1px solid #ffffff15; color: var(--gold); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 1.5rem; }
@@ -48,22 +47,35 @@
     .stat-val.red { color: var(--red); }
     .stat-val.amber { color: var(--gold); }
 
-    .mot-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ffffff08; font-size: 13px; flex-wrap: wrap; gap: 6px; }
+    /* MOT rows — expandable */
+    .mot-row { border-bottom: 1px solid #ffffff08; cursor: pointer; transition: background 0.1s; border-radius: 6px; }
     .mot-row:last-child { border-bottom: none; }
+    .mot-row:hover { background: #ffffff05; }
+    .mot-row-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 8px; font-size: 13px; flex-wrap: wrap; gap: 6px; }
+    .mot-chevron { color: #444440; font-size: 14px; transition: transform 0.2s; flex-shrink: 0; }
+    .mot-row.open .mot-chevron { transform: rotate(180deg); }
+    .mot-details { display: none; padding: 0 8px 12px; }
+    .mot-row.open .mot-details { display: block; }
+    .mot-detail-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-top: 1px solid #ffffff06; font-size: 12px; line-height: 1.5; }
+    .mot-detail-item:first-child { border-top: none; }
+    .mot-type-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .dot-fail { background: #FF6B6B; }
+    .dot-advisory { background: var(--gold); }
+    .dot-minor { background: #6DBD2A; }
+    .mot-no-items { font-size: 12px; color: #444440; padding: 8px 0; }
+
     .badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
     .b-pass { background: #1E3A0A; color: var(--green); }
     .b-fail { background: #3A0A0A; color: #FF6B6B; }
     .b-advisory { background: #3A2A0A; color: var(--gold); }
 
     .mods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .mod-btn { background: var(--dark); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.15s; position: relative; }
-    .mod-btn:hover:not(.locked) { border-color: var(--red); background: #2A1A1A; }
+    .mod-btn { background: var(--dark); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 8px; text-align: center; cursor: pointer; transition: all 0.15s; }
+    .mod-btn:hover { border-color: var(--red); background: #2A1A1A; }
     .mod-btn.selected { border: 2px solid var(--red); background: #2A1A1A; }
-    .mod-btn.locked { opacity: 0.4; cursor: default; }
     .mod-icon { font-size: 22px; margin-bottom: 6px; color: var(--gold); }
     .mod-name { font-size: 12px; font-weight: 500; color: var(--light); }
     .mod-tag { font-size: 10px; color: #555552; margin-top: 3px; }
-    .lock-badge { position: absolute; top: 6px; right: 6px; background: var(--gold); color: var(--dark2); font-size: 9px; padding: 1px 5px; border-radius: 8px; font-weight: 600; }
     .analyze-btn { width: 100%; background: var(--red); color: white; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; border: none; border-radius: var(--radius-sm); padding: 15px; cursor: pointer; margin-top: 10px; transition: background 0.15s; }
     .analyze-btn:hover:not(:disabled) { background: var(--red-dark); }
     .analyze-btn:disabled { background: #333330; color: #555552; cursor: default; }
@@ -77,6 +89,7 @@
     .change { font-size: 12px; padding: 2px 8px; border-radius: 10px; margin-left: 6px; }
     .c-up { background: #1E3A0A; color: var(--green); }
     .c-down { background: #3A0A0A; color: #FF6B6B; }
+    .c-neutral { background: #2A2A28; color: #999; }
     .verdict-box { background: var(--dark); border-left: 3px solid var(--red); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 14px; margin-top: 14px; font-size: 13px; color: #B4B2A9; line-height: 1.5; }
     .verdict-box strong { color: var(--light); }
 
@@ -85,14 +98,6 @@
 
     .sound-bar { display: flex; gap: 3px; align-items: flex-end; height: 28px; }
     .s-bar { width: 5px; border-radius: 2px; background: var(--red); }
-
-    .premium-banner { background: linear-gradient(135deg, #2C2C2A, #1A1A18); border: 1px solid var(--gold-dark); border-radius: var(--radius); padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 1rem; }
-    .premium-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--gold); }
-    .premium-perks { margin-top: 8px; list-style: none; }
-    .premium-perks li { font-size: 12px; color: #B4B2A9; padding: 3px 0; display: flex; align-items: center; gap: 6px; }
-    .premium-perks li::before { content: '✓'; color: var(--gold); font-size: 10px; }
-    .premium-btn { background: var(--gold); color: var(--dark2); font-family: 'Bebas Neue', sans-serif; font-size: 17px; letter-spacing: 1.5px; border: none; border-radius: var(--radius-sm); padding: 12px 24px; cursor: pointer; white-space: nowrap; transition: all 0.15s; flex-shrink: 0; text-align: center; line-height: 1.4; }
-    .premium-btn:hover { background: var(--gold-dark); color: white; }
 
     .how-section { padding: 4rem 1.5rem; max-width: 700px; margin: 0 auto; }
     .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 3px; margin-bottom: 2rem; text-align: center; }
@@ -117,7 +122,6 @@
       .grid4 { grid-template-columns: repeat(2, 1fr); }
       .mods-grid { grid-template-columns: repeat(2, 1fr); }
       .steps, .stats-strip { grid-template-columns: 1fr; }
-      .premium-banner { flex-direction: column; text-align: center; }
       nav { padding: 1rem; }
       .hero { padding: 3rem 1.5rem 2rem; }
     }
@@ -127,9 +131,7 @@
 
   <nav>
     <div class="nav-logo">GARAGE<span>IQ</span></div>
-    <button class="nav-pro-btn" onclick="document.getElementById('premiumAnchor').scrollIntoView({behavior:'smooth'})">
-      <i class="ti ti-crown"></i> GO PRO
-    </button>
+    <div class="nav-badge"><i class="ti ti-map-pin"></i> UK Cars Only</div>
   </nav>
 
   <section class="hero">
@@ -166,7 +168,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title"><i class="ti ti-clipboard-check"></i> MOT history</div>
+        <div class="card-title"><i class="ti ti-clipboard-check"></i> MOT history <span style="margin-left:auto;font-size:10px;color:#444440">Tap a row to expand</span></div>
         <div id="motHistory"><div class="loading">Loading MOT data...</div></div>
       </div>
 
@@ -188,38 +190,32 @@
             <div class="mod-name">Alloy wheels</div>
             <div class="mod-tag">Looks · Handling · Value</div>
           </div>
-          <div class="mod-btn locked">
-            <div class="lock-badge">PRO</div>
+          <div class="mod-btn" onclick="selectMod(this,'Lowering springs')">
             <div class="mod-icon"><i class="ti ti-adjustments"></i></div>
             <div class="mod-name">Lowering springs</div>
             <div class="mod-tag">Stance · Handling</div>
           </div>
-          <div class="mod-btn locked">
-            <div class="lock-badge">PRO</div>
+          <div class="mod-btn" onclick="selectMod(this,'Cold air intake')">
             <div class="mod-icon"><i class="ti ti-wind"></i></div>
             <div class="mod-name">Cold air intake</div>
             <div class="mod-tag">HP · Sound · Throttle</div>
           </div>
-          <div class="mod-btn locked">
-            <div class="lock-badge">PRO</div>
+          <div class="mod-btn" onclick="selectMod(this,'Turbo upgrade')">
             <div class="mod-icon"><i class="ti ti-bolt"></i></div>
             <div class="mod-name">Turbo upgrade</div>
             <div class="mod-tag">Big HP gains</div>
           </div>
-          <div class="mod-btn locked">
-            <div class="lock-badge">PRO</div>
+          <div class="mod-btn" onclick="selectMod(this,'Coilover kit')">
             <div class="mod-icon"><i class="ti ti-settings-2"></i></div>
             <div class="mod-name">Coilover kit</div>
             <div class="mod-tag">Ride · Stance · Feel</div>
           </div>
-          <div class="mod-btn locked">
-            <div class="lock-badge">PRO</div>
+          <div class="mod-btn" onclick="selectMod(this,'Big brake kit')">
             <div class="mod-icon"><i class="ti ti-disc"></i></div>
             <div class="mod-name">Big brake kit</div>
             <div class="mod-tag">Safety · Looks · Feel</div>
           </div>
-          <div class="mod-btn locked">
-            <div class="lock-badge">PRO</div>
+          <div class="mod-btn" onclick="selectMod(this,'Intercooler upgrade')">
             <div class="mod-icon"><i class="ti ti-gauge"></i></div>
             <div class="mod-name">Intercooler upgrade</div>
             <div class="mod-tag">Power · Heat · Reliability</div>
@@ -230,26 +226,11 @@
 
       <div id="resultSection" class="hidden"></div>
 
-      <div id="premiumAnchor" class="premium-banner">
-        <div>
-          <div class="premium-title"><i class="ti ti-crown"></i> GarageIQ Pro</div>
-          <ul class="premium-perks">
-            <li>Unlock all 9 mods including turbo, coilovers &amp; big brakes</li>
-            <li>Full MOT failure breakdown with estimated fix costs</li>
-            <li>Stack multiple mods — see combined HP &amp; value impact</li>
-            <li>Insurance impact report per modification</li>
-            <li>12-month resale value forecast</li>
-            <li>Shareable mod card for TikTok &amp; Instagram</li>
-          </ul>
-        </div>
-        <button class="premium-btn">UNLOCK PRO<br />£2.99/mo</button>
-      </div>
-
     </div>
   </div>
 
   <div class="stats-strip">
-    <div class="strip-stat"><div class="strip-num">9</div><div class="strip-label">Mods analysed with Pro</div></div>
+    <div class="strip-stat"><div class="strip-num">9</div><div class="strip-label">Mods available free</div></div>
     <div class="strip-stat"><div class="strip-num">100%</div><div class="strip-label">Real DVLA &amp; DVSA data</div></div>
     <div class="strip-stat"><div class="strip-num">FREE</div><div class="strip-label">Always free to look up</div></div>
   </div>
@@ -265,7 +246,7 @@
       <div class="step">
         <div class="step-num">02</div>
         <div class="step-title">Pick a mod</div>
-        <div class="step-desc">Choose from exhausts, remaps, wheels and more. Unlock all 9 mods with Pro for the full picture.</div>
+        <div class="step-desc">Choose from 9 mods — exhausts, remaps, coilovers, turbos and more. All free, all specific to your car.</div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
@@ -365,48 +346,106 @@
     renderDemoMot();
   }
 
+  function toggleMotRow(row) {
+    row.classList.toggle('open');
+  }
+
   function renderRealMot(data) {
     const tests = Array.isArray(data) ? data : (data.motTests || data.tests || []);
     if (!tests.length) { renderDemoMot(); return; }
-    document.getElementById('motHistory').innerHTML = tests.slice(0,6).map(t => {
+    document.getElementById('motHistory').innerHTML = tests.slice(0,8).map((t, idx) => {
       const passed = (t.testResult||t.result||'').toLowerCase() === 'passed';
       const items = t.rfrAndComments || t.advisoryItems || [];
-      const fails = items.filter(r => r.type === 'FAIL').length;
-      const adv = items.filter(r => r.type !== 'FAIL').length;
-      return `<div class="mot-row">
-        <span style="color:#555552;font-size:12px">${t.completedDate||t.date||'—'}</span>
-        <span>${t.odometerValue ? Number(t.odometerValue).toLocaleString()+' miles' : '—'}</span>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${fails ? `<span class="badge b-fail">${fails} failure</span>` : ''}
-          ${adv ? `<span class="badge b-advisory">${adv} advisory</span>` : ''}
-          <span class="badge ${passed?'b-pass':'b-fail'}">${passed?'PASS':'FAIL'}</span>
+      const fails = items.filter(r => r.type === 'FAIL' || r.type === 'DANGEROUS');
+      const advisories = items.filter(r => r.type === 'ADVISORY' || r.type === 'USER ENTERED' || r.type === 'MONITOR');
+      const minors = items.filter(r => r.type === 'MINOR' || r.type === 'PRS');
+
+      let detailsHtml = '';
+      if (fails.length || advisories.length || minors.length) {
+        detailsHtml += fails.map(f => `
+          <div class="mot-detail-item">
+            <div class="mot-type-dot dot-fail"></div>
+            <div><span style="color:#FF6B6B;font-weight:600;font-size:11px;text-transform:uppercase">FAIL — </span>${f.text||f.comment||f.description||'Unknown failure'}</div>
+          </div>`).join('');
+        detailsHtml += advisories.map(a => `
+          <div class="mot-detail-item">
+            <div class="mot-type-dot dot-advisory"></div>
+            <div><span style="color:var(--gold);font-weight:600;font-size:11px;text-transform:uppercase">ADVISORY — </span>${a.text||a.comment||a.description||'Advisory noted'}</div>
+          </div>`).join('');
+        detailsHtml += minors.map(m => `
+          <div class="mot-detail-item">
+            <div class="mot-type-dot dot-minor"></div>
+            <div><span style="color:var(--green);font-weight:600;font-size:11px;text-transform:uppercase">MINOR — </span>${m.text||m.comment||m.description||'Minor item'}</div>
+          </div>`).join('');
+      } else {
+        detailsHtml = `<div class="mot-no-items">No failures or advisories recorded for this test.</div>`;
+      }
+
+      const miles = t.odometerValue ? Number(t.odometerValue).toLocaleString() + ' miles' : '—';
+      const date = t.completedDate || t.date || '—';
+
+      return `<div class="mot-row" onclick="toggleMotRow(this)">
+        <div class="mot-row-header">
+          <span style="color:#555552;font-size:12px">${date}</span>
+          <span>${miles}</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+            ${fails.length ? `<span class="badge b-fail">${fails.length} failure${fails.length>1?'s':''}</span>` : ''}
+            ${advisories.length ? `<span class="badge b-advisory">${advisories.length} advisory</span>` : ''}
+            <span class="badge ${passed?'b-pass':'b-fail'}">${passed?'PASS':'FAIL'}</span>
+          </div>
+          <i class="ti ti-chevron-down mot-chevron"></i>
         </div>
+        <div class="mot-details">${detailsHtml}</div>
       </div>`;
     }).join('');
   }
 
   function renderDemoMot() {
     const h = [
-      {date:'14 Nov 2024',result:'PASS',mi:'62,440',adv:1,fail:0},
-      {date:'12 Nov 2023',result:'PASS',mi:'49,210',adv:0,fail:0},
-      {date:'08 Nov 2022',result:'PASS',mi:'37,880',adv:2,fail:0},
-      {date:'03 Dec 2021',result:'FAIL',mi:'28,550',adv:0,fail:1},
+      { date:'14 Nov 2024', result:'PASS', mi:'62,440', items:[
+        { type:'ADVISORY', text:'Tyre worn close to legal limit on nearside rear' },
+        { type:'ADVISORY', text:'Rear brake pads showing wear, monitor closely' }
+      ]},
+      { date:'12 Nov 2023', result:'PASS', mi:'49,210', items:[] },
+      { date:'08 Nov 2022', result:'PASS', mi:'37,880', items:[
+        { type:'ADVISORY', text:'Front suspension arm bush showing deterioration' },
+        { type:'ADVISORY', text:'Offside front tyre slightly worn' }
+      ]},
+      { date:'03 Dec 2021', result:'FAIL', mi:'28,550', items:[
+        { type:'FAIL', text:'Nearside front headlamp aim too low (1.3.1a)' },
+        { type:'ADVISORY', text:'Oil leak from rocker cover gasket — monitor' }
+      ]},
     ];
-    document.getElementById('motHistory').innerHTML = h.map(m=>`
-      <div class="mot-row">
-        <span style="color:#555552;font-size:12px">${m.date}</span>
-        <span>${m.mi} miles</span>
-        <div style="display:flex;gap:6px">
-          ${m.fail?`<span class="badge b-fail">${m.fail} failure</span>`:''}
-          ${m.adv?`<span class="badge b-advisory">${m.adv} advisory</span>`:''}
-          <span class="badge ${m.result==='PASS'?'b-pass':'b-fail'}">${m.result}</span>
+    document.getElementById('motHistory').innerHTML = h.map(m => {
+      const passed = m.result === 'PASS';
+      const fails = m.items.filter(i => i.type === 'FAIL');
+      const advs = m.items.filter(i => i.type === 'ADVISORY');
+      let detailsHtml = m.items.length
+        ? m.items.map(i => `
+          <div class="mot-detail-item">
+            <div class="mot-type-dot ${i.type==='FAIL'?'dot-fail':'dot-advisory'}"></div>
+            <div><span style="color:${i.type==='FAIL'?'#FF6B6B':'var(--gold)'};font-weight:600;font-size:11px;text-transform:uppercase">${i.type} — </span>${i.text}</div>
+          </div>`).join('')
+        : `<div class="mot-no-items">No failures or advisories recorded for this test.</div>`;
+
+      return `<div class="mot-row" onclick="toggleMotRow(this)">
+        <div class="mot-row-header">
+          <span style="color:#555552;font-size:12px">${m.date}</span>
+          <span>${m.mi} miles</span>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+            ${fails.length ? `<span class="badge b-fail">${fails.length} failure</span>` : ''}
+            ${advs.length ? `<span class="badge b-advisory">${advs.length} advisory</span>` : ''}
+            <span class="badge ${passed?'b-pass':'b-fail'}">${m.result}</span>
+          </div>
+          <i class="ti ti-chevron-down mot-chevron"></i>
         </div>
-      </div>`).join('');
+        <div class="mot-details">${detailsHtml}</div>
+      </div>`;
+    }).join('');
   }
 
   function selectMod(el, mod) {
-    if (el.classList.contains('locked')) return;
-    document.querySelectorAll('.mod-btn:not(.locked)').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.mod-btn').forEach(b => b.classList.remove('selected'));
     el.classList.add('selected');
     selectedMod = mod;
     const btn = document.getElementById('analyzeBtn');
@@ -414,15 +453,58 @@
     btn.textContent = 'Analyse: ' + mod;
   }
 
+  // Mod-specific context to guide the AI to give realistic, varied results
+  const modContext = {
+    'Performance exhaust': 'Cat-back or turbo-back exhaust system. For naturally aspirated engines HP gain is minimal (3-8%). For turbo/supercharged engines 5-12%. Sound impact is HIGH. Does NOT affect torque much without a remap. Value increase is modest — buyers like it but it narrows the market. MOT risk is noise-related.',
+    'ECU remap': 'Stage 1 ECU remap with no hardware changes. For turbo petrols expect 20-35% HP gain. For NA petrols only 5-10%. Diesel remaps typically +25-40%. No sound change. Significant torque gains on turbo engines. Insurance MUST be declared. Void manufacturer warranty. MOT risk is low but if detected it can affect insurance void.',
+    'Cold air intake': 'Induction kit replacing airbox. HP gain is 3-7% at most — mostly feels faster due to induction noise. Sound changes noticeably — loud induction roar. Minimal torque gain. Cheap install. MOT risk low unless it causes a rich/lean mixture code. Can cause issues in wet weather on some cars.',
+    'Alloy wheels upgrade': 'Upgrading wheel size or style. NO HP change whatsoever. Handling can improve or worsen depending on tyre choice. Unsprung weight matters — lighter alloys improve handling, heavier ones hurt it. Value impact depends heavily on style choice. MOT risk is low but wrong offset or size can cause rubbing issues.',
+    'Lowering springs': 'Replacing standard springs with lowering springs, typically 30-50mm drop. NO HP change. Handling improves due to lower centre of gravity but ride quality suffers. Value impact is negative for mainstream buyers but positive for enthusiasts. MOT risk: if lowered too far the car can fail on suspension geometry.',
+    'Turbo upgrade': 'Upgrading or fitting a larger turbocharger. Major HP gains possible — 30-60% on top of stock. Requires supporting mods (injectors, intercooler, remap) to use safely. Very high install cost. Reliability risk is significant if not done properly. Must declare to insurer — large premium increase expected. High MOT risk if emissions are affected.',
+    'Coilover kit': 'Full coilover suspension system replacing springs and dampers. Adjustable ride height and damping. NO HP change. Significant handling improvement when set up correctly. Ride quality varies — track-spec coilovers are harsh on road. Value impact is neutral to slightly positive. MOT risk around geometry and minimum ride height.',
+    'Big brake kit': 'Larger brake discs and callipers. NO HP change, NO torque change, NO value change from performance perspective. Stopping distance improves significantly. Sound change: none. MOT: brakes must be balanced side to side — mismatched upgrade can FAIL an MOT. Insurance impact is low.',
+    'Intercooler upgrade': 'Larger front-mount or top-mount intercooler. Only relevant on turbo/supercharged engines — on NA engines this has NO effect. On turbo engines: reduces intake air temperature allowing more aggressive remap = 5-15% more HP on top of remap. No sound change. Install cost moderate. MOT risk very low.'
+  };
+
   async function analyseMod() {
     if (!selectedMod) return;
     const btn = document.getElementById('analyzeBtn');
     btn.disabled = true;
     btn.textContent = 'Analysing...';
 
-    const prompt = `You are a UK car modification expert. Analyse adding "${selectedMod}" to: ${vehicleData.make||'Ford'} ${vehicleData.model||'Focus'} ${vehicleData.yearOfManufacture||'2018'}, ${vehicleData.engineCapacity||1600}cc ${vehicleData.fuelType||'PETROL'}, HP: ${vehicleData.hp||130}, Torque: ${vehicleData.torque||200}Nm, Value: £${vehicleData.value||8000}.
-Respond ONLY in this exact JSON, no other text:
-{"hpGain":"+15","newHp":"145","torqueGain":"+20","newTorque":"220","soundRating":"8/10","soundDesc":"Deep raspy note with pops on overrun","valueChange":"+£500","newValue":"8500","installCost":"£300-£550","insuranceImpact":"Declare to insurer — typical increase £50-£120/yr","motRisk":"Low","motNote":"Cat-back exhaust legal below 74dB at MOT test point","verdict":"Strong upgrade for daily driving — transforms character without hurting reliability","failureRisk":"Low — well-documented mod for this platform"}`;
+    const fuel = (vehicleData.fuelType || 'PETROL').toUpperCase();
+    const cc = parseInt(vehicleData.engineCapacity) || 1600;
+    const hp = vehicleData.hp || 130;
+    const torque = vehicleData.torque || 200;
+    const value = vehicleData.value || 8000;
+    const year = vehicleData.yearOfManufacture || 2018;
+    const make = vehicleData.make || 'Ford';
+    const model = vehicleData.model || 'Focus';
+    const isTurbo = cc <= 1599 && hp >= 140 || hp >= 200; // rough turbo detection
+    const engineType = fuel.includes('DIESEL') ? 'turbodiesel' : (isTurbo ? 'turbocharged petrol' : 'naturally aspirated petrol');
+
+    const context = modContext[selectedMod] || '';
+
+    const prompt = `You are a highly accurate UK car modification expert. Be SPECIFIC and REALISTIC — not generic.
+
+Car: ${year} ${make} ${model}, ${cc}cc ${engineType}, ${hp}HP, ${torque}Nm torque, estimated value £${value}.
+
+Modification: "${selectedMod}"
+
+Expert context for this mod: ${context}
+
+Rules:
+- HP and torque gains MUST be realistic for this exact engine type. If the mod doesn't change HP (e.g. alloys, brakes, coilovers), set hpGain to "0" and newHp to "${hp}".
+- Sound changes must reflect the actual mod. Alloys/brakes/intercooler = no sound change (soundRating same as stock ~5/10).
+- Value change must be realistic — some mods DECREASE value for standard buyers.
+- Install cost must be a real UK market range for this car.
+- Insurance impact must be specific — brakes have minimal impact, turbos have huge impact.
+- MOT risk must reflect actual UK MOT rules for this modification.
+- verdict must be specific to THIS car, not generic.
+- valueChangeDirection must be "up", "down", or "neutral"
+
+Respond ONLY with this exact JSON, no other text, no markdown:
+{"hpGain":"X","newHp":"X","torqueGain":"X","newTorque":"X","soundRating":"X/10","soundDesc":"specific description","valueChange":"£X","valueChangeDirection":"up/down/neutral","newValue":"X","installCost":"£X-£X","insuranceImpact":"specific advice","motRisk":"Low/Medium/High","motNote":"specific MOT rule","verdict":"specific verdict for this car","failureRisk":"Low/Medium/High — reason"}`;
 
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -434,15 +516,31 @@ Respond ONLY in this exact JSON, no other text:
       const txt = data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
       renderResult(JSON.parse(txt));
     } catch(e) {
+      // Realistic fallback per mod type
+      const fallbacks = {
+        'Performance exhaust':   { hpGain:fuel.includes('DIESEL')?'+4':isTurbo?'+12':'+6', torqueGain:'+8', soundRating:'8/10', soundDesc:'Deep aggressive note with pops on overrun', valueChange:'+£200', dir:'up', installCost:'£350–£650', ins:'Declare to insurer — typical increase £40–£90/yr', motRisk:'Low', motNote:'Legal if below 74dB at stationary test point', failureRisk:'Low — no drivetrain stress' },
+        'ECU remap':             { hpGain:fuel.includes('DIESEL')?'+'+Math.round(hp*0.3):isTurbo?'+'+Math.round(hp*0.25):'+'+Math.round(hp*0.07), torqueGain:'+'+Math.round(torque*0.25), soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'-£300', dir:'down', installCost:'£250–£450', ins:'Must declare — expect £80–£200/yr increase or policy void', motRisk:'Low', motNote:'Emissions must stay within legal limits at test', failureRisk:'Low if Stage 1, Medium if aggressive tune' },
+        'Alloy wheels upgrade':  { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'+£300', dir:'up', installCost:'£400–£900', ins:'Declare if different size — minimal impact', motRisk:'Low', motNote:'Must be correct offset — rubbing arch is an instant fail', failureRisk:'Low — no mechanical stress' },
+        'Lowering springs':      { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'-£200', dir:'down', installCost:'£200–£400', ins:'Declare to insurer — small increase expected', motRisk:'Medium', motNote:'Suspension geometry check required — too low fails ride height test', failureRisk:'Low — but tyre wear increases' },
+        'Cold air intake':       { hpGain:'+'+Math.round(hp*0.04), torqueGain:'+'+Math.round(torque*0.02), soundRating:'7/10', soundDesc:'Loud induction roar at high RPM', valueChange:'-£100', dir:'down', installCost:'£80–£250', ins:'Declare — minimal premium impact', motRisk:'Low', motNote:'Can cause wet weather issues — check filter spec', failureRisk:'Low — monitor for fault codes' },
+        'Turbo upgrade':         { hpGain:'+'+Math.round(hp*0.45), torqueGain:'+'+Math.round(torque*0.4), soundRating:'7/10', soundDesc:'More pronounced turbo spool and exhaust note', valueChange:'-£500', dir:'down', installCost:'£1,500–£3,500', ins:'Major declaration required — 30–80% premium increase or refused cover', motRisk:'High', motNote:'Emissions and smoke test — requires supporting hardware', failureRisk:'High without supporting mods — can destroy engine' },
+        'Coilover kit':          { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'+£100', dir:'neutral', installCost:'£500–£1,200', ins:'Declare — moderate increase expected', motRisk:'Medium', motNote:'Ride height and geometry must be within legal limits', failureRisk:'Low — quality kit with proper setup is reliable' },
+        'Big brake kit':         { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No sound change', valueChange:'+£0', dir:'neutral', installCost:'£600–£1,400', ins:'Declare — minimal impact on premium', motRisk:'Low', motNote:'Brakes must be balanced across axle — asymmetric setup fails', failureRisk:'Low — improves safety when fitted correctly' },
+        'Intercooler upgrade':   { hpGain:isTurbo?'+'+Math.round(hp*0.07):'0', torqueGain:isTurbo?'+'+Math.round(torque*0.06):'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'+£0', dir:'neutral', installCost:'£300–£700', ins:'Declare on turbocharged vehicles — small increase', motRisk:'Low', motNote:'No direct MOT implications — supports other mods', failureRisk:'Low — reduces heat soak and improves reliability' },
+      };
+      const fb = fallbacks[selectedMod] || fallbacks['Performance exhaust'];
+      const newHp = String(hp + (parseInt(fb.hpGain) || 0));
+      const newTorque = String(torque + (parseInt(fb.torqueGain) || 0));
+      const valNum = parseInt(fb.valueChange.replace(/[^0-9-]/g,'')) || 0;
       renderResult({
-        hpGain:'+18', newHp:String((vehicleData.hp||130)+18),
-        torqueGain:'+25', newTorque:String((vehicleData.torque||200)+25),
-        soundRating:'8/10', soundDesc:'Deep raspy note with crackle on overrun',
-        valueChange:'+£500', newValue:String((vehicleData.value||8000)+500),
-        installCost:'£300–£550', insuranceImpact:'Declare to insurer — typical increase £50–£120/yr',
-        motRisk:'Low', motNote:'Cat-back exhaust legal below 74dB',
-        verdict:"Solid upgrade that transforms the car's character with minimal reliability risk",
-        failureRisk:'Low — no additional drivetrain stress'
+        hpGain: fb.hpGain, newHp, torqueGain: fb.torqueGain, newTorque,
+        soundRating: fb.soundRating, soundDesc: fb.soundDesc,
+        valueChange: fb.valueChange, valueChangeDirection: fb.dir,
+        newValue: String(value + valNum),
+        installCost: fb.installCost, insuranceImpact: fb.ins,
+        motRisk: fb.motRisk, motNote: fb.motNote,
+        verdict: `Fallback estimate for ${make} ${model} — connect to AI for a full specific analysis.`,
+        failureRisk: fb.failureRisk
       });
     }
     btn.disabled = false;
@@ -450,24 +548,52 @@ Respond ONLY in this exact JSON, no other text:
   }
 
   function renderResult(r) {
-    const rating = parseInt(r.soundRating) || 7;
+    const rating = parseInt(r.soundRating) || 5;
     const bars = Array.from({length:8},(_,i)=>`<div class="s-bar" style="height:${i<rating?Math.round(10+Math.random()*16):4}px;opacity:${i<rating?1:0.15}"></div>`).join('');
     const motCol = r.motRisk==='Low'?'green':r.motRisk==='Medium'?'amber':'red';
     const failCol = (r.failureRisk||'').startsWith('Low')?'green':(r.failureRisk||'').startsWith('Med')?'amber':'red';
+    const hpChange = parseInt(r.hpGain) || 0;
+    const tqChange = parseInt(r.torqueGain) || 0;
+    const dir = r.valueChangeDirection || (r.valueChange && r.valueChange.startsWith('-') ? 'down' : 'up');
+
+    const hpClass = hpChange > 0 ? 'c-up' : hpChange < 0 ? 'c-down' : 'c-neutral';
+    const tqClass = tqChange > 0 ? 'c-up' : tqChange < 0 ? 'c-down' : 'c-neutral';
+    const valClass = dir === 'up' ? 'c-up' : dir === 'down' ? 'c-down' : 'c-neutral';
+    const hpDisplay = hpChange === 0 ? 'No change' : `${r.newHp} HP`;
+    const tqDisplay = tqChange === 0 ? 'No change' : `${r.newTorque} Nm`;
+
     document.getElementById('resultSection').innerHTML = `
       <div class="result-card">
         <div class="result-title">
           <span>${selectedMod.toUpperCase()}</span>
           <div class="sound-bar">${bars}</div>
         </div>
-        <div class="delta-row"><span class="delta-label">Power</span><span class="delta-val">${r.newHp} HP <span class="change c-up">${r.hpGain}</span></span></div>
-        <div class="delta-row"><span class="delta-label">Torque</span><span class="delta-val">${r.newTorque} Nm <span class="change c-up">${r.torqueGain}</span></span></div>
-        <div class="delta-row"><span class="delta-label">Sound</span><span class="delta-val">${r.soundRating} <span style="font-size:12px;font-weight:400;color:#666662">— ${r.soundDesc}</span></span></div>
-        <div class="delta-row"><span class="delta-label">Retail value</span><span class="delta-val">£${r.newValue} <span class="change c-up">${r.valueChange}</span></span></div>
+        <div class="delta-row">
+          <span class="delta-label">Power</span>
+          <span class="delta-val">${hpDisplay} ${hpChange !== 0 ? `<span class="change ${hpClass}">${r.hpGain} HP</span>` : '<span class="change c-neutral">No change</span>'}</span>
+        </div>
+        <div class="delta-row">
+          <span class="delta-label">Torque</span>
+          <span class="delta-val">${tqDisplay} ${tqChange !== 0 ? `<span class="change ${tqClass}">${r.torqueGain} Nm</span>` : '<span class="change c-neutral">No change</span>'}</span>
+        </div>
+        <div class="delta-row">
+          <span class="delta-label">Sound</span>
+          <span class="delta-val">${r.soundRating} <span style="font-size:12px;font-weight:400;color:#666662">— ${r.soundDesc}</span></span>
+        </div>
+        <div class="delta-row">
+          <span class="delta-label">Retail value</span>
+          <span class="delta-val">£${r.newValue} <span class="change ${valClass}">${r.valueChange}</span></span>
+        </div>
         <div class="delta-row"><span class="delta-label">Install cost</span><span class="delta-val">${r.installCost}</span></div>
         <div class="delta-row"><span class="delta-label">Insurance</span><span class="delta-val" style="font-size:12px;max-width:55%;text-align:right">${r.insuranceImpact}</span></div>
-        <div class="delta-row"><span class="delta-label">MOT risk</span><span class="delta-val"><span class="stat-val ${motCol}" style="font-size:15px">${r.motRisk}</span> <span style="font-size:11px;color:#555552;margin-left:6px">${r.motNote}</span></span></div>
-        <div class="delta-row"><span class="delta-label">Failure risk</span><span class="delta-val"><span class="stat-val ${failCol}" style="font-size:15px">${(r.failureRisk||'').split('—')[0].trim()}</span></span></div>
+        <div class="delta-row">
+          <span class="delta-label">MOT risk</span>
+          <span class="delta-val"><span class="stat-val ${motCol}" style="font-size:15px">${r.motRisk}</span> <span style="font-size:11px;color:#555552;margin-left:6px">${r.motNote}</span></span>
+        </div>
+        <div class="delta-row">
+          <span class="delta-label">Reliability risk</span>
+          <span class="delta-val"><span class="stat-val ${failCol}" style="font-size:15px">${(r.failureRisk||'').split('—')[0].trim()}</span><span style="font-size:11px;color:#555552;margin-left:6px">${(r.failureRisk||'').includes('—') ? r.failureRisk.split('—').slice(1).join('—').trim() : ''}</span></span>
+        </div>
         <div class="verdict-box"><strong>Verdict:</strong> ${r.verdict}</div>
         <button class="share-btn" onclick="shareResult()"><i class="ti ti-share"></i> Share this result</button>
       </div>`;
