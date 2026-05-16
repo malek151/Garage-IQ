@@ -384,30 +384,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
   const VERCEL = 'https://garage-iq-chi.vercel.app';
   const SUPA_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
-  const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
+  let supabase;
   let vehicleData = {};
   let selectedMod = null;
   let currentUser = null;
   let modalMode = 'login';
 
-  // Auth state listener
-  supabase.auth.onAuthStateChange((event, session) => {
-    currentUser = session?.user || null;
-    if (currentUser) {
-      document.getElementById('navAuth').classList.add('hidden');
-      document.getElementById('navUser').classList.remove('hidden');
-      document.getElementById('navEmail').textContent = currentUser.email;
-    } else {
-      document.getElementById('navAuth').classList.remove('hidden');
-      document.getElementById('navUser').classList.add('hidden');
-    }
-  });
-
+  // Global UI functions - must be global for onclick attributes to work
   function openModal(mode) {
     modalMode = mode;
     document.getElementById('authModal').classList.remove('hidden');
@@ -449,7 +436,7 @@ document.addEventListener("DOMContentLoaded", function() {
       document.getElementById('modalSubmit').textContent = modalMode === 'login' ? 'LOG IN' : 'SIGN UP';
     } else {
       closeModal();
-      if (modalMode === 'signup') alert('Check your email to confirm your account, then log in.');
+      if (modalMode === 'signup') alert('Account created! Check your email to confirm, then log in.');
     }
   }
 
@@ -465,6 +452,27 @@ document.addEventListener("DOMContentLoaded", function() {
     panel.classList.remove('hidden');
     panel.scrollIntoView({ behavior:'smooth', block:'start' });
   }
+
+  function loadFromHistory(reg) {
+    document.getElementById('regInput').value = reg;
+    document.getElementById('historyPanel').classList.add('hidden');
+    lookupVehicle();
+  }
+
+  window.addEventListener('load', function() {
+    supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+    supabase.auth.onAuthStateChange((event, session) => {
+      currentUser = session?.user || null;
+      if (currentUser) {
+        document.getElementById('navAuth').classList.add('hidden');
+        document.getElementById('navUser').classList.remove('hidden');
+        document.getElementById('navEmail').textContent = currentUser.email;
+      } else {
+        document.getElementById('navAuth').classList.remove('hidden');
+        document.getElementById('navUser').classList.add('hidden');
+      }
+    });
+  });
 
   async function saveToHistory() {
     if (!currentUser) return;
@@ -492,32 +500,24 @@ document.addEventListener("DOMContentLoaded", function() {
       .order('looked_up_at', { ascending: false })
       .limit(20);
     if (error || !data || !data.length) {
-      listEl.innerHTML = '<div class="history-empty">No cars looked up yet — enter a reg above to start.</div>';
+      listEl.innerHTML = '<div class="history-empty">No cars looked up yet.</div>';
       return;
     }
-    // Deduplicate by reg, keep most recent
     const seen = new Set();
     const unique = data.filter(r => { if (seen.has(r.reg)) return false; seen.add(r.reg); return true; });
     listEl.innerHTML = unique.map(r => {
       const date = new Date(r.looked_up_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-      return \`<div class="history-item" onclick="loadFromHistory('\${r.reg}')">
-        <div class="history-reg">\${r.reg}</div>
-        <div class="history-info">
-          <div class="history-car">\${(r.make||'').toUpperCase()} \${(r.model||'').toUpperCase()} \${r.year||''}</div>
-          <div class="history-date">\${r.colour||''} · \${r.fuel||''} · \${date}</div>
-        </div>
-        <i class="ti ti-chevron-right" style="color:#444440"></i>
-      </div>\`;
+      return '<div class="history-item" onclick="loadFromHistory('' + r.reg + '')">' +
+        '<div class="history-reg">' + r.reg + '</div>' +
+        '<div class="history-info">' +
+          '<div class="history-car">' + (r.make||'').toUpperCase() + ' ' + (r.model||'').toUpperCase() + ' ' + (r.year||'') + '</div>' +
+          '<div class="history-date">' + (r.colour||'') + ' · ' + (r.fuel||'') + ' · ' + date + '</div>' +
+        '</div>' +
+        '<i class="ti ti-chevron-right" style="color:#444440"></i></div>';
     }).join('');
   }
 
-  function loadFromHistory(reg) {
-    document.getElementById('regInput').value = reg;
-    document.getElementById('historyPanel').classList.add('hidden');
-    lookupVehicle();
-  }
-
-  document.getElementById('regInput').addEventListener('keydown', e => { if (e.key === 'Enter') lookupVehicle(); });
+document.getElementById('regInput').addEventListener('keydown', e => { if (e.key === 'Enter') lookupVehicle(); });
 
   async function lookupVehicle() {
     const reg = document.getElementById('regInput').value.replace(/\s/g,'').toUpperCase();
@@ -858,7 +858,7 @@ document.addEventListener("DOMContentLoaded", function() {
       navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard — paste it on TikTok or Instagram!'));
     }
   }
-}); // end DOMContentLoaded
+
 </script>
 </body>
 </html>
