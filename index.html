@@ -8,11 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-  <!-- Vercel Web Analytics -->
-  <script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-  </script>
-  <script defer src="/_vercel/insights/script.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -477,77 +472,31 @@
     btn.disabled = true;
     btn.textContent = 'Analysing...';
 
-    const fuel = (vehicleData.fuelType || 'PETROL').toUpperCase();
-    const cc = parseInt(vehicleData.engineCapacity) || 1600;
-    const hp = vehicleData.hp || 130;
-    const torque = vehicleData.torque || 200;
-    const value = vehicleData.value || 8000;
-    const year = vehicleData.yearOfManufacture || 2018;
-    const make = vehicleData.make || 'Ford';
-    const model = vehicleData.model || 'Focus';
-    const isTurbo = cc <= 1599 && hp >= 140 || hp >= 200; // rough turbo detection
-    const engineType = fuel.includes('DIESEL') ? 'turbodiesel' : (isTurbo ? 'turbocharged petrol' : 'naturally aspirated petrol');
-
-    const context = modContext[selectedMod] || '';
-
-    const prompt = `You are a highly accurate UK car modification expert. Be SPECIFIC and REALISTIC — not generic.
-
-Car: ${year} ${make} ${model}, ${cc}cc ${engineType}, ${hp}HP, ${torque}Nm torque, estimated value £${value}.
-
-Modification: "${selectedMod}"
-
-Expert context for this mod: ${context}
-
-Rules:
-- HP and torque gains MUST be realistic for this exact engine type. If the mod doesn't change HP (e.g. alloys, brakes, coilovers), set hpGain to "0" and newHp to "${hp}".
-- Sound changes must reflect the actual mod. Alloys/brakes/intercooler = no sound change (soundRating same as stock ~5/10).
-- Value change must be realistic — some mods DECREASE value for standard buyers.
-- Install cost must be a real UK market range for this car.
-- Insurance impact must be specific — brakes have minimal impact, turbos have huge impact.
-- MOT risk must reflect actual UK MOT rules for this modification.
-- verdict must be specific to THIS car, not generic.
-- valueChangeDirection must be "up", "down", or "neutral"
-
-Respond ONLY with this exact JSON, no other text, no markdown:
-{"hpGain":"X","newHp":"X","torqueGain":"X","newTorque":"X","soundRating":"X/10","soundDesc":"specific description","valueChange":"£X","valueChangeDirection":"up/down/neutral","newValue":"X","installCost":"£X-£X","insuranceImpact":"specific advice","motRisk":"Low/Medium/High","motNote":"specific MOT rule","verdict":"specific verdict for this car","failureRisk":"Low/Medium/High — reason"}`;
-
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch(`${VERCEL}/api/mod`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, messages:[{role:'user',content:prompt}] })
+        body: JSON.stringify({
+          mod: selectedMod,
+          make: vehicleData.make || 'Ford',
+          model: vehicleData.model || 'Focus',
+          year: vehicleData.yearOfManufacture || '2018',
+          cc: parseInt(vehicleData.engineCapacity) || 1600,
+          hp: vehicleData.hp || 130,
+          torque: vehicleData.torque || 200,
+          value: vehicleData.value || 8000,
+          fuel: (vehicleData.fuelType || 'PETROL').toUpperCase(),
+        })
       });
+      if (!res.ok) throw new Error('API error ' + res.status);
       const data = await res.json();
-      const txt = data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-      renderResult(JSON.parse(txt));
+      if (data.error) throw new Error(data.error);
+      renderResult(data);
     } catch(e) {
-      // Realistic fallback per mod type
-      const fallbacks = {
-        'Performance exhaust':   { hpGain:fuel.includes('DIESEL')?'+4':isTurbo?'+12':'+6', torqueGain:'+8', soundRating:'8/10', soundDesc:'Deep aggressive note with pops on overrun', valueChange:'+£200', dir:'up', installCost:'£350–£650', ins:'Declare to insurer — typical increase £40–£90/yr', motRisk:'Low', motNote:'Legal if below 74dB at stationary test point', failureRisk:'Low — no drivetrain stress' },
-        'ECU remap':             { hpGain:fuel.includes('DIESEL')?'+'+Math.round(hp*0.3):isTurbo?'+'+Math.round(hp*0.25):'+'+Math.round(hp*0.07), torqueGain:'+'+Math.round(torque*0.25), soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'-£300', dir:'down', installCost:'£250–£450', ins:'Must declare — expect £80–£200/yr increase or policy void', motRisk:'Low', motNote:'Emissions must stay within legal limits at test', failureRisk:'Low if Stage 1, Medium if aggressive tune' },
-        'Alloy wheels upgrade':  { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'+£300', dir:'up', installCost:'£400–£900', ins:'Declare if different size — minimal impact', motRisk:'Low', motNote:'Must be correct offset — rubbing arch is an instant fail', failureRisk:'Low — no mechanical stress' },
-        'Lowering springs':      { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'-£200', dir:'down', installCost:'£200–£400', ins:'Declare to insurer — small increase expected', motRisk:'Medium', motNote:'Suspension geometry check required — too low fails ride height test', failureRisk:'Low — but tyre wear increases' },
-        'Cold air intake':       { hpGain:'+'+Math.round(hp*0.04), torqueGain:'+'+Math.round(torque*0.02), soundRating:'7/10', soundDesc:'Loud induction roar at high RPM', valueChange:'-£100', dir:'down', installCost:'£80–£250', ins:'Declare — minimal premium impact', motRisk:'Low', motNote:'Can cause wet weather issues — check filter spec', failureRisk:'Low — monitor for fault codes' },
-        'Turbo upgrade':         { hpGain:'+'+Math.round(hp*0.45), torqueGain:'+'+Math.round(torque*0.4), soundRating:'7/10', soundDesc:'More pronounced turbo spool and exhaust note', valueChange:'-£500', dir:'down', installCost:'£1,500–£3,500', ins:'Major declaration required — 30–80% premium increase or refused cover', motRisk:'High', motNote:'Emissions and smoke test — requires supporting hardware', failureRisk:'High without supporting mods — can destroy engine' },
-        'Coilover kit':          { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'+£100', dir:'neutral', installCost:'£500–£1,200', ins:'Declare — moderate increase expected', motRisk:'Medium', motNote:'Ride height and geometry must be within legal limits', failureRisk:'Low — quality kit with proper setup is reliable' },
-        'Big brake kit':         { hpGain:'0', torqueGain:'0', soundRating:'5/10', soundDesc:'No sound change', valueChange:'+£0', dir:'neutral', installCost:'£600–£1,400', ins:'Declare — minimal impact on premium', motRisk:'Low', motNote:'Brakes must be balanced across axle — asymmetric setup fails', failureRisk:'Low — improves safety when fitted correctly' },
-        'Intercooler upgrade':   { hpGain:isTurbo?'+'+Math.round(hp*0.07):'0', torqueGain:isTurbo?'+'+Math.round(torque*0.06):'0', soundRating:'5/10', soundDesc:'No change to exhaust note', valueChange:'+£0', dir:'neutral', installCost:'£300–£700', ins:'Declare on turbocharged vehicles — small increase', motRisk:'Low', motNote:'No direct MOT implications — supports other mods', failureRisk:'Low — reduces heat soak and improves reliability' },
-      };
-      const fb = fallbacks[selectedMod] || fallbacks['Performance exhaust'];
-      const newHp = String(hp + (parseInt(fb.hpGain) || 0));
-      const newTorque = String(torque + (parseInt(fb.torqueGain) || 0));
-      const valNum = parseInt(fb.valueChange.replace(/[^0-9-]/g,'')) || 0;
-      renderResult({
-        hpGain: fb.hpGain, newHp, torqueGain: fb.torqueGain, newTorque,
-        soundRating: fb.soundRating, soundDesc: fb.soundDesc,
-        valueChange: fb.valueChange, valueChangeDirection: fb.dir,
-        newValue: String(value + valNum),
-        installCost: fb.installCost, insuranceImpact: fb.ins,
-        motRisk: fb.motRisk, motNote: fb.motNote,
-        verdict: `Fallback estimate for ${make} ${model} — connect to AI for a full specific analysis.`,
-        failureRisk: fb.failureRisk
-      });
+      document.getElementById('resultSection').innerHTML = `<div class="error-box">Analysis failed: ${e.message} — check Vercel function logs.</div>`;
+      document.getElementById('resultSection').classList.remove('hidden');
     }
+
     btn.disabled = false;
     btn.textContent = 'Analyse: ' + selectedMod;
   }
