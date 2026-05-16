@@ -394,7 +394,8 @@
   let currentUser = null;
   let modalMode = 'login';
 
-  // Global UI functions - must be global for onclick attributes to work
+  // ── AUTH FUNCTIONS (global so onclick= works) ──────────────────────────────
+
   function openModal(mode) {
     modalMode = mode;
     document.getElementById('authModal').classList.remove('hidden');
@@ -459,10 +460,12 @@
     lookupVehicle();
   }
 
+  // ── SUPABASE INIT (after page loads) ──────────────────────────────────────
+
   window.addEventListener('load', function() {
     supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
     supabase.auth.onAuthStateChange((event, session) => {
-      currentUser = session?.user || null;
+      currentUser = session ? session.user : null;
       if (currentUser) {
         document.getElementById('navAuth').classList.add('hidden');
         document.getElementById('navUser').classList.remove('hidden');
@@ -495,10 +498,8 @@
     const listEl = document.getElementById('historyList');
     listEl.innerHTML = '<div class="history-empty">Loading...</div>';
     const { data, error } = await supabase
-      .from('car_history')
-      .select('*')
-      .order('looked_up_at', { ascending: false })
-      .limit(20);
+      .from('car_history').select('*')
+      .order('looked_up_at', { ascending: false }).limit(20);
     if (error || !data || !data.length) {
       listEl.innerHTML = '<div class="history-empty">No cars looked up yet.</div>';
       return;
@@ -512,12 +513,17 @@
         '<div class="history-info">' +
           '<div class="history-car">' + (r.make||'').toUpperCase() + ' ' + (r.model||'').toUpperCase() + ' ' + (r.year||'') + '</div>' +
           '<div class="history-date">' + (r.colour||'') + ' · ' + (r.fuel||'') + ' · ' + date + '</div>' +
-        '</div>' +
-        '<i class="ti ti-chevron-right" style="color:#444440"></i></div>';
+        '</div><i class="ti ti-chevron-right" style="color:#444440"></i></div>';
     }).join('');
   }
 
-document.getElementById('regInput').addEventListener('keydown', e => { if (e.key === 'Enter') lookupVehicle(); });
+  // ── REG INPUT ─────────────────────────────────────────────────────────────
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('regInput').addEventListener('keydown', e => { if (e.key === 'Enter') lookupVehicle(); });
+  });
+
+  // ── VEHICLE / MOT / MODS LOGIC ────────────────────────────────────────────
 
   async function lookupVehicle() {
     const reg = document.getElementById('regInput').value.replace(/\s/g,'').toUpperCase();
