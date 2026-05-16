@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -383,7 +382,9 @@
     AI mod analysis is for guidance only — always consult a professional mechanic
   </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
   const VERCEL = 'https://garage-iq-chi.vercel.app';
   const SUPA_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
   const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
@@ -857,6 +858,7 @@
       navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard — paste it on TikTok or Instagram!'));
     }
   }
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
