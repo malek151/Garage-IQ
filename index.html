@@ -125,6 +125,30 @@
       nav { padding: 1rem; }
       .hero { padding: 3rem 1.5rem 2rem; }
     }
+
+    /* Specs table */
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid #ffffff08; }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: 9px 4px; font-size: 13px; }
+    .spec-table td:first-child { color: var(--text2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; width: 45%; }
+    .spec-table td:last-child { font-weight: 500; color: var(--light); text-align: right; }
+    .co2-label { display: inline-block; background: var(--green); color: var(--dark); font-family: 'Bebas Neue', sans-serif; font-size: 13px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; }
+    .co2-label.B { background: #8BC34A; }
+    .co2-label.C { background: #CDDC39; color: #333; }
+    .co2-label.D { background: var(--gold); color: var(--dark2); }
+    .co2-label.E { background: #FF9800; color: var(--dark2); }
+    .co2-label.F { background: #FF5722; }
+    .co2-label.G { background: #F44336; }
+    /* MOT summary */
+    .mot-summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 14px; }
+    .mot-sum-stat { background: var(--dark); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+    .mot-sum-val { font-family: 'Bebas Neue', sans-serif; font-size: 26px; line-height: 1; }
+    .mot-sum-label { font-size: 10px; color: #444440; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 3px; }
+    .pass-bar-wrap { margin-bottom: 14px; }
+    .pass-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+    .pass-bar-bg { background: #3A0A0A; border-radius: 20px; height: 8px; overflow: hidden; }
+    .pass-bar-fill { height: 100%; border-radius: 20px; background: var(--green); transition: width 0.6s ease; }
   </style>
 </head>
 <body>
@@ -167,8 +191,38 @@
         </div>
       </div>
 
+      <div class="card" id="specsCard">
+        <div class="card-title"><i class="ti ti-engine"></i> Engine &amp; performance <span id="specsLoading" style="margin-left:auto;font-size:10px;color:#444440">Loading specs...</span></div>
+        <div id="specsContent">
+          <table class="spec-table">
+            <tr><td>Power</td><td id="specBhp">—</td></tr>
+            <tr><td>Torque</td><td id="specTorque">—</td></tr>
+            <tr><td>0–62 mph</td><td id="specZero">—</td></tr>
+            <tr><td>Top speed</td><td id="specTopSpeed">—</td></tr>
+            <tr><td>Gearbox</td><td id="specGearbox">—</td></tr>
+            <tr><td>Cylinders</td><td id="specCylinders">—</td></tr>
+            <tr><td>Drive type</td><td id="specDrive">—</td></tr>
+            <tr><td>Fuel (city)</td><td id="specCity">—</td></tr>
+            <tr><td>Fuel (combined)</td><td id="specCombined">—</td></tr>
+            <tr><td>CO₂ emissions</td><td id="specCo2">—</td></tr>
+          </table>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title"><i class="ti ti-clipboard-check"></i> MOT history <span style="margin-left:auto;font-size:10px;color:#444440">Tap a row to expand</span></div>
+        <div id="motSummary" class="hidden">
+          <div class="pass-bar-wrap">
+            <div class="pass-bar-label"><span>Pass rate</span><span id="passRatePct">—</span></div>
+            <div class="pass-bar-bg"><div class="pass-bar-fill" id="passBarFill" style="width:0%"></div></div>
+          </div>
+          <div class="mot-summary">
+            <div class="mot-sum-stat"><div class="mot-sum-val green" id="sumPassed">—</div><div class="mot-sum-label">Passed</div></div>
+            <div class="mot-sum-stat"><div class="mot-sum-val red" id="sumFailed">—</div><div class="mot-sum-label">Failed</div></div>
+            <div class="mot-sum-stat"><div class="mot-sum-val amber" id="sumAdvisories">—</div><div class="mot-sum-label">Advisories</div></div>
+            <div class="mot-sum-stat"><div class="mot-sum-val" id="sumTests">—</div><div class="mot-sum-label">Total tests</div></div>
+          </div>
+        </div>
         <div id="motHistory"><div class="loading">Loading MOT data...</div></div>
       </div>
 
@@ -304,7 +358,7 @@
       return;
     }
 
-    await loadMot(reg);
+    await Promise.all([loadMot(reg), loadSpecs()]);
     document.getElementById('loadingBox').classList.add('hidden');
     document.getElementById('vehicleSection').classList.remove('hidden');
     document.getElementById('vehicleSection').scrollIntoView({ behavior:'smooth', block:'start' });
@@ -338,6 +392,43 @@
     motEl.className = 'stat-val ' + (motOk ? 'green' : 'red');
   }
 
+  async function loadSpecs() {
+    document.getElementById('specsLoading').textContent = 'Loading specs...';
+    try {
+      const r = await fetch(`${VERCEL}/api/specs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          make: vehicleData.make || '',
+          model: vehicleData.model || '',
+          year: vehicleData.yearOfManufacture || '',
+          cc: vehicleData.engineCapacity || '',
+          fuel: vehicleData.fuelType || 'PETROL'
+        })
+      });
+      if (r.ok) {
+        const s = await r.json();
+        document.getElementById('specBhp').textContent = s.bhp ? s.bhp + ' BHP' : '—';
+        document.getElementById('specTorque').textContent = s.torqueNm ? s.torqueNm + ' Nm @ ' + s.torqueRpm + ' rpm' : '—';
+        document.getElementById('specZero').textContent = s.zeroToSixty ? s.zeroToSixty + ' sec' : '—';
+        document.getElementById('specTopSpeed').textContent = s.topSpeedMph ? s.topSpeedMph + ' mph' : '—';
+        document.getElementById('specGearbox').textContent = s.gearbox || '—';
+        document.getElementById('specCylinders').textContent = s.cylinders || '—';
+        document.getElementById('specDrive').textContent = s.driveType || '—';
+        document.getElementById('specCity').textContent = s.consumptionCity ? s.consumptionCity + ' mpg' : '—';
+        document.getElementById('specCombined').textContent = s.consumptionCombined ? s.consumptionCombined + ' mpg' : '—';
+        const co2El = document.getElementById('specCo2');
+        co2El.innerHTML = s.co2gkm ? s.co2gkm + ' g/km <span class="co2-label ' + (s.co2Label||'') + '">' + (s.co2Label||'') + '</span>' : '—';
+        // Update vehicleData with real BHP and torque for mod analysis
+        if (s.bhp) vehicleData.hp = parseInt(s.bhp);
+        if (s.torqueNm) vehicleData.torque = parseInt(s.torqueNm);
+        document.getElementById('specsLoading').textContent = '';
+      }
+    } catch(e) {
+      document.getElementById('specsLoading').textContent = 'Specs unavailable';
+    }
+  }
+
   async function loadMot(reg) {
     try {
       const r = await fetch(`${VERCEL}/api/mot?reg=${reg}`);
@@ -360,6 +451,22 @@
       tests = raw;
     }
     if (!tests.length) { renderDemoMot(); return; }
+
+    // MOT summary stats
+    const totalTests = tests.length;
+    const totalPassed = tests.filter(t => (t.testResult||'').toUpperCase() === 'PASSED').length;
+    const totalFailed = totalTests - totalPassed;
+    const totalAdvisories = tests.reduce((sum, t) => sum + (t.defects||[]).filter(d => d.type === 'ADVISORY').length, 0);
+    const passRate = Math.round((totalPassed / totalTests) * 100);
+    document.getElementById('sumPassed').textContent = totalPassed;
+    document.getElementById('sumFailed').textContent = totalFailed;
+    document.getElementById('sumAdvisories').textContent = totalAdvisories;
+    document.getElementById('sumTests').textContent = totalTests;
+    document.getElementById('passRatePct').textContent = passRate + '%';
+    document.getElementById('passBarFill').style.width = passRate + '%';
+    document.getElementById('passBarFill').style.background = passRate >= 80 ? 'var(--green)' : passRate >= 60 ? 'var(--gold)' : '#FF6B6B';
+    document.getElementById('motSummary').classList.remove('hidden');
+
     document.getElementById('motHistory').innerHTML = tests.slice(0, 10).map(t => {
       const passed = (t.testResult || '').toUpperCase() === 'PASSED';
       const defects = t.defects || t.rfrAndComments || [];
