@@ -508,12 +508,13 @@
     const unique = data.filter(r => { if (seen.has(r.reg)) return false; seen.add(r.reg); return true; });
     listEl.innerHTML = unique.map(r => {
       const date = new Date(r.looked_up_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-      return '<div class="history-item" onclick="loadFromHistory('' + r.reg + '')">' +
-        '<div class="history-reg">' + r.reg + '</div>' +
-        '<div class="history-info">' +
-          '<div class="history-car">' + (r.make||'').toUpperCase() + ' ' + (r.model||'').toUpperCase() + ' ' + (r.year||'') + '</div>' +
-          '<div class="history-date">' + (r.colour||'') + ' · ' + (r.fuel||'') + ' · ' + date + '</div>' +
-        '</div><i class="ti ti-chevron-right" style="color:#444440"></i></div>';
+      const reg = r.reg || '';
+      return `<div class="history-item" onclick="loadFromHistory('${reg}')">` +
+        `<div class="history-reg">${reg}</div>` +
+        `<div class="history-info">` +
+          `<div class="history-car">${(r.make||'').toUpperCase()} ${(r.model||'').toUpperCase()} ${r.year||''}</div>` +
+          `<div class="history-date">${r.colour||''} · ${r.fuel||''} · ${date}</div>` +
+        `</div><i class="ti ti-chevron-right" style="color:#444440"></i></div>`;
     }).join('');
   }
 
