@@ -4,1081 +4,667 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GarageIQ — UK Car Mod Analyser</title>
-  <meta name="description" content="Enter your UK reg. See your car's real MOT history, then find out exactly what mods will do." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <style>
-    :root {
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --surface2: #1a1a1a;
-      --border: #2a2a2a;
-      --accent: #e8ff00;
-      --accent2: #ff4d00;
-      --text: #f0f0f0;
-      --muted: #666;
-      --pass: #00e676;
-      --fail: #ff1744;
-      --advisory: #ff9100;
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --red:#E24B4A;--red-dark:#A32D2D;--gold:#FAC775;--gold-dark:#BA7517;
+      --green:#6DBD2A;--dark:#1A1A18;--dark2:#2C2C2A;--dark3:#222220;
+      --light:#F5F4F0;--border:#ffffff0f;--text2:#666662;--radius:12px;--radius-sm:8px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
-
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 32px; height: 60px;
-      background: rgba(10,10,10,0.95);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-    }
-    .nav-logo { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 3px; color: var(--accent); }
-    .nav-logo span { color: var(--text); }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .btn-nav {
-      background: none; border: 1px solid var(--border); color: var(--text);
-      padding: 7px 16px; font-family: 'Space Mono', monospace; font-size: 11px;
-      letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-    }
-    .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-nav.accent { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
-    .btn-nav.accent:hover { background: #d4e800; }
-    .profile-btn {
-      display: flex; align-items: center; gap: 8px;
-      background: var(--surface2); border: 1px solid var(--border);
-      color: var(--text); padding: 6px 14px;
-      font-family: 'Space Mono', monospace; font-size: 11px;
-      cursor: pointer; transition: all 0.2s; letter-spacing: 1px;
-    }
-    .profile-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .profile-avatar {
-      width: 26px; height: 26px; background: var(--accent);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 11px; color: #000; font-weight: 700;
-    }
-
-    /* HERO */
-    .hero {
-      padding: 140px 32px 80px;
-      max-width: 900px; margin: 0 auto; text-align: center;
-    }
-    .hero-label {
-      display: inline-block; font-size: 10px; letter-spacing: 4px;
-      color: var(--accent); border: 1px solid var(--accent);
-      padding: 4px 14px; margin-bottom: 28px; text-transform: uppercase;
-    }
-    h1 {
-      font-family: 'Rajdhani', sans-serif;
-      font-size: clamp(42px, 8vw, 88px);
-      font-weight: 700; line-height: 0.95;
-      letter-spacing: -1px; margin-bottom: 20px;
-    }
-    h1 .dim { color: var(--muted); }
-    h1 .hi { color: var(--accent); }
-    .hero-sub { color: var(--muted); font-size: 12px; letter-spacing: 1px; margin-bottom: 48px; }
-
-    /* REG INPUT */
-    .reg-wrap {
-      display: flex; align-items: stretch; max-width: 520px; margin: 0 auto 16px;
-      border: 1px solid var(--border);
-    }
-    .reg-plate {
-      background: var(--accent); color: #000;
-      font-family: 'Rajdhani', sans-serif; font-weight: 700;
-      font-size: 13px; letter-spacing: 2px;
-      padding: 0 16px; display: flex; align-items: center;
-      white-space: nowrap;
-    }
-    input[type="text"] {
-      flex: 1; background: var(--surface); border: none; outline: none;
-      color: var(--text); font-family: 'Rajdhani', sans-serif;
-      font-size: 26px; font-weight: 700; letter-spacing: 6px;
-      padding: 16px 20px; text-transform: uppercase;
-    }
-    input[type="text"]::placeholder { color: var(--muted); letter-spacing: 4px; font-size: 18px; }
-    .btn-run {
-      background: var(--accent); color: #000; border: none;
-      font-family: 'Rajdhani', sans-serif; font-weight: 700;
-      font-size: 14px; letter-spacing: 3px; padding: 0 28px;
-      cursor: pointer; transition: background 0.2s; text-transform: uppercase;
-    }
-    .btn-run:hover { background: #d4e800; }
-    .btn-run:disabled { background: var(--muted); cursor: not-allowed; }
-    .hint { color: var(--muted); font-size: 10px; letter-spacing: 2px; }
-
-    /* LOADING */
-    .loader { display: none; text-align: center; padding: 40px; }
-    .loader.active { display: block; }
-    .loader-bar {
-      width: 200px; height: 2px; background: var(--border);
-      margin: 16px auto; overflow: hidden;
-    }
-    .loader-bar-inner {
-      height: 100%; width: 40%; background: var(--accent);
-      animation: slide 1s ease-in-out infinite alternate;
-    }
-    @keyframes slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
-    .loader-text { color: var(--muted); font-size: 10px; letter-spacing: 3px; animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
-
-    /* ERROR */
-    .error-box {
-      display: none; max-width: 520px; margin: 12px auto 0;
-      background: rgba(255,23,68,0.1); border: 1px solid var(--fail);
-      padding: 12px 16px; font-size: 11px; color: var(--fail); letter-spacing: 1px;
-    }
-    .error-box.active { display: block; }
-
-    /* RESULTS */
-    .results { max-width: 900px; margin: 0 auto; padding: 0 32px 80px; display: none; }
-    .results.active { display: block; }
-
-    /* VEHICLE CARD */
-    .vehicle-card {
-      background: var(--surface); border: 1px solid var(--border);
-      margin-bottom: 24px; overflow: hidden;
-    }
-    .vc-header {
-      background: var(--accent); color: #000;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px;
-    }
-    .vc-reg { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 6px; }
-    .vc-status { font-size: 10px; letter-spacing: 2px; font-weight: 700; }
-    .vc-body { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-    .vc-field label { display: block; color: var(--muted); font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
-    .vc-field span { font-family: 'Rajdhani', sans-serif; font-size: 18px; font-weight: 600; }
-
-    /* SPECS CARD */
-    .specs-card {
-      background: var(--surface); border: 1px solid var(--border);
-      margin-bottom: 24px; overflow: hidden;
-    }
-    .card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 20px; border-bottom: 1px solid var(--border);
-    }
-    .card-title { font-family: 'Rajdhani', sans-serif; font-size: 14px; letter-spacing: 3px; color: var(--accent); }
-    .specs-grid { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-    .spec-item label { display: block; color: var(--muted); font-size: 9px; letter-spacing: 2px; margin-bottom: 4px; }
-    .spec-item span { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 600; }
-    .spec-item small { display: block; font-size: 9px; color: var(--muted); letter-spacing: 1px; }
-    .co2-badge {
-      display: inline-block; padding: 2px 8px; font-size: 11px; font-weight: 700;
-      letter-spacing: 1px; margin-top: 4px;
-    }
-    .co2-a { background: #00c853; color: #000; }
-    .co2-b { background: #64dd17; color: #000; }
-    .co2-c { background: #aeea00; color: #000; }
-    .co2-d { background: #ffd600; color: #000; }
-    .co2-e { background: #ff6d00; color: #fff; }
-    .co2-f { background: #dd2c00; color: #fff; }
-    .co2-g { background: #b71c1c; color: #fff; }
-
-    /* MOT SUMMARY */
-    .mot-summary { padding: 20px 20px 0; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-    .mot-stat { text-align: center; }
-    .mot-stat-num { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; line-height: 1; }
-    .mot-stat-label { font-size: 9px; color: var(--muted); letter-spacing: 2px; margin-top: 2px; }
-    .pass-rate-wrap { flex: 1; min-width: 200px; }
-    .pass-rate-label { display: flex; justify-content: space-between; font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-bottom: 6px; }
-    .pass-rate-bar { height: 6px; background: var(--border); border-radius: 0; overflow: hidden; }
-    .pass-rate-fill { height: 100%; background: var(--pass); transition: width 1s ease; }
-
-    /* MOT HISTORY */
-    .mot-list { padding: 20px; display: flex; flex-direction: column; gap: 8px; }
-    .mot-item {
-      border: 1px solid var(--border); overflow: hidden;
-      cursor: pointer; transition: border-color 0.2s;
-    }
-    .mot-item:hover { border-color: var(--accent); }
-    .mot-item-header {
-      display: flex; align-items: center; gap: 16px;
-      padding: 12px 16px; background: var(--surface2);
-    }
-    .mot-badge {
-      font-size: 9px; font-weight: 700; letter-spacing: 2px;
-      padding: 3px 10px; flex-shrink: 0;
-    }
-    .badge-pass { background: rgba(0,230,118,0.15); color: var(--pass); border: 1px solid var(--pass); }
-    .badge-fail { background: rgba(255,23,68,0.15); color: var(--fail); border: 1px solid var(--fail); }
-    .mot-date { font-size: 11px; color: var(--muted); flex: 1; }
-    .mot-mileage { font-family: 'Rajdhani', sans-serif; font-size: 16px; font-weight: 600; }
-    .mot-chevron { color: var(--muted); font-size: 12px; transition: transform 0.2s; }
-    .mot-item.open .mot-chevron { transform: rotate(180deg); }
-    .mot-defects { display: none; padding: 12px 16px; border-top: 1px solid var(--border); background: var(--bg); }
-    .mot-item.open .mot-defects { display: block; }
-    .defect-section { margin-bottom: 12px; }
-    .defect-section:last-child { margin-bottom: 0; }
-    .defect-type {
-      font-size: 9px; letter-spacing: 2px; font-weight: 700;
-      margin-bottom: 6px; padding: 2px 8px; display: inline-block;
-    }
-    .type-DANGEROUS { background: rgba(255,23,68,0.2); color: var(--fail); border: 1px solid var(--fail); }
-    .type-MAJOR { background: rgba(255,77,0,0.2); color: #ff4d00; border: 1px solid #ff4d00; }
-    .type-MINOR { background: rgba(255,145,0,0.2); color: var(--advisory); border: 1px solid var(--advisory); }
-    .type-ADVISORY { background: rgba(255,214,0,0.2); color: #ffd600; border: 1px solid #ffd600; }
-    .defect-item { font-size: 11px; color: #ccc; letter-spacing: 0.5px; margin-bottom: 4px; padding-left: 8px; border-left: 2px solid var(--border); }
-    .no-defects { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
-
-    /* MODS */
-    .mods-grid { padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-    .mod-btn {
-      background: var(--bg); border: 1px solid var(--border);
-      padding: 16px; cursor: pointer; transition: all 0.2s;
-      text-align: left; font-family: 'Space Mono', monospace;
-    }
-    .mod-btn:hover { border-color: var(--accent); background: rgba(232,255,0,0.03); }
-    .mod-btn.active { border-color: var(--accent); background: rgba(232,255,0,0.06); }
-    .mod-btn .mod-icon { font-size: 20px; margin-bottom: 8px; }
-    .mod-btn .mod-name { font-size: 11px; letter-spacing: 1px; color: var(--text); }
-    .mod-btn .mod-hint { font-size: 9px; color: var(--muted); margin-top: 4px; letter-spacing: 1px; }
-
-    /* MOD RESULT */
-    .mod-result {
-      display: none; margin: 0 20px 20px;
-      background: var(--bg); border: 1px solid var(--accent);
-      padding: 20px;
-    }
-    .mod-result.active { display: block; }
-    .mod-result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .mr-stat label { display: block; font-size: 9px; color: var(--muted); letter-spacing: 2px; margin-bottom: 4px; }
-    .mr-stat .val { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; }
-    .mr-stat .val.up { color: var(--accent); }
-    .mr-stat .val.neutral { color: #888; }
-    .mr-ai { font-size: 11px; line-height: 1.7; color: #ccc; border-top: 1px solid var(--border); padding-top: 14px; letter-spacing: 0.5px; }
-    .mr-loading { font-size: 10px; color: var(--muted); letter-spacing: 2px; animation: pulse 1.5s ease-in-out infinite; }
-
-    /* AUTH MODAL */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
-      align-items: center; justify-content: center;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal {
-      background: var(--surface); border: 1px solid var(--border);
-      width: 100%; max-width: 400px; padding: 36px; position: relative;
-    }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px;
-      background: none; border: none; color: var(--muted);
-      font-size: 20px; cursor: pointer; line-height: 1;
-    }
-    .modal-close:hover { color: var(--text); }
-    .modal-title { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 3px; margin-bottom: 6px; }
-    .modal-sub { font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 28px; }
-    .modal-tabs { display: flex; gap: 0; margin-bottom: 24px; border: 1px solid var(--border); }
-    .modal-tab {
-      flex: 1; padding: 10px; background: none; border: none;
-      font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 2px;
-      color: var(--muted); cursor: pointer; transition: all 0.2s;
-    }
-    .modal-tab.active { background: var(--accent); color: #000; font-weight: 700; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 9px; letter-spacing: 2px; color: var(--muted); margin-bottom: 6px; }
-    .form-group input {
-      width: 100%; background: var(--bg); border: 1px solid var(--border);
-      color: var(--text); font-family: 'Space Mono', monospace; font-size: 12px;
-      padding: 10px 12px; outline: none; transition: border-color 0.2s;
-      letter-spacing: 1px;
-    }
-    .form-group input:focus { border-color: var(--accent); }
-    .btn-submit {
-      width: 100%; background: var(--accent); color: #000; border: none;
-      font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 14px;
-      letter-spacing: 3px; padding: 12px; cursor: pointer;
-      transition: background 0.2s; text-transform: uppercase; margin-top: 8px;
-    }
-    .btn-submit:hover { background: #d4e800; }
-    .btn-submit:disabled { background: var(--muted); cursor: not-allowed; }
-    .auth-msg { font-size: 10px; letter-spacing: 1px; margin-top: 12px; text-align: center; min-height: 16px; }
-    .auth-msg.ok { color: var(--pass); }
-    .auth-msg.err { color: var(--fail); }
-
-    /* PROFILE MODAL */
-    .profile-modal {
-      display: none; position: fixed; inset: 0; z-index: 200;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
-      align-items: flex-start; justify-content: flex-end;
-    }
-    .profile-modal.active { display: flex; }
-    .profile-panel {
-      background: var(--surface); border-left: 1px solid var(--border);
-      width: 100%; max-width: 420px; height: 100vh;
-      overflow-y: auto; padding: 0;
-      animation: slideIn 0.25s ease;
-    }
-    @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-    .panel-header {
-      background: var(--accent); color: #000;
-      padding: 24px 24px 20px;
-      display: flex; align-items: flex-start; justify-content: space-between;
-    }
-    .panel-avatar-wrap { display: flex; align-items: center; gap: 14px; }
-    .panel-avatar {
-      width: 52px; height: 52px; background: #000;
-      border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 22px; font-weight: 700;
-      color: var(--accent); font-family: 'Rajdhani', sans-serif;
-    }
-    .panel-username { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 2px; }
-    .panel-email { font-size: 10px; opacity: 0.7; margin-top: 2px; letter-spacing: 1px; }
-    .panel-close {
-      background: none; border: none; color: #000;
-      font-size: 22px; cursor: pointer; opacity: 0.6; line-height: 1;
-    }
-    .panel-close:hover { opacity: 1; }
-    .panel-section { padding: 20px 24px; border-bottom: 1px solid var(--border); }
-    .panel-section-title { font-size: 9px; letter-spacing: 3px; color: var(--accent); margin-bottom: 14px; text-transform: uppercase; }
-    .panel-stats { display: flex; gap: 20px; }
-    .panel-stat { text-align: center; }
-    .panel-stat-num { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; }
-    .panel-stat-label { font-size: 9px; color: var(--muted); letter-spacing: 1px; }
-    .history-item {
-      padding: 14px; border: 1px solid var(--border); margin-bottom: 8px;
-      cursor: pointer; transition: all 0.2s; background: var(--bg);
-    }
-    .history-item:hover { border-color: var(--accent); background: rgba(232,255,0,0.03); }
-    .history-item-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-    .history-reg { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 3px; color: var(--accent); }
-    .history-date { font-size: 9px; color: var(--muted); letter-spacing: 1px; }
-    .history-car { font-size: 10px; color: var(--muted); letter-spacing: 1px; }
-    .history-empty { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-align: center; padding: 20px 0; }
-    .btn-logout {
-      width: 100%; background: none; border: 1px solid var(--border);
-      color: var(--muted); font-family: 'Space Mono', monospace; font-size: 10px;
-      letter-spacing: 2px; padding: 12px; cursor: pointer; transition: all 0.2s;
-      margin-top: 4px;
-    }
-    .btn-logout:hover { border-color: var(--fail); color: var(--fail); }
-
-    /* DIVIDER */
-    .section-divider { padding: 0 20px 8px; font-size: 9px; letter-spacing: 3px; color: var(--muted); border-bottom: 1px solid var(--border); margin-bottom: 0; }
-
-    /* FOOTER */
-    footer { text-align: center; padding: 24px; border-top: 1px solid var(--border); font-size: 9px; color: var(--muted); letter-spacing: 2px; }
-
-    @media (max-width: 600px) {
-      nav { padding: 0 16px; }
-      .hero { padding: 100px 16px 40px; }
-      .results { padding: 0 16px 60px; }
-      .reg-wrap { flex-direction: column; }
-      .btn-run { padding: 14px; text-align: center; }
+    body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--light);min-height:100vh}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--dark);z-index:100}
+    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px}
+    .nav-logo span{color:var(--red)}
+    .nav-auth{display:flex;gap:8px;align-items:center}
+    .nav-user{font-size:12px;color:var(--text2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .btn-sm{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;border:none;border-radius:6px;padding:7px 14px;cursor:pointer;transition:all 0.15s}
+    .btn-login{background:transparent;border:1px solid #ffffff20;color:var(--light)}
+    .btn-login:hover{border-color:var(--red);color:var(--red)}
+    .btn-signup{background:var(--red);color:white}
+    .btn-signup:hover{background:var(--red-dark)}
+    .btn-logout{background:transparent;border:1px solid #ffffff15;color:var(--text2)}
+    .btn-logout:hover{border-color:#FF6B6B;color:#FF6B6B}
+    .btn-history{background:var(--dark2);border:1px solid #ffffff15;color:var(--gold)}
+    .btn-history:hover{border-color:var(--gold)}
+    .hero{text-align:center;padding:5rem 1.5rem 3rem;max-width:700px;margin:0 auto}
+    .hero-tag{display:inline-block;background:#ffffff10;border:1px solid #ffffff15;color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem}
+    .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,80px);letter-spacing:4px;line-height:1;margin-bottom:1rem}
+    .hero h1 span{color:var(--red)}
+    .hero p{font-size:16px;color:#B4B2A9;line-height:1.6;max-width:480px;margin:0 auto 2.5rem}
+    .hero-note{font-size:12px;color:#444440;text-align:center;margin-top:10px}
+    .reg-wrap{display:flex;gap:10px;max-width:480px;margin:0 auto}
+    .reg-input{flex:1;font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:5px;text-transform:uppercase;text-align:center;background:var(--gold);color:var(--dark2);border:2px solid var(--gold-dark);border-radius:var(--radius-sm);padding:12px 16px;outline:none}
+    .reg-input::placeholder{color:#85503066}
+    .reg-btn{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:0 28px;cursor:pointer;transition:background 0.15s}
+    .reg-btn:hover{background:var(--red-dark)}
+    .app{max-width:700px;margin:0 auto;padding:2rem 1.5rem 4rem}
+    .card{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+    .card-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+    .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+    .stat{background:var(--dark);border-radius:var(--radius-sm);padding:12px}
+    .stat-label{font-size:10px;color:#444440;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px}
+    .stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--light);line-height:1;word-break:break-word}
+    .stat-val.green{color:var(--green)}.stat-val.red{color:var(--red)}.stat-val.amber{color:var(--gold)}
+    .mot-row{border-bottom:1px solid #ffffff08;cursor:pointer;border-radius:6px;transition:background 0.1s}
+    .mot-row:last-child{border-bottom:none}
+    .mot-row:hover{background:#ffffff05}
+    .mot-row-header{display:flex;align-items:center;justify-content:space-between;padding:10px 8px;font-size:13px;flex-wrap:wrap;gap:6px}
+    .mot-chevron{color:#444440;font-size:14px;transition:transform 0.2s;flex-shrink:0}
+    .mot-row.open .mot-chevron{transform:rotate(180deg)}
+    .mot-details{display:none;padding:4px 8px 12px}
+    .mot-row.open .mot-details{display:block}
+    .mot-detail-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-top:1px solid #ffffff06;font-size:12px;line-height:1.5;color:#B4B2A9}
+    .mot-detail-item:first-child{border-top:none}
+    .mot-type-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+    .dot-fail{background:#FF6B6B}.dot-advisory{background:var(--gold)}.dot-minor{background:var(--green)}
+    .mot-no-items{font-size:12px;color:#444440;padding:8px 0 4px}
+    .badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px}
+    .b-pass{background:#1E3A0A;color:var(--green)}.b-fail{background:#3A0A0A;color:#FF6B6B}.b-advisory{background:#3A2A0A;color:var(--gold)}
+    .spec-table{width:100%;border-collapse:collapse}
+    .spec-table tr{border-bottom:1px solid #ffffff08}
+    .spec-table tr:last-child{border-bottom:none}
+    .spec-table td{padding:9px 4px;font-size:13px}
+    .spec-table td:first-child{color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:0.8px;width:45%}
+    .spec-table td:last-child{font-weight:500;color:var(--light);text-align:right}
+    .co2-label{display:inline-block;background:var(--green);color:var(--dark);font-family:'Bebas Neue',sans-serif;font-size:13px;padding:2px 8px;border-radius:4px;margin-left:6px}
+    .co2-label.C{background:#CDDC39;color:#333}.co2-label.D{background:var(--gold);color:var(--dark2)}
+    .co2-label.E{background:#FF9800;color:var(--dark2)}.co2-label.F{background:#FF5722}.co2-label.G{background:#F44336}
+    .mot-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+    .mot-sum-stat{background:var(--dark);border-radius:var(--radius-sm);padding:10px;text-align:center}
+    .mot-sum-val{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1}
+    .mot-sum-label{font-size:10px;color:#444440;text-transform:uppercase;letter-spacing:0.8px;margin-top:3px}
+    .pass-bar-wrap{margin-bottom:14px}
+    .pass-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:5px}
+    .pass-bar-bg{background:#3A0A0A;border-radius:20px;height:8px;overflow:hidden}
+    .pass-bar-fill{height:100%;border-radius:20px;background:var(--green);transition:width 0.6s ease}
+    .mods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .mod-btn{background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.15s}
+    .mod-btn:hover{border-color:var(--red);background:#2A1A1A}
+    .mod-btn.selected{border:2px solid var(--red);background:#2A1A1A}
+    .mod-icon{font-size:22px;margin-bottom:6px;color:var(--gold)}
+    .mod-name{font-size:12px;font-weight:500;color:var(--light)}
+    .mod-tag{font-size:10px;color:#555552;margin-top:3px}
+    .analyze-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:15px;cursor:pointer;margin-top:10px;transition:background 0.15s}
+    .analyze-btn:hover:not(:disabled){background:var(--red-dark)}
+    .analyze-btn:disabled{background:#333330;color:#555552;cursor:default}
+    .result-card{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+    .result-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+    .delta-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #ffffff08;font-size:14px;flex-wrap:wrap;gap:4px}
+    .delta-row:last-child{border-bottom:none}
+    .delta-label{color:#555552;font-size:11px;text-transform:uppercase;letter-spacing:0.8px}
+    .delta-val{font-weight:500}
+    .change{font-size:12px;padding:2px 8px;border-radius:10px;margin-left:6px}
+    .c-up{background:#1E3A0A;color:var(--green)}.c-down{background:#3A0A0A;color:#FF6B6B}.c-neutral{background:#2A2A28;color:#888}
+    .verdict-box{background:var(--dark);border-left:3px solid var(--red);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-top:14px;font-size:13px;color:#B4B2A9;line-height:1.5}
+    .verdict-box strong{color:var(--light)}
+    .share-btn{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;border-radius:var(--radius-sm);padding:12px;cursor:pointer;margin-top:10px;transition:all 0.15s}
+    .share-btn:hover{background:var(--green);color:var(--dark)}
+    .sound-bar{display:flex;gap:3px;align-items:flex-end;height:28px}
+    .s-bar{width:5px;border-radius:2px;background:var(--red)}
+    .modal-overlay{position:fixed;inset:0;background:#000000aa;z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem}
+    .modal-overlay.hidden{display:none}
+    .modal{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:380px}
+    .modal-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:4px}
+    .modal-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem}
+    .modal-input{width:100%;background:var(--dark);border:1px solid #ffffff15;border-radius:var(--radius-sm);padding:11px 14px;color:var(--light);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px}
+    .modal-input:focus{border-color:var(--red)}
+    .modal-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:background 0.15s;margin-top:4px}
+    .modal-btn:hover{background:var(--red-dark)}
+    .modal-switch{text-align:center;margin-top:14px;font-size:13px;color:var(--text2)}
+    .modal-switch a{color:var(--gold);cursor:pointer}
+    .modal-err{background:#3A0A0A;color:#FF6B6B;border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none}
+    .modal-close{float:right;background:none;border:none;color:var(--text2);cursor:pointer;font-size:20px;margin-top:-4px}
+    .history-panel{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
+    .history-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #ffffff08;cursor:pointer;gap:10px}
+    .history-item:last-child{border-bottom:none}
+    .history-item:hover{opacity:0.8}
+    .history-reg{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;background:var(--gold);color:var(--dark2);padding:3px 10px;border-radius:4px}
+    .history-info{flex:1;font-size:13px}
+    .history-car{font-weight:600;color:var(--light)}
+    .history-date{font-size:11px;color:#444440;margin-top:2px}
+    .history-empty{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
+    .stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:700px;margin:0 auto 4rem;padding:0 1.5rem}
+    .strip-stat{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
+    .strip-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--red)}
+    .strip-label{font-size:12px;color:var(--text2);margin-top:4px}
+    .how-section{padding:4rem 1.5rem;max-width:700px;margin:0 auto}
+    .section-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin-bottom:2rem;text-align:center}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .step{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
+    .step-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--red);line-height:1}
+    .step-title{font-weight:600;font-size:14px;margin:8px 0 4px}
+    .step-desc{font-size:12px;color:var(--text2);line-height:1.5}
+    footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:#444440;font-size:12px;line-height:1.8}
+    .hidden{display:none!important}
+    .loading{text-align:center;padding:2rem;color:var(--text2);font-size:14px}
+    .error-box{background:#3A0A0A;color:#FF6B6B;border-radius:var(--radius-sm);padding:12px 16px;font-size:13px;margin-bottom:1rem}
+    @media(max-width:520px){
+      .grid4{grid-template-columns:repeat(2,1fr)}
+      .mods-grid{grid-template-columns:repeat(2,1fr)}
+      .steps,.stats-strip{grid-template-columns:1fr}
+      nav{padding:1rem}
+      .hero{padding:3rem 1.5rem 2rem}
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-logo">GARAGE<span>IQ</span></div>
-    <div class="nav-right" id="navRight">
-      <button class="btn-nav" id="btnLogin">LOG IN</button>
-      <button class="btn-nav accent" id="btnSignup">SIGN UP</button>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-label">UK CAR MOD ANALYSER</div>
-    <h1><span class="dim">WHAT DOES YOUR</span><br><span class="hi">CAR BECOME</span><br><span class="dim">WITH MODS?</span></h1>
-    <p class="hero-sub">REAL DVLA DATA · REAL MOT HISTORY · REAL MOD IMPACT</p>
-    <div class="reg-wrap">
-      <div class="reg-plate">GB &#127988;</div>
-      <input type="text" id="regInput" placeholder="AB12 CDE" maxlength="8" />
-      <button class="btn-run" id="btnRun">RUN</button>
-    </div>
-    <p class="hint">ENTER YOUR UK REGISTRATION — WE HANDLE THE REST</p>
-  </section>
-
-  <!-- LOADING -->
-  <div class="loader" id="loader">
-    <div class="loader-text" id="loaderText">QUERYING DVLA DATABASE</div>
-    <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+<nav>
+  <div class="nav-logo">GARAGE<span>IQ</span></div>
+  <div class="nav-auth" id="navAuth">
+    <button class="btn-sm btn-login" id="btnLogin">LOG IN</button>
+    <button class="btn-sm btn-signup" id="btnSignup">SIGN UP</button>
   </div>
-
-  <!-- ERROR -->
-  <div class="error-box" id="errorBox"></div>
-
-  <!-- RESULTS -->
-  <div class="results" id="results">
-
-    <!-- VEHICLE CARD -->
-    <div class="vehicle-card" id="vehicleCard">
-      <div class="vc-header">
-        <div class="vc-reg" id="vcReg">—</div>
-        <div class="vc-status" id="vcStatus">—</div>
-      </div>
-      <div class="vc-body" id="vcBody"></div>
-    </div>
-
-    <!-- SPECS CARD -->
-    <div class="specs-card" id="specsCard">
-      <div class="card-header">
-        <div class="card-title">VEHICLE SPECS</div>
-        <div id="specsStatus" style="font-size:10px;color:var(--muted);letter-spacing:1px;">LOADING...</div>
-      </div>
-      <div class="specs-grid" id="specsGrid"></div>
-    </div>
-
-    <!-- MOT HISTORY CARD -->
-    <div class="specs-card" id="motCard">
-      <div class="card-header">
-        <div class="card-title">MOT HISTORY</div>
-        <div id="motSummaryLabel" style="font-size:10px;color:var(--muted);letter-spacing:1px;"></div>
-      </div>
-      <div class="mot-summary" id="motSummary"></div>
-      <div class="mot-list" id="motList"></div>
-    </div>
-
-    <!-- MODS CARD -->
-    <div class="specs-card" id="modsCard">
-      <div class="card-header">
-        <div class="card-title">MOD ANALYSER</div>
-        <div style="font-size:10px;color:var(--muted);letter-spacing:1px;">SELECT A MOD TO ANALYSE</div>
-      </div>
-      <div class="mods-grid" id="modsGrid"></div>
-      <div class="mod-result" id="modResult">
-        <div class="mod-result-grid" id="modResultGrid"></div>
-        <div class="mr-ai" id="modResultAI"></div>
-      </div>
-    </div>
-
+  <div class="nav-auth hidden" id="navUser">
+    <span class="nav-user" id="navEmail"></span>
+    <button class="btn-sm btn-history" id="btnHistory">HISTORY</button>
+    <button class="btn-sm btn-logout" id="btnLogout">LOG OUT</button>
   </div>
+</nav>
 
-  <!-- AUTH MODAL -->
-  <div class="modal-overlay" id="authModal">
-    <div class="modal">
-      <button class="modal-close" id="authModalClose">&times;</button>
-      <div class="modal-title">GARAGEIQ</div>
-      <div class="modal-sub">SAVE YOUR HISTORY. TRACK YOUR BUILDS.</div>
-      <div class="modal-tabs">
-        <button class="modal-tab active" id="tabLogin">LOG IN</button>
-        <button class="modal-tab" id="tabSignup">SIGN UP</button>
-      </div>
+<!-- Auth modal -->
+<div class="modal-overlay hidden" id="authModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">x</button>
+    <div class="modal-title" id="modalTitle">WELCOME BACK</div>
+    <div class="modal-sub" id="modalSub">Log in to save your car history</div>
+    <div class="modal-err" id="modalErr"></div>
+    <input class="modal-input" id="authEmail" type="email" placeholder="Email address" />
+    <input class="modal-input" id="authPassword" type="password" placeholder="Password" />
+    <button class="modal-btn" id="modalSubmit">LOG IN</button>
+    <div class="modal-switch" id="modalSwitch">No account? <a id="modalSwitchLink">Sign up free</a></div>
+  </div>
+</div>
 
-      <!-- LOGIN FORM -->
-      <div id="loginForm">
-        <div class="form-group">
-          <label>EMAIL</label>
-          <input type="email" id="loginEmail" placeholder="your@email.com" />
-        </div>
-        <div class="form-group">
-          <label>PASSWORD</label>
-          <input type="password" id="loginPass" placeholder="••••••••" />
-        </div>
-        <button class="btn-submit" id="btnDoLogin">LOG IN</button>
-        <div class="auth-msg" id="loginMsg"></div>
-      </div>
+<section class="hero">
+  <div class="hero-tag">UK Cars Only &nbsp;·&nbsp; Free to Use</div>
+  <h1>KNOW YOUR<br /><span>CAR.</span><br />BUILD YOUR <span>VISION.</span></h1>
+  <p>Enter your reg. Get real DVLA data and full MOT history. Then see exactly what any modification does to your HP, sound, value and MOT risk.</p>
+  <div class="reg-wrap">
+    <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="8" />
+    <button class="reg-btn" id="runBtn">RUN</button>
+  </div>
+  <p class="hero-note">Real DVLA + DVSA data &nbsp;·&nbsp; No account needed &nbsp;·&nbsp; Free forever</p>
+</section>
 
-      <!-- SIGNUP FORM -->
-      <div id="signupForm" style="display:none;">
-        <div class="form-group">
-          <label>USERNAME</label>
-          <input type="text" id="signupUsername" placeholder="CARMANIAC99" maxlength="20" style="text-transform:uppercase;" />
-        </div>
-        <div class="form-group">
-          <label>EMAIL</label>
-          <input type="email" id="signupEmail" placeholder="your@email.com" />
-        </div>
-        <div class="form-group">
-          <label>PASSWORD</label>
-          <input type="password" id="signupPass" placeholder="min 6 characters" />
-        </div>
-        <button class="btn-submit" id="btnDoSignup">CREATE ACCOUNT</button>
-        <div class="auth-msg" id="signupMsg"></div>
-      </div>
+<div class="app">
+  <div id="errorBox" class="error-box hidden"></div>
+  <div id="loadingBox" class="loading hidden">Fetching real vehicle data...</div>
+
+  <div id="historyPanel" class="hidden">
+    <div class="history-panel">
+      <div class="card-title">Your car history</div>
+      <div id="historyList"><div class="history-empty">No cars looked up yet.</div></div>
     </div>
   </div>
 
-  <!-- PROFILE PANEL -->
-  <div class="profile-modal" id="profileModal">
-    <div class="profile-panel">
-      <div class="panel-header">
-        <div class="panel-avatar-wrap">
-          <div class="panel-avatar" id="panelAvatar">?</div>
-          <div>
-            <div class="panel-username" id="panelUsername">—</div>
-            <div class="panel-email" id="panelEmail">—</div>
-          </div>
-        </div>
-        <button class="panel-close" id="profilePanelClose">&times;</button>
+  <div id="vehicleSection" class="hidden">
+    <div class="card">
+      <div class="card-title">Vehicle info</div>
+      <div class="grid4">
+        <div class="stat"><div class="stat-label">Make</div><div class="stat-val" id="statMake">-</div></div>
+        <div class="stat"><div class="stat-label">Model</div><div class="stat-val" id="statModel">-</div></div>
+        <div class="stat"><div class="stat-label">Year</div><div class="stat-val" id="statYear">-</div></div>
+        <div class="stat"><div class="stat-label">Engine</div><div class="stat-val" id="statEngine">-</div></div>
       </div>
-      <div class="panel-section">
-        <div class="panel-section-title">STATS</div>
-        <div class="panel-stats">
-          <div class="panel-stat">
-            <div class="panel-stat-num" id="panelLookupCount">0</div>
-            <div class="panel-stat-label">LOOKUPS</div>
-          </div>
-          <div class="panel-stat">
-            <div class="panel-stat-num" id="panelCarCount">0</div>
-            <div class="panel-stat-label">UNIQUE CARS</div>
-          </div>
-        </div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-section-title">CAR HISTORY</div>
-        <div id="panelHistory"><div class="history-empty">NO CARS LOOKED UP YET</div></div>
-      </div>
-      <div class="panel-section">
-        <button class="btn-logout" id="btnLogout">LOG OUT</button>
+      <div class="grid4">
+        <div class="stat"><div class="stat-label">Colour</div><div class="stat-val" id="statColour">-</div></div>
+        <div class="stat"><div class="stat-label">Fuel</div><div class="stat-val" id="statFuel">-</div></div>
+        <div class="stat"><div class="stat-label">Tax</div><div class="stat-val" id="statTax">-</div></div>
+        <div class="stat"><div class="stat-label">MOT</div><div class="stat-val" id="statMot">-</div></div>
       </div>
     </div>
+
+    <div class="card" id="specsCard">
+      <div class="card-title">Engine &amp; performance <span id="specsLoading" style="margin-left:auto;font-size:10px;color:#444440">Loading...</span></div>
+      <table class="spec-table">
+        <tr><td>Power</td><td id="specBhp">-</td></tr>
+        <tr><td>Torque</td><td id="specTorque">-</td></tr>
+        <tr><td>0-62 mph</td><td id="specZero">-</td></tr>
+        <tr><td>Top speed</td><td id="specTopSpeed">-</td></tr>
+        <tr><td>Gearbox</td><td id="specGearbox">-</td></tr>
+        <tr><td>Cylinders</td><td id="specCylinders">-</td></tr>
+        <tr><td>Drive type</td><td id="specDrive">-</td></tr>
+        <tr><td>Fuel combined</td><td id="specCombined">-</td></tr>
+        <tr><td>CO2</td><td id="specCo2">-</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MOT history <span style="margin-left:auto;font-size:10px;color:#444440">Tap row to expand</span></div>
+      <div id="motSummary" class="hidden">
+        <div class="pass-bar-wrap">
+          <div class="pass-bar-label"><span>Pass rate</span><span id="passRatePct">-</span></div>
+          <div class="pass-bar-bg"><div class="pass-bar-fill" id="passBarFill" style="width:0%"></div></div>
+        </div>
+        <div class="mot-summary">
+          <div class="mot-sum-stat"><div class="mot-sum-val green" id="sumPassed">-</div><div class="mot-sum-label">Passed</div></div>
+          <div class="mot-sum-stat"><div class="mot-sum-val red" id="sumFailed">-</div><div class="mot-sum-label">Failed</div></div>
+          <div class="mot-sum-stat"><div class="mot-sum-val amber" id="sumAdvisories">-</div><div class="mot-sum-label">Advisories</div></div>
+          <div class="mot-sum-stat"><div class="mot-sum-val" id="sumTests">-</div><div class="mot-sum-label">Total tests</div></div>
+        </div>
+      </div>
+      <div id="motHistory"><div class="loading">Loading MOT data...</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Choose a modification</div>
+      <div class="mods-grid">
+        <div class="mod-btn" data-mod="Performance exhaust"><div class="mod-icon"><i class="ti ti-flame"></i></div><div class="mod-name">Performance exhaust</div><div class="mod-tag">Sound · HP · Value</div></div>
+        <div class="mod-btn" data-mod="ECU remap"><div class="mod-icon"><i class="ti ti-cpu"></i></div><div class="mod-name">ECU remap</div><div class="mod-tag">HP · Torque · Economy</div></div>
+        <div class="mod-btn" data-mod="Alloy wheels upgrade"><div class="mod-icon"><i class="ti ti-circle"></i></div><div class="mod-name">Alloy wheels</div><div class="mod-tag">Looks · Handling · Value</div></div>
+        <div class="mod-btn" data-mod="Lowering springs"><div class="mod-icon"><i class="ti ti-adjustments"></i></div><div class="mod-name">Lowering springs</div><div class="mod-tag">Stance · Handling</div></div>
+        <div class="mod-btn" data-mod="Cold air intake"><div class="mod-icon"><i class="ti ti-wind"></i></div><div class="mod-name">Cold air intake</div><div class="mod-tag">HP · Sound · Throttle</div></div>
+        <div class="mod-btn" data-mod="Turbo upgrade"><div class="mod-icon"><i class="ti ti-bolt"></i></div><div class="mod-name">Turbo upgrade</div><div class="mod-tag">Big HP gains</div></div>
+        <div class="mod-btn" data-mod="Coilover kit"><div class="mod-icon"><i class="ti ti-settings-2"></i></div><div class="mod-name">Coilover kit</div><div class="mod-tag">Ride · Stance · Feel</div></div>
+        <div class="mod-btn" data-mod="Big brake kit"><div class="mod-icon"><i class="ti ti-disc"></i></div><div class="mod-name">Big brake kit</div><div class="mod-tag">Safety · Looks · Feel</div></div>
+        <div class="mod-btn" data-mod="Intercooler upgrade"><div class="mod-icon"><i class="ti ti-gauge"></i></div><div class="mod-name">Intercooler upgrade</div><div class="mod-tag">Power · Heat · Reliability</div></div>
+      </div>
+      <button class="analyze-btn" id="analyzeBtn" disabled>Select a mod to analyse</button>
+    </div>
+
+    <div id="resultSection" class="hidden"></div>
   </div>
+</div>
 
-  <footer>GARAGEIQ &copy; 2025 &mdash; UK MOT DATA VIA DVSA &mdash; VEHICLE DATA VIA DVLA</footer>
+<div class="stats-strip">
+  <div class="strip-stat"><div class="strip-num">9</div><div class="strip-label">Mods available free</div></div>
+  <div class="strip-stat"><div class="strip-num">100%</div><div class="strip-label">Real DVLA &amp; DVSA data</div></div>
+  <div class="strip-stat"><div class="strip-num">FREE</div><div class="strip-label">Always free to look up</div></div>
+</div>
 
-  <script>
-    // ─── CONFIG ───────────────────────────────────────────────────────────────
-    var VERCEL = '';
-    var SUPABASE_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
-    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
+<div class="how-section">
+  <div class="section-title">HOW IT <span style="color:var(--red)">WORKS</span></div>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-title">Enter your reg</div><div class="step-desc">Real DVLA vehicle data and full MOT history from official government databases instantly.</div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Pick a mod</div><div class="step-desc">Choose from 9 mods — exhausts, remaps, coilovers, turbos and more. All free.</div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Get your report</div><div class="step-desc">AI analyses your exact car — HP gain, sound, value change, MOT risk and install cost.</div></div>
+  </div>
+</div>
 
-    var supabase = null;
-    var currentUser = null;
-    var currentProfile = null;
-    var currentVehicleData = null;
+<footer>
+  2026 GarageIQ &nbsp;·&nbsp; Built for UK car enthusiasts<br />
+  Not affiliated with DVLA or DVSA &nbsp;·&nbsp; AI mod analysis is for guidance only
+</footer>
 
-    // ─── MODS LIST ────────────────────────────────────────────────────────────
-    var MODS = [
-      { id: 'exhaust',      icon: '💨', name: 'PERFORMANCE EXHAUST',  hint: 'Cat-back / full system' },
-      { id: 'airfilter',    icon: '🌬️', name: 'INDUCTION KIT',        hint: 'Cold air / panel filter' },
-      { id: 'ecu',          icon: '💻', name: 'ECU REMAP / TUNE',      hint: 'Stage 1 / stage 2' },
-      { id: 'suspension',   icon: '🔩', name: 'COILOVER SUSPENSION',   hint: 'Height & damping adj.' },
-      { id: 'brakes',       icon: '🔴', name: 'BIG BRAKE KIT',         hint: 'Uprated discs & calipers' },
-      { id: 'turbo',        icon: '🌀', name: 'TURBO UPGRADE',         hint: 'Hybrid / larger turbo' },
-      { id: 'intercooler',  icon: '❄️', name: 'INTERCOOLER',           hint: 'Front mount upgrade' },
-      { id: 'wheels',       icon: '⚙️', name: 'ALLOY WHEELS',          hint: 'Aftermarket rims & tyres' },
-      { id: 'bodykit',      icon: '🏎️', name: 'BODY KIT',              hint: 'Splitter / diffuser / side skirts' },
-    ];
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var VERCEL = 'https://garage-iq-chi.vercel.app';
+var SUPA_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
+var sb;
+var vehicleData = {};
+var selectedMod = null;
+var currentUser = null;
+var modalMode = 'login';
 
-    // ─── INIT SUPABASE ────────────────────────────────────────────────────────
-    window.addEventListener('load', function() {
-      if (typeof window.supabase !== 'undefined') {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        supabase.auth.getSession().then(function(result) {
-          if (result.data && result.data.session) {
-            currentUser = result.data.session.user;
-            loadProfile();
-          }
-        });
-        supabase.auth.onAuthStateChange(function(event, session) {
-          if (session) {
-            currentUser = session.user;
-            loadProfile();
-          } else {
-            currentUser = null;
-            currentProfile = null;
-            updateNav();
-          }
-        });
-      }
-      buildModsGrid();
-      bindEvents();
+window.onload = function() {
+  sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+  sb.auth.onAuthStateChange(function(event, session) {
+    currentUser = session ? session.user : null;
+    if (currentUser) {
+      document.getElementById('navAuth').classList.add('hidden');
+      document.getElementById('navUser').classList.remove('hidden');
+      document.getElementById('navEmail').textContent = currentUser.email;
+    } else {
+      document.getElementById('navAuth').classList.remove('hidden');
+      document.getElementById('navUser').classList.add('hidden');
+    }
+  });
+
+  document.getElementById('runBtn').addEventListener('click', lookupVehicle);
+  document.getElementById('regInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') lookupVehicle(); });
+  document.getElementById('btnLogin').addEventListener('click', function() { openModal('login'); });
+  document.getElementById('btnSignup').addEventListener('click', function() { openModal('signup'); });
+  document.getElementById('btnLogout').addEventListener('click', signOut);
+  document.getElementById('btnHistory').addEventListener('click', toggleHistory);
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalSubmit').addEventListener('click', submitAuth);
+  document.getElementById('modalSwitchLink').addEventListener('click', switchModal);
+  document.getElementById('analyzeBtn').addEventListener('click', analyseMod);
+
+  document.querySelectorAll('.mod-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { selectMod(btn); });
+  });
+};
+
+function openModal(mode) {
+  modalMode = mode;
+  document.getElementById('authModal').classList.remove('hidden');
+  document.getElementById('modalErr').style.display = 'none';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+  if (mode === 'login') {
+    document.getElementById('modalTitle').textContent = 'WELCOME BACK';
+    document.getElementById('modalSub').textContent = 'Log in to save your car history';
+    document.getElementById('modalSubmit').textContent = 'LOG IN';
+    document.getElementById('modalSwitch').innerHTML = 'No account? <a id="modalSwitchLink" style="color:var(--gold);cursor:pointer">Sign up free</a>';
+  } else {
+    document.getElementById('modalTitle').textContent = 'CREATE ACCOUNT';
+    document.getElementById('modalSub').textContent = 'Free forever — saves all your lookups';
+    document.getElementById('modalSubmit').textContent = 'SIGN UP';
+    document.getElementById('modalSwitch').innerHTML = 'Already have one? <a id="modalSwitchLink" style="color:var(--gold);cursor:pointer">Log in</a>';
+  }
+  document.getElementById('modalSwitchLink').addEventListener('click', switchModal);
+}
+
+function closeModal() { document.getElementById('authModal').classList.add('hidden'); }
+function switchModal() { openModal(modalMode === 'login' ? 'signup' : 'login'); }
+
+function submitAuth() {
+  var email = document.getElementById('authEmail').value.trim();
+  var password = document.getElementById('authPassword').value;
+  var errEl = document.getElementById('modalErr');
+  errEl.style.display = 'none';
+  if (!email || !password) { errEl.textContent = 'Enter your email and password.'; errEl.style.display = 'block'; return; }
+  document.getElementById('modalSubmit').textContent = '...';
+  if (modalMode === 'login') {
+    sb.auth.signInWithPassword({ email: email, password: password }).then(function(res) {
+      if (res.error) { errEl.textContent = res.error.message; errEl.style.display = 'block'; document.getElementById('modalSubmit').textContent = 'LOG IN'; }
+      else { closeModal(); }
     });
+  } else {
+    sb.auth.signUp({ email: email, password: password }).then(function(res) {
+      if (res.error) { errEl.textContent = res.error.message; errEl.style.display = 'block'; document.getElementById('modalSubmit').textContent = 'SIGN UP'; }
+      else { closeModal(); alert('Account created! Check your email to confirm, then log in.'); }
+    });
+  }
+}
 
-    // ─── BIND EVENTS ─────────────────────────────────────────────────────────
-    function bindEvents() {
-      document.getElementById('btnRun').addEventListener('click', runLookup);
-      document.getElementById('regInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') runLookup();
+function signOut() {
+  sb.auth.signOut();
+  document.getElementById('historyPanel').classList.add('hidden');
+}
+
+function toggleHistory() {
+  var panel = document.getElementById('historyPanel');
+  if (!panel.classList.contains('hidden')) { panel.classList.add('hidden'); return; }
+  loadHistory();
+  panel.classList.remove('hidden');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function saveToHistory() {
+  if (!currentUser) return;
+  sb.from('car_history').insert({
+    user_id: currentUser.id,
+    reg: vehicleData.reg,
+    make: vehicleData.make,
+    model: vehicleData.model,
+    year: vehicleData.yearOfManufacture,
+    colour: vehicleData.colour || vehicleData.primaryColour,
+    fuel: vehicleData.fuelType,
+    hp: vehicleData.hp,
+    value: vehicleData.value
+  });
+}
+
+function loadHistory() {
+  var listEl = document.getElementById('historyList');
+  listEl.innerHTML = '<div class="history-empty">Loading...</div>';
+  sb.from('car_history').select('*').order('looked_up_at', { ascending: false }).limit(20).then(function(res) {
+    var data = res.data;
+    if (!data || !data.length) { listEl.innerHTML = '<div class="history-empty">No cars looked up yet.</div>'; return; }
+    var seen = {};
+    var unique = data.filter(function(r) { if (seen[r.reg]) return false; seen[r.reg] = true; return true; });
+    listEl.innerHTML = unique.map(function(r) {
+      var date = new Date(r.looked_up_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      return '<div class="history-item" data-reg="' + r.reg + '">' +
+        '<div class="history-reg">' + r.reg + '</div>' +
+        '<div class="history-info"><div class="history-car">' + (r.make || '').toUpperCase() + ' ' + (r.model || '').toUpperCase() + ' ' + (r.year || '') + '</div>' +
+        '<div class="history-date">' + (r.colour || '') + ' · ' + (r.fuel || '') + ' · ' + date + '</div></div>' +
+        '<i class="ti ti-chevron-right" style="color:#444440"></i></div>';
+    }).join('');
+    listEl.querySelectorAll('.history-item').forEach(function(item) {
+      item.addEventListener('click', function() {
+        document.getElementById('regInput').value = item.dataset.reg;
+        document.getElementById('historyPanel').classList.add('hidden');
+        lookupVehicle();
       });
-      document.getElementById('btnLogin').addEventListener('click', function() { openAuth('login'); });
-      document.getElementById('btnSignup').addEventListener('click', function() { openAuth('signup'); });
-      document.getElementById('authModalClose').addEventListener('click', closeAuth);
-      document.getElementById('authModal').addEventListener('click', function(e) {
-        if (e.target === this) closeAuth();
-      });
-      document.getElementById('tabLogin').addEventListener('click', function() { switchTab('login'); });
-      document.getElementById('tabSignup').addEventListener('click', function() { switchTab('signup'); });
-      document.getElementById('btnDoLogin').addEventListener('click', doLogin);
-      document.getElementById('btnDoSignup').addEventListener('click', doSignup);
-      document.getElementById('profilePanelClose').addEventListener('click', closeProfile);
-      document.getElementById('profileModal').addEventListener('click', function(e) {
-        if (e.target === this) closeProfile();
-      });
-      document.getElementById('btnLogout').addEventListener('click', doLogout);
-    }
+    });
+  });
+}
 
-    // ─── NAV UPDATE ───────────────────────────────────────────────────────────
-    function updateNav() {
-      var navRight = document.getElementById('navRight');
-      if (currentUser && currentProfile) {
-        var initial = (currentProfile.username || currentUser.email || '?').charAt(0).toUpperCase();
-        navRight.innerHTML =
-          '<button class="profile-btn" id="btnProfile">' +
-          '<div class="profile-avatar">' + initial + '</div>' +
-          (currentProfile.username || 'PROFILE').toUpperCase() +
-          '</button>';
-        document.getElementById('btnProfile').addEventListener('click', openProfile);
-      } else {
-        navRight.innerHTML =
-          '<button class="btn-nav" id="btnLogin">LOG IN</button>' +
-          '<button class="btn-nav accent" id="btnSignup">SIGN UP</button>';
-        document.getElementById('btnLogin').addEventListener('click', function() { openAuth('login'); });
-        document.getElementById('btnSignup').addEventListener('click', function() { openAuth('signup'); });
-      }
-    }
+function estimateHp(d) {
+  var cc = parseInt(d.engineCapacity) || 1600;
+  if (cc <= 999) return 65; if (cc <= 1199) return 85; if (cc <= 1399) return 110;
+  if (cc <= 1599) return 130; if (cc <= 1999) return 160; if (cc <= 2499) return 220;
+  if (cc <= 2999) return 280; return 340;
+}
+function estimateTorque(d) { return Math.round(estimateHp(d) * 1.5); }
+function estimateValue(d) {
+  var yr = parseInt(d.yearOfManufacture) || 2015;
+  return Math.max(1500, Math.round(15000 - (2026 - yr) * 900));
+}
 
-    // ─── AUTH ─────────────────────────────────────────────────────────────────
-    function openAuth(tab) {
-      document.getElementById('authModal').classList.add('active');
-      switchTab(tab || 'login');
-    }
-    function closeAuth() {
-      document.getElementById('authModal').classList.remove('active');
-      document.getElementById('loginMsg').textContent = '';
-      document.getElementById('signupMsg').textContent = '';
-    }
-    function switchTab(tab) {
-      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
-      document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
-      document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
-      document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
-    }
+function lookupVehicle() {
+  var reg = document.getElementById('regInput').value.replace(/\s/g, '').toUpperCase();
+  if (!reg || reg.length < 2) return;
+  document.getElementById('errorBox').classList.add('hidden');
+  document.getElementById('loadingBox').classList.remove('hidden');
+  document.getElementById('vehicleSection').classList.add('hidden');
+  document.getElementById('resultSection').classList.add('hidden');
+  selectedMod = null;
+  document.getElementById('analyzeBtn').disabled = true;
+  document.getElementById('analyzeBtn').textContent = 'Select a mod to analyse';
+  document.querySelectorAll('.mod-btn').forEach(function(b) { b.classList.remove('selected'); });
 
-    function doLogin() {
-      if (!supabase) return;
-      var email = document.getElementById('loginEmail').value.trim();
-      var pass = document.getElementById('loginPass').value;
-      var msg = document.getElementById('loginMsg');
-      var btn = document.getElementById('btnDoLogin');
-      if (!email || !pass) { showMsg(msg, 'ENTER EMAIL AND PASSWORD', false); return; }
-      btn.disabled = true;
-      btn.textContent = 'LOGGING IN...';
-      supabase.auth.signInWithPassword({ email: email, password: pass }).then(function(result) {
-        btn.disabled = false;
-        btn.textContent = 'LOG IN';
-        if (result.error) {
-          showMsg(msg, result.error.message.toUpperCase(), false);
-        } else {
-          currentUser = result.data.user;
-          loadProfile();
-          closeAuth();
-        }
-      });
-    }
+  fetch(VERCEL + '/api/vehicle', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ registrationNumber: reg })
+  }).then(function(r) {
+    if (!r.ok) throw new Error('DVLA error');
+    return r.json();
+  }).then(function(d) {
+    vehicleData = Object.assign({}, d, { reg: reg, hp: estimateHp(d), torque: estimateTorque(d), value: estimateValue(d) });
+    renderVehicle(vehicleData);
+    saveToHistory();
+    loadMot(reg);
+    loadSpecs();
+    document.getElementById('loadingBox').classList.add('hidden');
+    document.getElementById('vehicleSection').classList.remove('hidden');
+    document.getElementById('vehicleSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }).catch(function() {
+    document.getElementById('errorBox').textContent = 'Could not fetch vehicle data — check the reg and try again.';
+    document.getElementById('errorBox').classList.remove('hidden');
+    document.getElementById('loadingBox').classList.add('hidden');
+  });
+}
 
-    function doSignup() {
-      if (!supabase) return;
-      var username = document.getElementById('signupUsername').value.trim().toUpperCase();
-      var email = document.getElementById('signupEmail').value.trim();
-      var pass = document.getElementById('signupPass').value;
-      var msg = document.getElementById('signupMsg');
-      var btn = document.getElementById('btnDoSignup');
-      if (!username || !email || !pass) { showMsg(msg, 'ALL FIELDS REQUIRED', false); return; }
-      if (pass.length < 6) { showMsg(msg, 'PASSWORD MIN 6 CHARACTERS', false); return; }
-      btn.disabled = true;
-      btn.textContent = 'CREATING...';
-      supabase.auth.signUp({ email: email, password: pass }).then(function(result) {
-        btn.disabled = false;
-        btn.textContent = 'CREATE ACCOUNT';
-        if (result.error) {
-          showMsg(msg, result.error.message.toUpperCase(), false);
-        } else {
-          currentUser = result.data.user;
-          // Create profile
-          if (currentUser) {
-            supabase.from('profiles').insert([{ id: currentUser.id, username: username }]).then(function() {
-              loadProfile();
-              closeAuth();
-            });
-          } else {
-            showMsg(msg, 'CHECK EMAIL TO CONFIRM ACCOUNT', true);
-          }
-        }
-      });
-    }
+function renderVehicle(d) {
+  document.getElementById('statMake').textContent = (d.make || '-').toUpperCase();
+  document.getElementById('statModel').textContent = (d.model || '-').toUpperCase();
+  document.getElementById('statYear').textContent = d.yearOfManufacture || '-';
+  document.getElementById('statEngine').textContent = d.engineCapacity ? d.engineCapacity + 'cc' : '-';
+  document.getElementById('statColour').textContent = (d.colour || d.primaryColour || '-').toUpperCase();
+  document.getElementById('statFuel').textContent = (d.fuelType || '-').toUpperCase();
+  var taxEl = document.getElementById('statTax');
+  taxEl.textContent = (d.taxStatus || '-').toUpperCase();
+  taxEl.className = 'stat-val ' + ((d.taxStatus || '').toLowerCase().includes('taxed') ? 'green' : 'red');
+  var motEl = document.getElementById('statMot');
+  var motOk = (d.motStatus || '').toLowerCase().includes('valid');
+  motEl.textContent = motOk ? 'VALID' : (d.motStatus || '-').toUpperCase();
+  motEl.className = 'stat-val ' + (motOk ? 'green' : 'red');
+}
 
-    function doLogout() {
-      if (!supabase) return;
-      supabase.auth.signOut().then(function() {
-        currentUser = null;
-        currentProfile = null;
-        closeProfile();
-        updateNav();
-      });
-    }
+function loadSpecs() {
+  document.getElementById('specsLoading').textContent = 'Loading...';
+  fetch(VERCEL + '/api/specs', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ make: vehicleData.make, model: vehicleData.model, year: vehicleData.yearOfManufacture, cc: vehicleData.engineCapacity, fuel: vehicleData.fuelType })
+  }).then(function(r) { return r.json(); }).then(function(s) {
+    document.getElementById('specBhp').textContent = s.bhp ? s.bhp + ' BHP' : '-';
+    document.getElementById('specTorque').textContent = s.torqueNm ? s.torqueNm + ' Nm @ ' + s.torqueRpm + ' rpm' : '-';
+    document.getElementById('specZero').textContent = s.zeroToSixty ? s.zeroToSixty + ' sec' : '-';
+    document.getElementById('specTopSpeed').textContent = s.topSpeedMph ? s.topSpeedMph + ' mph' : '-';
+    document.getElementById('specGearbox').textContent = s.gearbox || '-';
+    document.getElementById('specCylinders').textContent = s.cylinders || '-';
+    document.getElementById('specDrive').textContent = s.driveType || '-';
+    document.getElementById('specCombined').textContent = s.consumptionCombined ? s.consumptionCombined + ' mpg' : '-';
+    var co2El = document.getElementById('specCo2');
+    co2El.innerHTML = s.co2gkm ? s.co2gkm + ' g/km <span class="co2-label ' + (s.co2Label || '') + '">' + (s.co2Label || '') + '</span>' : '-';
+    if (s.bhp) vehicleData.hp = parseInt(s.bhp);
+    if (s.torqueNm) vehicleData.torque = parseInt(s.torqueNm);
+    document.getElementById('specsLoading').textContent = '';
+  }).catch(function() { document.getElementById('specsLoading').textContent = 'Unavailable'; });
+}
 
-    function showMsg(el, text, ok) {
-      el.textContent = text;
-      el.className = 'auth-msg ' + (ok ? 'ok' : 'err');
-    }
+function loadMot(reg) {
+  fetch(VERCEL + '/api/mot?reg=' + reg).then(function(r) {
+    if (!r.ok) throw new Error('MOT error');
+    return r.json();
+  }).then(function(raw) {
+    renderRealMot(raw);
+  }).catch(function() { renderDemoMot(); });
+}
 
-    // ─── PROFILE ──────────────────────────────────────────────────────────────
-    function loadProfile() {
-      if (!supabase || !currentUser) return;
-      supabase.from('profiles').select('*').eq('id', currentUser.id).single().then(function(result) {
-        if (result.data) {
-          currentProfile = result.data;
-        } else {
-          currentProfile = { username: currentUser.email.split('@')[0].toUpperCase() };
-        }
-        updateNav();
-      });
-    }
+function toggleMotRow(row) { row.classList.toggle('open'); }
 
-    function openProfile() {
-      if (!currentUser) { openAuth('login'); return; }
-      var username = (currentProfile && currentProfile.username) ? currentProfile.username : 'USER';
-      var initial = username.charAt(0).toUpperCase();
-      document.getElementById('panelAvatar').textContent = initial;
-      document.getElementById('panelUsername').textContent = username;
-      document.getElementById('panelEmail').textContent = currentUser.email || '';
-      loadProfileHistory();
-      document.getElementById('profileModal').classList.add('active');
-    }
+function renderRealMot(raw) {
+  var tests = [];
+  if (raw && raw.motTests) tests = raw.motTests;
+  else if (Array.isArray(raw) && raw[0] && raw[0].motTests) tests = raw[0].motTests;
+  else if (Array.isArray(raw) && raw[0] && raw[0].completedDate) tests = raw;
+  if (!tests.length) { renderDemoMot(); return; }
 
-    function closeProfile() {
-      document.getElementById('profileModal').classList.remove('active');
-    }
+  var totalTests = tests.length;
+  var totalPassed = tests.filter(function(t) { return (t.testResult || '').toUpperCase() === 'PASSED'; }).length;
+  var totalFailed = totalTests - totalPassed;
+  var totalAdvisories = tests.reduce(function(sum, t) { return sum + (t.defects || []).filter(function(d) { return d.type === 'ADVISORY'; }).length; }, 0);
+  var passRate = Math.round((totalPassed / totalTests) * 100);
+  document.getElementById('sumPassed').textContent = totalPassed;
+  document.getElementById('sumFailed').textContent = totalFailed;
+  document.getElementById('sumAdvisories').textContent = totalAdvisories;
+  document.getElementById('sumTests').textContent = totalTests;
+  document.getElementById('passRatePct').textContent = passRate + '%';
+  document.getElementById('passBarFill').style.width = passRate + '%';
+  document.getElementById('passBarFill').style.background = passRate >= 80 ? 'var(--green)' : passRate >= 60 ? 'var(--gold)' : '#FF6B6B';
+  document.getElementById('motSummary').classList.remove('hidden');
 
-    function loadProfileHistory() {
-      if (!supabase || !currentUser) return;
-      supabase.from('car_history')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .order('looked_up_at', { ascending: false })
-        .limit(50)
-        .then(function(result) {
-          var rows = result.data || [];
-          var container = document.getElementById('panelHistory');
-          document.getElementById('panelLookupCount').textContent = rows.length;
-          var unique = {};
-          rows.forEach(function(r) { unique[r.reg] = true; });
-          document.getElementById('panelCarCount').textContent = Object.keys(unique).length;
+  document.getElementById('motHistory').innerHTML = tests.slice(0, 10).map(function(t) {
+    var passed = (t.testResult || '').toUpperCase() === 'PASSED';
+    var defects = t.defects || [];
+    var fails = defects.filter(function(d) { return d.type === 'DANGEROUS' || d.type === 'MAJOR'; });
+    var minors = defects.filter(function(d) { return d.type === 'MINOR'; });
+    var advisories = defects.filter(function(d) { return d.type === 'ADVISORY'; });
+    var detailsHtml = defects.length ? (
+      fails.map(function(d) { return '<div class="mot-detail-item"><div class="mot-type-dot dot-fail"></div><div><span style="color:#FF6B6B;font-weight:600;font-size:11px">' + d.type + ' - </span>' + (d.text || '-') + '</div></div>'; }).join('') +
+      minors.map(function(d) { return '<div class="mot-detail-item"><div class="mot-type-dot dot-minor"></div><div><span style="color:var(--green);font-weight:600;font-size:11px">MINOR - </span>' + (d.text || '-') + '</div></div>'; }).join('') +
+      advisories.map(function(d) { return '<div class="mot-detail-item"><div class="mot-type-dot dot-advisory"></div><div><span style="color:var(--gold);font-weight:600;font-size:11px">ADVISORY - </span>' + (d.text || '-') + '</div></div>'; }).join('')
+    ) : '<div class="mot-no-items">No failures or advisories recorded.</div>';
+    var dateStr = t.completedDate || '-';
+    try { if (dateStr.includes('T')) dateStr = new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); } catch(e) {}
+    var miles = t.odometerValue ? Number(t.odometerValue).toLocaleString() + ' miles' : '-';
+    return '<div class="mot-row" onclick="toggleMotRow(this)">' +
+      '<div class="mot-row-header">' +
+      '<span style="color:#555552;font-size:12px">' + dateStr + '</span>' +
+      '<span>' + miles + '</span>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
+      (fails.length ? '<span class="badge b-fail">' + fails.length + ' failure</span>' : '') +
+      (minors.length ? '<span class="badge b-advisory">' + minors.length + ' minor</span>' : '') +
+      (advisories.length ? '<span class="badge b-advisory">' + advisories.length + ' advisory</span>' : '') +
+      '<span class="badge ' + (passed ? 'b-pass' : 'b-fail') + '">' + (passed ? 'PASS' : 'FAIL') + '</span>' +
+      '</div><i class="ti ti-chevron-down mot-chevron"></i></div>' +
+      '<div class="mot-details">' + detailsHtml + '</div></div>';
+  }).join('');
+}
 
-          if (!rows.length) {
-            container.innerHTML = '<div class="history-empty">NO CARS LOOKED UP YET</div>';
-            return;
-          }
+function renderDemoMot() {
+  var h = [
+    { date: '14 Nov 2024', passed: true, mi: '62,440', defects: [{ type: 'ADVISORY', text: 'Tyre worn close to legal limit on nearside rear' }, { type: 'ADVISORY', text: 'Rear brake pads showing wear' }] },
+    { date: '12 Nov 2023', passed: true, mi: '49,210', defects: [] },
+    { date: '08 Nov 2022', passed: true, mi: '37,880', defects: [{ type: 'ADVISORY', text: 'Front suspension arm bush deteriorating' }] },
+    { date: '03 Dec 2021', passed: false, mi: '28,550', defects: [{ type: 'MAJOR', text: 'Nearside front headlamp aim too low (1.3.1a)' }, { type: 'ADVISORY', text: 'Oil seeping from rocker cover gasket' }] }
+  ];
+  document.getElementById('motHistory').innerHTML = h.map(function(m) {
+    var fails = m.defects.filter(function(d) { return d.type === 'MAJOR' || d.type === 'DANGEROUS'; });
+    var advs = m.defects.filter(function(d) { return d.type === 'ADVISORY'; });
+    var detailsHtml = m.defects.length ? m.defects.map(function(d) {
+      var isFail = d.type === 'MAJOR' || d.type === 'DANGEROUS';
+      return '<div class="mot-detail-item"><div class="mot-type-dot ' + (isFail ? 'dot-fail' : 'dot-advisory') + '"></div><div><span style="color:' + (isFail ? '#FF6B6B' : 'var(--gold)') + ';font-weight:600;font-size:11px">' + (isFail ? 'FAIL' : 'ADVISORY') + ' - </span>' + d.text + '</div></div>';
+    }).join('') : '<div class="mot-no-items">No failures or advisories.</div>';
+    return '<div class="mot-row" onclick="toggleMotRow(this)">' +
+      '<div class="mot-row-header"><span style="color:#555552;font-size:12px">' + m.date + '</span><span>' + m.mi + ' miles</span>' +
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' +
+      (fails.length ? '<span class="badge b-fail">' + fails.length + ' failure</span>' : '') +
+      (advs.length ? '<span class="badge b-advisory">' + advs.length + ' advisory</span>' : '') +
+      '<span class="badge ' + (m.passed ? 'b-pass' : 'b-fail') + '">' + (m.passed ? 'PASS' : 'FAIL') + '</span>' +
+      '</div><i class="ti ti-chevron-down mot-chevron"></i></div>' +
+      '<div class="mot-details">' + detailsHtml + '</div></div>';
+  }).join('');
+}
 
-          var html = '';
-          rows.forEach(function(row) {
-            var date = new Date(row.looked_up_at);
-            var dateStr = date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-            var carDesc = [row.make, row.model, row.year].filter(Boolean).join(' ').toUpperCase() || 'UNKNOWN VEHICLE';
-            html += '<div class="history-item" data-reg="' + row.reg + '">' +
-              '<div class="history-item-top">' +
-              '<div class="history-reg">' + row.reg + '</div>' +
-              '<div class="history-date">' + dateStr + '</div>' +
-              '</div>' +
-              '<div class="history-car">' + carDesc + '</div>' +
-              '</div>';
-          });
-          container.innerHTML = html;
+function selectMod(el) {
+  document.querySelectorAll('.mod-btn').forEach(function(b) { b.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedMod = el.dataset.mod;
+  document.getElementById('analyzeBtn').disabled = false;
+  document.getElementById('analyzeBtn').textContent = 'Analyse: ' + selectedMod;
+}
 
-          container.querySelectorAll('.history-item').forEach(function(item) {
-            item.addEventListener('click', function() {
-              var reg = this.getAttribute('data-reg');
-              document.getElementById('regInput').value = reg;
-              closeProfile();
-              runLookup();
-            });
-          });
-        });
-    }
+function analyseMod() {
+  if (!selectedMod) return;
+  var btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.textContent = 'Analysing...';
+  fetch(VERCEL + '/api/mod', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mod: selectedMod, make: vehicleData.make, model: vehicleData.model, year: vehicleData.yearOfManufacture, cc: parseInt(vehicleData.engineCapacity) || 1600, hp: vehicleData.hp, torque: vehicleData.torque, value: vehicleData.value, fuel: (vehicleData.fuelType || 'PETROL').toUpperCase() })
+  }).then(function(r) { return r.json(); }).then(function(data) {
+    renderResult(data);
+    btn.disabled = false;
+    btn.textContent = 'Analyse: ' + selectedMod;
+  }).catch(function() {
+    document.getElementById('resultSection').innerHTML = '<div class="error-box">Analysis failed — please try again.</div>';
+    document.getElementById('resultSection').classList.remove('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Analyse: ' + selectedMod;
+  });
+}
 
-    // ─── MAIN LOOKUP ──────────────────────────────────────────────────────────
-    function runLookup() {
-      var reg = document.getElementById('regInput').value.trim().replace(/\s/g, '').toUpperCase();
-      if (!reg) { showError('ENTER A REGISTRATION NUMBER'); return; }
+function renderResult(r) {
+  var rating = parseInt(r.soundRating) || 5;
+  var bars = '';
+  for (var i = 0; i < 8; i++) { bars += '<div class="s-bar" style="height:' + (i < rating ? Math.round(10 + Math.random() * 16) : 4) + 'px;opacity:' + (i < rating ? 1 : 0.15) + '"></div>'; }
+  var motCol = r.motRisk === 'Low' ? 'green' : r.motRisk === 'Medium' ? 'amber' : 'red';
+  var failStr = (r.failureRisk || '');
+  var failCol = failStr.startsWith('Low') ? 'green' : failStr.startsWith('Med') ? 'amber' : 'red';
+  var hpNum = parseInt(r.hpGain) || 0;
+  var tqNum = parseInt(r.torqueGain) || 0;
+  var dir = r.valueChangeDirection || (r.valueChange && r.valueChange.startsWith('-') ? 'down' : 'up');
+  var hpClass = hpNum > 0 ? 'c-up' : hpNum < 0 ? 'c-down' : 'c-neutral';
+  var tqClass = tqNum > 0 ? 'c-up' : tqNum < 0 ? 'c-down' : 'c-neutral';
+  var valClass = dir === 'up' ? 'c-up' : dir === 'down' ? 'c-down' : 'c-neutral';
+  document.getElementById('resultSection').innerHTML =
+    '<div class="result-card">' +
+    '<div class="result-title"><span>' + selectedMod.toUpperCase() + '</span><div class="sound-bar">' + bars + '</div></div>' +
+    '<div class="delta-row"><span class="delta-label">Power</span><span class="delta-val">' + (hpNum !== 0 ? r.newHp + ' HP' : 'No change') + ' <span class="change ' + hpClass + '">' + (hpNum !== 0 ? r.hpGain + ' HP' : 'No change') + '</span></span></div>' +
+    '<div class="delta-row"><span class="delta-label">Torque</span><span class="delta-val">' + (tqNum !== 0 ? r.newTorque + ' Nm' : 'No change') + ' <span class="change ' + tqClass + '">' + (tqNum !== 0 ? r.torqueGain + ' Nm' : 'No change') + '</span></span></div>' +
+    '<div class="delta-row"><span class="delta-label">Sound</span><span class="delta-val">' + r.soundRating + ' <span style="font-size:12px;font-weight:400;color:#666662">- ' + r.soundDesc + '</span></span></div>' +
+    '<div class="delta-row"><span class="delta-label">Retail value</span><span class="delta-val">£' + r.newValue + ' <span class="change ' + valClass + '">' + r.valueChange + '</span></span></div>' +
+    '<div class="delta-row"><span class="delta-label">Install cost</span><span class="delta-val">' + r.installCost + '</span></div>' +
+    '<div class="delta-row"><span class="delta-label">Insurance</span><span class="delta-val" style="font-size:12px;max-width:55%;text-align:right">' + r.insuranceImpact + '</span></div>' +
+    '<div class="delta-row"><span class="delta-label">MOT risk</span><span class="delta-val"><span class="stat-val ' + motCol + '" style="font-size:15px">' + r.motRisk + '</span> <span style="font-size:11px;color:#555552;margin-left:6px">' + r.motNote + '</span></span></div>' +
+    '<div class="delta-row"><span class="delta-label">Reliability</span><span class="delta-val"><span class="stat-val ' + failCol + '" style="font-size:15px">' + failStr.split('-')[0].trim() + '</span><span style="font-size:11px;color:#555552;margin-left:6px">' + (failStr.includes('-') ? failStr.split('-').slice(1).join('-').trim() : '') + '</span></span></div>' +
+    '<div class="verdict-box"><strong>Verdict:</strong> ' + r.verdict + '</div>' +
+    '<button class="share-btn" id="shareBtn">Share this result</button></div>';
+  document.getElementById('resultSection').classList.remove('hidden');
+  document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('shareBtn').addEventListener('click', shareResult);
+}
 
-      showError('');
-      document.getElementById('results').classList.remove('active');
-      document.getElementById('loader').classList.add('active');
-      setLoaderText('QUERYING DVLA DATABASE');
-
-      fetch(VERCEL + '/api/mot?reg=' + reg)
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          if (data.error) { throw new Error(data.error); }
-          setLoaderText('PROCESSING MOT RECORDS');
-          renderResults(reg, data);
-          document.getElementById('loader').classList.remove('active');
-          document.getElementById('results').classList.add('active');
-
-          // Save to history
-          if (currentUser && Array.isArray(data) && data[0]) {
-            var v = data[0];
-            supabase.from('car_history').insert([{
-              user_id: currentUser.id,
-              reg: reg,
-              make: v.make || '',
-              model: v.model || '',
-              year: v.manufactureYear ? String(v.manufactureYear) : '',
-              colour: v.primaryColour || '',
-              fuel: v.fuelType || ''
-            }]).then(function() {});
-          }
-        })
-        .catch(function(err) {
-          document.getElementById('loader').classList.remove('active');
-          showError('ERROR: ' + (err.message || 'COULD NOT FETCH DATA').toUpperCase());
-        });
-    }
-
-    function setLoaderText(text) {
-      document.getElementById('loaderText').textContent = text;
-    }
-
-    function showError(msg) {
-      var el = document.getElementById('errorBox');
-      if (msg) {
-        el.textContent = msg;
-        el.classList.add('active');
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      } else {
-        el.classList.remove('active');
-      }
-    }
-
-    // ─── RENDER RESULTS ───────────────────────────────────────────────────────
-    function renderResults(reg, data) {
-      var raw = Array.isArray(data) ? data[0] : data;
-      currentVehicleData = raw;
-
-      // Vehicle card
-      document.getElementById('vcReg').textContent = reg;
-      var motExpiry = raw.motExpiryDate || raw.motTestExpiryDate || '';
-      document.getElementById('vcStatus').textContent = motExpiry ? 'MOT: ' + motExpiry : 'CHECK MOT';
-      var vcBody = document.getElementById('vcBody');
-      vcBody.innerHTML = '';
-      var fields = [
-        { label: 'MAKE', val: raw.make },
-        { label: 'MODEL', val: raw.model },
-        { label: 'YEAR', val: raw.manufactureYear || raw.yearOfManufacture },
-        { label: 'COLOUR', val: raw.primaryColour || raw.colour },
-        { label: 'FUEL', val: raw.fuelType },
-        { label: 'ENGINE', val: raw.engineSize ? raw.engineSize + 'cc' : null },
-        { label: 'TRANSMISSION', val: raw.transmission },
-        { label: 'DOORS', val: raw.numberOfDoors },
-      ];
-      fields.forEach(function(f) {
-        if (!f.val) return;
-        vcBody.innerHTML += '<div class="vc-field"><label>' + f.label + '</label><span>' + String(f.val).toUpperCase() + '</span></div>';
-      });
-
-      // Specs card
-      fetchSpecs(raw);
-
-      // MOT history
-      renderMOT(raw);
-
-      // Mods
-      document.getElementById('modResult').classList.remove('active');
-      document.querySelectorAll('.mod-btn').forEach(function(b) { b.classList.remove('active'); });
-    }
-
-    // ─── SPECS ────────────────────────────────────────────────────────────────
-    function fetchSpecs(raw) {
-      var specsGrid = document.getElementById('specsGrid');
-      var specsStatus = document.getElementById('specsStatus');
-      specsGrid.innerHTML = '';
-      specsStatus.textContent = 'LOADING...';
-
-      var makeModel = (raw.make || '') + ' ' + (raw.model || '');
-      var year = raw.manufactureYear || raw.yearOfManufacture || '';
-      var engine = raw.engineSize ? (raw.engineSize / 1000).toFixed(1) + 'L' : '';
-      var fuel = raw.fuelType || '';
-
-      fetch(VERCEL + '/api/specs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ make: raw.make, model: raw.model, year: year, engine: engine, fuel: fuel })
-      })
-        .then(function(r) { return r.json(); })
-        .then(function(s) {
-          specsStatus.textContent = 'AI SOURCED';
-          var items = [
-            { label: 'BHP', val: s.bhp, unit: 'bhp' },
-            { label: 'TORQUE', val: s.torque, unit: 'Nm' },
-            { label: '0-62 MPH', val: s.zero_to_62, unit: 's' },
-            { label: 'TOP SPEED', val: s.top_speed, unit: 'mph' },
-            { label: 'CYLINDERS', val: s.cylinders, unit: '' },
-            { label: 'GEARBOX', val: s.gearbox, unit: '' },
-            { label: 'DRIVE', val: s.drive_type, unit: '' },
-            { label: 'CONSUMPTION', val: s.mpg, unit: 'mpg' },
-            { label: 'CO2', val: s.co2, unit: 'g/km' },
-            { label: 'VALUE ~', val: s.value, unit: '' },
-          ];
-          var html = '';
-          items.forEach(function(item) {
-            if (!item.val) return;
-            html += '<div class="spec-item"><label>' + item.label + '</label><span>' + item.val + '</span>';
-            if (item.unit) html += '<small>' + item.unit + '</small>';
-            if (item.label === 'CO2' && s.co2_band) {
-              html += '<div><span class="co2-badge co2-' + s.co2_band.toLowerCase() + '">' + s.co2_band + ' RATED</span></div>';
-            }
-            html += '</div>';
-          });
-          specsGrid.innerHTML = html || '<div style="color:var(--muted);font-size:11px;padding:4px;">SPECS NOT AVAILABLE</div>';
-        })
-        .catch(function() {
-          specsStatus.textContent = 'UNAVAILABLE';
-          specsGrid.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:4px;">COULD NOT LOAD SPECS</div>';
-        });
-    }
-
-    // ─── MOT HISTORY ─────────────────────────────────────────────────────────
-    function renderMOT(raw) {
-      var tests = (raw.motTests || raw.motTestHistory || []);
-      var motList = document.getElementById('motList');
-      var motSummary = document.getElementById('motSummary');
-      var motSummaryLabel = document.getElementById('motSummaryLabel');
-      motList.innerHTML = '';
-      motSummary.innerHTML = '';
-
-      if (!tests || !tests.length) {
-        motList.innerHTML = '<div style="padding:20px;color:var(--muted);font-size:11px;letter-spacing:1px;">NO MOT RECORDS FOUND</div>';
-        motSummaryLabel.textContent = '';
-        return;
-      }
-
-      var passed = tests.filter(function(t) { return (t.testResult || '').toUpperCase() === 'PASSED'; }).length;
-      var failed = tests.filter(function(t) { return (t.testResult || '').toUpperCase() === 'FAILED'; }).length;
-      var totalAdvisories = 0;
-      tests.forEach(function(t) {
-        (t.defects || []).forEach(function(d) {
-          if ((d.type || '').toUpperCase() === 'ADVISORY') totalAdvisories++;
-        });
-      });
-      var rate = tests.length > 0 ? Math.round((passed / tests.length) * 100) : 0;
-
-      motSummaryLabel.textContent = tests.length + ' TESTS';
-      motSummary.innerHTML =
-        '<div class="mot-stat"><div class="mot-stat-num" style="color:var(--pass)">' + passed + '</div><div class="mot-stat-label">PASSED</div></div>' +
-        '<div class="mot-stat"><div class="mot-stat-num" style="color:var(--fail)">' + failed + '</div><div class="mot-stat-label">FAILED</div></div>' +
-        '<div class="mot-stat"><div class="mot-stat-num" style="color:var(--advisory)">' + totalAdvisories + '</div><div class="mot-stat-label">ADVISORIES</div></div>' +
-        '<div class="pass-rate-wrap">' +
-          '<div class="pass-rate-label"><span>PASS RATE</span><span>' + rate + '%</span></div>' +
-          '<div class="pass-rate-bar"><div class="pass-rate-fill" id="passRateFill" style="width:0%"></div></div>' +
-        '</div>';
-
-      setTimeout(function() {
-        var fill = document.getElementById('passRateFill');
-        if (fill) fill.style.width = rate + '%';
-      }, 100);
-
-      tests.forEach(function(test, idx) {
-        var passed = (test.testResult || '').toUpperCase() === 'PASSED';
-        var defects = test.defects || [];
-        var dateStr = test.completedDate || test.testDate || '';
-        var mileage = test.odometerValue ? parseInt(test.odometerValue).toLocaleString() + ' ' + (test.odometerUnit || 'mi') : '—';
-
-        var item = document.createElement('div');
-        item.className = 'mot-item';
-
-        // Build defects HTML
-        var defectsHTML = '';
-        if (defects.length > 0) {
-          var byType = {};
-          defects.forEach(function(d) {
-            var t = (d.type || 'OTHER').toUpperCase();
-            if (!byType[t]) byType[t] = [];
-            byType[t].push(d.text || d.description || 'No description');
-          });
-          var typeOrder = ['DANGEROUS', 'MAJOR', 'MINOR', 'ADVISORY'];
-          typeOrder.forEach(function(type) {
-            if (!byType[type]) return;
-            defectsHTML += '<div class="defect-section">' +
-              '<span class="defect-type type-' + type + '">' + type + '</span>';
-            byType[type].forEach(function(txt) {
-              defectsHTML += '<div class="defect-item">' + txt + '</div>';
-            });
-            defectsHTML += '</div>';
-          });
-        } else {
-          defectsHTML = '<div class="no-defects">' + (passed ? '✓ NO DEFECTS OR ADVISORIES' : 'NO DEFECT DETAILS RECORDED') + '</div>';
-        }
-
-        item.innerHTML =
-          '<div class="mot-item-header">' +
-          '<span class="mot-badge ' + (passed ? 'badge-pass' : 'badge-fail') + '">' + (passed ? 'PASS' : 'FAIL') + '</span>' +
-          '<span class="mot-date">' + dateStr + '</span>' +
-          '<span class="mot-mileage">' + mileage + '</span>' +
-          '<span class="mot-chevron">▼</span>' +
-          '</div>' +
-          '<div class="mot-defects">' + defectsHTML + '</div>';
-
-        item.querySelector('.mot-item-header').addEventListener('click', function() {
-          item.classList.toggle('open');
-        });
-
-        motList.appendChild(item);
-      });
-    }
-
-    // ─── MODS GRID ────────────────────────────────────────────────────────────
-    function buildModsGrid() {
-      var grid = document.getElementById('modsGrid');
-      grid.innerHTML = '';
-      MODS.forEach(function(mod) {
-        var btn = document.createElement('button');
-        btn.className = 'mod-btn';
-        btn.setAttribute('data-mod', mod.id);
-        btn.innerHTML = '<div class="mod-icon">' + mod.icon + '</div><div class="mod-name">' + mod.name + '</div><div class="mod-hint">' + mod.hint + '</div>';
-        btn.addEventListener('click', function() { selectMod(mod); });
-        grid.appendChild(btn);
-      });
-    }
-
-    function selectMod(mod) {
-      if (!currentVehicleData) return;
-      document.querySelectorAll('.mod-btn').forEach(function(b) { b.classList.remove('active'); });
-      document.querySelector('[data-mod="' + mod.id + '"]').classList.add('active');
-
-      var result = document.getElementById('modResult');
-      var grid = document.getElementById('modResultGrid');
-      var ai = document.getElementById('modResultAI');
-      result.classList.add('active');
-      grid.innerHTML = '<div style="color:var(--muted);font-size:10px;letter-spacing:2px;">CALCULATING...</div>';
-      ai.innerHTML = '<div class="mr-loading">ANALYSING WITH AI...</div>';
-
-      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-      var v = currentVehicleData;
-      var payload = {
-        mod: mod.id,
-        modName: mod.name,
-        make: v.make,
-        model: v.model,
-        year: v.manufactureYear || v.yearOfManufacture,
-        engine: v.engineSize ? (v.engineSize / 1000).toFixed(1) + 'L' : '',
-        fuel: v.fuelType,
-        transmission: v.transmission
-      };
-
-      fetch(VERCEL + '/api/mod', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          var stats = [
-            { label: 'HP GAIN', val: data.hp_gain ? '+' + data.hp_gain + ' BHP' : '—', up: true },
-            { label: 'TORQUE GAIN', val: data.torque_gain ? '+' + data.torque_gain + ' NM' : '—', up: true },
-            { label: 'VALUE INCREASE', val: data.value_increase ? '+£' + data.value_increase : '—', up: true },
-            { label: 'APPROX COST', val: data.cost ? '£' + data.cost : '—', up: false },
-            { label: 'DIFFICULTY', val: data.difficulty || '—', up: false },
-            { label: 'MOT LEGAL', val: data.mot_legal || '—', up: false },
-          ];
-          grid.innerHTML = '';
-          stats.forEach(function(s) {
-            grid.innerHTML += '<div class="mr-stat"><label>' + s.label + '</label><div class="val ' + (s.up ? 'up' : 'neutral') + '">' + s.val + '</div></div>';
-          });
-          ai.innerHTML = data.analysis || data.verdict || 'No analysis available.';
-        })
-        .catch(function() {
-          grid.innerHTML = '<div style="color:var(--fail);font-size:10px;letter-spacing:1px;">ERROR LOADING MOD DATA</div>';
-          ai.innerHTML = '';
-        });
-    }
-  </script>
+function shareResult() {
+  var text = 'GarageIQ - ' + (vehicleData.make || '') + ' ' + (vehicleData.model || '') + ' ' + (vehicleData.yearOfManufacture || '') + '\nMod: ' + selectedMod + '\nCheck yours at garage-iq-chi.vercel.app';
+  if (navigator.share) { navigator.share({ title: 'GarageIQ Mod Report', text: text, url: 'https://garage-iq-chi.vercel.app' }); }
+  else { navigator.clipboard.writeText(text).then(function() { alert('Copied!'); }); }
+}
+</script>
 </body>
 </html>
