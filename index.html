@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GarageIQ — UK Car Mod Analyser</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="preconnect" href="[fonts.googleapis.com](https://fonts.googleapis.com)" />
+  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap)" rel="stylesheet" />
+  <link rel="stylesheet" href="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css)" />
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -19,16 +19,28 @@
     .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px}
     .nav-logo span{color:var(--red)}
     .nav-auth{display:flex;gap:8px;align-items:center}
-    .nav-user{font-size:12px;color:var(--text2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .btn-sm{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;border:none;border-radius:6px;padding:7px 14px;cursor:pointer;transition:all 0.15s}
     .btn-login{background:transparent;border:1px solid #ffffff20;color:var(--light)}
     .btn-login:hover{border-color:var(--red);color:var(--red)}
     .btn-signup{background:var(--red);color:white}
     .btn-signup:hover{background:var(--red-dark)}
-    .btn-logout{background:transparent;border:1px solid #ffffff15;color:var(--text2)}
-    .btn-logout:hover{border-color:#FF6B6B;color:#FF6B6B}
-    .btn-history{background:var(--dark2);border:1px solid #ffffff15;color:var(--gold)}
-    .btn-history:hover{border-color:var(--gold)}
+    
+    /* Profile dropdown styles */
+    .profile-wrapper{position:relative}
+    .profile-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--red-dark));border:2px solid var(--red);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;position:relative}
+    .profile-btn:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(226,75,74,0.4)}
+    .profile-btn i{font-size:20px;color:white}
+    .profile-dropdown{position:absolute;top:calc(100% + 10px);right:0;background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);min-width:220px;opacity:0;visibility:hidden;transform:translateY(-10px);transition:all 0.2s ease;box-shadow:0 10px 40px rgba(0,0,0,0.5);z-index:200}
+    .profile-dropdown.open{opacity:1;visibility:visible;transform:translateY(0)}
+    .profile-dropdown::before{content:'';position:absolute;top:-6px;right:16px;width:12px;height:12px;background:var(--dark3);border-left:1px solid var(--border);border-top:1px solid var(--border);transform:rotate(45deg)}
+    .dropdown-header{padding:16px;border-bottom:1px solid var(--border);text-align:center}
+    .dropdown-email{font-size:12px;color:var(--text2);word-break:break-all;max-width:190px;margin:0 auto}
+    .dropdown-item{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:background 0.15s;font-size:14px;color:var(--light)}
+    .dropdown-item:hover{background:#ffffff08}
+    .dropdown-item i{font-size:18px;color:var(--gold)}
+    .dropdown-item.logout{border-top:1px solid var(--border);color:#FF6B6B}
+    .dropdown-item.logout i{color:#FF6B6B}
+    .dropdown-item.logout:hover{background:#3A0A0A}
     .hero{text-align:center;padding:5rem 1.5rem 3rem;max-width:700px;margin:0 auto}
     .hero-tag{display:inline-block;background:#ffffff10;border:1px solid #ffffff15;color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem}
     .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,80px);letter-spacing:4px;line-height:1;margin-bottom:1rem}
@@ -147,28 +159,40 @@
       .steps,.stats-strip{grid-template-columns:1fr}
       nav{padding:1rem}
       .hero{padding:3rem 1.5rem 2rem}
+      .profile-dropdown{right:-10px;min-width:200px}
     }
   </style>
 </head>
 <body>
-
 <nav>
   <div class="nav-logo">GARAGE<span>IQ</span></div>
   <div class="nav-auth" id="navAuth">
     <button class="btn-sm btn-login" id="btnLogin">LOG IN</button>
     <button class="btn-sm btn-signup" id="btnSignup">SIGN UP</button>
   </div>
-  <div class="nav-auth hidden" id="navUser">
-    <span class="nav-user" id="navEmail"></span>
-    <button class="btn-sm btn-history" id="btnHistory">HISTORY</button>
-    <button class="btn-sm btn-logout" id="btnLogout">LOG OUT</button>
+  <div class="profile-wrapper hidden" id="navUser">
+    <button class="profile-btn" id="profileBtn">
+      <i class="ti ti-history"></i>
+    </button>
+    <div class="profile-dropdown" id="profileDropdown">
+      <div class="dropdown-header">
+        <div class="dropdown-email" id="navEmail"></div>
+      </div>
+      <div class="dropdown-item" id="btnHistory">
+        <i class="ti ti-history"></i>
+        <span>View History</span>
+      </div>
+      <div class="dropdown-item logout" id="btnLogout">
+        <i class="ti ti-logout"></i>
+        <span>Log Out</span>
+      </div>
+    </div>
   </div>
 </nav>
-
 <!-- Auth modal -->
 <div class="modal-overlay hidden" id="authModal">
   <div class="modal">
-    <button class="modal-close" id="modalClose">x</button>
+    <button class="modal-close" id="modalClose">×</button>
     <div class="modal-title" id="modalTitle">WELCOME BACK</div>
     <div class="modal-sub" id="modalSub">Log in to save your car history</div>
     <div class="modal-err" id="modalErr"></div>
@@ -178,7 +202,6 @@
     <div class="modal-switch" id="modalSwitch">No account? <a id="modalSwitchLink">Sign up free</a></div>
   </div>
 </div>
-
 <section class="hero">
   <div class="hero-tag">UK Cars Only &nbsp;·&nbsp; Free to Use</div>
   <h1>KNOW YOUR<br /><span>CAR.</span><br />BUILD YOUR <span>VISION.</span></h1>
@@ -189,18 +212,15 @@
   </div>
   <p class="hero-note">Real DVLA + DVSA data &nbsp;·&nbsp; No account needed &nbsp;·&nbsp; Free forever</p>
 </section>
-
 <div class="app">
   <div id="errorBox" class="error-box hidden"></div>
   <div id="loadingBox" class="loading hidden">Fetching real vehicle data...</div>
-
   <div id="historyPanel" class="hidden">
     <div class="history-panel">
       <div class="card-title">Your car history</div>
       <div id="historyList"><div class="history-empty">No cars looked up yet.</div></div>
     </div>
   </div>
-
   <div id="vehicleSection" class="hidden">
     <div class="card">
       <div class="card-title">Vehicle info</div>
@@ -217,7 +237,6 @@
         <div class="stat"><div class="stat-label">MOT</div><div class="stat-val" id="statMot">-</div></div>
       </div>
     </div>
-
     <div class="card" id="specsCard">
       <div class="card-title">Engine &amp; performance <span id="specsLoading" style="margin-left:auto;font-size:10px;color:#444440">Loading...</span></div>
       <table class="spec-table">
@@ -232,7 +251,6 @@
         <tr><td>CO2</td><td id="specCo2">-</td></tr>
       </table>
     </div>
-
     <div class="card">
       <div class="card-title">MOT history <span style="margin-left:auto;font-size:10px;color:#444440">Tap row to expand</span></div>
       <div id="motSummary" class="hidden">
@@ -249,7 +267,6 @@
       </div>
       <div id="motHistory"><div class="loading">Loading MOT data...</div></div>
     </div>
-
     <div class="card">
       <div class="card-title">Choose a modification</div>
       <div class="mods-grid">
@@ -265,17 +282,14 @@
       </div>
       <button class="analyze-btn" id="analyzeBtn" disabled>Select a mod to analyse</button>
     </div>
-
     <div id="resultSection" class="hidden"></div>
   </div>
 </div>
-
 <div class="stats-strip">
   <div class="strip-stat"><div class="strip-num">9</div><div class="strip-label">Mods available free</div></div>
   <div class="strip-stat"><div class="strip-num">100%</div><div class="strip-label">Real DVLA &amp; DVSA data</div></div>
   <div class="strip-stat"><div class="strip-num">FREE</div><div class="strip-label">Always free to look up</div></div>
 </div>
-
 <div class="how-section">
   <div class="section-title">HOW IT <span style="color:var(--red)">WORKS</span></div>
   <div class="steps">
@@ -284,26 +298,22 @@
     <div class="step"><div class="step-num">03</div><div class="step-title">Get your report</div><div class="step-desc">AI analyses your exact car — HP gain, sound, value change, MOT risk and install cost.</div></div>
   </div>
 </div>
-
 <footer>
   2026 GarageIQ &nbsp;·&nbsp; Built for UK car enthusiasts<br />
   Not affiliated with DVLA or DVSA &nbsp;·&nbsp; AI mod analysis is for guidance only
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)"></script>
 <script>
-var VERCEL = 'https://garage-iq-chi.vercel.app';
-var SUPA_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
+var VERCEL = '[garage-iq-chi.vercel.app](https://garage-iq-chi.vercel.app)';
+var SUPA_URL = '[hbfntnxawwavttzvxdde.supabase.co](https://hbfntnxawwavttzvxdde.supabase.co)';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
 var sb;
 var vehicleData = {};
 var selectedMod = null;
 var currentUser = null;
 var modalMode = 'login';
-
 window.onload = function() {
   sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-
   sb.auth.onAuthStateChange(function(event, session) {
     currentUser = session ? session.user : null;
     if (currentUser) {
@@ -313,9 +323,9 @@ window.onload = function() {
     } else {
       document.getElementById('navAuth').classList.remove('hidden');
       document.getElementById('navUser').classList.add('hidden');
+      document.getElementById('profileDropdown').classList.remove('open');
     }
   });
-
   document.getElementById('runBtn').addEventListener('click', lookupVehicle);
   document.getElementById('regInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') lookupVehicle(); });
   document.getElementById('btnLogin').addEventListener('click', function() { openModal('login'); });
@@ -326,12 +336,23 @@ window.onload = function() {
   document.getElementById('modalSubmit').addEventListener('click', submitAuth);
   document.getElementById('modalSwitchLink').addEventListener('click', switchModal);
   document.getElementById('analyzeBtn').addEventListener('click', analyseMod);
-
+  // Profile dropdown toggle
+  document.getElementById('profileBtn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.getElementById('profileDropdown').classList.toggle('open');
+  });
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    var dropdown = document.getElementById('profileDropdown');
+    var profileBtn = document.getElementById('profileBtn');
+    if (!dropdown.contains(e.target) && !profileBtn.contains(e.target)) {
+      dropdown.classList.remove('open');
+    }
+  });
   document.querySelectorAll('.mod-btn').forEach(function(btn) {
     btn.addEventListener('click', function() { selectMod(btn); });
   });
 };
-
 function openModal(mode) {
   modalMode = mode;
   document.getElementById('authModal').classList.remove('hidden');
@@ -351,10 +372,8 @@ function openModal(mode) {
   }
   document.getElementById('modalSwitchLink').addEventListener('click', switchModal);
 }
-
 function closeModal() { document.getElementById('authModal').classList.add('hidden'); }
 function switchModal() { openModal(modalMode === 'login' ? 'signup' : 'login'); }
-
 function submitAuth() {
   var email = document.getElementById('authEmail').value.trim();
   var password = document.getElementById('authPassword').value;
@@ -374,20 +393,19 @@ function submitAuth() {
     });
   }
 }
-
 function signOut() {
   sb.auth.signOut();
   document.getElementById('historyPanel').classList.add('hidden');
+  document.getElementById('profileDropdown').classList.remove('open');
 }
-
 function toggleHistory() {
   var panel = document.getElementById('historyPanel');
+  document.getElementById('profileDropdown').classList.remove('open');
   if (!panel.classList.contains('hidden')) { panel.classList.add('hidden'); return; }
   loadHistory();
   panel.classList.remove('hidden');
   panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-
 function saveToHistory() {
   if (!currentUser) return;
   sb.from('car_history').insert({
@@ -402,7 +420,6 @@ function saveToHistory() {
     value: vehicleData.value
   });
 }
-
 function loadHistory() {
   var listEl = document.getElementById('historyList');
   listEl.innerHTML = '<div class="history-empty">Loading...</div>';
@@ -428,7 +445,6 @@ function loadHistory() {
     });
   });
 }
-
 function estimateHp(d) {
   var cc = parseInt(d.engineCapacity) || 1600;
   if (cc <= 999) return 65; if (cc <= 1199) return 85; if (cc <= 1399) return 110;
@@ -440,7 +456,6 @@ function estimateValue(d) {
   var yr = parseInt(d.yearOfManufacture) || 2015;
   return Math.max(1500, Math.round(15000 - (2026 - yr) * 900));
 }
-
 function lookupVehicle() {
   var reg = document.getElementById('regInput').value.replace(/\s/g, '').toUpperCase();
   if (!reg || reg.length < 2) return;
@@ -452,7 +467,6 @@ function lookupVehicle() {
   document.getElementById('analyzeBtn').disabled = true;
   document.getElementById('analyzeBtn').textContent = 'Select a mod to analyse';
   document.querySelectorAll('.mod-btn').forEach(function(b) { b.classList.remove('selected'); });
-
   fetch(VERCEL + '/api/vehicle', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -475,7 +489,6 @@ function lookupVehicle() {
     document.getElementById('loadingBox').classList.add('hidden');
   });
 }
-
 function renderVehicle(d) {
   document.getElementById('statMake').textContent = (d.make || '-').toUpperCase();
   document.getElementById('statModel').textContent = (d.model || '-').toUpperCase();
@@ -491,7 +504,6 @@ function renderVehicle(d) {
   motEl.textContent = motOk ? 'VALID' : (d.motStatus || '-').toUpperCase();
   motEl.className = 'stat-val ' + (motOk ? 'green' : 'red');
 }
-
 function loadSpecs() {
   document.getElementById('specsLoading').textContent = 'Loading...';
   fetch(VERCEL + '/api/specs', {
@@ -514,7 +526,6 @@ function loadSpecs() {
     document.getElementById('specsLoading').textContent = '';
   }).catch(function() { document.getElementById('specsLoading').textContent = 'Unavailable'; });
 }
-
 function loadMot(reg) {
   fetch(VERCEL + '/api/mot?reg=' + reg).then(function(r) {
     if (!r.ok) throw new Error('MOT error');
@@ -523,16 +534,13 @@ function loadMot(reg) {
     renderRealMot(raw);
   }).catch(function() { renderDemoMot(); });
 }
-
 function toggleMotRow(row) { row.classList.toggle('open'); }
-
 function renderRealMot(raw) {
   var tests = [];
   if (raw && raw.motTests) tests = raw.motTests;
   else if (Array.isArray(raw) && raw[0] && raw[0].motTests) tests = raw[0].motTests;
   else if (Array.isArray(raw) && raw[0] && raw[0].completedDate) tests = raw;
   if (!tests.length) { renderDemoMot(); return; }
-
   var totalTests = tests.length;
   var totalPassed = tests.filter(function(t) { return (t.testResult || '').toUpperCase() === 'PASSED'; }).length;
   var totalFailed = totalTests - totalPassed;
@@ -546,7 +554,6 @@ function renderRealMot(raw) {
   document.getElementById('passBarFill').style.width = passRate + '%';
   document.getElementById('passBarFill').style.background = passRate >= 80 ? 'var(--green)' : passRate >= 60 ? 'var(--gold)' : '#FF6B6B';
   document.getElementById('motSummary').classList.remove('hidden');
-
   document.getElementById('motHistory').innerHTML = tests.slice(0, 10).map(function(t) {
     var passed = (t.testResult || '').toUpperCase() === 'PASSED';
     var defects = t.defects || [];
@@ -574,7 +581,6 @@ function renderRealMot(raw) {
       '<div class="mot-details">' + detailsHtml + '</div></div>';
   }).join('');
 }
-
 function renderDemoMot() {
   var h = [
     { date: '14 Nov 2024', passed: true, mi: '62,440', defects: [{ type: 'ADVISORY', text: 'Tyre worn close to legal limit on nearside rear' }, { type: 'ADVISORY', text: 'Rear brake pads showing wear' }] },
@@ -599,7 +605,6 @@ function renderDemoMot() {
       '<div class="mot-details">' + detailsHtml + '</div></div>';
   }).join('');
 }
-
 function selectMod(el) {
   document.querySelectorAll('.mod-btn').forEach(function(b) { b.classList.remove('selected'); });
   el.classList.add('selected');
@@ -607,7 +612,6 @@ function selectMod(el) {
   document.getElementById('analyzeBtn').disabled = false;
   document.getElementById('analyzeBtn').textContent = 'Analyse: ' + selectedMod;
 }
-
 function analyseMod() {
   if (!selectedMod) return;
   var btn = document.getElementById('analyzeBtn');
@@ -628,7 +632,6 @@ function analyseMod() {
     btn.textContent = 'Analyse: ' + selectedMod;
   });
 }
-
 function renderResult(r) {
   var rating = parseInt(r.soundRating) || 5;
   var bars = '';
@@ -659,10 +662,9 @@ function renderResult(r) {
   document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
   document.getElementById('shareBtn').addEventListener('click', shareResult);
 }
-
 function shareResult() {
   var text = 'GarageIQ - ' + (vehicleData.make || '') + ' ' + (vehicleData.model || '') + ' ' + (vehicleData.yearOfManufacture || '') + '\nMod: ' + selectedMod + '\nCheck yours at garage-iq-chi.vercel.app';
-  if (navigator.share) { navigator.share({ title: 'GarageIQ Mod Report', text: text, url: 'https://garage-iq-chi.vercel.app' }); }
+  if (navigator.share) { navigator.share({ title: 'GarageIQ Mod Report', text: text, url: '[garage-iq-chi.vercel.app](https://garage-iq-chi.vercel.app)' }); }
   else { navigator.clipboard.writeText(text).then(function() { alert('Copied!'); }); }
 }
 </script>
