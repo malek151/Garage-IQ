@@ -1,175 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GarageIQ — UK Car Mod Analyser</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>GarageIQ — UK Car Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --red:#E24B4A;--red-dark:#A32D2D;--gold:#FAC775;--gold-dark:#BA7517;
-      --green:#6DBD2A;--dark:#1A1A18;--dark2:#2C2C2A;--dark3:#222220;
-      --light:#F5F4F0;--border:#ffffff0f;--text2:#666662;--radius:12px;--radius-sm:8px;
+      --red:#E24B4A;--red-dark:#A32D2D;--red-glow:rgba(226,75,74,0.15);
+      --gold:#FAC775;--gold-dark:#BA7517;
+      --green:#6DBD2A;--green-dark:#4a8a1a;
+      --amber:#F59E0B;--blue:#3B82F6;
+      --dark:#111110;--dark2:#1E1E1C;--dark3:#1A1A18;--dark4:#222220;
+      --surface:#252523;--surface2:#2C2C2A;
+      --light:#F5F4F0;--light2:#D4D2CE;
+      --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+      --text2:#888885;--text3:#555552;
+      --radius:14px;--radius-sm:8px;--radius-xs:5px;
+      --transition:0.18s ease;
     }
-    body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--light);min-height:100vh}
-    nav{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--dark);z-index:100}
-    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--light);min-height:100vh;overflow-x:hidden}
+    
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar{width:4px}
+    ::-webkit-scrollbar-track{background:var(--dark)}
+    ::-webkit-scrollbar-thumb{background:var(--dark4);border-radius:2px}
+
+    /* ── NAV ── */
+    nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(17,17,16,0.95);z-index:100;backdrop-filter:blur(12px)}
+    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;cursor:default}
     .nav-logo span{color:var(--red)}
     .nav-right{display:flex;gap:8px;align-items:center}
-    .btn-sm{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;border:none;border-radius:6px;padding:7px 14px;cursor:pointer;transition:all 0.15s}
-    .btn-login{background:transparent;border:1px solid #ffffff20;color:var(--light)}
+    .btn-sm{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;border:none;border-radius:var(--radius-xs);padding:7px 14px;cursor:pointer;transition:all var(--transition)}
+    .btn-login{background:transparent;border:1px solid var(--border2);color:var(--light2)}
     .btn-login:hover{border-color:var(--red);color:var(--red)}
     .btn-signup{background:var(--red);color:white}
     .btn-signup:hover{background:var(--red-dark)}
-    /* Round black avatar button */
-    .nav-avatar{width:36px;height:36px;border-radius:50%;background:#000;border:2px solid #333;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color 0.15s;font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--light);flex-shrink:0}
-    .nav-avatar:hover{border-color:var(--gold)}
-    /* Hero */
-    .hero{text-align:center;padding:5rem 1.5rem 3rem;max-width:700px;margin:0 auto}
-    .hero-tag{display:inline-block;background:#ffffff10;border:1px solid #ffffff15;color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem}
-    .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,10vw,80px);letter-spacing:4px;line-height:1;margin-bottom:1rem}
+    /* Black circle avatar */
+    .nav-avatar{width:34px;height:34px;border-radius:50%;background:#000;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--transition);font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--light);flex-shrink:0;user-select:none}
+    .nav-avatar:hover{border-color:var(--gold);color:var(--gold);transform:scale(1.05)}
+
+    /* ── HERO ── */
+    .hero{text-align:center;padding:5rem 1.5rem 3rem;max-width:680px;margin:0 auto}
+    .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(250,199,117,0.08);border:1px solid rgba(250,199,117,0.2);color:var(--gold);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.75rem}
+    .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(46px,9vw,82px);letter-spacing:3px;line-height:0.95;margin-bottom:1.25rem}
     .hero h1 span{color:var(--red)}
-    .hero p{font-size:16px;color:#B4B2A9;line-height:1.6;max-width:480px;margin:0 auto 2.5rem}
-    .hero-note{font-size:12px;color:#444440;text-align:center;margin-top:10px}
-    .reg-wrap{display:flex;gap:10px;max-width:480px;margin:0 auto}
-    .reg-input{flex:1;font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:5px;text-transform:uppercase;text-align:center;background:var(--gold);color:var(--dark2);border:2px solid var(--gold-dark);border-radius:var(--radius-sm);padding:12px 16px;outline:none}
-    .reg-input::placeholder{color:#85503066}
-    .reg-btn{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:0 28px;cursor:pointer;transition:background 0.15s}
-    .reg-btn:hover{background:var(--red-dark)}
-    .app{max-width:700px;margin:0 auto;padding:2rem 1.5rem 4rem}
-    .card{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
-    .card-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+    .hero p{font-size:15px;color:#9A9896;line-height:1.65;max-width:460px;margin:0 auto 2.5rem;font-weight:300}
+    .hero-note{font-size:11px;color:var(--text3);text-align:center;margin-top:12px;letter-spacing:0.3px}
+    .reg-wrap{display:flex;gap:10px;max-width:460px;margin:0 auto;filter:drop-shadow(0 4px 20px rgba(226,75,74,0.15))}
+    .reg-input{flex:1;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:6px;text-transform:uppercase;text-align:center;background:var(--gold);color:var(--dark2);border:2px solid var(--gold-dark);border-radius:var(--radius-sm);padding:13px 16px;outline:none;transition:border-color var(--transition)}
+    .reg-input:focus{border-color:var(--red)}
+    .reg-input::placeholder{color:rgba(46,38,18,0.35)}
+    .reg-btn{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:0 28px;cursor:pointer;transition:all var(--transition);white-space:nowrap}
+    .reg-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
+    .reg-btn:active{transform:translateY(0)}
+
+    /* ── APP ── */
+    .app{max-width:680px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
+    
+    /* ── CARDS ── */
+    .card{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;transition:border-color var(--transition)}
+    .card:hover{border-color:var(--border2)}
+    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .card-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px}
+    .card-title i{font-size:13px;color:var(--red)}
+    .card-badge{font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,0.06);color:var(--text2)}
+
+    /* ── GRID STATS ── */
     .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
-    .stat{background:var(--dark);border-radius:var(--radius-sm);padding:12px}
-    .stat-label{font-size:10px;color:#444440;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px}
-    .stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--light);line-height:1;word-break:break-word}
-    .stat-val.green{color:var(--green)}.stat-val.red{color:var(--red)}.stat-val.amber{color:var(--gold)}
-    .mot-row{border-bottom:1px solid #ffffff08;cursor:pointer;border-radius:6px;transition:background 0.1s}
+    .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .stat-box{background:var(--dark);border-radius:var(--radius-sm);padding:12px;border:1px solid transparent;transition:border-color var(--transition)}
+    .stat-box:hover{border-color:var(--border)}
+    .stat-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+    .stat-val{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;color:var(--light);line-height:1;word-break:break-word}
+    .stat-val.green{color:var(--green)}.stat-val.red{color:var(--red)}.stat-val.amber{color:var(--gold)}.stat-val.blue{color:var(--blue)}
+
+    /* ── MOT ROWS ── */
+    .mot-row{border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;border-radius:var(--radius-xs);transition:background var(--transition)}
     .mot-row:last-child{border-bottom:none}
-    .mot-row:hover{background:#ffffff05}
-    .mot-row-header{display:flex;align-items:center;justify-content:space-between;padding:10px 8px;font-size:13px;flex-wrap:wrap;gap:6px}
-    .mot-chevron{color:#444440;font-size:14px;transition:transform 0.2s;flex-shrink:0}
+    .mot-row:hover{background:rgba(255,255,255,0.03)}
+    .mot-row-header{display:flex;align-items:center;justify-content:space-between;padding:11px 8px;font-size:13px;flex-wrap:wrap;gap:6px}
+    .mot-chevron{color:var(--text3);font-size:13px;transition:transform 0.2s;flex-shrink:0}
     .mot-row.open .mot-chevron{transform:rotate(180deg)}
-    .mot-details{display:none;padding:4px 8px 12px}
+    .mot-details{display:none;padding:4px 8px 14px}
     .mot-row.open .mot-details{display:block}
-    .mot-detail-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-top:1px solid #ffffff06;font-size:12px;line-height:1.5;color:#B4B2A9}
+    .mot-detail-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px solid rgba(255,255,255,0.04);font-size:12px;line-height:1.5;color:#B4B2A9}
     .mot-detail-item:first-child{border-top:none}
-    .mot-type-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
-    .dot-fail{background:#FF6B6B}.dot-advisory{background:var(--gold)}.dot-minor{background:var(--green)}
-    .mot-no-items{font-size:12px;color:#444440;padding:8px 0 4px}
-    .badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px}
-    .b-pass{background:#1E3A0A;color:var(--green)}.b-fail{background:#3A0A0A;color:#FF6B6B}.b-advisory{background:#3A2A0A;color:var(--gold)}
+    .mot-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+    .dot-danger{background:#FF6B6B}.dot-major{background:#FF9500}.dot-minor{background:var(--green)}.dot-advisory{background:var(--gold)}
+    .mot-no-items{font-size:12px;color:var(--text3);padding:6px 0}
+    .badge{font-size:10px;font-weight:500;padding:2px 9px;border-radius:20px;letter-spacing:0.3px}
+    .b-pass{background:rgba(109,189,42,0.15);color:var(--green);border:1px solid rgba(109,189,42,0.3)}
+    .b-fail{background:rgba(255,107,107,0.15);color:#FF6B6B;border:1px solid rgba(255,107,107,0.3)}
+    .b-advisory{background:rgba(250,199,117,0.12);color:var(--gold);border:1px solid rgba(250,199,117,0.25)}
+    .b-warn{background:rgba(245,158,11,0.12);color:var(--amber);border:1px solid rgba(245,158,11,0.25)}
+
+    /* ── SPECS TABLE ── */
     .spec-table{width:100%;border-collapse:collapse}
-    .spec-table tr{border-bottom:1px solid #ffffff08}
+    .spec-table tr{border-bottom:1px solid rgba(255,255,255,0.05)}
     .spec-table tr:last-child{border-bottom:none}
     .spec-table td{padding:9px 4px;font-size:13px}
-    .spec-table td:first-child{color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:0.8px;width:45%}
+    .spec-table td:first-child{color:var(--text2);font-size:10px;text-transform:uppercase;letter-spacing:1px;width:44%}
     .spec-table td:last-child{font-weight:500;color:var(--light);text-align:right}
-    .co2-label{display:inline-block;background:var(--green);color:var(--dark);font-family:'Bebas Neue',sans-serif;font-size:13px;padding:2px 8px;border-radius:4px;margin-left:6px}
-    .co2-label.C{background:#CDDC39;color:#333}.co2-label.D{background:var(--gold);color:var(--dark2)}
-    .co2-label.E{background:#FF9800;color:var(--dark2)}.co2-label.F{background:#FF5722}.co2-label.G{background:#F44336}
-    .mot-summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-    .mot-sum-stat{background:var(--dark);border-radius:var(--radius-sm);padding:10px;text-align:center}
-    .mot-sum-val{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1}
-    .mot-sum-label{font-size:10px;color:#444440;text-transform:uppercase;letter-spacing:0.8px;margin-top:3px}
+    .co2-badge{display:inline-block;font-family:'Bebas Neue',sans-serif;font-size:12px;padding:1px 7px;border-radius:3px;margin-left:6px;background:var(--green);color:#000}
+    .co2-badge.B{background:#8BC34A}.co2-badge.C{background:#CDDC39;color:#333}
+    .co2-badge.D{background:var(--gold);color:#333}.co2-badge.E{background:#FF9800}
+    .co2-badge.F{background:#FF5722}.co2-badge.G{background:#F44336}
+
+    /* ── MOT PASS BAR ── */
+    .mot-sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+    .mot-sum-box{background:var(--dark);border-radius:var(--radius-sm);padding:10px;text-align:center}
+    .mot-sum-num{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1}
+    .mot-sum-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
     .pass-bar-wrap{margin-bottom:14px}
-    .pass-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:5px}
-    .pass-bar-bg{background:#3A0A0A;border-radius:20px;height:8px;overflow:hidden}
-    .pass-bar-fill{height:100%;border-radius:20px;background:var(--green);transition:width 0.6s ease}
+    .pass-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:5px}
+    .pass-bar-bg{background:rgba(255,23,68,0.15);border-radius:20px;height:7px;overflow:hidden}
+    .pass-bar-fill{height:100%;border-radius:20px;background:var(--green);transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+
+    /* ── CAR INTELLIGENCE REPORT ── */
+    .intel-card{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
+    .intel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold))}
+    .intel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .intel-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;display:flex;align-items:center;gap:8px}
+    .risk-score-wrap{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--dark);border-radius:var(--radius-sm);margin-bottom:16px}
+    .risk-score-circle{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;border:2px solid;flex-shrink:0}
+    .risk-low{border-color:var(--green);color:var(--green);background:rgba(109,189,42,0.08)}
+    .risk-med{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.08)}
+    .risk-high{border-color:var(--red);color:var(--red);background:rgba(226,75,74,0.08)}
+    .risk-label-wrap{flex:1}
+    .risk-label{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px}
+    .risk-sub{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4}
+    .intel-checks{display:flex;flex-direction:column;gap:8px}
+    .check-row{display:flex;align-items:flex-start;gap:12px;padding:10px 12px;background:var(--dark);border-radius:var(--radius-sm);border-left:3px solid transparent;transition:all var(--transition)}
+    .check-row.ok{border-left-color:var(--green)}
+    .check-row.warn{border-left-color:var(--amber)}
+    .check-row.bad{border-left-color:var(--red)}
+    .check-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px}
+    .icon-ok{background:rgba(109,189,42,0.15);color:var(--green)}
+    .icon-warn{background:rgba(245,158,11,0.15);color:var(--amber)}
+    .icon-bad{background:rgba(226,75,74,0.15);color:var(--red)}
+    .check-content{flex:1}
+    .check-title{font-size:13px;font-weight:600;color:var(--light);margin-bottom:2px}
+    .check-desc{font-size:11px;color:var(--text2);line-height:1.5}
+    /* Mileage timeline */
+    .mileage-timeline{margin-top:14px}
+    .timeline-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px}
+    .mileage-bar-item{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+    .mileage-year{font-size:10px;color:var(--text3);width:60px;flex-shrink:0}
+    .mileage-bar-wrap{flex:1;position:relative;height:14px;background:var(--dark);border-radius:3px;overflow:hidden}
+    .mileage-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width 0.6s ease}
+    .mileage-bar-fill.fraud{background:linear-gradient(90deg,var(--red),#ff0000)}
+    .mileage-val{font-size:10px;color:var(--text2);width:70px;text-align:right;flex-shrink:0}
+    .fraud-flag{display:inline-flex;align-items:center;gap:4px;background:rgba(226,75,74,0.15);border:1px solid rgba(226,75,74,0.3);color:var(--red);font-size:10px;letter-spacing:1px;padding:2px 8px;border-radius:20px;margin-left:8px}
+
+    /* ── MODS ── */
     .mods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .mod-btn{background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all 0.15s}
-    .mod-btn:hover{border-color:var(--red);background:#2A1A1A}
-    .mod-btn.selected{border:2px solid var(--red);background:#2A1A1A}
-    .mod-icon{font-size:22px;margin-bottom:6px;color:var(--gold)}
-    .mod-name{font-size:12px;font-weight:500;color:var(--light)}
-    .mod-tag{font-size:10px;color:#555552;margin-top:3px}
-    .analyze-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:15px;cursor:pointer;margin-top:10px;transition:background 0.15s}
-    .analyze-btn:hover:not(:disabled){background:var(--red-dark)}
-    .analyze-btn:disabled{background:#333330;color:#555552;cursor:default}
-    .result-card{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
-    .result-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-    .delta-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #ffffff08;font-size:14px;flex-wrap:wrap;gap:4px}
-    .delta-row:last-child{border-bottom:none}
-    .delta-label{color:#555552;font-size:11px;text-transform:uppercase;letter-spacing:0.8px}
-    .delta-val{font-weight:500}
-    .change{font-size:12px;padding:2px 8px;border-radius:10px;margin-left:6px}
-    .c-up{background:#1E3A0A;color:var(--green)}.c-down{background:#3A0A0A;color:#FF6B6B}.c-neutral{background:#2A2A28;color:#888}
-    .verdict-box{background:var(--dark);border-left:3px solid var(--red);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-top:14px;font-size:13px;color:#B4B2A9;line-height:1.5}
+    .mod-btn{background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all var(--transition)}
+    .mod-btn:hover{border-color:rgba(226,75,74,0.5);background:rgba(226,75,74,0.04);transform:translateY(-1px)}
+    .mod-btn.selected{border:1.5px solid var(--red);background:rgba(226,75,74,0.07)}
+    .mod-icon{font-size:20px;margin-bottom:7px;color:var(--gold)}
+    .mod-name{font-size:11px;font-weight:600;color:var(--light)}
+    .mod-tag{font-size:9px;color:var(--text3);margin-top:3px;letter-spacing:0.5px}
+    .analyze-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:14px;cursor:pointer;margin-top:10px;transition:all var(--transition)}
+    .analyze-btn:hover:not(:disabled){background:var(--red-dark);transform:translateY(-1px)}
+    .analyze-btn:disabled{background:#2A2A28;color:var(--text3);cursor:default}
+
+    /* ── RESULT ── */
+    .result-card{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
+    .result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
+    .result-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+    .delta-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;flex-wrap:wrap;gap:4px}
+    .delta-row:last-of-type{border-bottom:none}
+    .delta-lbl{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px}
+    .delta-val{font-weight:500;font-size:14px}
+    .change{font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px}
+    .c-up{background:rgba(109,189,42,0.12);color:var(--green)}.c-down{background:rgba(255,107,107,0.12);color:#FF6B6B}.c-neutral{background:rgba(255,255,255,0.06);color:var(--text2)}
+    .verdict-box{background:var(--dark);border-left:2px solid var(--red);border-radius:0 var(--radius-xs) var(--radius-xs) 0;padding:12px 14px;margin-top:14px;font-size:12px;color:#B4B2A9;line-height:1.6}
     .verdict-box strong{color:var(--light)}
-    .share-btn{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;border-radius:var(--radius-sm);padding:12px;cursor:pointer;margin-top:10px;transition:all 0.15s}
-    .share-btn:hover{background:var(--green);color:var(--dark)}
-    .sound-bar{display:flex;gap:3px;align-items:flex-end;height:28px}
-    .s-bar{width:5px;border-radius:2px;background:var(--red)}
+    .share-btn{width:100%;background:transparent;border:1px solid rgba(109,189,42,0.3);color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;border-radius:var(--radius-sm);padding:11px;cursor:pointer;margin-top:10px;transition:all var(--transition)}
+    .share-btn:hover{background:rgba(109,189,42,0.08)}
+    .sound-bar{display:flex;gap:3px;align-items:flex-end;height:26px}
+    .s-bar{width:4px;border-radius:2px;background:var(--red)}
 
-    /* ── MODALS (shared base) ── */
-    .modal-overlay{position:fixed;inset:0;background:#000000cc;z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
-    .modal-overlay.hidden{display:none}
-    .modal{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:420px;position:relative;max-height:90vh;overflow-y:auto}
-    .modal-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;line-height:1}
+    /* ── MODALS ── */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:fadeIn 0.15s ease}
+    .overlay.hidden{display:none}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .modal{background:var(--dark3);border:1px solid var(--border2);border-radius:var(--radius);padding:2rem;width:100%;max-width:420px;position:relative;max-height:92vh;overflow-y:auto;animation:slideUp 0.2s ease}
+    @keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+    .modal-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;line-height:1;transition:color var(--transition)}
     .modal-x:hover{color:var(--light)}
-    .modal-heading{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;margin-bottom:4px}
-    .modal-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem}
-    .modal-tabs{display:flex;border:1px solid #ffffff15;border-radius:6px;overflow:hidden;margin-bottom:20px}
-    .modal-tab{flex:1;background:transparent;border:none;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;color:var(--text2);padding:9px;cursor:pointer;transition:all 0.15s}
-    .modal-tab.active{background:var(--red);color:white}
-    .modal-inp{width:100%;background:var(--dark);border:1px solid #ffffff15;border-radius:var(--radius-sm);padding:11px 14px;color:var(--light);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px;transition:border-color 0.15s}
-    .modal-inp:focus{border-color:var(--red)}
-    .modal-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:background 0.15s;margin-top:4px}
+    .modal-h{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:4px}
+    .modal-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;line-height:1.4}
+    .tabs{display:flex;border:1px solid var(--border);border-radius:var(--radius-xs);overflow:hidden;margin-bottom:20px}
+    .tab{flex:1;background:transparent;border:none;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:var(--text2);padding:9px;cursor:pointer;transition:all var(--transition)}
+    .tab.active{background:var(--red);color:white}
+    .inp{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--light);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px;transition:border-color var(--transition)}
+    .inp:focus{border-color:rgba(226,75,74,0.6)}
+    .modal-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all var(--transition);margin-top:4px}
     .modal-btn:hover:not(:disabled){background:var(--red-dark)}
-    .modal-btn:disabled{background:#333330;color:#555552;cursor:default}
-    .modal-btn-ghost{width:100%;background:transparent;border:1px solid #ffffff15;color:var(--text2);font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;border-radius:var(--radius-sm);padding:11px;cursor:pointer;transition:all 0.15s;margin-top:8px}
-    .modal-btn-ghost:hover{border-color:#FF6B6B;color:#FF6B6B}
-    .modal-err{background:#3A0A0A;color:#FF6B6B;border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none}
-    .modal-ok{background:#1E3A0A;color:var(--green);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none}
-
-    /* ── PROFILE MODAL specifics ── */
-    .prof-avatar-wrap{text-align:center;margin-bottom:1.5rem}
-    .prof-big-avatar{width:72px;height:72px;border-radius:50%;background:#000;border:2px solid #333;display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--light);margin-bottom:10px}
-    .prof-email{font-size:12px;color:var(--text2);margin-top:4px}
-    .prof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+    .modal-btn:disabled{background:#2A2A28;color:var(--text3);cursor:default}
+    .modal-btn-ghost{width:100%;background:transparent;border:1px solid var(--border);color:var(--text2);font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;border-radius:var(--radius-sm);padding:11px;cursor:pointer;transition:all var(--transition);margin-top:8px}
+    .modal-btn-ghost:hover{border-color:rgba(255,107,107,0.5);color:#FF6B6B}
+    .msg-err{background:rgba(255,107,107,0.1);color:#FF6B6B;border:1px solid rgba(255,107,107,0.2);border-radius:var(--radius-xs);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;line-height:1.4}
+    .msg-ok{background:rgba(109,189,42,0.1);color:var(--green);border:1px solid rgba(109,189,42,0.2);border-radius:var(--radius-xs);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none}
+    /* Profile modal specifics */
+    .prof-top{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+    .prof-avatar-big{width:68px;height:68px;border-radius:50%;background:#000;border:2px solid var(--border2);display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--light);margin-bottom:10px;transition:border-color var(--transition)}
+    .prof-avatar-big:hover{border-color:var(--gold)}
+    .prof-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px}
+    .prof-email{font-size:11px;color:var(--text2);margin-top:3px}
+    .prof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
     .prof-stat{background:var(--dark);border-radius:var(--radius-sm);padding:12px;text-align:center}
-    .prof-stat-num{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--gold);line-height:1}
-    .prof-stat-lbl{font-size:10px;color:#444440;text-transform:uppercase;letter-spacing:0.8px;margin-top:3px}
-    .prof-section-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin-bottom:10px;margin-top:4px}
-    /* Edit username inline */
-    .edit-row{display:flex;gap:8px;margin-bottom:16px}
-    .edit-row .modal-inp{margin-bottom:0;flex:1}
-    .edit-save{background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:0 16px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;transition:background 0.15s;white-space:nowrap}
+    .prof-stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);line-height:1}
+    .prof-stat-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+    .sect-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px;margin-top:2px}
+    .edit-row{display:flex;gap:8px;margin-bottom:16px;align-items:center}
+    .edit-row .inp{margin-bottom:0;flex:1}
+    .edit-save{background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:10px 16px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;cursor:pointer;transition:background var(--transition);white-space:nowrap;flex-shrink:0}
     .edit-save:hover{background:var(--red-dark)}
     /* History inside profile modal */
-    .ph-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:all 0.15s}
-    .ph-item:hover{border-color:var(--red);background:#2A1A1A}
-    .ph-reg{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;background:var(--gold);color:var(--dark2);padding:3px 9px;border-radius:4px;flex-shrink:0}
+    .ph-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;cursor:pointer;transition:all var(--transition)}
+    .ph-item:hover{border-color:rgba(226,75,74,0.4);background:rgba(226,75,74,0.03)}
+    .ph-reg{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;background:var(--gold);color:#1a1600;padding:3px 9px;border-radius:3px;flex-shrink:0}
     .ph-info{flex:1;min-width:0}
-    .ph-car{font-size:13px;font-weight:600;color:var(--light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ph-meta{font-size:11px;color:#444440;margin-top:1px}
+    .ph-car{font-size:12px;font-weight:600;color:var(--light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ph-meta{font-size:10px;color:var(--text3);margin-top:1px}
     .ph-empty{text-align:center;padding:1.5rem 0;color:var(--text2);font-size:13px}
+    /* SQL hint box */
+    .sql-hint{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:12px;font-size:11px;color:#93C5FD;line-height:1.6;display:none}
+    .sql-hint code{background:rgba(59,130,246,0.15);padding:2px 6px;border-radius:3px;font-family:monospace;font-size:10px}
 
-    /* Footer strips */
-    .stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:700px;margin:0 auto 4rem;padding:0 1.5rem}
-    .strip-stat{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
-    .strip-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--red)}
-    .strip-label{font-size:12px;color:var(--text2);margin-top:4px}
-    .how-section{padding:4rem 1.5rem;max-width:700px;margin:0 auto}
-    .section-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;margin-bottom:2rem;text-align:center}
+    /* ── FOOTER STRIPS ── */
+    .stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:680px;margin:0 auto 4rem;padding:0 1.5rem}
+    .strip-stat{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
+    .strip-num{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--red)}
+    .strip-label{font-size:11px;color:var(--text2);margin-top:4px}
+    .how-section{padding:3.5rem 1.5rem;max-width:680px;margin:0 auto}
+    .section-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;margin-bottom:2rem;text-align:center}
     .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-    .step{background:var(--dark3);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
-    .step-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--red);line-height:1}
-    .step-title{font-weight:600;font-size:14px;margin:8px 0 4px}
-    .step-desc{font-size:12px;color:var(--text2);line-height:1.5}
-    footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:#444440;font-size:12px;line-height:1.8}
+    .step{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
+    .step-num{font-family:'Bebas Neue',sans-serif;font-size:46px;color:var(--red);line-height:1}
+    .step-title{font-weight:600;font-size:13px;margin:8px 0 4px}
+    .step-desc{font-size:11px;color:var(--text2);line-height:1.5}
+    footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:var(--text3);font-size:11px;line-height:1.9}
+
+    /* ── UTILS ── */
     .hidden{display:none!important}
-    .loading{text-align:center;padding:2rem;color:var(--text2);font-size:14px}
-    .error-box{background:#3A0A0A;color:#FF6B6B;border-radius:var(--radius-sm);padding:12px 16px;font-size:13px;margin-bottom:1rem}
+    .loading{text-align:center;padding:2rem;color:var(--text2);font-size:13px;letter-spacing:0.5px}
+    .loading::after{content:'';display:inline-block;width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;margin-left:8px;vertical-align:middle}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .error-box{background:rgba(255,107,107,0.08);color:#FF6B6B;border:1px solid rgba(255,107,107,0.2);border-radius:var(--radius-sm);padding:12px 16px;font-size:13px;margin-bottom:1rem}
     @media(max-width:520px){
       .grid4{grid-template-columns:repeat(2,1fr)}
       .mods-grid{grid-template-columns:repeat(2,1fr)}
       .steps,.stats-strip{grid-template-columns:1fr}
+      .mot-sum-grid{grid-template-columns:repeat(2,1fr)}
       nav{padding:1rem}
-      .hero{padding:3rem 1.5rem 2rem}
+      .hero{padding:3rem 1rem 2rem}
+      .app{padding:1rem 1rem 4rem}
     }
   </style>
 </head>
@@ -184,76 +277,70 @@
       <button class="btn-sm btn-signup" id="btnSignup">SIGN UP</button>
     </div>
     <div id="navLoggedIn" class="hidden">
-      <!-- Black circle avatar -->
-      <button class="nav-avatar" id="btnAvatar" title="My profile">?</button>
+      <button class="nav-avatar" id="btnAvatar" title="Profile">?</button>
     </div>
   </div>
 </nav>
 
 <!-- AUTH MODAL -->
-<div class="modal-overlay hidden" id="authModal">
+<div class="overlay hidden" id="authModal">
   <div class="modal">
     <button class="modal-x" id="authClose">&times;</button>
-    <div class="modal-heading">GARAGEIQ</div>
+    <div class="modal-h">GARAGEIQ</div>
     <div class="modal-sub">Save your history. Track your builds.</div>
-    <div class="modal-tabs">
-      <button class="modal-tab active" id="tabLogin">LOG IN</button>
-      <button class="modal-tab" id="tabSignup">SIGN UP</button>
+    <div class="tabs">
+      <button class="tab active" id="tabLogin">LOG IN</button>
+      <button class="tab" id="tabSignup">SIGN UP</button>
     </div>
-    <div class="modal-err" id="authErr"></div>
-    <div class="modal-ok"  id="authOk"></div>
+    <div class="msg-err" id="authErr"></div>
+    <div class="msg-ok"  id="authOk"></div>
     <div id="loginForm">
-      <input class="modal-inp" id="loginEmail" type="email"     placeholder="Email address"           autocomplete="email" />
-      <input class="modal-inp" id="loginPass"  type="password"  placeholder="Password"                autocomplete="current-password" />
+      <input class="inp" id="loginEmail" type="email" placeholder="Email address" autocomplete="email"/>
+      <input class="inp" id="loginPass"  type="password" placeholder="Password" autocomplete="current-password"/>
       <button class="modal-btn" id="btnDoLogin">LOG IN</button>
     </div>
     <div id="signupForm" style="display:none">
-      <input class="modal-inp" id="signupUser"  type="text"     placeholder="Username (e.g. SPEEDKING99)" maxlength="20" style="text-transform:uppercase" autocomplete="off" />
-      <input class="modal-inp" id="signupEmail" type="email"    placeholder="Email address"           autocomplete="email" />
-      <input class="modal-inp" id="signupPass"  type="password" placeholder="Password (min 6 chars)"  autocomplete="new-password" />
+      <input class="inp" id="signupUser"  type="text"     placeholder="Username e.g. SPEEDKING99" maxlength="20" style="text-transform:uppercase" autocomplete="off"/>
+      <input class="inp" id="signupEmail" type="email"    placeholder="Email address" autocomplete="email"/>
+      <input class="inp" id="signupPass"  type="password" placeholder="Password (min 6 chars)" autocomplete="new-password"/>
       <button class="modal-btn" id="btnDoSignup">CREATE ACCOUNT</button>
     </div>
   </div>
 </div>
 
 <!-- PROFILE MODAL -->
-<div class="modal-overlay hidden" id="profileModal">
+<div class="overlay hidden" id="profileModal">
   <div class="modal">
     <button class="modal-x" id="profileClose">&times;</button>
-    <!-- Avatar + email -->
-    <div class="prof-avatar-wrap">
-      <div class="prof-big-avatar" id="profAvatar">?</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px" id="profName">—</div>
+    <div class="prof-top">
+      <div class="prof-avatar-big" id="profAvatar">?</div>
+      <div class="prof-name" id="profName">—</div>
       <div class="prof-email" id="profEmail">—</div>
     </div>
-    <!-- Edit username -->
-    <div class="modal-err" id="profErr"></div>
-    <div class="modal-ok"  id="profOk"></div>
-    <div class="prof-section-title">CHANGE USERNAME</div>
+    <div class="msg-err" id="profErr"></div>
+    <div class="msg-ok"  id="profOk"></div>
+    <div class="sect-title">CHANGE USERNAME</div>
     <div class="edit-row">
-      <input class="modal-inp" id="newUsername" type="text" placeholder="New username" maxlength="20" style="text-transform:uppercase" />
-      <button class="edit-save" id="btnSaveUsername">SAVE</button>
+      <input class="inp" id="newUsername" type="text" placeholder="New username" maxlength="20" style="text-transform:uppercase"/>
+      <button class="edit-save" id="btnSaveUser">SAVE</button>
     </div>
-    <!-- Stats -->
     <div class="prof-stats">
-      <div class="prof-stat"><div class="prof-stat-num" id="profLookups">—</div><div class="prof-stat-lbl">Lookups</div></div>
+      <div class="prof-stat"><div class="prof-stat-num" id="profLookups">—</div><div class="prof-stat-lbl">Total Lookups</div></div>
       <div class="prof-stat"><div class="prof-stat-num" id="profUnique">—</div><div class="prof-stat-lbl">Unique Cars</div></div>
     </div>
-    <!-- History -->
-    <div class="prof-section-title">CAR HISTORY</div>
-    <div id="profHistoryList"><div class="ph-empty">Loading...</div></div>
-    <!-- Logout -->
+    <div class="sect-title">CAR HISTORY</div>
+    <div id="profHistory"><div class="ph-empty">Loading...</div></div>
     <button class="modal-btn-ghost" id="btnLogout">LOG OUT</button>
   </div>
 </div>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-tag">UK Cars Only &nbsp;·&nbsp; Free to Use</div>
-  <h1>KNOW YOUR<br /><span>CAR.</span><br />BUILD YOUR <span>VISION.</span></h1>
-  <p>Enter your reg. Get real DVLA data and full MOT history. Then see exactly what any modification does to your HP, sound, value and MOT risk.</p>
+  <div class="hero-tag"><i class="ti ti-shield-check" style="font-size:11px"></i> UK Car Intelligence Platform</div>
+  <h1>KNOW YOUR<br/><span>CAR.</span><br/>BUILD YOUR <span>VISION.</span></h1>
+  <p>Real DVLA data · Full MOT history · Mileage fraud detection · Mod impact analysis</p>
   <div class="reg-wrap">
-    <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="8" />
+    <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="8"/>
     <button class="reg-btn" id="runBtn">RUN</button>
   </div>
   <p class="hero-note">Real DVLA + DVSA data &nbsp;·&nbsp; No account needed &nbsp;·&nbsp; Free forever</p>
@@ -261,25 +348,35 @@
 
 <div class="app">
   <div id="errorBox" class="error-box hidden"></div>
-  <div id="loadingBox" class="loading hidden">Fetching real vehicle data...</div>
+  <div id="loadingBox" class="loading hidden">Fetching vehicle data</div>
+
   <div id="vehicleSection" class="hidden">
+    <!-- Vehicle info -->
     <div class="card">
-      <div class="card-title">Vehicle info</div>
-      <div class="grid4">
-        <div class="stat"><div class="stat-label">Make</div><div class="stat-val" id="statMake">-</div></div>
-        <div class="stat"><div class="stat-label">Model</div><div class="stat-val" id="statModel">-</div></div>
-        <div class="stat"><div class="stat-label">Year</div><div class="stat-val" id="statYear">-</div></div>
-        <div class="stat"><div class="stat-label">Engine</div><div class="stat-val" id="statEngine">-</div></div>
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-car"></i> Vehicle Info</div>
+        <div class="card-badge" id="vcReg">—</div>
       </div>
       <div class="grid4">
-        <div class="stat"><div class="stat-label">Colour</div><div class="stat-val" id="statColour">-</div></div>
-        <div class="stat"><div class="stat-label">Fuel</div><div class="stat-val" id="statFuel">-</div></div>
-        <div class="stat"><div class="stat-label">Tax</div><div class="stat-val" id="statTax">-</div></div>
-        <div class="stat"><div class="stat-label">MOT</div><div class="stat-val" id="statMot">-</div></div>
+        <div class="stat-box"><div class="stat-lbl">Make</div><div class="stat-val" id="statMake">-</div></div>
+        <div class="stat-box"><div class="stat-lbl">Model</div><div class="stat-val" id="statModel">-</div></div>
+        <div class="stat-box"><div class="stat-lbl">Year</div><div class="stat-val" id="statYear">-</div></div>
+        <div class="stat-box"><div class="stat-lbl">Engine</div><div class="stat-val" id="statEngine">-</div></div>
+      </div>
+      <div class="grid4">
+        <div class="stat-box"><div class="stat-lbl">Colour</div><div class="stat-val" id="statColour">-</div></div>
+        <div class="stat-box"><div class="stat-lbl">Fuel</div><div class="stat-val" id="statFuel">-</div></div>
+        <div class="stat-box"><div class="stat-lbl">Tax</div><div class="stat-val" id="statTax">-</div></div>
+        <div class="stat-box"><div class="stat-lbl">MOT</div><div class="stat-val" id="statMot">-</div></div>
       </div>
     </div>
+
+    <!-- Specs -->
     <div class="card">
-      <div class="card-title">Engine &amp; performance <span id="specsLoading" style="margin-left:auto;font-size:10px;color:#444440">Loading...</span></div>
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-engine"></i> Engine &amp; Performance</div>
+        <div class="card-badge" id="specsStatus">Loading...</div>
+      </div>
       <table class="spec-table">
         <tr><td>Power</td><td id="specBhp">-</td></tr>
         <tr><td>Torque</td><td id="specTorque">-</td></tr>
@@ -292,24 +389,50 @@
         <tr><td>CO2</td><td id="specCo2">-</td></tr>
       </table>
     </div>
+
+    <!-- MOT History -->
     <div class="card">
-      <div class="card-title">MOT history <span style="margin-left:auto;font-size:10px;color:#444440">Tap row to expand</span></div>
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-clipboard-list"></i> MOT History</div>
+        <div class="card-badge" style="font-size:9px;color:var(--text2)">Tap row to expand</div>
+      </div>
       <div id="motSummaryWrap" class="hidden">
         <div class="pass-bar-wrap">
-          <div class="pass-bar-label"><span>Pass rate</span><span id="passRatePct">-</span></div>
+          <div class="pass-bar-labels"><span>Pass rate</span><span id="passRatePct">—</span></div>
           <div class="pass-bar-bg"><div class="pass-bar-fill" id="passBarFill" style="width:0%"></div></div>
         </div>
-        <div class="mot-summary-grid">
-          <div class="mot-sum-stat"><div class="mot-sum-val green" id="sumPassed">-</div><div class="mot-sum-label">Passed</div></div>
-          <div class="mot-sum-stat"><div class="mot-sum-val red" id="sumFailed">-</div><div class="mot-sum-label">Failed</div></div>
-          <div class="mot-sum-stat"><div class="mot-sum-val amber" id="sumAdvisories">-</div><div class="mot-sum-label">Advisories</div></div>
-          <div class="mot-sum-stat"><div class="mot-sum-val" id="sumTests">-</div><div class="mot-sum-label">Total tests</div></div>
+        <div class="mot-sum-grid">
+          <div class="mot-sum-box"><div class="mot-sum-num green" id="sumPassed">-</div><div class="mot-sum-lbl">Passed</div></div>
+          <div class="mot-sum-box"><div class="mot-sum-num red"   id="sumFailed">-</div><div class="mot-sum-lbl">Failed</div></div>
+          <div class="mot-sum-box"><div class="mot-sum-num amber" id="sumAdv">-</div><div class="mot-sum-lbl">Advisories</div></div>
+          <div class="mot-sum-box"><div class="mot-sum-num"       id="sumTests">-</div><div class="mot-sum-lbl">Total Tests</div></div>
         </div>
       </div>
-      <div id="motHistory"><div class="loading">Loading MOT data...</div></div>
+      <div id="motHistory"><div class="loading">Loading MOT data</div></div>
     </div>
+
+    <!-- INTELLIGENCE REPORT -->
+    <div class="intel-card" id="intelCard" style="display:none">
+      <div class="intel-header">
+        <div class="intel-title"><i class="ti ti-report-analytics" style="color:var(--red)"></i> Car Intelligence Report</div>
+      </div>
+      <div class="risk-score-wrap" id="riskScoreWrap">
+        <div class="risk-score-circle" id="riskCircle">—</div>
+        <div class="risk-label-wrap">
+          <div class="risk-label" id="riskLabel">Analysing...</div>
+          <div class="risk-sub" id="riskSub">Checking mileage consistency, MOT history and vehicle data</div>
+        </div>
+      </div>
+      <div class="intel-checks" id="intelChecks"></div>
+      <div class="mileage-timeline" id="mileageTimeline"></div>
+    </div>
+
+    <!-- Mods -->
     <div class="card">
-      <div class="card-title">Choose a modification</div>
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-settings-2"></i> Mod Analyser</div>
+        <div class="card-badge">AI Powered</div>
+      </div>
       <div class="mods-grid">
         <div class="mod-btn" data-mod="Performance exhaust"><div class="mod-icon"><i class="ti ti-flame"></i></div><div class="mod-name">Performance exhaust</div><div class="mod-tag">Sound · HP · Value</div></div>
         <div class="mod-btn" data-mod="ECU remap"><div class="mod-icon"><i class="ti ti-cpu"></i></div><div class="mod-name">ECU remap</div><div class="mod-tag">HP · Torque · Economy</div></div>
@@ -328,19 +451,19 @@
 </div>
 
 <div class="stats-strip">
-  <div class="strip-stat"><div class="strip-num">9</div><div class="strip-label">Mods available free</div></div>
+  <div class="strip-stat"><div class="strip-num">9</div><div class="strip-label">Mods analysed free</div></div>
   <div class="strip-stat"><div class="strip-num">100%</div><div class="strip-label">Real DVLA &amp; DVSA data</div></div>
-  <div class="strip-stat"><div class="strip-num">FREE</div><div class="strip-label">Always free to look up</div></div>
+  <div class="strip-stat"><div class="strip-num">FREE</div><div class="strip-label">Always free to use</div></div>
 </div>
 <div class="how-section">
   <div class="section-title">HOW IT <span style="color:var(--red)">WORKS</span></div>
   <div class="steps">
-    <div class="step"><div class="step-num">01</div><div class="step-title">Enter your reg</div><div class="step-desc">Real DVLA vehicle data and full MOT history from official government databases instantly.</div></div>
-    <div class="step"><div class="step-num">02</div><div class="step-title">Pick a mod</div><div class="step-desc">Choose from 9 mods — exhausts, remaps, coilovers, turbos and more. All free.</div></div>
-    <div class="step"><div class="step-num">03</div><div class="step-title">Get your report</div><div class="step-desc">AI analyses your exact car — HP gain, sound, value change, MOT risk and install cost.</div></div>
+    <div class="step"><div class="step-num">01</div><div class="step-title">Enter your reg</div><div class="step-desc">Real DVLA vehicle data and full MOT history from official government databases.</div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Get the report</div><div class="step-desc">Mileage fraud detection, MOT risk score, annual mileage analysis — all from real data.</div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Build your vision</div><div class="step-desc">AI analyses your exact car — HP gain, sound change, value impact, MOT risk and cost.</div></div>
   </div>
 </div>
-<footer>2026 GarageIQ &nbsp;·&nbsp; Built for UK car enthusiasts<br />Not affiliated with DVLA or DVSA &nbsp;·&nbsp; AI mod analysis is for guidance only</footer>
+<footer>2026 GarageIQ &nbsp;·&nbsp; Built for UK car enthusiasts<br/>Not affiliated with DVLA or DVSA &nbsp;·&nbsp; AI analysis is guidance only</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -349,385 +472,602 @@ var VERCEL   = 'https://garage-iq-chi.vercel.app';
 var SUPA_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
 
-var sb, currentUser, currentProfile, vehicleData, selectedMod;
+var sb, currentUser, currentProfile, vehicleData={}, motTests=[], selectedMod;
 
-window.addEventListener('load', function () {
+/* ═══════════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════════ */
+window.addEventListener('load', function(){
   sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
-  sb.auth.onAuthStateChange(function (ev, session) {
+  // Auth state — fires immediately on load
+  sb.auth.onAuthStateChange(function(event, session){
     currentUser = session ? session.user : null;
-    if (currentUser) { loadProfile(); } else { currentProfile = null; renderNav(); }
+    if(currentUser){
+      // If pending username stored from signup, try to create profile
+      var pending = localStorage.getItem('giq_pending_user_' + currentUser.id);
+      if(pending){ tryCreateProfile(currentUser.id, pending); }
+      else{ loadProfile(); }
+    } else {
+      currentProfile = null; renderNav();
+    }
   });
 
-  // NAV
-  document.getElementById('btnLogin').addEventListener('click',  function () { openAuth('login'); });
-  document.getElementById('btnSignup').addEventListener('click', function () { openAuth('signup'); });
-  document.getElementById('btnAvatar').addEventListener('click', openProfileModal);
-
-  // AUTH MODAL
-  document.getElementById('authClose').addEventListener('click', closeAuth);
-  document.getElementById('authModal').addEventListener('click', function (e) { if (e.target === this) closeAuth(); });
-  document.getElementById('tabLogin').addEventListener('click',  function () { switchAuthTab('login'); });
-  document.getElementById('tabSignup').addEventListener('click', function () { switchAuthTab('signup'); });
-  document.getElementById('btnDoLogin').addEventListener('click',  doLogin);
-  document.getElementById('btnDoSignup').addEventListener('click', doSignup);
-
-  // PROFILE MODAL
-  document.getElementById('profileClose').addEventListener('click', closeProfileModal);
-  document.getElementById('profileModal').addEventListener('click', function (e) { if (e.target === this) closeProfileModal(); });
-  document.getElementById('btnSaveUsername').addEventListener('click', saveUsername);
-  document.getElementById('btnLogout').addEventListener('click', doLogout);
-
-  // LOOKUP
-  document.getElementById('runBtn').addEventListener('click', lookupVehicle);
-  document.getElementById('regInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') lookupVehicle(); });
-
-  // MODS
-  document.getElementById('analyzeBtn').addEventListener('click', analyseMod);
-  document.querySelectorAll('.mod-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () { selectMod(btn); });
-  });
+  // Nav
+  el('btnLogin').addEventListener('click', function(){ openAuth('login'); });
+  el('btnSignup').addEventListener('click', function(){ openAuth('signup'); });
+  el('btnAvatar').addEventListener('click', openProfileModal);
+  // Auth modal
+  el('authClose').addEventListener('click', closeAuth);
+  el('authModal').addEventListener('click', function(e){ if(e.target===this) closeAuth(); });
+  el('tabLogin').addEventListener('click', function(){ switchTab('login'); });
+  el('tabSignup').addEventListener('click', function(){ switchTab('signup'); });
+  el('btnDoLogin').addEventListener('click', doLogin);
+  el('btnDoSignup').addEventListener('click', doSignup);
+  // Profile modal
+  el('profileClose').addEventListener('click', closeProfileModal);
+  el('profileModal').addEventListener('click', function(e){ if(e.target===this) closeProfileModal(); });
+  el('btnSaveUser').addEventListener('click', saveUsername);
+  el('btnLogout').addEventListener('click', doLogout);
+  // Lookup
+  el('runBtn').addEventListener('click', lookupVehicle);
+  el('regInput').addEventListener('keydown', function(e){ if(e.key==='Enter') lookupVehicle(); });
+  // Mods
+  el('analyzeBtn').addEventListener('click', analyseMod);
+  qsa('.mod-btn').forEach(function(b){ b.addEventListener('click', function(){ selectMod(b); }); });
 });
 
-/* ── NAV ── */
-function renderNav() {
-  var loggedIn = !!(currentUser && currentProfile);
-  document.getElementById('navGuest').classList.toggle('hidden', loggedIn);
-  document.getElementById('navLoggedIn').classList.toggle('hidden', !loggedIn);
-  if (loggedIn) {
-    var initial = (currentProfile.username || '?').charAt(0).toUpperCase();
-    document.getElementById('btnAvatar').textContent = initial;
+function el(id){ return document.getElementById(id); }
+function qsa(s){ return document.querySelectorAll(s); }
+function esc(s){ return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
+function fmt(s){ return s?String(s).toUpperCase():'-'; }
+
+/* ═══════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════ */
+function renderNav(){
+  var li = !!(currentUser && currentProfile);
+  el('navGuest').classList.toggle('hidden', li);
+  el('navLoggedIn').classList.toggle('hidden', !li);
+  if(li){
+    var initial = (currentProfile.username||'?').charAt(0).toUpperCase();
+    el('btnAvatar').textContent = initial;
   }
 }
 
-/* ── LOAD PROFILE ── */
-function loadProfile() {
-  sb.from('profiles').select('id, username').eq('id', currentUser.id).single()
-    .then(function (res) {
-      if (res.data && res.data.username) {
+/* ═══════════════════════════════════════════════
+   PROFILE FROM DB
+═══════════════════════════════════════════════ */
+function loadProfile(){
+  if(!currentUser) return;
+  sb.from('profiles').select('id,username').eq('id',currentUser.id).maybeSingle()
+    .then(function(res){
+      if(res.data && res.data.username){
         currentProfile = res.data;
       } else {
-        var fb = currentUser.email.split('@')[0].toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,20);
+        // No profile — create fallback
+        var fb = currentUser.email.split('@')[0].toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,20)||'USER';
         currentProfile = { id: currentUser.id, username: fb };
-        sb.from('profiles').upsert([{ id: currentUser.id, username: fb }]);
+        sb.from('profiles').upsert([{id:currentUser.id,username:fb}],{onConflict:'id'});
       }
       renderNav();
-    })
-    .catch(function () {
-      currentProfile = { id: currentUser.id, username: currentUser.email.split('@')[0].toUpperCase() };
+    }).catch(function(){ currentProfile={id:currentUser.id,username:'USER'}; renderNav(); });
+}
+
+function tryCreateProfile(uid, username){
+  sb.from('profiles').upsert([{id:uid,username:username}],{onConflict:'id'})
+    .then(function(){
+      localStorage.removeItem('giq_pending_user_'+uid);
+      currentProfile = {id:uid,username:username};
       renderNav();
+    }).catch(function(){ loadProfile(); });
+}
+
+/* ═══════════════════════════════════════════════
+   AUTH MODAL
+═══════════════════════════════════════════════ */
+function openAuth(tab){
+  ['authErr','authOk'].forEach(function(id){ hideMsg(id); });
+  ['loginEmail','loginPass','signupUser','signupEmail','signupPass'].forEach(function(id){ el(id).value=''; });
+  el('authModal').classList.remove('hidden');
+  switchTab(tab||'login');
+}
+function closeAuth(){ el('authModal').classList.add('hidden'); }
+function switchTab(tab){
+  el('tabLogin').classList.toggle('active', tab==='login');
+  el('tabSignup').classList.toggle('active', tab==='signup');
+  el('loginForm').style.display  = tab==='login'  ? 'block':'none';
+  el('signupForm').style.display = tab==='signup' ? 'block':'none';
+  ['authErr','authOk'].forEach(function(id){ hideMsg(id); });
+}
+
+function doLogin(){
+  var email=el('loginEmail').value.trim(), pass=el('loginPass').value;
+  if(!email||!pass){ showErr('authErr','Enter your email and password.'); return; }
+  var btn=el('btnDoLogin'); btn.disabled=true; btn.textContent='...';
+  sb.auth.signInWithPassword({email:email,password:pass}).then(function(res){
+    btn.disabled=false; btn.textContent='LOG IN';
+    if(res.error){ showErr('authErr',res.error.message); }
+    else{ closeAuth(); }
+  });
+}
+
+function doSignup(){
+  var username=el('signupUser').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'');
+  var email=el('signupEmail').value.trim(), pass=el('signupPass').value;
+  if(!username){ showErr('authErr','Enter a username.'); return; }
+  if(!email){ showErr('authErr','Enter your email.'); return; }
+  if(pass.length<6){ showErr('authErr','Password needs 6+ characters.'); return; }
+  var btn=el('btnDoSignup'); btn.disabled=true; btn.textContent='...';
+  // Check username not taken
+  sb.from('profiles').select('id',{count:'exact',head:true}).eq('username',username)
+    .then(function(ck){
+      if((ck.count||0)>0){ btn.disabled=false; btn.textContent='CREATE ACCOUNT'; showErr('authErr','Username taken.'); return; }
+      sb.auth.signUp({email:email,password:pass}).then(function(res){
+        btn.disabled=false; btn.textContent='CREATE ACCOUNT';
+        if(res.error){ showErr('authErr',res.error.message); return; }
+        var uid = res.data&&res.data.user ? res.data.user.id : null;
+        if(uid){
+          // Store username in localStorage so onAuthStateChange can pick it up
+          localStorage.setItem('giq_pending_user_'+uid, username);
+          sb.from('profiles').upsert([{id:uid,username:username}],{onConflict:'id'}).then(function(){
+            localStorage.removeItem('giq_pending_user_'+uid);
+            currentUser=res.data.user;
+            currentProfile={id:uid,username:username};
+            renderNav(); closeAuth();
+          }).catch(function(){
+            // Will retry on next login via onAuthStateChange
+            showOk('authOk','Account created! Check email to confirm then log in.');
+          });
+        } else {
+          showOk('authOk','Check your email to confirm, then log in!');
+        }
+      });
     });
 }
 
-/* ── AUTH MODAL ── */
-function openAuth(tab) {
-  clearMsg('authErr'); clearMsg('authOk');
-  ['loginEmail','loginPass','signupUser','signupEmail','signupPass'].forEach(function (id) {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('authModal').classList.remove('hidden');
-  switchAuthTab(tab || 'login');
-}
-function closeAuth() { document.getElementById('authModal').classList.add('hidden'); }
-function switchAuthTab(tab) {
-  document.getElementById('tabLogin').classList.toggle('active',  tab === 'login');
-  document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
-  document.getElementById('loginForm').style.display  = tab === 'login'  ? 'block' : 'none';
-  document.getElementById('signupForm').style.display = tab === 'signup' ? 'block' : 'none';
-  clearMsg('authErr'); clearMsg('authOk');
-}
-
-function doLogin() {
-  var email = document.getElementById('loginEmail').value.trim();
-  var pass  = document.getElementById('loginPass').value;
-  if (!email || !pass) { showMsg('authErr', 'Enter your email and password.'); return; }
-  var btn = document.getElementById('btnDoLogin');
-  btn.disabled = true; btn.textContent = '...';
-  sb.auth.signInWithPassword({ email: email, password: pass }).then(function (res) {
-    btn.disabled = false; btn.textContent = 'LOG IN';
-    if (res.error) { showMsg('authErr', res.error.message); }
-    else { closeAuth(); }
+function doLogout(){
+  sb.auth.signOut().then(function(){
+    currentUser=null; currentProfile=null; renderNav(); closeProfileModal();
   });
 }
 
-function doSignup() {
-  var username = document.getElementById('signupUser').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'');
-  var email    = document.getElementById('signupEmail').value.trim();
-  var pass     = document.getElementById('signupPass').value;
-  if (!username)      { showMsg('authErr', 'Enter a username.'); return; }
-  if (!email)         { showMsg('authErr', 'Enter your email.'); return; }
-  if (pass.length < 6){ showMsg('authErr', 'Password needs 6+ characters.'); return; }
-  var btn = document.getElementById('btnDoSignup');
-  btn.disabled = true; btn.textContent = '...';
-  // Check username uniqueness first
-  sb.from('profiles').select('id', { count: 'exact', head: true }).eq('username', username).then(function (ck) {
-    if (ck.count > 0) {
-      btn.disabled = false; btn.textContent = 'CREATE ACCOUNT';
-      showMsg('authErr', 'Username taken — try another.'); return;
-    }
-    sb.auth.signUp({ email: email, password: pass }).then(function (res) {
-      btn.disabled = false; btn.textContent = 'CREATE ACCOUNT';
-      if (res.error) { showMsg('authErr', res.error.message); return; }
-      var uid = res.data && res.data.user ? res.data.user.id : null;
-      if (uid) {
-        sb.from('profiles').insert([{ id: uid, username: username }]).then(function () {
-          currentUser    = res.data.user;
-          currentProfile = { id: uid, username: username };
-          renderNav(); closeAuth();
-        });
-      } else {
-        showMsg('authOk', 'Check your email to confirm, then log in!');
-      }
-    });
-  });
-}
-
-function doLogout() {
-  sb.auth.signOut().then(function () {
-    currentUser = null; currentProfile = null;
-    renderNav(); closeProfileModal();
-  });
-}
-
-/* ── PROFILE MODAL ── */
-function openProfileModal() {
-  clearMsg('profErr'); clearMsg('profOk');
-  document.getElementById('newUsername').value = '';
-  var name = (currentProfile && currentProfile.username) ? currentProfile.username.toUpperCase() : '?';
-  document.getElementById('profAvatar').textContent = name.charAt(0);
-  document.getElementById('profName').textContent   = name;
-  document.getElementById('profEmail').textContent  = currentUser ? currentUser.email : '';
-  document.getElementById('profLookups').textContent = '—';
-  document.getElementById('profUnique').textContent  = '—';
-  document.getElementById('profHistoryList').innerHTML = '<div class="ph-empty">Loading...</div>';
-  document.getElementById('profileModal').classList.remove('hidden');
+/* ═══════════════════════════════════════════════
+   PROFILE MODAL
+═══════════════════════════════════════════════ */
+function openProfileModal(){
+  ['profErr','profOk'].forEach(function(id){ hideMsg(id); });
+  el('newUsername').value='';
+  var name=(currentProfile&&currentProfile.username)?currentProfile.username.toUpperCase():'?';
+  el('profAvatar').textContent=name.charAt(0);
+  el('profName').textContent=name;
+  el('profEmail').textContent=currentUser?currentUser.email:'';
+  el('profLookups').textContent='—';
+  el('profUnique').textContent='—';
+  el('profHistory').innerHTML='<div class="ph-empty">Loading...</div>';
+  el('profileModal').classList.remove('hidden');
   loadProfileHistory();
 }
-function closeProfileModal() { document.getElementById('profileModal').classList.add('hidden'); }
+function closeProfileModal(){ el('profileModal').classList.add('hidden'); }
 
-function saveUsername() {
-  var val = document.getElementById('newUsername').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'');
-  if (!val) { showMsg('profErr','Enter a username.'); return; }
-  var btn = document.getElementById('btnSaveUsername');
-  btn.disabled = true;
-  // Check uniqueness
-  sb.from('profiles').select('id', { count: 'exact', head: true }).eq('username', val).then(function (ck) {
-    if (ck.count > 0 && val !== (currentProfile.username || '').toUpperCase()) {
-      btn.disabled = false; showMsg('profErr','Username taken.'); return;
-    }
-    sb.from('profiles').update({ username: val }).eq('id', currentUser.id).then(function (res) {
-      btn.disabled = false;
-      if (res.error) { showMsg('profErr', res.error.message); return; }
-      currentProfile.username = val;
-      renderNav();
-      document.getElementById('profAvatar').textContent = val.charAt(0);
-      document.getElementById('profName').textContent   = val;
-      document.getElementById('newUsername').value = '';
-      showMsg('profOk', 'Username updated!');
+function saveUsername(){
+  var val=el('newUsername').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'');
+  if(!val){ showErr('profErr','Enter a username.'); return; }
+  var btn=el('btnSaveUser'); btn.disabled=true;
+  sb.from('profiles').select('id',{count:'exact',head:true}).eq('username',val)
+    .then(function(ck){
+      if((ck.count||0)>0 && val!==(currentProfile.username||'').toUpperCase()){
+        btn.disabled=false; showErr('profErr','Username already taken.'); return;
+      }
+      sb.from('profiles').update({username:val}).eq('id',currentUser.id)
+        .then(function(res){
+          btn.disabled=false;
+          if(res.error){ showErr('profErr',res.error.message||'Update failed.'); return; }
+          currentProfile.username=val;
+          renderNav();
+          el('profAvatar').textContent=val.charAt(0);
+          el('profName').textContent=val;
+          el('newUsername').value='';
+          showOk('profOk','Username updated!');
+        }).catch(function(e){ btn.disabled=false; showErr('profErr','Update failed: '+(e.message||'unknown')); });
     });
-  });
 }
 
-function loadProfileHistory() {
+function loadProfileHistory(){
   sb.from('car_history')
-    .select('reg, make, model, year, colour, fuel, looked_up_at')
-    .eq('user_id', currentUser.id)
-    .order('looked_up_at', { ascending: false })
-    .limit(100)
-    .then(function (res) {
-      var rows = res.data || [];
-      // Total lookups = all rows
-      document.getElementById('profLookups').textContent = rows.length;
-      // Unique cars = deduplicated by reg
-      var seen = {}; var unique = [];
-      rows.forEach(function (r) { if (!seen[r.reg]) { seen[r.reg] = true; unique.push(r); } });
-      document.getElementById('profUnique').textContent = unique.length;
-
-      var listEl = document.getElementById('profHistoryList');
-      if (!rows.length) {
-        listEl.innerHTML = '<div class="ph-empty">No cars looked up yet.</div>'; return;
-      }
-      listEl.innerHTML = unique.map(function (r) {
-        var date    = r.looked_up_at ? new Date(r.looked_up_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
-        var carName = [(r.make||'').toUpperCase(),(r.model||'').toUpperCase(),r.year||''].filter(Boolean).join(' ') || 'Unknown';
-        var meta    = [r.colour, r.fuel, date].filter(Boolean).join(' · ');
-        return '<div class="ph-item" data-reg="' + esc(r.reg) + '">'
-          + '<div class="ph-reg">' + esc(r.reg) + '</div>'
-          + '<div class="ph-info"><div class="ph-car">' + esc(carName) + '</div>'
-          + '<div class="ph-meta">' + esc(meta) + '</div></div>'
-          + '<i class="ti ti-chevron-right" style="color:#444440;font-size:13px;flex-shrink:0"></i></div>';
+    .select('reg,make,model,year,colour,fuel,looked_up_at')
+    .eq('user_id',currentUser.id)
+    .order('looked_up_at',{ascending:false})
+    .limit(200)
+    .then(function(res){
+      if(res.error){ el('profHistory').innerHTML='<div class="ph-empty">Could not load history: '+esc(res.error.message)+'</div>'; return; }
+      var rows=res.data||[];
+      el('profLookups').textContent=rows.length;
+      var seen={}, unique=[];
+      rows.forEach(function(r){ if(!seen[r.reg]){seen[r.reg]=true;unique.push(r);} });
+      el('profUnique').textContent=unique.length;
+      if(!rows.length){ el('profHistory').innerHTML='<div class="ph-empty">No cars looked up yet.<br>Search a reg above to start.</div>'; return; }
+      el('profHistory').innerHTML=unique.map(function(r){
+        var date=r.looked_up_at?new Date(r.looked_up_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+        var car=[(r.make||'').toUpperCase(),(r.model||'').toUpperCase(),r.year||''].filter(Boolean).join(' ')||'Unknown';
+        var meta=[r.colour,r.fuel,date].filter(Boolean).join(' · ');
+        return '<div class="ph-item" data-reg="'+esc(r.reg)+'">'
+          +'<div class="ph-reg">'+esc(r.reg)+'</div>'
+          +'<div class="ph-info"><div class="ph-car">'+esc(car)+'</div>'
+          +'<div class="ph-meta">'+esc(meta)+'</div></div>'
+          +'<i class="ti ti-chevron-right" style="color:var(--text3);font-size:12px"></i></div>';
       }).join('');
-      listEl.querySelectorAll('.ph-item').forEach(function (item) {
-        item.addEventListener('click', function () {
-          document.getElementById('regInput').value = item.getAttribute('data-reg');
+      qsa('#profHistory .ph-item').forEach(function(item){
+        item.addEventListener('click',function(){
+          el('regInput').value=item.getAttribute('data-reg');
           closeProfileModal(); lookupVehicle();
         });
       });
-    })
-    .catch(function () {
-      document.getElementById('profHistoryList').innerHTML = '<div class="ph-empty">Could not load history.</div>';
-    });
+    }).catch(function(e){ el('profHistory').innerHTML='<div class="ph-empty">Error: '+esc(e.message)+'</div>'; });
 }
 
-/* ── HELPERS ── */
-function showMsg(id, msg) { var e = document.getElementById(id); e.textContent = msg; e.style.display = 'block'; }
-function clearMsg(id) { var e = document.getElementById(id); e.textContent = ''; e.style.display = 'none'; }
-function esc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+/* ═══════════════════════════════════════════════
+   VEHICLE LOOKUP
+═══════════════════════════════════════════════ */
+function estHp(d){ var c=parseInt(d.engineCapacity)||1600; return c<=999?65:c<=1199?85:c<=1399?110:c<=1599?130:c<=1999?160:c<=2499?220:c<=2999?280:340; }
+function estTq(d){ return Math.round(estHp(d)*1.5); }
+function estVal(d){ var y=parseInt(d.yearOfManufacture)||2015; return Math.max(1500,Math.round(15000-(2026-y)*900)); }
 
-/* ── VEHICLE LOOKUP ── */
-function estHp(d)  { var c=parseInt(d.engineCapacity)||1600; if(c<=999)return 65;if(c<=1199)return 85;if(c<=1399)return 110;if(c<=1599)return 130;if(c<=1999)return 160;if(c<=2499)return 220;if(c<=2999)return 280;return 340; }
-function estTq(d)  { return Math.round(estHp(d)*1.5); }
-function estVal(d) { var y=parseInt(d.yearOfManufacture)||2015; return Math.max(1500,Math.round(15000-(2026-y)*900)); }
+function lookupVehicle(){
+  var reg=el('regInput').value.replace(/\s/g,'').toUpperCase();
+  if(!reg||reg.length<2) return;
+  el('errorBox').classList.add('hidden');
+  el('loadingBox').classList.remove('hidden');
+  el('vehicleSection').classList.add('hidden');
+  el('resultSection').classList.add('hidden');
+  el('intelCard').style.display='none';
+  selectedMod=null; motTests=[];
+  el('analyzeBtn').disabled=true;
+  el('analyzeBtn').textContent='Select a mod to analyse';
+  qsa('.mod-btn').forEach(function(b){ b.classList.remove('selected'); });
 
-function lookupVehicle() {
-  var reg = document.getElementById('regInput').value.replace(/\s/g,'').toUpperCase();
-  if (!reg || reg.length < 2) return;
-  document.getElementById('errorBox').classList.add('hidden');
-  document.getElementById('loadingBox').classList.remove('hidden');
-  document.getElementById('vehicleSection').classList.add('hidden');
-  document.getElementById('resultSection').classList.add('hidden');
-  selectedMod = null;
-  document.getElementById('analyzeBtn').disabled = true;
-  document.getElementById('analyzeBtn').textContent = 'Select a mod to analyse';
-  document.querySelectorAll('.mod-btn').forEach(function (b) { b.classList.remove('selected'); });
-
-  fetch(VERCEL + '/api/vehicle', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({registrationNumber:reg}) })
-    .then(function (r) { if (!r.ok) throw new Error('DVLA'); return r.json(); })
-    .then(function (d) {
-      vehicleData = Object.assign({}, d, { reg:reg, hp:estHp(d), torque:estTq(d), value:estVal(d) });
+  fetch(VERCEL+'/api/vehicle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({registrationNumber:reg})})
+    .then(function(r){ if(!r.ok) throw new Error('DVLA error'); return r.json(); })
+    .then(function(d){
+      vehicleData=Object.assign({},d,{reg:reg,hp:estHp(d),torque:estTq(d),value:estVal(d)});
       renderVehicle(vehicleData);
       saveToHistory();
-      loadMot(reg);
       loadSpecs();
-      document.getElementById('loadingBox').classList.add('hidden');
-      document.getElementById('vehicleSection').classList.remove('hidden');
-      document.getElementById('vehicleSection').scrollIntoView({ behavior:'smooth', block:'start' });
+      loadMot(reg);
+      el('loadingBox').classList.add('hidden');
+      el('vehicleSection').classList.remove('hidden');
+      el('vcReg').textContent=reg;
+      el('vehicleSection').scrollIntoView({behavior:'smooth',block:'start'});
     })
-    .catch(function () {
-      document.getElementById('errorBox').textContent = 'Could not fetch vehicle data — check the reg and try again.';
-      document.getElementById('errorBox').classList.remove('hidden');
-      document.getElementById('loadingBox').classList.add('hidden');
+    .catch(function(e){
+      el('errorBox').textContent='Could not fetch vehicle — check the reg and try again. ('+(e.message)+')';
+      el('errorBox').classList.remove('hidden');
+      el('loadingBox').classList.add('hidden');
     });
 }
 
-function renderVehicle(d) {
-  document.getElementById('statMake').textContent   = (d.make||'-').toUpperCase();
-  document.getElementById('statModel').textContent  = (d.model||'-').toUpperCase();
-  document.getElementById('statYear').textContent   = d.yearOfManufacture||'-';
-  document.getElementById('statEngine').textContent = d.engineCapacity ? d.engineCapacity+'cc' : '-';
-  document.getElementById('statColour').textContent = (d.colour||d.primaryColour||'-').toUpperCase();
-  document.getElementById('statFuel').textContent   = (d.fuelType||'-').toUpperCase();
-  var te = document.getElementById('statTax');
-  te.textContent = (d.taxStatus||'-').toUpperCase();
-  te.className = 'stat-val '+((d.taxStatus||'').toLowerCase().includes('taxed')?'green':'red');
-  var me = document.getElementById('statMot');
-  var mok = (d.motStatus||'').toLowerCase().includes('valid');
-  me.textContent = mok ? 'VALID' : (d.motStatus||'-').toUpperCase();
-  me.className = 'stat-val '+(mok?'green':'red');
+function renderVehicle(d){
+  el('statMake').textContent=fmt(d.make);
+  el('statModel').textContent=fmt(d.model);
+  el('statYear').textContent=d.yearOfManufacture||'-';
+  el('statEngine').textContent=d.engineCapacity?d.engineCapacity+'cc':'-';
+  el('statColour').textContent=fmt(d.colour||d.primaryColour);
+  el('statFuel').textContent=fmt(d.fuelType);
+  var te=el('statTax');
+  te.textContent=fmt(d.taxStatus);
+  te.className='stat-val '+((d.taxStatus||'').toLowerCase().includes('taxed')?'green':'red');
+  var me=el('statMot');
+  var mok=(d.motStatus||'').toLowerCase().includes('valid');
+  me.textContent=mok?'VALID':fmt(d.motStatus);
+  me.className='stat-val '+(mok?'green':'red');
 }
 
-function saveToHistory() {
-  if (!currentUser) return;
-  sb.from('car_history').insert({ user_id:currentUser.id, reg:vehicleData.reg, make:vehicleData.make, model:vehicleData.model, year:vehicleData.yearOfManufacture, colour:vehicleData.colour||vehicleData.primaryColour, fuel:vehicleData.fuelType, hp:vehicleData.hp, value:vehicleData.value });
-}
-
-function loadSpecs() {
-  document.getElementById('specsLoading').textContent = 'Loading...';
-  fetch(VERCEL+'/api/specs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({make:vehicleData.make,model:vehicleData.model,year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity,fuel:vehicleData.fuelType})})
-    .then(function(r){return r.json();})
-    .then(function(s){
-      document.getElementById('specBhp').textContent      = s.bhp       ? s.bhp+' BHP' : '-';
-      document.getElementById('specTorque').textContent   = s.torqueNm  ? s.torqueNm+' Nm @ '+s.torqueRpm+' rpm' : '-';
-      document.getElementById('specZero').textContent     = s.zeroToSixty ? s.zeroToSixty+' sec' : '-';
-      document.getElementById('specTopSpeed').textContent = s.topSpeedMph ? s.topSpeedMph+' mph' : '-';
-      document.getElementById('specGearbox').textContent  = s.gearbox   ||'-';
-      document.getElementById('specCylinders').textContent= s.cylinders ||'-';
-      document.getElementById('specDrive').textContent    = s.driveType ||'-';
-      document.getElementById('specCombined').textContent = s.consumptionCombined ? s.consumptionCombined+' mpg' : '-';
-      document.getElementById('specCo2').innerHTML = s.co2gkm ? s.co2gkm+' g/km <span class="co2-label '+(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>' : '-';
-      if(s.bhp)      vehicleData.hp     = parseInt(s.bhp);
-      if(s.torqueNm) vehicleData.torque = parseInt(s.torqueNm);
-      document.getElementById('specsLoading').textContent = '';
+/* ── SAVE HISTORY — robust with error logging ── */
+function saveToHistory(){
+  if(!currentUser){ return; }
+  var row={
+    user_id: currentUser.id,
+    reg:     vehicleData.reg||'',
+    make:    vehicleData.make||null,
+    model:   vehicleData.model||null,
+    year:    vehicleData.yearOfManufacture ? String(vehicleData.yearOfManufacture) : null,
+    colour:  vehicleData.colour||vehicleData.primaryColour||null,
+    fuel:    vehicleData.fuelType||null,
+    hp:      vehicleData.hp||null,
+    value:   vehicleData.value||null
+  };
+  sb.from('car_history').insert(row)
+    .then(function(res){
+      if(res.error){ console.warn('GarageIQ: history save failed:', res.error.message, res.error.code); }
     })
-    .catch(function(){ document.getElementById('specsLoading').textContent = 'Unavailable'; });
+    .catch(function(e){ console.warn('GarageIQ: history save error:', e.message); });
 }
 
-/* ── MOT ── */
-function loadMot(reg) {
+function loadSpecs(){
+  el('specsStatus').textContent='Loading...';
+  fetch(VERCEL+'/api/specs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({make:vehicleData.make,model:vehicleData.model,year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity,fuel:vehicleData.fuelType})})
+    .then(function(r){ return r.json(); })
+    .then(function(s){
+      el('specBhp').textContent=s.bhp?s.bhp+' BHP':'-';
+      el('specTorque').textContent=s.torqueNm?s.torqueNm+' Nm @ '+(s.torqueRpm||'?')+' rpm':'-';
+      el('specZero').textContent=s.zeroToSixty?s.zeroToSixty+' sec':'-';
+      el('specTopSpeed').textContent=s.topSpeedMph?s.topSpeedMph+' mph':'-';
+      el('specGearbox').textContent=s.gearbox||'-';
+      el('specCylinders').textContent=s.cylinders||'-';
+      el('specDrive').textContent=s.driveType||'-';
+      el('specCombined').textContent=s.consumptionCombined?s.consumptionCombined+' mpg':'-';
+      el('specCo2').innerHTML=s.co2gkm?s.co2gkm+' g/km <span class="co2-badge '+(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>':'-';
+      if(s.bhp) vehicleData.hp=parseInt(s.bhp);
+      if(s.torqueNm) vehicleData.torque=parseInt(s.torqueNm);
+      el('specsStatus').textContent='AI sourced';
+    })
+    .catch(function(){ el('specsStatus').textContent='Unavailable'; });
+}
+
+/* ═══════════════════════════════════════════════
+   MOT
+═══════════════════════════════════════════════ */
+function loadMot(reg){
   fetch(VERCEL+'/api/mot?reg='+reg)
-    .then(function(r){if(!r.ok)throw new Error();return r.json();})
-    .then(function(raw){renderRealMot(raw);})
-    .catch(function(){renderDemoMot();});
+    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
+    .then(function(raw){ renderMot(raw); })
+    .catch(function(){ renderDemoMot(); });
 }
-function toggleMotRow(row){row.classList.toggle('open');}
+function toggleMotRow(row){ row.classList.toggle('open'); }
 
-function renderRealMot(raw) {
+function renderMot(raw){
   var tests=[];
   if(raw&&raw.motTests) tests=raw.motTests;
   else if(Array.isArray(raw)&&raw[0]&&raw[0].motTests) tests=raw[0].motTests;
   else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate) tests=raw;
-  if(!tests.length){renderDemoMot();return;}
-  var tot=tests.length, pass=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
-  var advs=tests.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
+  if(!tests.length){ renderDemoMot(); return; }
+  motTests=tests;
+
+  var tot=tests.length;
+  var pass=tests.filter(function(t){ return(t.testResult||'').toUpperCase()==='PASSED'; }).length;
+  var advCount=tests.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
   var rate=Math.round(pass/tot*100);
-  document.getElementById('sumPassed').textContent=pass;
-  document.getElementById('sumFailed').textContent=tot-pass;
-  document.getElementById('sumAdvisories').textContent=advs;
-  document.getElementById('sumTests').textContent=tot;
-  document.getElementById('passRatePct').textContent=rate+'%';
-  document.getElementById('passBarFill').style.width=rate+'%';
-  document.getElementById('passBarFill').style.background=rate>=80?'var(--green)':rate>=60?'var(--gold)':'#FF6B6B';
-  document.getElementById('motSummaryWrap').classList.remove('hidden');
-  document.getElementById('motHistory').innerHTML=tests.slice(0,10).map(function(t){
+
+  el('sumPassed').textContent=pass;
+  el('sumFailed').textContent=tot-pass;
+  el('sumAdv').textContent=advCount;
+  el('sumTests').textContent=tot;
+  el('passRatePct').textContent=rate+'%';
+  el('passBarFill').style.width=rate+'%';
+  el('passBarFill').style.background=rate>=80?'var(--green)':rate>=60?'var(--gold)':'var(--red)';
+  el('motSummaryWrap').classList.remove('hidden');
+
+  el('motHistory').innerHTML=tests.slice(0,10).map(function(t){
     var passed=(t.testResult||'').toUpperCase()==='PASSED';
     var def=t.defects||[];
-    var fails=def.filter(function(d){return d.type==='DANGEROUS'||d.type==='MAJOR';});
-    var mins=def.filter(function(d){return d.type==='MINOR';});
-    var ad=def.filter(function(d){return d.type==='ADVISORY';});
+    var dang=def.filter(function(d){ return d.type==='DANGEROUS'; });
+    var maj=def.filter(function(d){ return d.type==='MAJOR'; });
+    var min=def.filter(function(d){ return d.type==='MINOR'; });
+    var adv=def.filter(function(d){ return d.type==='ADVISORY'; });
     var det=def.length
-      ? fails.map(function(d){return'<div class="mot-detail-item"><div class="mot-type-dot dot-fail"></div><div><span style="color:#FF6B6B;font-weight:600;font-size:11px">'+d.type+' — </span>'+esc(d.text||'-')+'</div></div>';}).join('')
-        +mins.map(function(d){return'<div class="mot-detail-item"><div class="mot-type-dot dot-minor"></div><div><span style="color:var(--green);font-weight:600;font-size:11px">MINOR — </span>'+esc(d.text||'-')+'</div></div>';}).join('')
-        +ad.map(function(d){return'<div class="mot-detail-item"><div class="mot-type-dot dot-advisory"></div><div><span style="color:var(--gold);font-weight:600;font-size:11px">ADVISORY — </span>'+esc(d.text||'-')+'</div></div>';}).join('')
-      :'<div class="mot-no-items">No failures or advisories recorded.</div>';
+      ? dang.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-danger"></div><div><span style="color:#FF6B6B;font-weight:600;font-size:10px">DANGEROUS — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
+        +maj.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-major"></div><div><span style="color:#FF9500;font-weight:600;font-size:10px">MAJOR — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
+        +min.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-minor"></div><div><span style="color:var(--green);font-weight:600;font-size:10px">MINOR — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
+        +adv.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-advisory"></div><div><span style="color:var(--gold);font-weight:600;font-size:10px">ADVISORY — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
+      : '<div class="mot-no-items">No failures or advisories recorded.</div>';
     var ds=t.completedDate||'-';
-    try{if(ds.includes('T'))ds=new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){}
+    try{ if(ds.includes('T')) ds=new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }catch(e){}
     var mi=t.odometerValue?Number(t.odometerValue).toLocaleString()+' miles':'-';
-    return'<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-row-header"><span style="color:#555552;font-size:12px">'+ds+'</span><span>'+mi+'</span><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+(fails.length?'<span class="badge b-fail">'+fails.length+' failure</span>':'')+(mins.length?'<span class="badge b-advisory">'+mins.length+' minor</span>':'')+(ad.length?'<span class="badge b-advisory">'+ad.length+' advisory</span>':'')+'<span class="badge '+(passed?'b-pass':'b-fail')+'">'+(passed?'PASS':'FAIL')+'</span></div><i class="ti ti-chevron-down mot-chevron"></i></div><div class="mot-details">'+det+'</div></div>';
+    return '<div class="mot-row" onclick="toggleMotRow(this)">'
+      +'<div class="mot-row-header">'
+      +'<span style="color:var(--text2);font-size:11px">'+ds+'</span>'
+      +'<span style="font-weight:500">'+mi+'</span>'
+      +'<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">'
+      +(dang.length+maj.length?'<span class="badge b-fail">'+(dang.length+maj.length)+' failure</span>':'')
+      +(min.length?'<span class="badge b-warn">'+min.length+' minor</span>':'')
+      +(adv.length?'<span class="badge b-advisory">'+adv.length+' advisory</span>':'')
+      +'<span class="badge '+(passed?'b-pass':'b-fail')+'">'+(passed?'PASS':'FAIL')+'</span>'
+      +'</div><i class="ti ti-chevron-down mot-chevron"></i></div>'
+      +'<div class="mot-details">'+det+'</div></div>';
   }).join('');
+
+  // Run intelligence report
+  setTimeout(function(){ buildIntelReport(tests); }, 300);
 }
 
-function renderDemoMot() {
+function renderDemoMot(){
   var h=[
-    {date:'14 Nov 2024',passed:true, mi:'62,440',defects:[{type:'ADVISORY',text:'Tyre worn close to legal limit on nearside rear'},{type:'ADVISORY',text:'Rear brake pads showing wear'}]},
-    {date:'12 Nov 2023',passed:true, mi:'49,210',defects:[]},
-    {date:'08 Nov 2022',passed:true, mi:'37,880',defects:[{type:'ADVISORY',text:'Front suspension arm bush deteriorating'}]},
-    {date:'03 Dec 2021',passed:false,mi:'28,550',defects:[{type:'MAJOR',text:'Nearside front headlamp aim too low (1.3.1a)'},{type:'ADVISORY',text:'Oil seeping from rocker cover gasket'}]}
+    {date:'14 Nov 2024',passed:true, mi:'62,440',od:62440,defects:[{type:'ADVISORY',text:'Tyre worn close to legal limit on nearside rear'},{type:'ADVISORY',text:'Rear brake pads showing wear'}]},
+    {date:'12 Nov 2023',passed:true, mi:'49,210',od:49210,defects:[]},
+    {date:'08 Nov 2022',passed:true, mi:'37,880',od:37880,defects:[{type:'ADVISORY',text:'Front suspension arm bush deteriorating'}]},
+    {date:'03 Dec 2021',passed:false,mi:'28,550',od:28550,defects:[{type:'MAJOR',text:'Nearside front headlamp aim too low (1.3.1a)'},{type:'ADVISORY',text:'Oil seeping from rocker cover gasket'}]}
   ];
-  document.getElementById('motHistory').innerHTML=h.map(function(m){
-    var fails=m.defects.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';});
-    var advs=m.defects.filter(function(d){return d.type==='ADVISORY';});
-    var det=m.defects.length?m.defects.map(function(d){var f=d.type==='MAJOR'||d.type==='DANGEROUS';return'<div class="mot-detail-item"><div class="mot-type-dot '+(f?'dot-fail':'dot-advisory')+'"></div><div><span style="color:'+(f?'#FF6B6B':'var(--gold)')+';font-weight:600;font-size:11px">'+(f?'FAIL':'ADVISORY')+' — </span>'+esc(d.text)+'</div></div>';}).join(''):'<div class="mot-no-items">No failures or advisories.</div>';
-    return'<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-row-header"><span style="color:#555552;font-size:12px">'+m.date+'</span><span>'+m.mi+' miles</span><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+(fails.length?'<span class="badge b-fail">'+fails.length+' failure</span>':'')+(advs.length?'<span class="badge b-advisory">'+advs.length+' advisory</span>':'')+'<span class="badge '+(m.passed?'b-pass':'b-fail')+'">'+(m.passed?'PASS':'FAIL')+'</span></div><i class="ti ti-chevron-down mot-chevron"></i></div><div class="mot-details">'+det+'</div></div>';
+  el('motHistory').innerHTML=h.map(function(m){
+    var fails=m.defects.filter(function(d){ return d.type==='MAJOR'||d.type==='DANGEROUS'; });
+    var advs=m.defects.filter(function(d){ return d.type==='ADVISORY'; });
+    var det=m.defects.length?m.defects.map(function(d){
+      var f=d.type==='MAJOR'||d.type==='DANGEROUS';
+      return '<div class="mot-detail-item"><div class="mot-dot '+(f?'dot-major':'dot-advisory')+'"></div><div><span style="color:'+(f?'#FF9500':'var(--gold)')+';font-weight:600;font-size:10px">'+(f?'MAJOR':'ADVISORY')+' — </span>'+esc(d.text)+'</div></div>';
+    }).join(''):'<div class="mot-no-items">No failures or advisories.</div>';
+    return '<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-row-header">'
+      +'<span style="color:var(--text2);font-size:11px">'+m.date+'</span><span style="font-weight:500">'+m.mi+' miles</span>'
+      +'<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">'
+      +(fails.length?'<span class="badge b-fail">'+fails.length+' failure</span>':'')
+      +(advs.length?'<span class="badge b-advisory">'+advs.length+' advisory</span>':'')
+      +'<span class="badge '+(m.passed?'b-pass':'b-fail')+'">'+(m.passed?'PASS':'FAIL')+'</span>'
+      +'</div><i class="ti ti-chevron-down mot-chevron"></i></div>'
+      +'<div class="mot-details">'+det+'</div></div>';
   }).join('');
+  // Demo intelligence report
+  var demoTests=h.map(function(m){ return {completedDate:m.date,testResult:m.passed?'PASSED':'FAILED',odometerValue:m.od,defects:m.defects}; });
+  setTimeout(function(){ buildIntelReport(demoTests); },300);
 }
 
-/* ── MODS ── */
-function selectMod(el) {
-  document.querySelectorAll('.mod-btn').forEach(function(b){b.classList.remove('selected');});
-  el.classList.add('selected'); selectedMod = el.dataset.mod;
-  document.getElementById('analyzeBtn').disabled = false;
-  document.getElementById('analyzeBtn').textContent = 'Analyse: '+selectedMod;
+/* ═══════════════════════════════════════════════
+   CAR INTELLIGENCE REPORT
+═══════════════════════════════════════════════ */
+function buildIntelReport(tests){
+  if(!tests||tests.length<2){ el('intelCard').style.display='none'; return; }
+  el('intelCard').style.display='block';
+
+  // Sort chronologically (oldest first)
+  var sorted = tests.slice().sort(function(a,b){
+    var da=new Date(a.completedDate||0), db=new Date(b.completedDate||0);
+    return da-db;
+  });
+
+  var readings=sorted.map(function(t){ return {
+    date: t.completedDate||'',
+    mi: parseInt(t.odometerValue)||0,
+    passed: (t.testResult||'').toUpperCase()==='PASSED'
+  }; }).filter(function(r){ return r.mi>0; });
+
+  // ── MILEAGE FRAUD DETECTION ──
+  var fraudEvents=[];
+  for(var i=1;i<readings.length;i++){
+    if(readings[i].mi < readings[i-1].mi){
+      fraudEvents.push({
+        date: readings[i].date,
+        from: readings[i-1].mi,
+        to: readings[i].mi,
+        drop: readings[i-1].mi - readings[i].mi
+      });
+    }
+  }
+
+  // ── ANNUAL MILEAGE ──
+  var annualMileage=0, totalMileage=0;
+  if(readings.length>=2){
+    var first=readings[0], last=readings[readings.length-1];
+    totalMileage=last.mi-first.mi;
+    var firstDate=new Date(first.date), lastDate=new Date(last.date);
+    var years=(lastDate-firstDate)/(1000*60*60*24*365.25);
+    annualMileage=years>0.1?Math.round(totalMileage/years):0;
+  }
+  var ukAvg=8000;
+  var mileageStatus=annualMileage>0?(annualMileage>20000?'high':annualMileage<3000?'low':'normal'):'unknown';
+
+  // ── MOT PASS RATE ──
+  var passCount=tests.filter(function(t){ return(t.testResult||'').toUpperCase()==='PASSED'; }).length;
+  var passRate=Math.round(passCount/tests.length*100);
+
+  // ── ADVISORY TREND ──
+  var recentHalf=sorted.slice(Math.floor(sorted.length/2));
+  var olderHalf=sorted.slice(0,Math.floor(sorted.length/2));
+  var recentAdvs=recentHalf.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
+  var olderAdvs=olderHalf.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
+
+  // ── RISK SCORE (0=clean, 100=high risk) ──
+  var riskScore=0;
+  riskScore += fraudEvents.length * 35;
+  riskScore += passRate<60 ? 25 : passRate<80 ? 10 : 0;
+  riskScore += mileageStatus==='high' ? 10 : 0;
+  riskScore += recentAdvs>olderAdvs&&recentAdvs>2 ? 10 : 0;
+  riskScore = Math.min(100, riskScore);
+
+  var riskLevel = riskScore>=50?'high':riskScore>=20?'med':'low';
+  var riskLabels={low:'LOW RISK',med:'MODERATE',high:'HIGH RISK'};
+  var riskSubs={
+    low:'Vehicle history looks consistent. No major concerns detected.',
+    med:'Some concerns found. Review the checks below before buying.',
+    high:'Significant concerns detected. We strongly recommend an HPI check.'
+  };
+
+  // Render risk circle
+  el('riskCircle').textContent=riskScore;
+  el('riskCircle').className='risk-score-circle risk-'+riskLevel;
+  el('riskLabel').textContent=riskLabels[riskLevel];
+  el('riskSub').textContent=riskSubs[riskLevel];
+
+  // ── BUILD CHECKS ──
+  var checks=[];
+
+  // Mileage fraud
+  if(fraudEvents.length===0){
+    checks.push({status:'ok',icon:'ti-check',title:'Mileage Consistent',desc:'Odometer readings increase consistently across all '+readings.length+' MOT tests. No rollback detected.'});
+  } else {
+    fraudEvents.forEach(function(ev){
+      checks.push({status:'bad',icon:'ti-alert-triangle',title:'Mileage Rollback Detected',desc:'Odometer dropped from '+ev.from.toLocaleString()+' to '+ev.to.toLocaleString()+' miles ('+ev.drop.toLocaleString()+' mile drop) around '+ev.date+'. This is a serious fraud indicator.'});
+    });
+  }
+
+  // Annual mileage
+  if(annualMileage>0){
+    if(mileageStatus==='normal'){
+      checks.push({status:'ok',icon:'ti-check',title:'Normal Annual Mileage',desc:'~'+annualMileage.toLocaleString()+' miles/year. UK average is 8,000–10,000 miles/year. This vehicle sits within normal range.'});
+    } else if(mileageStatus==='high'){
+      checks.push({status:'warn',icon:'ti-alert-circle',title:'High Annual Mileage',desc:'~'+annualMileage.toLocaleString()+' miles/year — significantly above the UK average of '+ukAvg.toLocaleString()+'. Expect higher wear on engine, transmission and suspension.'});
+    } else {
+      checks.push({status:'warn',icon:'ti-alert-circle',title:'Unusually Low Mileage',desc:'~'+annualMileage.toLocaleString()+' miles/year. Very low mileage can mean the car sat unused (bad for rubber seals, brakes and fluids) or mileage has been manipulated.'});
+    }
+  }
+
+  // MOT pass rate
+  if(passRate>=80){
+    checks.push({status:'ok',icon:'ti-check',title:'Strong MOT History ('+passRate+'% pass rate)',desc:'Car has passed '+passCount+' out of '+tests.length+' MOT tests. Consistent pass record suggests well-maintained vehicle.'});
+  } else if(passRate>=60){
+    checks.push({status:'warn',icon:'ti-alert-circle',title:'Average MOT Pass Rate ('+passRate+'%)',desc:passCount+'/'+tests.length+' tests passed. Review the failure reasons — recurring failures on the same item suggest deferred maintenance.'});
+  } else {
+    checks.push({status:'bad',icon:'ti-x',title:'Poor MOT History ('+passRate+'% pass rate)',desc:'Only '+passCount+'/'+tests.length+' tests passed. Multiple failures suggest the car has been poorly maintained or has recurring mechanical issues.'});
+  }
+
+  // Advisory trend
+  if(recentAdvs>olderAdvs&&recentAdvs>=3){
+    checks.push({status:'warn',icon:'ti-trending-up',title:'Increasing Advisories',desc:'Advisory count has increased in recent years ('+recentAdvs+' recent vs '+olderAdvs+' older). This may indicate the vehicle is approaching the end of serviceable life on several components.'});
+  } else if(recentAdvs<=olderAdvs){
+    checks.push({status:'ok',icon:'ti-trending-down',title:'Stable Advisory Trend',desc:'Advisory items have not been increasing. The vehicle appears to be in consistent or improving condition.'});
+  }
+
+  // Total distance
+  if(totalMileage>0 && readings.length>=2){
+    var lastMi=readings[readings.length-1].mi;
+    checks.push({status:lastMi>120000?'warn':'ok',icon:lastMi>120000?'ti-gauge':'ti-check',title:'Total Recorded Mileage: '+lastMi.toLocaleString()+' miles',desc:'Covered '+totalMileage.toLocaleString()+' miles across '+readings.length+' MOT tests. '+(lastMi>120000?'High mileage vehicle — budget for more frequent maintenance.':'Within acceptable range for age.')});
+  }
+
+  // HPI disclaimer
+  checks.push({status:'warn',icon:'ti-info-circle',title:'Finance, Theft & Write-off: Not checked here',desc:'This report uses only DVLA + DVSA data. For a full history check (outstanding finance, theft, write-off, keeper count), use an HPI or Cazana check — typically £10–20.'});
+
+  el('intelChecks').innerHTML=checks.map(function(c){
+    return '<div class="check-row '+c.status+'">'
+      +'<div class="check-icon icon-'+c.status+'"><i class="ti '+c.icon+'"></i></div>'
+      +'<div class="check-content"><div class="check-title">'+esc(c.title)+'</div>'
+      +'<div class="check-desc">'+esc(c.desc)+'</div></div></div>';
+  }).join('');
+
+  // ── MILEAGE TIMELINE ──
+  if(readings.length>=2){
+    var maxMi=readings[readings.length-1].mi||1;
+    el('mileageTimeline').innerHTML='<div class="timeline-title">Mileage Progression</div>'
+      +readings.map(function(r,i){
+        var pct=Math.round((r.mi/maxMi)*100);
+        var isFraud=i>0&&r.mi<readings[i-1].mi;
+        var yr=''; try{ yr=r.date.split('-')[0]||r.date.split(' ')[2]||r.date; }catch(e){}
+        return '<div class="mileage-bar-item">'
+          +'<div class="mileage-year">'+esc(yr)+'</div>'
+          +'<div class="mileage-bar-wrap"><div class="mileage-bar-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
+          +'<div class="mileage-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-flag"><i class="ti ti-alert-triangle" style="font-size:9px"></i>DROP</span>':'')+'</div>'
+          +'</div>';
+      }).join('');
+  }
 }
-function analyseMod() {
-  if (!selectedMod) return;
-  var btn = document.getElementById('analyzeBtn');
-  btn.disabled=true; btn.textContent='Analysing...';
-  fetch(VERCEL+'/api/mod',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mod:selectedMod,make:vehicleData.make,model:vehicleData.model,year:vehicleData.yearOfManufacture,cc:parseInt(vehicleData.engineCapacity)||1600,hp:vehicleData.hp,torque:vehicleData.torque,value:vehicleData.value,fuel:(vehicleData.fuelType||'PETROL').toUpperCase()})})
-    .then(function(r){return r.json();})
-    .then(function(data){renderResult(data);btn.disabled=false;btn.textContent='Analyse: '+selectedMod;})
-    .catch(function(){document.getElementById('resultSection').innerHTML='<div class="error-box">Analysis failed — please try again.</div>';document.getElementById('resultSection').classList.remove('hidden');btn.disabled=false;btn.textContent='Analyse: '+selectedMod;});
+
+/* ═══════════════════════════════════════════════
+   MODS
+═══════════════════════════════════════════════ */
+function selectMod(el_){
+  qsa('.mod-btn').forEach(function(b){ b.classList.remove('selected'); });
+  el_.classList.add('selected');
+  selectedMod=el_.dataset.mod;
+  el('analyzeBtn').disabled=false;
+  el('analyzeBtn').textContent='Analyse: '+selectedMod;
 }
-function renderResult(r) {
+
+function analyseMod(){
+  if(!selectedMod) return;
+  var btn=el('analyzeBtn'); btn.disabled=true; btn.textContent='Analysing...';
+  fetch(VERCEL+'/api/mod',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({mod:selectedMod,make:vehicleData.make,model:vehicleData.model,year:vehicleData.yearOfManufacture,cc:parseInt(vehicleData.engineCapacity)||1600,hp:vehicleData.hp,torque:vehicleData.torque,value:vehicleData.value,fuel:(vehicleData.fuelType||'PETROL').toUpperCase()})})
+    .then(function(r){ return r.json(); })
+    .then(function(d){ renderResult(d); btn.disabled=false; btn.textContent='Analyse: '+selectedMod; })
+    .catch(function(){ el('resultSection').innerHTML='<div class="error-box">Analysis failed — please try again.</div>'; el('resultSection').classList.remove('hidden'); btn.disabled=false; btn.textContent='Analyse: '+selectedMod; });
+}
+
+function renderResult(r){
   var rating=parseInt(r.soundRating)||5, bars='';
   for(var i=0;i<8;i++) bars+='<div class="s-bar" style="height:'+(i<rating?Math.round(10+Math.random()*16):4)+'px;opacity:'+(i<rating?1:0.15)+'"></div>';
   var mc=r.motRisk==='Low'?'green':r.motRisk==='Medium'?'amber':'red';
@@ -735,27 +1075,33 @@ function renderResult(r) {
   var hn=parseInt(r.hpGain)||0, tn=parseInt(r.torqueGain)||0;
   var dir=r.valueChangeDirection||(r.valueChange&&r.valueChange.startsWith('-')?'down':'up');
   var hc=hn>0?'c-up':hn<0?'c-down':'c-neutral', tc=tn>0?'c-up':tn<0?'c-down':'c-neutral', vc=dir==='up'?'c-up':dir==='down'?'c-down':'c-neutral';
-  document.getElementById('resultSection').innerHTML=
+  el('resultSection').innerHTML=
     '<div class="result-card"><div class="result-title"><span>'+esc(selectedMod.toUpperCase())+'</span><div class="sound-bar">'+bars+'</div></div>'
-    +'<div class="delta-row"><span class="delta-label">Power</span><span class="delta-val">'+(hn!==0?r.newHp+' HP':'No change')+' <span class="change '+hc+'">'+(hn!==0?r.hpGain+' HP':'—')+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-label">Torque</span><span class="delta-val">'+(tn!==0?r.newTorque+' Nm':'No change')+' <span class="change '+tc+'">'+(tn!==0?r.torqueGain+' Nm':'—')+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-label">Sound</span><span class="delta-val">'+esc(String(r.soundRating))+' <span style="font-size:12px;font-weight:400;color:#666662">— '+esc(r.soundDesc)+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-label">Retail value</span><span class="delta-val">£'+esc(String(r.newValue))+' <span class="change '+vc+'">'+esc(r.valueChange)+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-label">Install cost</span><span class="delta-val">'+esc(r.installCost)+'</span></div>'
-    +'<div class="delta-row"><span class="delta-label">Insurance</span><span class="delta-val" style="font-size:12px;max-width:55%;text-align:right">'+esc(r.insuranceImpact)+'</span></div>'
-    +'<div class="delta-row"><span class="delta-label">MOT risk</span><span class="delta-val"><span class="stat-val '+mc+'" style="font-size:15px">'+esc(r.motRisk)+'</span> <span style="font-size:11px;color:#555552;margin-left:6px">'+esc(r.motNote)+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-label">Reliability</span><span class="delta-val"><span class="stat-val '+fc+'" style="font-size:15px">'+esc(fs.split('-')[0].trim())+'</span><span style="font-size:11px;color:#555552;margin-left:6px">'+esc(fs.includes('-')?fs.split('-').slice(1).join('-').trim():'')+'</span></span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">Power</span><span class="delta-val">'+(hn!==0?r.newHp+' HP':'No change')+' <span class="change '+hc+'">'+(hn!==0?r.hpGain+' HP':'—')+'</span></span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">Torque</span><span class="delta-val">'+(tn!==0?r.newTorque+' Nm':'No change')+' <span class="change '+tc+'">'+(tn!==0?r.torqueGain+' Nm':'—')+'</span></span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">Sound</span><span class="delta-val">'+esc(String(r.soundRating))+'/10 <span style="font-size:11px;font-weight:400;color:var(--text2)">— '+esc(r.soundDesc)+'</span></span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">Retail value</span><span class="delta-val">£'+esc(String(r.newValue))+' <span class="change '+vc+'">'+esc(r.valueChange)+'</span></span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">Install cost</span><span class="delta-val">'+esc(r.installCost)+'</span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">Insurance</span><span class="delta-val" style="font-size:12px;max-width:55%;text-align:right">'+esc(r.insuranceImpact)+'</span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">MOT risk</span><span class="delta-val"><span class="stat-val '+mc+'" style="font-size:14px">'+esc(r.motRisk)+'</span> <span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(r.motNote)+'</span></span></div>'
+    +'<div class="delta-row"><span class="delta-lbl">Reliability</span><span class="delta-val"><span class="stat-val '+fc+'" style="font-size:14px">'+esc(fs.split('-')[0].trim())+'</span><span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(fs.includes('-')?fs.split('-').slice(1).join('-').trim():'')+'</span></span></div>'
     +'<div class="verdict-box"><strong>Verdict:</strong> '+esc(r.verdict)+'</div>'
-    +'<button class="share-btn" id="shareBtn">Share this result</button></div>';
-  document.getElementById('resultSection').classList.remove('hidden');
-  document.getElementById('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
-  document.getElementById('shareBtn').addEventListener('click', shareResult);
+    +'<button class="share-btn" id="shareBtn"><i class="ti ti-share" style="margin-right:6px"></i>Share this result</button></div>';
+  el('resultSection').classList.remove('hidden');
+  el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+  el('shareBtn').addEventListener('click',shareResult);
 }
-function shareResult() {
+
+function shareResult(){
   var text='GarageIQ — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+' '+(vehicleData.yearOfManufacture||'')+'\nMod: '+selectedMod+'\nCheck yours at garage-iq-chi.vercel.app';
-  if(navigator.share){navigator.share({title:'GarageIQ Mod Report',text:text,url:'https://garage-iq-chi.vercel.app'});}
-  else{navigator.clipboard.writeText(text).then(function(){alert('Copied!');});}
+  if(navigator.share){ navigator.share({title:'GarageIQ Mod Report',text:text,url:'https://garage-iq-chi.vercel.app'}); }
+  else{ navigator.clipboard.writeText(text).then(function(){ alert('Copied!'); }); }
 }
+
+/* ── MSG HELPERS ── */
+function showErr(id,msg){ var e=el(id); e.textContent=msg; e.style.display='block'; }
+function showOk(id,msg){ var e=el(id); e.textContent=msg; e.style.display='block'; }
+function hideMsg(id){ var e=el(id); e.textContent=''; e.style.display='none'; }
 </script>
 </body>
 </html>
