@@ -228,6 +228,15 @@
     .share-btn:hover{background:rgba(109,189,42,0.08)}
     .sound-bar{display:flex;gap:3px;align-items:flex-end;height:26px}
     .s-bar{width:4px;border-radius:2px;background:var(--red)}
+        /* MOT SUMMARY */
+    .mot-sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+    .mot-sum-box{background:var(--dark);border-radius:var(--radius-sm);padding:10px;text-align:center}
+    .mot-sum-num{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1}
+    .mot-sum-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+    .pass-bar-wrap{margin-bottom:14px}
+    .pass-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:5px}
+    .pass-bar-bg{background:rgba(255,23,68,0.15);border-radius:20px;height:7px;overflow:hidden}
+    .pass-bar-fill{height:100%;border-radius:20px;background:var(--green);transition:width 0.8s cubic-bezier(.4,0,.2,1)}
 
     /* ── MODALS ── */
     .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:fadeIn 0.15s ease}
