@@ -156,7 +156,50 @@
     .mileage-bar-fill.fraud{background:linear-gradient(90deg,var(--red),#ff0000)}
     .mileage-val{font-size:10px;color:var(--text2);width:70px;text-align:right;flex-shrink:0}
     .fraud-flag{display:inline-flex;align-items:center;gap:4px;background:rgba(226,75,74,0.15);border:1px solid rgba(226,75,74,0.3);color:var(--red);font-size:10px;letter-spacing:1px;padding:2px 8px;border-radius:20px;margin-left:8px}
-
+    .intel-card{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1rem;overflow:hidden;position:relative}
+    .intel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold))}
+    .intel-inner{padding:1.25rem}
+    /* PAYWALL */
+    .intel-paywall{padding:2rem 1.25rem;text-align:center;border-top:1px solid var(--border)}
+    .paywall-lock{width:52px;height:52px;border-radius:50%;background:rgba(226,75,74,0.1);border:1px solid rgba(226,75,74,0.25);display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--red);margin-bottom:14px}
+    .paywall-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:6px}
+    .paywall-sub{font-size:12px;color:var(--text2);line-height:1.6;max-width:320px;margin:0 auto 18px}
+    .paywall-features{display:flex;flex-direction:column;gap:7px;margin-bottom:20px;text-align:left;max-width:280px;margin-left:auto;margin-right:auto}
+    .pf-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--light2)}
+    .pf-row i{color:var(--green);font-size:13px;flex-shrink:0}
+    .pay-btn{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:14px 32px;cursor:pointer;transition:all var(--t)}
+    .pay-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
+    .pay-btn:disabled{background:#333;color:var(--text3);cursor:default;transform:none}
+    .pay-note{font-size:10px;color:var(--text3);margin-top:10px}
+    /* Risk circle */
+    .risk-wrap{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--dark);border-radius:var(--radius-sm);margin-bottom:14px}
+    .risk-circle{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;border:2px solid;flex-shrink:0}
+    .risk-low{border-color:var(--green);color:var(--green);background:rgba(109,189,42,0.08)}
+    .risk-med{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.08)}
+    .risk-high{border-color:var(--red);color:var(--red);background:rgba(226,75,74,0.08)}
+    .risk-lbl{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px}
+    .risk-sub{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4}
+    /* Check rows */
+    .intel-checks{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+    .check-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--dark);border-radius:var(--radius-sm);border-left:3px solid transparent}
+    .check-row.ok{border-left-color:var(--green)}
+    .check-row.warn{border-left-color:var(--amber)}
+    .check-row.bad{border-left-color:var(--red)}
+    .check-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px}
+    .icon-ok{background:rgba(109,189,42,0.15);color:var(--green)}
+    .icon-warn{background:rgba(245,158,11,0.15);color:var(--amber)}
+    .icon-bad{background:rgba(226,75,74,0.15);color:var(--red)}
+    .check-title{font-size:12px;font-weight:600;color:var(--light);margin-bottom:2px}
+    .check-desc{font-size:11px;color:var(--text2);line-height:1.5}
+    /* Mileage timeline */
+    .timeline-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px}
+    .mi-bar-item{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+    .mi-yr{font-size:10px;color:var(--text3);width:42px;flex-shrink:0}
+    .mi-bar-bg{flex:1;height:13px;background:var(--dark);border-radius:3px;overflow:hidden;position:relative}
+    .mi-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .6s ease}
+    .mi-bar-fill.fraud{background:linear-gradient(90deg,#ff0000,#ff6b6b)}
+    .mi-val{font-size:10px;color:var(--text2);width:76px;text-align:right;flex-shrink:0}
+    .fraud-flag{display:inline-flex;align-items:center;gap:3px;background:rgba(226,75,74,0.15);border:1px solid rgba(226,75,74,0.3);color:var(--red);font-size:9px;padding:1px 6px;border-radius:20px;margin-left:6px}
     /* ── MODS ── */
     .mods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
     .mod-btn{background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all var(--transition)}
