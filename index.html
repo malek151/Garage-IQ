@@ -479,6 +479,49 @@ var sb, currentUser, currentProfile, vehicleData={}, motTests=[], selectedMod;
 ═══════════════════════════════════════════════ */
 window.addEventListener('load', function(){
   sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+  sb.auth.onAuthStateChange(function(ev, session){
+    currentUser = session ? session.user : null;
+    if(currentUser){
+      var pending = localStorage.getItem('giq_pu_'+currentUser.id);
+      if(pending){ tryCreateProfile(currentUser.id, pending); }
+      else { loadProfile(); }
+    } else { currentProfile=null; renderNav(); }
+  });
+ 
+  el('btnLogin').addEventListener('click',  function(){ openAuth('login'); });
+  el('btnSignup').addEventListener('click', function(){ openAuth('signup'); });
+  el('btnAvatar').addEventListener('click', openProfileModal);
+  el('authClose').addEventListener('click', closeAuth);
+  el('authModal').addEventListener('click', function(e){ if(e.target===this) closeAuth(); });
+  el('tabLogin').addEventListener('click',  function(){ switchTab('login'); });
+  el('tabSignup').addEventListener('click', function(){ switchTab('signup'); });
+  el('btnDoLogin').addEventListener('click',  doLogin);
+  el('btnDoSignup').addEventListener('click', doSignup);
+  el('profileClose').addEventListener('click', closeProfileModal);
+  el('profileModal').addEventListener('click', function(e){ if(e.target===this) closeProfileModal(); });
+  el('btnSaveUser').addEventListener('click', saveUsername);
+  el('btnLogout').addEventListener('click',   doLogout);
+  el('runBtn').addEventListener('click', lookupVehicle);
+  el('regInput').addEventListener('keydown', function(e){ if(e.key==='Enter') lookupVehicle(); });
+  el('analyzeBtn').addEventListener('click', analyseMod);
+  el('btnPay').addEventListener('click', startPayment);
+  qsa('.mod-btn').forEach(function(b){ b.addEventListener('click', function(){ selectMod(b); }); });
+ 
+  // Handle return from Stripe
+  var params = new URLSearchParams(window.location.search);
+  var retReg = params.get('reg');
+  var sessionId = params.get('session_id');
+  var paid = params.get('paid');
+  if(retReg && paid === '1' && sessionId){
+    el('regInput').value = retReg;
+    window.history.replaceState({}, '', '/');
+    // Verify then lookup
+    verifyPaymentAndLookup(retReg, sessionId);
+  } else if(retReg){
+    el('regInput').value = retReg;
+    window.history.replaceState({}, '', '/');
+  }
+});
 
   // Auth state — fires immediately on load
   sb.auth.onAuthStateChange(function(event, session){
