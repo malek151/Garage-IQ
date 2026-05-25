@@ -1045,7 +1045,90 @@ function buildIntelReport(tests){
       }).join('');
   }
 }
-
+/* ═══ PAYMENT ═══ */
+function startPayment(){
+  var btn=el('btnPay'); btn.disabled=true; btn.textContent='Loading...';
+  fetch(VERCEL+'/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({reg:currentReg, userId:currentUser?currentUser.id:''})})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if(d.url){ window.location.href=d.url; }
+      else { btn.disabled=false; btn.innerHTML='<i class="ti ti-lock-open"></i> UNLOCK FOR £1.99'; alert('Payment error: '+(d.error||'unknown')); }
+    }).catch(function(e){ btn.disabled=false; btn.innerHTML='<i class="ti ti-lock-open"></i> UNLOCK FOR £1.99'; alert('Error: '+e.message); });
+}
+ 
+function showIntelReport(){
+  if(!motTests||motTests.length<2){ return; }
+  el('intelPaywall').style.display='none';
+  el('intelContent').style.display='block';
+  el('intelBadge').textContent='UNLOCKED';
+  el('intelBadge').style.background='rgba(109,189,42,0.15)';
+  el('intelBadge').style.color='var(--green)';
+  buildIntelReport(motTests);
+}
+ 
+function buildIntelReport(tests){
+  var sorted=tests.slice().sort(function(a,b){ return new Date(a.completedDate||0)-new Date(b.completedDate||0); });
+  var readings=sorted.map(function(t){ return {date:t.completedDate||'',mi:parseInt(t.odometerValue)||0}; }).filter(function(r){ return r.mi>0; });
+ 
+  var fraudEvents=[];
+  for(var i=1;i<readings.length;i++){
+    if(readings[i].mi<readings[i-1].mi) fraudEvents.push({date:readings[i].date,from:readings[i-1].mi,to:readings[i].mi,drop:readings[i-1].mi-readings[i].mi});
+  }
+  var annualMi=0, totalMi=0;
+  if(readings.length>=2){
+    var first=readings[0],last=readings[readings.length-1];
+    totalMi=last.mi-first.mi;
+    var yrs=(new Date(last.date)-new Date(first.date))/(1000*60*60*24*365.25);
+    annualMi=yrs>0.1?Math.round(totalMi/yrs):0;
+  }
+  var miStatus=annualMi>0?(annualMi>20000?'high':annualMi<3000?'low':'normal'):'unknown';
+  var pass=tests.filter(function(t){ return(t.testResult||'').toUpperCase()==='PASSED'; }).length;
+  var passRate=Math.round(pass/tests.length*100);
+  var recentH=sorted.slice(Math.floor(sorted.length/2)), olderH=sorted.slice(0,Math.floor(sorted.length/2));
+  var recentAdv=recentH.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
+  var olderAdv=olderH.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
+  var score=Math.min(100,fraudEvents.length*35+(passRate<60?25:passRate<80?10:0)+(miStatus==='high'?10:0)+(recentAdv>olderAdv&&recentAdv>2?10:0));
+  var level=score>=50?'high':score>=20?'med':'low';
+  var lbls={low:'LOW RISK',med:'MODERATE RISK',high:'HIGH RISK'};
+  var subs={low:'History looks consistent. No major concerns found.',med:'Some concerns found. Review checks below carefully.',high:'Significant concerns. Strongly recommend a full HPI check.'};
+  el('riskCircle').textContent=score;
+  el('riskCircle').className='risk-circle risk-'+level;
+  el('riskLabel').textContent=lbls[level];
+  el('riskSub').textContent=subs[level];
+  var checks=[];
+  if(fraudEvents.length===0){ checks.push({s:'ok',ic:'ti-check',t:'Mileage Consistent',d:'Odometer increases across all '+readings.length+' tests. No rollback detected.'}); }
+  else{ fraudEvents.forEach(function(ev){ checks.push({s:'bad',ic:'ti-alert-triangle',t:'Mileage Rollback Detected',d:'Dropped from '+ev.from.toLocaleString()+' to '+ev.to.toLocaleString()+' miles ('+ev.drop.toLocaleString()+' drop) around '+ev.date+'. Serious fraud indicator.'}); }); }
+  if(annualMi>0){
+    if(miStatus==='normal') checks.push({s:'ok',ic:'ti-check',t:'Normal Annual Mileage',d:'~'+annualMi.toLocaleString()+' miles/yr. UK average is 8,000–10,000. Normal range.'});
+    else if(miStatus==='high') checks.push({s:'warn',ic:'ti-alert-circle',t:'High Annual Mileage',d:'~'+annualMi.toLocaleString()+' miles/yr — above UK average. Expect higher wear on drivetrain and suspension.'});
+    else checks.push({s:'warn',ic:'ti-alert-circle',t:'Unusually Low Mileage',d:'~'+annualMi.toLocaleString()+' miles/yr. Very low mileage can cause seal and brake deterioration, or indicate manipulation.'});
+  }
+  if(passRate>=80) checks.push({s:'ok',ic:'ti-check',t:'Strong MOT History ('+passRate+'% pass rate)',d:pass+'/'+tests.length+' tests passed. Consistent record suggests well-maintained vehicle.'});
+  else if(passRate>=60) checks.push({s:'warn',ic:'ti-alert-circle',t:'Average MOT Pass Rate ('+passRate+'%)',d:pass+'/'+tests.length+' passed. Check if failures repeat on the same items.'});
+  else checks.push({s:'bad',ic:'ti-x',t:'Poor MOT History ('+passRate+'% pass rate)',d:'Only '+pass+'/'+tests.length+' passed. Multiple failures suggest deferred maintenance or recurring issues.'});
+  if(recentAdv>olderAdv&&recentAdv>=3) checks.push({s:'warn',ic:'ti-trending-up',t:'Advisory Count Increasing',d:recentAdv+' recent vs '+olderAdv+' older. Deterioration trend detected — budget for maintenance.'});
+  else checks.push({s:'ok',ic:'ti-trending-down',t:'Advisory Trend Stable',d:'No significant increase in advisories. Vehicle appears consistently maintained.'});
+  var lastMi=readings.length?readings[readings.length-1].mi:0;
+  if(lastMi>0) checks.push({s:lastMi>120000?'warn':'ok',ic:lastMi>120000?'ti-gauge':'ti-check',t:'Total Mileage: '+lastMi.toLocaleString()+' miles',d:(lastMi>120000?'High mileage — budget for more frequent servicing and checks.':'Mileage within reasonable range for vehicle age.')});
+  checks.push({s:'warn',ic:'ti-info-circle',t:'Finance, Theft & Write-off: Not checked here',d:'For outstanding finance, theft register, write-off history and keeper count — run an HPI or Cazana check (£10–20).'});
+  el('intelChecks').innerHTML=checks.map(function(c){
+    return '<div class="check-row '+c.s+'"><div class="check-icon icon-'+c.s+'"><i class="ti '+c.ic+'"></i></div>'
+      +'<div><div class="check-title">'+esc(c.t)+'</div><div class="check-desc">'+esc(c.d)+'</div></div></div>';
+  }).join('');
+  if(readings.length>=2){
+    var maxMi=readings[readings.length-1].mi||1;
+    el('mileageTimeline').innerHTML='<div class="timeline-title">Mileage Progression</div>'
+      +readings.map(function(r,i){
+        var pct=Math.round((r.mi/maxMi)*100);
+        var isFraud=i>0&&r.mi<readings[i-1].mi;
+        var yr=''; try{ yr=r.date.split('T')[0].split('-')[0]||r.date.slice(-4)||r.date; }catch(e){}
+        return '<div class="mi-bar-item"><div class="mi-yr">'+esc(yr)+'</div>'
+          +'<div class="mi-bar-bg"><div class="mi-bar-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
+          +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?' <span class="fraud-flag"><i class="ti ti-alert-triangle" style="font-size:9px"></i>DROP</span>':'')+'</div></div>';
+      }).join('');
+  }
+}
 /* ═══════════════════════════════════════════════
    MODS
 ═══════════════════════════════════════════════ */
@@ -1105,5 +1188,3 @@ function hideMsg(id){ var e=el(id); e.textContent=''; e.style.display='none'; }
 </script>
 </body>
 </html>
-HTMLEOF
-node -e "require('fs').readFileSync('/mnt/user-data/outputs/index.html','utf8');console.log('OK - lines:',require('fs').readFileSync('/mnt/user-data/outputs/index.html','utf8').split('\n').length)"
