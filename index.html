@@ -307,12 +307,24 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
 .errbox{background:var(--red2);color:var(--red);border:1px solid #FCA5A5;border-radius:var(--rs);padding:12px 16px;font-size:13px;margin-bottom:1rem;font-weight:500}
 .info-box{background:var(--sky);border:1px solid var(--sky2);border-radius:var(--rxs);padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:8px}
 .info-box strong{color:var(--blue)}
-@media(max-width:600px){
+@media(max-width:640px){
   .g4{grid-template-columns:repeat(2,1fr)}.mods-g{grid-template-columns:repeat(2,1fr)}
   .mot-sum-g{grid-template-columns:repeat(2,1fr)}.how-g{grid-template-columns:1fr}
   .val-facs{grid-template-columns:1fr 1fr}.fin-g{grid-template-columns:1fr}
   nav{padding:0 1rem}.hero{padding:3rem 1rem 2.5rem}.app{padding:1rem 1rem 4rem}
-  .tabs-inner{gap:0}.tab-btn{font-size:10px;padding:12px 10px}
+  .tabs-inner{gap:0}.tab-btn{font-size:10px;padding:12px 8px;letter-spacing:0}
+  .hrow{flex-wrap:wrap;gap:8px}.hrow .chip{margin-top:4px}
+  .val-hero{padding:1rem}.val-price{font-size:34px}
+  .dmg-wrap{flex-direction:column}.dmg-car-w{max-width:180px;margin:0 auto}
+  .reg-form{flex-direction:column}.reg-btn{padding:14px;font-size:16px}
+  .reg-input{font-size:24px;letter-spacing:4px;padding:12px}
+  .fin-bd{grid-template-columns:1fr}.fin-bd-v{font-size:14px}
+  .pw-feats{max-width:100%}
+  .checks .chk{padding:9px 10px}
+  .hero h1{font-size:clamp(36px,10vw,60px)}
+  .tab-btn i{display:none}
+  .modal{padding:1.5rem}
+  .pstats{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -412,7 +424,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
     <button class="tab-btn active" data-tab="overview"><i class="ti ti-car"></i> Overview</button>
     <button class="tab-btn" data-tab="report"><i class="ti ti-report-analytics"></i> Intelligence</button>
     <button class="tab-btn" data-tab="valuation"><i class="ti ti-currency-pound"></i> Valuation</button>
-    <button class="tab-btn" data-tab="history"><i class="ti ti-history"></i> History</button>
+    
     <button class="tab-btn" data-tab="mods"><i class="ti ti-settings-2"></i> Mods</button>
   </div>
 </div>
@@ -490,20 +502,25 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
         </div>
         <div id="intelPaywall" class="paywall">
           <div class="pw-icon"><i class="ti ti-lock"></i></div>
-          <div class="pw-title">Free Intelligence Report</div>
-          <div class="pw-sub">Create a free account — no card needed — and get your full Intelligence Report instantly every time you look up a car.</div>
+          <div class="pw-title" id="pwTitle">Unlock Intelligence Report</div>
+          <div class="pw-sub" id="pwSub">One-time payment of £1.99. Unlocked instantly. No subscription ever.</div>
           <div class="pw-feats">
             <div class="pwf"><i class="ti ti-check"></i> Mileage fraud &amp; rollback detection</div>
             <div class="pwf"><i class="ti ti-check"></i> Risk score (0–100)</div>
             <div class="pwf"><i class="ti ti-check"></i> Damage zone analysis from MOT data</div>
-            <div class="pwf"><i class="ti ti-check"></i> Tax &amp; ownership patterns</div>
+            <div class="pwf"><i class="ti ti-check"></i> Tax &amp; ownership history</div>
             <div class="pwf"><i class="ti ti-check"></i> Commercial use detection</div>
             <div class="pwf"><i class="ti ti-check"></i> Finance &amp; legal risk flags</div>
             <div class="pwf"><i class="ti ti-check"></i> Full mileage timeline</div>
           </div>
-          <button class="pay-btn" id="btnPwSignup"><i class="ti ti-user-plus"></i> Sign Up Free to Unlock</button>
-          <div><span class="login-lnk" id="btnPwLogin"><i class="ti ti-login"></i> Already have an account? Log in</span></div>
-          <div class="pay-note">100% free for all registered users · No subscription · No credit card</div>
+          <div id="pwLoggedOut">
+            <button class="pay-btn" id="btnPwSignup" style="margin-bottom:8px"><i class="ti ti-user-plus"></i> Sign Up &amp; Unlock Free</button>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Already have an account? <span class="login-lnk" id="btnPwLogin" style="font-size:11px">Log in first</span></div>
+          </div>
+          <div id="pwLoggedIn" style="display:none">
+            <button class="pay-btn" id="btnPay"><i class="ti ti-lock-open"></i> Unlock for £1.99</button>
+            <div class="pay-note">Secure payment by Stripe · Instant unlock · One reg per payment</div>
+          </div>
         </div>
         <div id="intelContent" style="display:none">
           <div class="risk-wrap">
@@ -515,6 +532,67 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
           </div>
           <div class="checks" id="intelChecks"></div>
           <div id="mileTimeline"></div>
+          <!-- HISTORY inside intelligence report -->
+          <div id="intelHistorySections" style="margin-top:16px">
+            <!-- Damage map -->
+            <div class="sect-lbl">Damage &amp; Accident History</div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+                <span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text2)">MOT Damage Zones</span>
+                <div class="chip chip-red" id="dmgChip">From MOT records</div>
+              </div>
+              <div class="dmg-wrap">
+                <div class="dmg-car-w">
+                  <svg class="dmg-car-svg" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="30" y="60" width="140" height="240" rx="20" fill="#EEF5FD" stroke="#BBDEFB" stroke-width="2"/>
+                    <rect x="45" y="110" width="110" height="120" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
+                    <rect x="52" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
+                    <rect x="106" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
+                    <circle cx="55" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                    <circle cx="145" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                    <circle cx="55" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                    <circle cx="145" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                    <rect id="zone-front" class="dmg-zone" x="30" y="40" width="140" height="50" rx="10" data-label="Front (bumper, headlights, bonnet)"/>
+                    <rect id="zone-rear"  class="dmg-zone" x="30" y="270" width="140" height="50" rx="10" data-label="Rear (bumper, boot, tail lights)"/>
+                    <rect id="zone-left"  class="dmg-zone" x="10" y="80"  width="45" height="200" rx="8" data-label="Nearside/Left — driver side"/>
+                    <rect id="zone-right" class="dmg-zone" x="145" y="80" width="45" height="200" rx="8" data-label="Offside/Right — passenger side"/>
+                    <rect id="zone-roof"  class="dmg-zone" x="45" y="95"  width="110" height="130" rx="8" data-label="Roof / cabin / windscreen"/>
+                    <rect id="zone-under" class="dmg-zone" x="55" y="155" width="90" height="50"  rx="5" data-label="Underbody / mechanical"/>
+                    <text x="100" y="58" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">FRONT</text>
+                    <text x="100" y="312" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">REAR</text>
+                  </svg>
+                </div>
+                <div class="dmg-list" id="dmgList"><div class="dmg-none">Loading damage data...</div></div>
+              </div>
+              <div class="info-box" style="margin-top:10px"><i class="ti ti-info-circle"></i> Zones from MOT data only. <strong>Full accident/insurance history</strong> requires an HPI check.</div>
+            </div>
+            <!-- Mileage history -->
+            <div class="sect-lbl">Mileage History</div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+              <div id="mileHistRows"><div class="ph-empty">Loading...</div></div>
+            </div>
+            <!-- Tax & ownership -->
+            <div class="sect-lbl">Tax &amp; Registration</div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-id"></i></div><div style="flex:1"><div class="hrow-t">Tax Status</div><div class="hrow-d" id="taxStatusText">—</div></div><div><div class="chip chip-blue" id="taxChip">—</div></div></div>
+              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-calendar"></i></div><div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText">—</div></div></div>
+              <div class="hrow"><div class="hic hi-green"><i class="ti ti-user-check"></i></div><div><div class="hrow-t">Registration Details</div><div class="hrow-d" id="keeperText">—</div></div></div>
+            </div>
+            <!-- Financial & Legal -->
+            <div class="sect-lbl">Financial &amp; Legal Risks</div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+              <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. Run an HPI or MyCarCheck (£10–20). Buying a car with finance outstanding means the lender can legally repossess it.</div></div><div><div class="chip chip-gold" style="white-space:nowrap">Check HPI</div></div></div>
+              <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Theft Register</div><div class="hrow-d">Not in DVLA/DVSA data. Verify via Police.uk or HPI. Stolen vehicles can be seized even from innocent buyers.</div></div><div><div class="chip chip-gold" style="white-space:nowrap">Check HPI</div></div></div>
+              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Write-off Category (Cat A/B/S/N)</div><div class="hrow-d">Not in DVLA public data. A Cat S/N car can be repaired and sold legally but must be declared. Always check via HPI.</div></div><div><div class="chip chip-gold" style="white-space:nowrap">Check HPI</div></div></div>
+              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing mileage patterns...</div></div><div><div class="chip" id="commUseChip" style="background:var(--sky);color:var(--blue);border:1px solid var(--sky2)">—</div></div></div>
+              <div class="hrow"><div class="hic hi-green"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Estimated Ownership Count</div><div class="hrow-d" id="ownerText">Based on vehicle age and MOT patterns.</div></div><div><div class="chip chip-blue" id="ownerChip">—</div></div></div>
+            </div>
+            <!-- Safety -->
+            <div class="sect-lbl">Safety &amp; Specs</div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+              <div id="safetyRows"><div class="ph-empty">Loading...</div></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -577,88 +655,6 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
       <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div><div class="hrow-t">Outstanding Finance Risk</div><div class="hrow-d">If a car still has finance owed, the lender holds a legal interest. Buying a car with outstanding finance means you could lose the vehicle even after paying. Always run an HPI check.</div></div></div>
       <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-garage"></i></div><div><div class="hrow-t">Part Exchange Value</div><div class="hrow-d">What a dealer will offer for your current car. Typically 10–20% below private sale. Use our estimate as a negotiating benchmark.</div></div></div>
       <div class="hrow"><div class="hic hi-blue"><i class="ti ti-receipt"></i></div><div><div class="hrow-t">Voluntary Termination (VT)</div><div class="hrow-d">Under the Consumer Credit Act, once you've paid 50% of the total amount payable on a PCP/HP deal, you can return the car without further payments — as long as it's in good condition.</div></div></div>
-    </div>
-  </div>
-
-  <!-- HISTORY TAB -->
-  <div id="tab-history" class="tab-panel">
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title"><i class="ti ti-car-crash"></i> Damage &amp; Accident History</div>
-        <div class="chip chip-red" id="dmgChip">From MOT records</div>
-      </div>
-      <div class="dmg-wrap">
-        <div class="dmg-car-w">
-          <svg class="dmg-car-svg" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
-            <rect x="30" y="60" width="140" height="240" rx="20" fill="#EEF5FD" stroke="#BBDEFB" stroke-width="2"/>
-            <rect x="45" y="110" width="110" height="120" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
-            <rect x="52" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
-            <rect x="106" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
-            <circle cx="55" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-            <circle cx="145" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-            <circle cx="55" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-            <circle cx="145" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-            <rect id="zone-front" class="dmg-zone" x="30" y="40" width="140" height="50" rx="10" data-label="Front (bumper, headlights, bonnet)"/>
-            <rect id="zone-rear"  class="dmg-zone" x="30" y="270" width="140" height="50" rx="10" data-label="Rear (bumper, boot, tail lights)"/>
-            <rect id="zone-left"  class="dmg-zone" x="10" y="80"  width="45" height="200" rx="8" data-label="Nearside / Left — driver side"/>
-            <rect id="zone-right" class="dmg-zone" x="145" y="80" width="45" height="200" rx="8" data-label="Offside / Right — passenger side"/>
-            <rect id="zone-roof"  class="dmg-zone" x="45" y="95"  width="110" height="130" rx="8" data-label="Roof / cabin / windscreen"/>
-            <rect id="zone-under" class="dmg-zone" x="55" y="155" width="90" height="50"  rx="5" data-label="Underbody / mechanical (brakes, suspension, engine)"/>
-            <text x="100" y="58" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">FRONT</text>
-            <text x="100" y="312" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">REAR</text>
-            <text x="22" y="182" text-anchor="middle" fill="#64748B" font-size="8" font-family="sans-serif" transform="rotate(-90,22,182)">NEARSIDE</text>
-            <text x="178" y="182" text-anchor="middle" fill="#64748B" font-size="8" font-family="sans-serif" transform="rotate(90,178,182)">OFFSIDE</text>
-          </svg>
-        </div>
-        <div class="dmg-list" id="dmgList"><div class="dmg-none">Run a lookup to see damage analysis</div></div>
-      </div>
-      <div class="info-box"><i class="ti ti-info-circle"></i> Zones highlighted from MOT failures and advisories. <strong>For full insurance claim and accident history</strong>, an HPI check is recommended — GarageIQ is still cheaper than CarVertical for this.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title"><i class="ti ti-route"></i> Mileage History</div>
-        <div class="chip chip-blue" id="mileChip">MOT records</div>
-      </div>
-      <div id="mileHistRows"><div class="ph-empty">Run a lookup to see mileage history</div></div>
-    </div>
-
-    <div class="card">
-      <div class="card-head"><div class="card-title"><i class="ti ti-file-certificate"></i> Tax &amp; Registration</div></div>
-      <div class="hrow">
-        <div class="hic hi-blue"><i class="ti ti-id"></i></div>
-        <div style="flex:1"><div class="hrow-t">Tax Status</div><div class="hrow-d" id="taxStatusText">Run a lookup to see tax history</div></div>
-        <div><div class="chip chip-blue" id="taxChip">—</div></div>
-      </div>
-      <div class="hrow">
-        <div class="hic hi-gold"><i class="ti ti-calendar"></i></div>
-        <div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText">—</div></div>
-      </div>
-      <div class="hrow">
-        <div class="hic hi-green"><i class="ti ti-user-check"></i></div>
-        <div><div class="hrow-t">Colour &amp; Registration Details</div><div class="hrow-d" id="keeperText">From DVLA records</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title"><i class="ti ti-gavel"></i> Financial &amp; Legal Risks</div>
-        <div class="chip chip-gold">Advisory</div>
-      </div>
-      <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA open data. Run an HPI or MyCarCheck report (£10–20) to verify. Buying a car with finance outstanding means the lender can legally repossess it.</div></div><div><div class="chip chip-gold">Check HPI</div></div></div>
-      <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Theft Register</div><div class="hrow-d">Not in DVLA/DVSA data. Verify via Police.uk or HPI. Stolen vehicles can be seized even from innocent buyers.</div></div><div><div class="chip chip-gold">Check HPI</div></div></div>
-      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Write-off Category (Cat A/B/S/N)</div><div class="hrow-d">Not in DVLA public data. A Cat S/N car can be repaired and sold legally but must be declared. Always check via HPI before buying.</div></div><div><div class="chip chip-gold">Check HPI</div></div></div>
-      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing mileage patterns and fuel type for commercial use indicators...</div></div><div><div class="chip" id="commUseChip" style="background:var(--sky);color:var(--blue);border:1px solid var(--sky2)">—</div></div></div>
-      <div class="hrow"><div class="hic hi-green"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Estimated Ownership Count</div><div class="hrow-d" id="ownerText">Based on vehicle age and MOT patterns. Exact count requires an HPI check.</div></div><div><div class="chip chip-blue" id="ownerChip">—</div></div></div>
-      <div class="info-box"><strong>GarageIQ uses official DVLA &amp; DVSA government data.</strong> For outstanding finance, theft, write-off history and exact keeper count — use HPI or Cazana (£10–20). We give you a better free baseline than any competitor at this price.</div>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <div class="card-title"><i class="ti ti-shield"></i> Safety Ratings &amp; Specs</div>
-        <div class="chip chip-green" id="safetyChip">Euro NCAP</div>
-      </div>
-      <div id="safetyRows"><div class="ph-empty">Loading safety data...</div></div>
     </div>
   </div>
 
@@ -732,6 +728,7 @@ window.addEventListener('load',function(){
   el('regInput').addEventListener('keydown',function(e){if(e.key==='Enter')lookupVehicle();});
   el('analyzeBtn').addEventListener('click',analyseMod);
   el('btnPwSignup').addEventListener('click',function(){openAuth('signup');});
+  el('btnPay').addEventListener('click',startPayment);
   el('btnPwLogin').addEventListener('click',function(){openAuth('login');});
   qsa('.mod-btn').forEach(function(b){b.addEventListener('click',function(){selectMod(b);});});
   qsa('.tab-btn').forEach(function(b){b.addEventListener('click',function(){switchMainTab(b.dataset.tab);});});
@@ -762,7 +759,7 @@ function fmt(s){return s?String(s).toUpperCase():'-';}
 function switchMainTab(tab){
   qsa('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
   qsa('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+tab);});
-  if(tab==='report'&&currentUser&&motTests.length)showIntelReport();
+  if(tab==='report')showIntelReport();
 }
 
 /* ── NAV ── */
@@ -784,7 +781,7 @@ function loadProfile(){
         sb.from('profiles').upsert([{id:currentUser.id,username:fb}],{onConflict:'id'});
       }
       renderNav();
-      if(el('tab-report').classList.contains('active')&&motTests.length)showIntelReport();
+      if(motTests.length)showIntelReport();
     }).catch(function(){currentProfile={id:currentUser.id,username:'USER'};renderNav();});
 }
 
@@ -981,7 +978,7 @@ function lookupVehicle(){
     el('loadbox').classList.add('hidden');
     el('vcReg').textContent=reg;
     el('mainApp').scrollIntoView({behavior:'smooth',block:'start'});
-    if(currentUser||(VIP_ACCOUNTS.indexOf(currentUser&&currentUser.email)!==-1))showIntelReport();
+    showIntelReport();
   })
   .catch(function(e){
     el('errbox').textContent='Could not fetch vehicle — check the reg and try again. ('+e.message+')';
@@ -1009,9 +1006,10 @@ function verifyThenLookup(reg,sessionId){
 
 function renderVehicle(d){
   el('statMake').textContent=fmt(d.make);
-  // Try every possible model field from DVLA
-  var m=d.model||d.modelSeries||d.typeApproval||'';
-  el('statModel').textContent=m?fmt(m):'-';
+  // All DVLA model field variants
+  var m=d.model||d.modelSeries||d.typeApproval||d.vehicleClass||'';
+  if(m&&m.length<=2)m=''; // strip short codes
+  el('statModel').textContent=m?fmt(m):fmt(d.make)?'CHECK DVLA':'-';
   el('statYear').textContent=d.yearOfManufacture||d.monthOfFirstRegistration||'-';
   el('statEngine').textContent=d.engineCapacity?d.engineCapacity+'cc':(d.engineSize?d.engineSize+'cc':'-');
   el('statColour').textContent=fmt(d.colour||d.primaryColour);
@@ -1155,9 +1153,8 @@ function renderMot(raw){
       +'</div><i class="ti ti-chevron-down mot-chev"></i></div>'
       +'<div class="mot-det">'+det+'</div></div>';
   }).join('');
-  buildDamageMap(tests);
-  buildMileageHistory(tests);
-  if(currentUser||(VIP_ACCOUNTS.indexOf(currentUser&&currentUser.email)!==-1))showIntelReport();
+  // Don't build damage/mile here — showIntelReport handles it when unlocked
+  if(el('tab-report').classList.contains('active'))showIntelReport();
 }
 
 function renderDemoMot(){
@@ -1185,9 +1182,7 @@ function renderDemoMot(){
       +'</div><i class="ti ti-chevron-down mot-chev"></i></div>'
       +'<div class="mot-det">'+det+'</div></div>';
   }).join('');
-  buildDamageMap(motTests);
-  buildMileageHistory(motTests);
-  if(currentUser||(VIP_ACCOUNTS.indexOf(currentUser&&currentUser.email)!==-1))showIntelReport();
+  if(el('tab-report').classList.contains('active'))showIntelReport();
 }
 
 /* ── DAMAGE MAP ── */
@@ -1350,15 +1345,41 @@ function calcFinance(){
 
 /* ── INTELLIGENCE REPORT ── */
 var VIP_ACCOUNTS=['bravemalek2020@gmail.com','waelmoh1983@gmail.com'];
+function isVipUser(){return currentUser&&VIP_ACCOUNTS.indexOf(currentUser.email)!==-1;}
+function hasPaidForReg(reg){return sessionStorage.getItem('giq_paid_'+(reg||currentReg))==='1';}
+
 function showIntelReport(){
-  var isVip=currentUser&&VIP_ACCOUNTS.indexOf(currentUser.email)!==-1;
-if(!currentUser||!motTests.length)return;
-if(!isVip&&!currentUser)return;
-  el('intelPaywall').style.display='none';
-  el('intelContent').style.display='block';
-  el('intelBadge').textContent=isVip?'VIP — Full Access':'FREE — Logged In';
-  el('intelBadge').className=isVip?'chip chip-gold':'chip chip-green';
-  buildIntelReport(motTests);
+  if(!motTests.length)return;
+  // Update paywall UI based on login state
+  if(!currentUser){
+    // Not logged in — show sign up CTA
+    el('pwLoggedOut').style.display='block';
+    el('pwLoggedIn').style.display='none';
+    el('intelPaywall').style.display='block';
+    el('intelContent').style.display='none';
+    return;
+  }
+  // Logged in — check VIP or paid
+  if(isVipUser()||hasPaidForReg(currentReg)){
+    // Unlock for VIP or paid
+    el('intelPaywall').style.display='none';
+    el('intelContent').style.display='block';
+    el('intelHistorySections').style.display='block';
+    el('intelBadge').textContent=isVipUser()?'VIP — Full Access':'UNLOCKED';
+    el('intelBadge').className=isVipUser()?'chip chip-gold':'chip chip-green';
+    buildIntelReport(motTests);
+    renderHistoryTab();
+    buildDamageMap(motTests);
+    buildMileageHistory(motTests);
+  } else {
+    // Logged in but not VIP and not paid — show Stripe button
+    el('pwLoggedOut').style.display='none';
+    el('pwLoggedIn').style.display='block';
+    el('intelPaywall').style.display='block';
+    el('intelContent').style.display='none';
+    el('intelBadge').textContent='£1.99 to unlock';
+    el('intelBadge').className='chip chip-gold';
+  }
 }
 
 function buildIntelReport(tests){
@@ -1524,6 +1545,32 @@ function renderResult(r){
     var text='GarageIQ — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+' '+(vehicleData.yearOfManufacture||'')+'\nMod: '+selectedMod+'\ngarage-iq-chi.vercel.app';
     if(navigator.share){navigator.share({title:'GarageIQ',text:text,url:'https://garage-iq-chi.vercel.app'});}
     else{navigator.clipboard.writeText(text).then(function(){alert('Copied to clipboard!');});}
+  });
+}
+
+/* ── STRIPE PAYMENT ── */
+function startPayment(){
+  if(!currentUser){openAuth('login');return;}
+  var btn=el('btnPay');
+  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="animation:spin .7s linear infinite"></i> Loading...';
+  fetch(VERCEL+'/api/checkout',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({reg:currentReg,userId:currentUser.id})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.url){window.location.href=d.url;}
+    else{
+      btn.disabled=false;
+      btn.innerHTML='<i class="ti ti-lock-open"></i> Unlock for £1.99';
+      alert('Payment error: '+(d.error||'Unknown error. Please try again.'));
+    }
+  })
+  .catch(function(e){
+    btn.disabled=false;
+    btn.innerHTML='<i class="ti ti-lock-open"></i> Unlock for £1.99';
+    alert('Error: '+e.message);
   });
 }
 
