@@ -402,12 +402,12 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
   <div class="hero-chip"><i class="ti ti-shield-check" style="font-size:11px"></i> UK Vehicle Intelligence</div>
   <h1>Know Your<br/><em>Car.</em><br/>Build Your <em>Vision.</em></h1>
   <p class="hero-sub">Real DVLA data · Full MOT history · Mileage fraud detection · Valuation · Mod analysis</p>
-  <div class="better-badge"><i class="ti ti-award" style="font-size:11px;color:var(--gold)"></i> <b>Better &amp; cheaper than CarVertical</b> — free with account, or £1.99 one-time</div>
+  <div class="better-badge"><i class="ti ti-award" style="font-size:11px;color:var(--gold)"></i> <b>Better &amp; cheaper than CarVertical</b></div>
   <div class="reg-form">
     <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="8"/>
     <button class="reg-btn" id="runBtn">RUN</button>
   </div>
-  <p class="hero-note">Real DVLA + DVSA data · Free basic lookup · Intelligence Report free when signed in</p>
+  <p class="hero-note">Real DVLA + DVSA data · Official government records</p>
 </section>
 
 <!-- VIN STRIP -->
@@ -456,7 +456,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
     <div class="card">
       <div class="card-head">
         <div class="card-title"><i class="ti ti-engine"></i> Engine &amp; Performance</div>
-        <div class="chip chip-blue" id="specsStatus">Loading...</div>
+        <div class="chip chip-blue" id="specsStatus">Loading</div>
       </div>
       <table class="spec-tbl">
         <tr><td>Power</td><td id="specBhp">-</td></tr>
@@ -498,12 +498,12 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
       <div class="intel-body">
         <div class="card-head" style="margin-bottom:10px">
           <div class="card-title"><i class="ti ti-report-analytics"></i> Intelligence Report</div>
-          <div class="chip chip-blue" id="intelBadge">Free with account</div>
+          <div class="chip chip-blue" id="intelBadge">£1.99 per report</div>
         </div>
         <div id="intelPaywall" class="paywall">
           <div class="pw-icon"><i class="ti ti-lock"></i></div>
-          <div class="pw-title" id="pwTitle">Unlock Intelligence Report</div>
-          <div class="pw-sub" id="pwSub">One-time payment of £1.99. Unlocked instantly. No subscription ever.</div>
+          <div class="pw-title" id="pwTitle">Intelligence Report</div>
+          <div class="pw-sub" id="pwSub">One-time payment of £1.99 per vehicle. Instant unlock. No subscription.</div>
           <div class="pw-feats">
             <div class="pwf"><i class="ti ti-check"></i> Mileage fraud &amp; rollback detection</div>
             <div class="pwf"><i class="ti ti-check"></i> Risk score (0–100)</div>
@@ -514,8 +514,8 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
             <div class="pwf"><i class="ti ti-check"></i> Full mileage timeline</div>
           </div>
           <div id="pwLoggedOut">
-            <button class="pay-btn" id="btnPwSignup" style="margin-bottom:8px"><i class="ti ti-user-plus"></i> Sign Up &amp; Unlock Free</button>
-            <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Already have an account? <span class="login-lnk" id="btnPwLogin" style="font-size:11px">Log in first</span></div>
+            <button class="pay-btn" id="btnPwSignup" style="margin-bottom:8px"><i class="ti ti-lock-open"></i> Log In to Pay £1.99</button>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:10px">No account? <span class="login-lnk" id="btnPwLogin" style="font-size:11px">Create one free (no card needed)</span> then unlock for £1.99</div>
           </div>
           <div id="pwLoggedIn" style="display:none">
             <button class="pay-btn" id="btnPay"><i class="ti ti-lock-open"></i> Unlock for £1.99</button>
@@ -581,16 +581,32 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
             <!-- Financial & Legal -->
             <div class="sect-lbl">Financial &amp; Legal Risks</div>
             <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. Run an HPI or MyCarCheck (£10–20). Buying a car with finance outstanding means the lender can legally repossess it.</div></div><div><div class="chip chip-gold" style="white-space:nowrap">Check HPI</div></div></div>
-              <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Theft Register</div><div class="hrow-d">Not in DVLA/DVSA data. Verify via Police.uk or HPI. Stolen vehicles can be seized even from innocent buyers.</div></div><div><div class="chip chip-gold" style="white-space:nowrap">Check HPI</div></div></div>
-              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Write-off Category (Cat A/B/S/N)</div><div class="hrow-d">Not in DVLA public data. A Cat S/N car can be repaired and sold legally but must be declared. Always check via HPI.</div></div><div><div class="chip chip-gold" style="white-space:nowrap">Check HPI</div></div></div>
+              <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. Run an HPI or MyCarCheck (£10–20). Buying a car with finance outstanding means the lender can legally repossess it.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="white-space:nowrap;cursor:pointer">Check HPI →</div></a></div></div>
+              <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Theft Register</div><div class="hrow-d">Not in DVLA/DVSA data. Verify via Police.uk or HPI. Stolen vehicles can be seized even from innocent buyers.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="white-space:nowrap;cursor:pointer">Check HPI →</div></a></div></div>
+              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Write-off Category (Cat A/B/S/N)</div><div class="hrow-d">Not in DVLA public data. A Cat S/N car can be repaired and sold legally but must be declared. Always check via HPI.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="white-space:nowrap;cursor:pointer">Check HPI →</div></a></div></div>
               <div class="hrow"><div class="hic hi-blue"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing mileage patterns...</div></div><div><div class="chip" id="commUseChip" style="background:var(--sky);color:var(--blue);border:1px solid var(--sky2)">—</div></div></div>
-              <div class="hrow"><div class="hic hi-green"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Estimated Ownership Count</div><div class="hrow-d" id="ownerText">Based on vehicle age and MOT patterns.</div></div><div><div class="chip chip-blue" id="ownerChip">—</div></div></div>
+              <div class="hrow"><div class="hic hi-green"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Ownership History</div><div class="hrow-d" id="ownerText">Based on vehicle age and MOT patterns.</div></div><div><div class="chip chip-blue" id="ownerChip">—</div></div></div>
             </div>
             <!-- Safety -->
             <div class="sect-lbl">Safety &amp; Specs</div>
             <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
               <div id="safetyRows"><div class="ph-empty">Loading...</div></div>
+            </div>
+            <!-- Insurance section -->
+            <div class="sect-lbl">Insurance</div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-shield"></i></div><div><div class="hrow-t">Insurance Group</div><div class="hrow-d" id="insuranceGroupText">Analysing vehicle data...</div></div><div><div class="chip chip-blue" id="insuranceGroupChip">—</div></div></div>
+              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-currency-pound"></i></div><div><div class="hrow-t">Estimated Annual Premium</div><div class="hrow-d" id="insuranceCostText">Based on vehicle group, age and UK average driver profile.</div></div><div><div class="chip chip-gold" id="insuranceCostChip">—</div></div></div>
+              <div class="hrow"><div class="hic hi-green"><i class="ti ti-check"></i></div><div><div class="hrow-t">SORN Check</div><div class="hrow-d" id="sornText">Vehicle tax status from DVLA records.</div></div></div>
+              <div class="info-box"><strong>Always declare modifications</strong> to your insurer. Undeclared mods can void your policy. Use <a href="https://www.confused.com" target="_blank" style="color:var(--blue)">Confused.com</a> or <a href="https://www.comparethemarket.com" target="_blank" style="color:var(--blue)">Compare the Market</a> for accurate quotes.</div>
+            </div>
+            <!-- Finance check -->
+            <div class="sect-lbl">Finance &amp; Provenance</div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+              <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. If finance is outstanding, the lender can legally repossess the car even after you've paid for it.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
+              <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Stolen Vehicle Check</div><div class="hrow-d">Cross-reference with Police National Computer. Not available in public DVLA data — requires HPI.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
+              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Insurance Write-off (Cat A/B/S/N)</div><div class="hrow-d">Not in public DVLA data. Cat S &amp; N cars can be legally sold but must be declared. Always verify before buying.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
+              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Exact Keeper History</div><div class="hrow-d">Precise number of previous registered keepers not available in DVLA open data. HPI provides exact count.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
             </div>
           </div>
         </div>
@@ -602,7 +618,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
   <div id="tab-valuation" class="tab-panel">
     <div class="val-hero">
       <div style="position:relative;z-index:1">
-        <div class="val-lbl">Estimated Market Value</div>
+        <div class="val-lbl">Current Market Value</div>
         <div class="val-price" id="valPrice">£—</div>
         <div class="val-range">
           <span><i class="ti ti-trending-down" style="font-size:12px"></i> Private sale: <b id="valPrivate">—</b></span>
@@ -614,7 +630,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
     <div class="card">
       <div class="card-head">
         <div class="card-title"><i class="ti ti-chart-bar"></i> Value Factors</div>
-        <div class="chip chip-gold">AI Estimated</div>
+        <div class="chip chip-blue">Projected</div>
       </div>
       <div class="val-facs">
         <div class="vf-box"><div class="vf-num" id="vfAge">—</div><div class="vf-lbl">Age (yrs)</div></div>
@@ -685,10 +701,10 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
 <div class="how-sec">
   <div class="how-inner">
     <div class="how-title">Why <em>GarageIQ</em>?</div>
-    <div class="how-sub">Better data. Better design. Free with an account. No subscription nonsense.</div>
+    <div class="how-sub">Better data. Better design. Just £1.99 for a full report. No subscription ever.</div>
     <div class="how-g">
       <div class="how-card"><div class="how-num">01</div><div class="how-t">Enter Your Reg</div><div class="how-d">Instant DVLA lookup. VIN, specs, tax status and full MOT history in seconds.</div></div>
-      <div class="how-card"><div class="how-num">02</div><div class="how-t">Free Intelligence Report</div><div class="how-d">Sign up free — unlock mileage fraud detection, risk score, damage map and more. No card needed.</div></div>
+      <div class="how-card"><div class="how-num">02</div><div class="how-t">£1.99 Intelligence Report</div><div class="how-d">One-time payment per vehicle. Mileage fraud detection, risk score, damage analysis, financial risks and more.</div></div>
       <div class="how-card"><div class="how-num">03</div><div class="how-t">Value, Finance &amp; Mods</div><div class="how-d">Detailed valuation, live finance calculator, finance terms explained, and AI mod analysis all in one.</div></div>
     </div>
   </div>
@@ -727,7 +743,7 @@ window.addEventListener('load',function(){
   el('runBtn').addEventListener('click',lookupVehicle);
   el('regInput').addEventListener('keydown',function(e){if(e.key==='Enter')lookupVehicle();});
   el('analyzeBtn').addEventListener('click',analyseMod);
-  el('btnPwSignup').addEventListener('click',function(){openAuth('signup');});
+  el('btnPwSignup').addEventListener('click',function(){openAuth('login');});
   el('btnPay').addEventListener('click',startPayment);
   el('btnPwLogin').addEventListener('click',function(){openAuth('login');});
   qsa('.mod-btn').forEach(function(b){b.addEventListener('click',function(){selectMod(b);});});
@@ -884,15 +900,23 @@ function saveUsername(){
       if((ck.count||0)>0&&val!==(currentProfile&&currentProfile.username||'').toUpperCase()){
         btn.disabled=false;btn.textContent='Save';showErr('profErr','Username already taken.');return;
       }
-      sb.from('profiles').upsert([{id:currentUser.id,username:val}],{onConflict:'id'})
+      // First try UPDATE (profile row exists), then INSERT if not
+      sb.from('profiles').update({username:val}).eq('id',currentUser.id)
         .then(function(r){
           btn.disabled=false;btn.textContent='Save';
+          if(r.error&&r.error.code==='PGRST116'){
+            // Row doesn't exist yet - insert it
+            return sb.from('profiles').insert([{id:currentUser.id,username:val}]).then(function(r2){
+              if(r2.error){showErr('profErr',r2.error.message||'Failed');return;}
+              currentProfile.username=val;renderNav();
+              el('profAvatar').textContent=val.charAt(0);el('profName').textContent=val;
+              el('newUsername').value='';showOk('profOk','Username saved!');
+            });
+          }
           if(r.error){showErr('profErr',r.error.message||'Failed — try again.');return;}
           currentProfile.username=val;renderNav();
-          el('profAvatar').textContent=val.charAt(0);
-          el('profName').textContent=val;
-          el('newUsername').value='';
-          showOk('profOk','Username saved!');
+          el('profAvatar').textContent=val.charAt(0);el('profName').textContent=val;
+          el('newUsername').value='';showOk('profOk','Username saved!');
         }).catch(function(e){btn.disabled=false;btn.textContent='Save';showErr('profErr',e.message||'Failed');});
     });
 }
@@ -933,8 +957,22 @@ function loadProfileHistory(){
 /* ── VEHICLE LOOKUP ── */
 function estHp(d){var c=parseInt(d.engineCapacity)||1600;return c<=999?65:c<=1199?85:c<=1399?110:c<=1599?130:c<=1999?160:c<=2499?220:c<=2999?280:340;}
 function estTq(d){return Math.round(estHp(d)*1.5);}
-function estVal(d){var y=parseInt(d.yearOfManufacture)||2015;return Math.max(1500,Math.round(18000-(2026-y)*1100));}
+function estVal(d){
+  var y=parseInt(d.yearOfManufacture)||2015;
+  var age=2026-y;
+  var cc=parseInt(d.engineCapacity)||1600;
+  // Base value by engine size
+  var baseNew=cc<=1000?12000:cc<=1400?15000:cc<=2000?22000:cc<=3000?35000:50000;
+  // Depreciation: ~15% year 1, ~12% years 2-3, ~10% thereafter
+  var val=baseNew;
+  if(age>=1)val=Math.round(val*0.85);
+  if(age>=2)val=Math.round(val*0.88);
+  if(age>=3)val=Math.round(val*0.88);
+  for(var i=3;i<age;i++)val=Math.round(val*0.90);
+  return Math.max(800,val);
+}
 
+var _specCache={};
 function lookupVehicle(){
   var reg=el('regInput').value.replace(/\s/g,'').toUpperCase();
   if(!reg||reg.length<2)return;
@@ -1009,7 +1047,7 @@ function renderVehicle(d){
   // All DVLA model field variants
   var m=d.model||d.modelSeries||d.typeApproval||d.vehicleClass||'';
   if(m&&m.length<=2)m=''; // strip short codes
-  el('statModel').textContent=m?fmt(m):fmt(d.make)?'CHECK DVLA':'-';
+  el('statModel').textContent=m?fmt(m):'-';
   el('statYear').textContent=d.yearOfManufacture||d.monthOfFirstRegistration||'-';
   el('statEngine').textContent=d.engineCapacity?d.engineCapacity+'cc':(d.engineSize?d.engineSize+'cc':'-');
   el('statColour').textContent=fmt(d.colour||d.primaryColour);
@@ -1048,6 +1086,21 @@ function saveToHistory(){
 }
 
 /* ── SPECS — normalised with retry fallback ── */
+function applySpecs(s){
+  el('specBhp').textContent=s.bhp?s.bhp+' BHP':'-';
+  el('specTorque').textContent=s.torqueNm?(s.torqueNm+' Nm'+(s.torqueRpm?' @ '+s.torqueRpm+' rpm':'')):'-';
+  el('specZero').textContent=s.zeroToSixty?s.zeroToSixty+' sec':'-';
+  el('specTop').textContent=s.topSpeedMph?s.topSpeedMph+' mph':'-';
+  el('specGearbox').textContent=s.gearbox||'-';
+  el('specCyl').textContent=s.cylinders||'-';
+  el('specDrive').textContent=s.driveType||'-';
+  el('specMpg').textContent=s.consumptionCombined?s.consumptionCombined+' mpg':'-';
+  el('specCo2').innerHTML=s.co2gkm?s.co2gkm+' g/km <span class="co2b '+esc(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>':'-';
+  if(s.bhp)vehicleData.hp=parseInt(s.bhp);
+  if(s.torqueNm)vehicleData.torque=parseInt(s.torqueNm);
+  el('specsStatus').textContent='Loaded';
+  renderSafety(s);
+}
 function loadSpecs(){
   el('specsStatus').textContent='Loading...';
   var payload={
@@ -1057,6 +1110,11 @@ function loadSpecs(){
     cc:vehicleData.engineCapacity||vehicleData.engineSize,
     fuel:vehicleData.fuelType
   };
+  var cacheKey=payload.make+'_'+payload.model+'_'+payload.year+'_'+payload.cc;
+  if(_specCache[cacheKey]){
+    var s=_specCache[cacheKey];
+    applySpecs(s);return;
+  }
   fetch(VERCEL+'/api/specs',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -1065,22 +1123,14 @@ function loadSpecs(){
   .then(function(r){if(!r.ok)throw new Error('specs '+r.status);return r.json();})
   .then(function(s){
     if(!s||((!s.bhp)&&(!s.torqueNm)&&(!s.gearbox))){throw new Error('empty response');}
-    el('specBhp').textContent=s.bhp?s.bhp+' BHP':'-';
-    el('specTorque').textContent=s.torqueNm?(s.torqueNm+' Nm'+(s.torqueRpm?' @ '+s.torqueRpm+' rpm':'')):'-';
-    el('specZero').textContent=s.zeroToSixty?s.zeroToSixty+' sec':'-';
-    el('specTop').textContent=s.topSpeedMph?s.topSpeedMph+' mph':'-';
-    el('specGearbox').textContent=s.gearbox||'-';
-    el('specCyl').textContent=s.cylinders||'-';
-    el('specDrive').textContent=s.driveType||'-';
-    el('specMpg').textContent=s.consumptionCombined?s.consumptionCombined+' mpg':'-';
-    el('specCo2').innerHTML=s.co2gkm?s.co2gkm+' g/km <span class="co2b '+esc(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>':'-';
-    if(s.bhp)vehicleData.hp=parseInt(s.bhp);
-    if(s.torqueNm)vehicleData.torque=parseInt(s.torqueNm);
-    el('specsStatus').textContent='AI sourced';
-    renderSafety(s);
+    _specCache[cacheKey]=s;
+    applySpecs(s);
   })
   .catch(function(){
-    el('specsStatus').textContent='Unavailable';
+    // Show what we know from DVLA even if specs API fails
+    el('specBhp').textContent=vehicleData.hp?vehicleData.hp+' BHP (est.)':'-';
+    el('specTorque').textContent=vehicleData.torque?vehicleData.torque+' Nm (est.)':'-';
+    el('specsStatus').textContent='Partial';
     renderSafety(null);
   });
 }
@@ -1283,8 +1333,27 @@ function renderHistoryTab(){
   var yr=parseInt(d.yearOfManufacture)||2015;
   var age=2026-yr;
   var estOwners=age<=2?1:age<=4?2:age<=7?3:4;
-  el('ownerText').textContent='Vehicle is ~'+age+' years old. Estimated '+estOwners+'+ keeper(s) based on age alone. Exact count via HPI.';
-  el('ownerChip').textContent='~'+estOwners+'+ owners';
+  el('ownerText').textContent='Exact keeper count is not available in DVLA/DVSA public data. Run an HPI check to get the precise number of previous owners.';
+  el('ownerChip').textContent='HPI Required';
+  el('ownerChip').className='chip chip-gold';
+  // Insurance group estimate from engine size
+  var cc2=parseInt(vehicleData.engineCapacity)||1600;
+  var ig=cc2<=1000?'Group 1-8':cc2<=1400?'Group 9-16':cc2<=1600?'Group 15-22':cc2<=2000?'Group 20-28':cc2<=2500?'Group 25-35':'Group 35-50';
+  var ic=cc2<=1000?'~£600-900/yr':cc2<=1400?'~£800-1200/yr':cc2<=1600?'~£900-1400/yr':cc2<=2000?'~£1100-1800/yr':'~£1500-3000/yr';
+  var insurEl=document.getElementById('insuranceGroupText');
+  var insurCostEl=document.getElementById('insuranceCostText');
+  var insurChipEl=document.getElementById('insuranceGroupChip');
+  var insurCostChipEl=document.getElementById('insuranceCostChip');
+  if(insurEl)insurEl.textContent=ig+' — based on '+cc2+'cc engine. Exact group depends on trim, doors and safety rating.';
+  if(insurChipEl)insurChipEl.textContent=ig;
+  if(insurCostEl)insurCostEl.textContent=ic+' estimate for average UK driver. Use comparison sites for your exact quote.';
+  if(insurCostChipEl)insurCostChipEl.textContent=ic;
+  var sornEl=document.getElementById('sornText');
+  var sornEl2=document.getElementById('taxStatusText');
+  if(sornEl){
+    var taxOk2=(vehicleData.taxStatus||'').toLowerCase().includes('taxed');
+    sornEl.textContent=taxOk2?'Vehicle is currently taxed — no SORN in effect.':'Vehicle may be SORN (off-road declaration) or tax lapsed. Do not drive without valid tax.';
+  }
 }
 
 /* ── VALUATION ── */
@@ -1314,17 +1383,21 @@ function renderValuation(){
   el('vfMileage').textContent=annMi>0?annMi.toLocaleString():'N/A';
   var tot=motTests.length,pass=motTests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
   el('vfPass').textContent=tot>0?Math.round(pass/tot*100)+'%':'N/A';
-  // Depreciation over 6 years
+  // Depreciation from NOW forward 5 years (2026 = current value, then projected)
   var depHTML='';
-  for(var y=0;y<=6;y++){
-    var dp=Math.round(base*Math.pow(0.82,y));
+  var currentYear=2026;
+  for(var y=0;y<=5;y++){
+    var dp=Math.round(base*Math.pow(0.85,y));
     var pct=Math.round((dp/base)*100);
-    depHTML+='<div class="dep-row"><div class="dep-yr">'+(yr+y)+'</div><div class="dep-bg"><div class="dep-fill" style="width:'+pct+'%"></div></div><div class="dep-val">£'+dp.toLocaleString()+'</div></div>';
+    var label=y===0?'Now ('+currentYear+')':String(currentYear+y);
+    depHTML+='<div class="dep-row"><div class="dep-yr" style="width:52px;font-size:9px">'+label+'</div><div class="dep-bg"><div class="dep-fill" style="width:'+pct+'%"></div></div><div class="dep-val">£'+dp.toLocaleString()+'</div></div>';
   }
   el('depRows').innerHTML=depHTML;
+  // Update finance price to current value
   el('finPrice').value=base;
   el('finDeposit').value=Math.round(base*0.15);
   calcFinance();
+
 }
 
 function calcFinance(){
