@@ -1,260 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>GarageIQ — UK Car Intelligence</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --red:#E24B4A;--red-dark:#A32D2D;
-      --gold:#FAC775;--gold-dark:#BA7517;
-      --green:#6DBD2A;--amber:#F59E0B;--blue:#3B82F6;
-      --dark:#111110;--dark2:#1E1E1C;--dark3:#1A1A18;--dark4:#222220;
-      --light:#F5F4F0;--light2:#D4D2CE;
-      --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
-      --text2:#888885;--text3:#555552;
-      --radius:14px;--radius-sm:8px;--t:0.18s ease;
-    }
-    html{scroll-behavior:smooth}
-    body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--light);min-height:100vh;overflow-x:hidden}
-    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--dark)}::-webkit-scrollbar-thumb{background:var(--dark4)}
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>GarageIQ — UK Car Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#071E3D;--navy2:#0B2A50;--navy3:#0F3460;
+  --blue:#1565C0;--blue2:#1976D2;--sky:#E3F2FD;--sky2:#BBDEFB;--sky3:#90CAF9;
+  --gold:#F5B731;--gold2:#E6A800;--gold3:#FFF9E6;
+  --white:#FFFFFF;--off:#F8FBFF;
+  --text:#071E3D;--text2:#2C4A6E;--text3:#6B8CAE;--text4:#A8C0D6;
+  --green:#1B7F4F;--green2:#E8F5EE;
+  --red:#C0392B;--red2:#FDECEA;
+  --amber:#B45309;--amber2:#FEF3C7;
+  --border:rgba(21,101,192,0.1);--border2:rgba(21,101,192,0.2);
+  --sh:0 2px 16px rgba(7,30,61,0.08);--sh2:0 8px 40px rgba(7,30,61,0.14);
+  --r:14px;--rs:8px;--rxs:5px;--t:0.18s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;background:var(--off);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--sky)}::-webkit-scrollbar-thumb{background:var(--sky3);border-radius:3px}
 
-    /* NAV */
-    nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(17,17,16,0.96);z-index:100;backdrop-filter:blur(12px)}
-    .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px}
-    .nav-logo span{color:var(--red)}
-    .nav-right{display:flex;gap:8px;align-items:center}
-    .btn-sm{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;border:none;border-radius:5px;padding:7px 14px;cursor:pointer;transition:all var(--t)}
-    .btn-login{background:transparent;border:1px solid var(--border2);color:var(--light2)}
-    .btn-login:hover{border-color:var(--red);color:var(--red)}
-    .btn-signup{background:var(--red);color:white}
-    .btn-signup:hover{background:var(--red-dark)}
-    .nav-avatar{width:34px;height:34px;border-radius:50%;background:#000;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--t);font-family:'Bebas Neue',sans-serif;font-size:15px;color:var(--light);flex-shrink:0}
-    .nav-avatar:hover{border-color:var(--gold);color:var(--gold)}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:62px;background:var(--navy);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(7,30,61,0.4)}
+.nav-logo{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:2px}
+.nav-logo span{color:var(--gold)}
+.nav-right{display:flex;gap:8px;align-items:center}
+.btn-nav{font-family:"Syne",sans-serif;font-size:12px;font-weight:700;letter-spacing:.3px;border:none;border-radius:var(--rxs);padding:8px 16px;cursor:pointer;transition:all var(--t)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
+.nav-avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:15px;font-weight:800;color:var(--navy);cursor:pointer;transition:all var(--t);flex-shrink:0;border:2px solid transparent}
+.nav-avatar:hover{border-color:var(--white);transform:scale(1.05)}
 
-    /* HERO */
-    .hero{text-align:center;padding:5rem 1.5rem 3rem;max-width:680px;margin:0 auto}
-    .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(250,199,117,0.08);border:1px solid rgba(250,199,117,0.2);color:var(--gold);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.75rem}
-    .hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(46px,9vw,82px);letter-spacing:3px;line-height:0.95;margin-bottom:1.25rem}
-    .hero h1 span{color:var(--red)}
-    .hero p{font-size:15px;color:#9A9896;line-height:1.65;max-width:460px;margin:0 auto 2.5rem;font-weight:300}
-    .hero-note{font-size:11px;color:var(--text3);text-align:center;margin-top:12px}
-    .reg-wrap{display:flex;gap:10px;max-width:460px;margin:0 auto}
-    .reg-input{flex:1;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:6px;text-transform:uppercase;text-align:center;background:var(--gold);color:var(--dark2);border:2px solid var(--gold-dark);border-radius:var(--radius-sm);padding:13px 16px;outline:none;transition:border-color var(--t)}
-    .reg-input:focus{border-color:var(--red)}
-    .reg-input::placeholder{color:rgba(46,38,18,0.35)}
-    .reg-btn{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:0 28px;cursor:pointer;transition:all var(--t)}
-    .reg-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 60%,#0D47A1 100%);padding:4.5rem 1.5rem 3.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(245,183,49,0.09) 0%,transparent 60%)}
+.hero-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(245,183,49,0.15);border:1px solid rgba(245,183,49,0.3);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.75rem}
+.hero h1{font-family:"Syne",sans-serif;font-size:clamp(40px,8vw,74px);font-weight:800;line-height:.98;letter-spacing:-1px;color:var(--white);margin-bottom:.75rem;position:relative}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.55);max-width:440px;margin:0 auto 1.5rem;line-height:1.6;font-weight:300}
+.better-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,183,49,0.1);border:1px solid rgba(245,183,49,0.2);color:rgba(255,255,255,0.65);font-size:10px;padding:4px 12px;border-radius:20px;margin-bottom:1.75rem}
+.better-badge b{color:var(--gold)}
+.reg-form{display:flex;gap:10px;max-width:480px;margin:0 auto;filter:drop-shadow(0 8px 30px rgba(7,30,61,0.5))}
+.reg-input{flex:1;font-family:"Syne",sans-serif;font-size:28px;font-weight:800;letter-spacing:6px;text-transform:uppercase;text-align:center;background:var(--gold);color:var(--navy);border:3px solid var(--gold2);border-radius:var(--rs);padding:13px 16px;outline:none;transition:border-color var(--t)}
+.reg-input:focus{border-color:var(--white)}
+.reg-input::placeholder{color:rgba(7,30,61,0.3);font-size:18px;letter-spacing:3px}
+.reg-btn{font-family:"Syne",sans-serif;font-size:15px;font-weight:800;letter-spacing:1px;background:var(--navy2);color:var(--white);border:3px solid rgba(255,255,255,0.15);border-radius:var(--rs);padding:0 28px;cursor:pointer;transition:all var(--t);white-space:nowrap}
+.reg-btn:hover{background:var(--blue);border-color:var(--blue2)}
+.hero-note{font-size:10px;color:rgba(255,255,255,0.3);margin-top:14px;letter-spacing:.5px}
 
-    /* APP */
-    .app{max-width:680px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
-    .card{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
-    .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .card-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:6px}
-    .card-title i{font-size:13px;color:var(--red)}
-    .card-badge{font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:20px;background:rgba(255,255,255,0.06);color:var(--text2)}
-    .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
-    .stat-box{background:var(--dark);border-radius:var(--radius-sm);padding:12px}
-    .stat-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
-    .stat-val{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;color:var(--light);line-height:1;word-break:break-word}
-    .stat-val.green{color:var(--green)}.stat-val.red{color:var(--red)}.stat-val.amber{color:var(--gold)}
+.vin-strip{background:var(--navy2);padding:.6rem 1.5rem;text-align:center;font-size:11px;color:var(--sky3);letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.vin-strip strong{color:var(--gold);letter-spacing:2px;font-family:"Syne",sans-serif}
 
-    /* MOT */
-    .mot-row{border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;border-radius:5px;transition:background var(--t)}
-    .mot-row:last-child{border-bottom:none}
-    .mot-row:hover{background:rgba(255,255,255,0.03)}
-    .mot-row-header{display:flex;align-items:center;justify-content:space-between;padding:11px 8px;font-size:13px;flex-wrap:wrap;gap:6px}
-    .mot-chevron{color:var(--text3);font-size:13px;transition:transform 0.2s;flex-shrink:0}
-    .mot-row.open .mot-chevron{transform:rotate(180deg)}
-    .mot-details{display:none;padding:4px 8px 14px}
-    .mot-row.open .mot-details{display:block}
-    .mot-detail-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px solid rgba(255,255,255,0.04);font-size:12px;line-height:1.5;color:#B4B2A9}
-    .mot-detail-item:first-child{border-top:none}
-    .mot-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
-    .dot-danger{background:#FF6B6B}.dot-major{background:#FF9500}.dot-minor{background:var(--green)}.dot-advisory{background:var(--gold)}
-    .mot-no-items{font-size:12px;color:var(--text3);padding:6px 0}
-    .badge{font-size:10px;font-weight:500;padding:2px 9px;border-radius:20px}
-    .b-pass{background:rgba(109,189,42,0.15);color:var(--green);border:1px solid rgba(109,189,42,0.3)}
-    .b-fail{background:rgba(255,107,107,0.15);color:#FF6B6B;border:1px solid rgba(255,107,107,0.3)}
-    .b-advisory{background:rgba(250,199,117,0.12);color:var(--gold);border:1px solid rgba(250,199,117,0.25)}
-    .b-warn{background:rgba(245,158,11,0.12);color:var(--amber);border:1px solid rgba(245,158,11,0.25)}
+.tabs-wrap{background:var(--white);border-bottom:2px solid var(--border);position:sticky;top:62px;z-index:100;overflow-x:auto}
+.tabs-inner{display:flex;max-width:900px;margin:0 auto;padding:0 1rem}
+.tab-btn{font-family:"Syne",sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text3);border:none;background:none;padding:14px 16px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all var(--t);display:flex;align-items:center;gap:6px;text-transform:uppercase}
+.tab-btn i{font-size:14px}
+.tab-btn:hover{color:var(--blue)}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
 
-    /* SPECS */
-    .spec-table{width:100%;border-collapse:collapse}
-    .spec-table tr{border-bottom:1px solid rgba(255,255,255,0.05)}
-    .spec-table tr:last-child{border-bottom:none}
-    .spec-table td{padding:9px 4px;font-size:13px}
-    .spec-table td:first-child{color:var(--text2);font-size:10px;text-transform:uppercase;letter-spacing:1px;width:44%}
-    .spec-table td:last-child{font-weight:500;color:var(--light);text-align:right}
-    .co2-badge{display:inline-block;font-family:'Bebas Neue',sans-serif;font-size:12px;padding:1px 7px;border-radius:3px;margin-left:6px;background:var(--green);color:#000}
-    .co2-badge.C{background:#CDDC39;color:#333}.co2-badge.D{background:var(--gold);color:#333}
-    .co2-badge.E{background:#FF9800}.co2-badge.F{background:#FF5722}.co2-badge.G{background:#F44336}
+.app{max-width:900px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-    /* MOT SUMMARY */
-    .mot-sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-    .mot-sum-box{background:var(--dark);border-radius:var(--radius-sm);padding:10px;text-align:center}
-    .mot-sum-num{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1}
-    .mot-sum-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-    .pass-bar-wrap{margin-bottom:14px}
-    .pass-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:5px}
-    .pass-bar-bg{background:rgba(255,23,68,0.15);border-radius:20px;height:7px;overflow:hidden}
-    .pass-bar-fill{height:100%;border-radius:20px;background:var(--green);transition:width 0.8s cubic-bezier(.4,0,.2,1)}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--sh)}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-family:"Syne",sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:7px}
+.card-title i{font-size:15px;color:var(--blue)}
+.chip{font-size:9px;font-weight:700;letter-spacing:.5px;padding:3px 9px;border-radius:20px;border:1px solid}
+.chip-blue{background:var(--sky);color:var(--blue);border-color:var(--sky2)}
+.chip-gold{background:var(--gold3);color:var(--amber);border-color:#FBBF24}
+.chip-green{background:var(--green2);color:var(--green);border-color:#A7F3D0}
+.chip-red{background:var(--red2);color:var(--red);border-color:#FCA5A5}
 
-    /* ── INTELLIGENCE REPORT ── */
-    .intel-card{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1rem;overflow:hidden;position:relative}
-    .intel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold))}
-    .intel-inner{padding:1.25rem}
-    /* PAYWALL */
-    .intel-paywall{padding:2rem 1.25rem;text-align:center;border-top:1px solid var(--border)}
-    .paywall-lock{width:52px;height:52px;border-radius:50%;background:rgba(226,75,74,0.1);border:1px solid rgba(226,75,74,0.25);display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--red);margin-bottom:14px}
-    .paywall-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:6px}
-    .paywall-sub{font-size:12px;color:var(--text2);line-height:1.6;max-width:320px;margin:0 auto 18px}
-    .paywall-features{display:flex;flex-direction:column;gap:7px;margin-bottom:20px;text-align:left;max-width:280px;margin-left:auto;margin-right:auto}
-    .pf-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--light2)}
-    .pf-row i{color:var(--green);font-size:13px;flex-shrink:0}
-    .pay-btn{display:inline-flex;align-items:center;gap:8px;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:14px 32px;cursor:pointer;transition:all var(--t)}
-    .pay-btn:hover{background:var(--red-dark);transform:translateY(-1px)}
-    .pay-btn:disabled{background:#333;color:var(--text3);cursor:default;transform:none}
-    .pay-note{font-size:10px;color:var(--text3);margin-top:10px}
-    /* Risk circle */
-    .risk-wrap{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--dark);border-radius:var(--radius-sm);margin-bottom:14px}
-    .risk-circle{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:20px;border:2px solid;flex-shrink:0}
-    .risk-low{border-color:var(--green);color:var(--green);background:rgba(109,189,42,0.08)}
-    .risk-med{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,0.08)}
-    .risk-high{border-color:var(--red);color:var(--red);background:rgba(226,75,74,0.08)}
-    .risk-lbl{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px}
-    .risk-sub{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4}
-    /* Check rows */
-    .intel-checks{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-    .check-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--dark);border-radius:var(--radius-sm);border-left:3px solid transparent}
-    .check-row.ok{border-left-color:var(--green)}
-    .check-row.warn{border-left-color:var(--amber)}
-    .check-row.bad{border-left-color:var(--red)}
-    .check-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px}
-    .icon-ok{background:rgba(109,189,42,0.15);color:var(--green)}
-    .icon-warn{background:rgba(245,158,11,0.15);color:var(--amber)}
-    .icon-bad{background:rgba(226,75,74,0.15);color:var(--red)}
-    .check-title{font-size:12px;font-weight:600;color:var(--light);margin-bottom:2px}
-    .check-desc{font-size:11px;color:var(--text2);line-height:1.5}
-    /* Mileage timeline */
-    .timeline-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px}
-    .mi-bar-item{display:flex;align-items:center;gap:10px;margin-bottom:7px}
-    .mi-yr{font-size:10px;color:var(--text3);width:42px;flex-shrink:0}
-    .mi-bar-bg{flex:1;height:13px;background:var(--dark);border-radius:3px;overflow:hidden;position:relative}
-    .mi-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red),var(--gold));transition:width .6s ease}
-    .mi-bar-fill.fraud{background:linear-gradient(90deg,#ff0000,#ff6b6b)}
-    .mi-val{font-size:10px;color:var(--text2);width:76px;text-align:right;flex-shrink:0}
-    .fraud-flag{display:inline-flex;align-items:center;gap:3px;background:rgba(226,75,74,0.15);border:1px solid rgba(226,75,74,0.3);color:var(--red);font-size:9px;padding:1px 6px;border-radius:20px;margin-left:6px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sbox{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:12px;transition:border-color var(--t)}
+.sbox:hover{border-color:var(--sky3)}
+.slbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-weight:700}
+.sval{font-family:"Syne",sans-serif;font-size:18px;font-weight:700;color:var(--text);line-height:1;word-break:break-word}
+.sval.green{color:var(--green)}.sval.red{color:var(--red)}.sval.amber{color:var(--amber)}.sval.blue{color:var(--blue)}
 
-    /* MODS */
-    .mods-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .mod-btn{background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 8px;text-align:center;cursor:pointer;transition:all var(--t)}
-    .mod-btn:hover{border-color:rgba(226,75,74,0.5);background:rgba(226,75,74,0.04);transform:translateY(-1px)}
-    .mod-btn.selected{border:1.5px solid var(--red);background:rgba(226,75,74,0.07)}
-    .mod-icon{font-size:20px;margin-bottom:7px;color:var(--gold)}
-    .mod-name{font-size:11px;font-weight:600;color:var(--light)}
-    .mod-tag{font-size:9px;color:var(--text3);margin-top:3px}
-    .analyze-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:14px;cursor:pointer;margin-top:10px;transition:all var(--t)}
-    .analyze-btn:hover:not(:disabled){background:var(--red-dark)}
-    .analyze-btn:disabled{background:#2A2A28;color:var(--text3);cursor:default}
-    .result-card{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;position:relative;overflow:hidden}
-    .result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
-    .result-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
-    .delta-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;flex-wrap:wrap;gap:4px}
-    .delta-row:last-of-type{border-bottom:none}
-    .delta-lbl{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px}
-    .change{font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px}
-    .c-up{background:rgba(109,189,42,0.12);color:var(--green)}.c-down{background:rgba(255,107,107,0.12);color:#FF6B6B}.c-neutral{background:rgba(255,255,255,0.06);color:var(--text2)}
-    .verdict-box{background:var(--dark);border-left:2px solid var(--red);border-radius:0 5px 5px 0;padding:12px 14px;margin-top:14px;font-size:12px;color:#B4B2A9;line-height:1.6}
-    .verdict-box strong{color:var(--light)}
-    .share-btn{width:100%;background:transparent;border:1px solid rgba(109,189,42,0.3);color:var(--green);font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;border-radius:var(--radius-sm);padding:11px;cursor:pointer;margin-top:10px;transition:all var(--t)}
-    .share-btn:hover{background:rgba(109,189,42,0.08)}
-    .sound-bar{display:flex;gap:3px;align-items:flex-end;height:26px}
-    .s-bar{width:4px;border-radius:2px;background:var(--red)}
+.spec-tbl{width:100%;border-collapse:collapse}
+.spec-tbl tr{border-bottom:1px solid var(--border)}
+.spec-tbl tr:last-child{border-bottom:none}
+.spec-tbl td{padding:9px 4px;font-size:13px}
+.spec-tbl td:first-child{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;width:44%;font-weight:700}
+.spec-tbl td:last-child{font-weight:600;color:var(--text);text-align:right}
+.co2b{display:inline-block;font-family:"Syne",sans-serif;font-size:11px;font-weight:800;padding:1px 7px;border-radius:3px;margin-left:6px;background:var(--green);color:#fff}
+.co2b.C{background:#8BC34A}.co2b.D{background:var(--gold);color:var(--navy)}.co2b.E{background:#FF9800}.co2b.F{background:#FF5722}.co2b.G{background:#F44336}
 
-    /* MODALS */
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:fadeIn .15s ease}
-    .overlay.hidden{display:none}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    .modal{background:var(--dark3);border:1px solid var(--border2);border-radius:var(--radius);padding:2rem;width:100%;max-width:420px;position:relative;max-height:92vh;overflow-y:auto;animation:slideUp .2s ease}
-    @keyframes slideUp{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
-    .modal-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer;line-height:1;transition:color var(--t)}
-    .modal-x:hover{color:var(--light)}
-    .modal-h{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:4px}
-    .modal-sub{font-size:13px;color:var(--text2);margin-bottom:1.5rem;line-height:1.4}
-    .tabs{display:flex;border:1px solid var(--border);border-radius:5px;overflow:hidden;margin-bottom:20px}
-    .tab{flex:1;background:transparent;border:none;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:var(--text2);padding:9px;cursor:pointer;transition:all var(--t)}
-    .tab.active{background:var(--red);color:white}
-    .inp{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--light);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px;transition:border-color var(--t)}
-    .inp:focus{border-color:rgba(226,75,74,0.6)}
-    .modal-btn{width:100%;background:var(--red);color:white;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;border:none;border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all var(--t);margin-top:4px}
-    .modal-btn:hover:not(:disabled){background:var(--red-dark)}
-    .modal-btn:disabled{background:#2A2A28;color:var(--text3);cursor:default}
-    .modal-btn-ghost{width:100%;background:transparent;border:1px solid var(--border);color:var(--text2);font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:1px;border-radius:var(--radius-sm);padding:11px;cursor:pointer;transition:all var(--t);margin-top:8px}
-    .modal-btn-ghost:hover{border-color:rgba(255,107,107,0.5);color:#FF6B6B}
-    .msg-err{background:rgba(255,107,107,0.1);color:#FF6B6B;border:1px solid rgba(255,107,107,0.2);border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;line-height:1.4}
-    .msg-ok{background:rgba(109,189,42,0.1);color:var(--green);border:1px solid rgba(109,189,42,0.2);border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:10px;display:none}
-    /* Profile modal */
-    .prof-top{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
-    .prof-avatar-big{width:68px;height:68px;border-radius:50%;background:#000;border:2px solid var(--border2);display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--light);margin-bottom:10px}
-    .prof-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px}
-    .prof-email{font-size:11px;color:var(--text2);margin-top:3px}
-    .prof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
-    .prof-stat{background:var(--dark);border-radius:var(--radius-sm);padding:12px;text-align:center}
-    .prof-stat-num{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);line-height:1}
-    .prof-stat-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-    .sect-lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px;margin-top:2px}
-    .edit-row{display:flex;gap:8px;margin-bottom:16px;align-items:center}
-    .edit-row .inp{margin-bottom:0;flex:1}
-    .edit-save{background:var(--red);color:white;border:none;border-radius:var(--radius-sm);padding:10px 16px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;cursor:pointer;transition:background var(--t);flex-shrink:0}
-    .edit-save:hover{background:var(--red-dark)}
-    .edit-save:disabled{background:#333;color:var(--text3);cursor:default}
-    .ph-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:7px;cursor:pointer;transition:all var(--t)}
-    .ph-item:hover{border-color:rgba(226,75,74,0.4);background:rgba(226,75,74,0.03)}
-    .ph-reg{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:2px;background:var(--gold);color:#1a1600;padding:3px 9px;border-radius:3px;flex-shrink:0}
-    .ph-info{flex:1;min-width:0}
-    .ph-car{font-size:12px;font-weight:600;color:var(--light);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ph-meta{font-size:10px;color:var(--text3);margin-top:1px}
-    .ph-empty{text-align:center;padding:1.5rem 0;color:var(--text2);font-size:13px}
+.mot-sum-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.mot-sb{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:10px;text-align:center}
+.mot-sn{font-family:"Syne",sans-serif;font-size:26px;font-weight:800;line-height:1}
+.mot-sl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
+.pbar-wrap{margin-bottom:14px}
+.pbar-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.pbar-bg{background:var(--red2);border-radius:20px;height:8px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green),#4ADE80);transition:width .8s cubic-bezier(.4,0,.2,1)}
+.mot-row{border-bottom:1px solid var(--border);cursor:pointer;border-radius:var(--rxs);transition:background var(--t)}
+.mot-row:last-child{border-bottom:none}
+.mot-row:hover{background:var(--off)}
+.mot-rh{display:flex;align-items:center;justify-content:space-between;padding:11px 8px;flex-wrap:wrap;gap:6px}
+.mot-chev{color:var(--text4);font-size:13px;transition:transform .2s;flex-shrink:0}
+.mot-row.open .mot-chev{transform:rotate(180deg)}
+.mot-det{display:none;padding:4px 8px 14px}
+.mot-row.open .mot-det{display:block}
+.mot-di{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px solid var(--border);font-size:12px;line-height:1.5;color:var(--text2)}
+.mot-di:first-child{border-top:none}
+.mdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.d-dang{background:#EF4444}.d-maj{background:#F97316}.d-min{background:#22C55E}.d-adv{background:var(--gold)}
+.mot-ni{font-size:12px;color:var(--text3);padding:6px 0}
+.badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px}
+.b-pass{background:var(--green2);color:var(--green);border:1px solid #A7F3D0}
+.b-fail{background:var(--red2);color:var(--red);border:1px solid #FCA5A5}
+.b-adv{background:var(--amber2);color:var(--amber);border:1px solid #FDE68A}
+.b-warn{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA}
 
-    /* FOOTER */
-    .stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:680px;margin:0 auto 4rem;padding:0 1.5rem}
-    .strip-stat{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
-    .strip-num{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--red)}
-    .strip-label{font-size:11px;color:var(--text2);margin-top:4px}
-    .how-section{padding:3.5rem 1.5rem;max-width:680px;margin:0 auto}
-    .section-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:3px;margin-bottom:2rem;text-align:center}
-    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-    .step{background:var(--dark4);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;text-align:center}
-    .step-num{font-family:'Bebas Neue',sans-serif;font-size:46px;color:var(--red);line-height:1}
-    .step-title{font-weight:600;font-size:13px;margin:8px 0 4px}
-    .step-desc{font-size:11px;color:var(--text2);line-height:1.5}
-    footer{text-align:center;padding:2rem;border-top:1px solid var(--border);color:var(--text3);font-size:11px;line-height:1.9}
-    .hidden{display:none!important}
-    .loading{text-align:center;padding:2rem;color:var(--text2);font-size:13px}
-    .error-box{background:rgba(255,107,107,0.08);color:#FF6B6B;border:1px solid rgba(255,107,107,0.2);border-radius:var(--radius-sm);padding:12px 16px;font-size:13px;margin-bottom:1rem}
-    @media(max-width:520px){
-      .grid4{grid-template-columns:repeat(2,1fr)}.mods-grid{grid-template-columns:repeat(2,1fr)}
-      .steps,.stats-strip{grid-template-columns:1fr}.mot-sum-grid{grid-template-columns:repeat(2,1fr)}
-      nav{padding:1rem}.hero{padding:3rem 1rem 2rem}.app{padding:1rem 1rem 4rem}
-    }
-  </style>
+/* INTELLIGENCE */
+.intel-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1rem;overflow:hidden;box-shadow:var(--sh)}
+.intel-bar{height:3px;background:linear-gradient(90deg,var(--blue),var(--gold))}
+.intel-body{padding:1.25rem}
+.paywall{text-align:center;padding:2.5rem 1rem}
+.pw-icon{width:58px;height:58px;border-radius:50%;background:var(--sky);border:2px solid var(--sky2);display:inline-flex;align-items:center;justify-content:center;font-size:24px;color:var(--blue);margin-bottom:14px}
+.pw-title{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.pw-sub{font-size:12px;color:var(--text3);line-height:1.7;max-width:340px;margin:0 auto 16px}
+.pw-feats{display:flex;flex-direction:column;gap:7px;margin-bottom:20px;text-align:left;max-width:300px;margin-left:auto;margin-right:auto}
+.pwf{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);font-weight:500}
+.pwf i{color:var(--green);font-size:13px;flex-shrink:0}
+.pay-btn{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:var(--white);font-family:"Syne",sans-serif;font-size:15px;font-weight:800;letter-spacing:.3px;border:none;border-radius:var(--rs);padding:14px 32px;cursor:pointer;transition:all var(--t)}
+.pay-btn:hover{background:var(--blue);transform:translateY(-1px)}
+.pay-btn:disabled{background:var(--text3);cursor:default;transform:none}
+.login-lnk{display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;text-decoration:underline}
+.pay-note{font-size:10px;color:var(--text3);margin-top:8px}
+.risk-wrap{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--off);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:14px}
+.risk-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:20px;font-weight:800;border:3px solid;flex-shrink:0}
+.r-low{border-color:var(--green);color:var(--green);background:var(--green2)}
+.r-med{border-color:#D97706;color:#D97706;background:var(--amber2)}
+.r-high{border-color:var(--red);color:var(--red);background:var(--red2)}
+.risk-lbl{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;color:var(--navy)}
+.risk-sub{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4}
+.checks{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.chk{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:var(--rs);border-left:3px solid transparent}
+.chk.ok{background:var(--green2);border-left-color:var(--green)}
+.chk.warn{background:var(--amber2);border-left-color:#D97706}
+.chk.bad{background:var(--red2);border-left-color:var(--red)}
+.chk-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;background:rgba(255,255,255,0.6)}
+.chk.ok .chk-ic{color:var(--green)}.chk.warn .chk-ic{color:#D97706}.chk.bad .chk-ic{color:var(--red)}
+.chk-t{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.chk-d{font-size:11px;color:var(--text2);line-height:1.5}
+.tl-title{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.mi-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.mi-yr{font-size:10px;color:var(--text3);width:42px;flex-shrink:0;font-weight:700}
+.mi-bg{flex:1;height:14px;background:var(--off);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.mi-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--sky3));transition:width .7s ease}
+.mi-fill.fraud{background:linear-gradient(90deg,var(--red),#F87171)}
+.mi-val{font-size:10px;color:var(--text2);width:80px;text-align:right;flex-shrink:0;font-weight:600}
+.fraud-tag{display:inline-flex;align-items:center;gap:3px;background:var(--red2);border:1px solid #FCA5A5;color:var(--red);font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:5px}
+
+/* DAMAGE */
+.dmg-wrap{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+.dmg-car-w{flex:0 0 200px}
+.dmg-car-svg{width:100%;height:auto}
+.dmg-zone{fill:transparent;cursor:pointer;transition:fill .2s}
+.dmg-zone:hover{fill:rgba(245,183,49,0.25)}
+.dmg-zone.hit{fill:rgba(192,57,43,0.25)}
+.dmg-zone.minor-hit{fill:rgba(245,183,49,0.2)}
+.dmg-list{flex:1;min-width:180px;display:flex;flex-direction:column;gap:6px}
+.dmg-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:var(--rxs);font-size:11px}
+.dmg-item.damage{background:var(--red2);border:1px solid #FCA5A5}
+.dmg-item.advisory{background:var(--amber2);border:1px solid #FDE68A}
+.dmg-item i{font-size:13px;flex-shrink:0;margin-top:1px}
+.dmg-item.damage i{color:var(--red)}.dmg-item.advisory i{color:#D97706}
+.dmg-it{font-weight:700;color:var(--navy);margin-bottom:2px;font-size:11px}
+.dmg-id{color:var(--text2);line-height:1.4}
+.dmg-none{font-size:12px;color:var(--text3);text-align:center;padding:1rem;width:100%}
+
+/* HISTORY ROWS */
+.hrow{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;background:var(--off)}
+.hic{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.hi-blue{background:var(--sky);color:var(--blue)}.hi-gold{background:var(--gold3);color:var(--amber)}
+.hi-green{background:var(--green2);color:var(--green)}.hi-red{background:var(--red2);color:var(--red)}
+.hrow-t{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.hrow-d{font-size:11px;color:var(--text3);line-height:1.5}
+.sect-lbl{font-family:"Syne",sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* VALUATION */
+.val-hero{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);border-radius:var(--r);padding:1.5rem;color:var(--white);margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:var(--sh2)}
+.val-hero::before{content:"";position:absolute;right:-20px;top:-20px;width:160px;height:160px;background:rgba(245,183,49,0.1);border-radius:50%}
+.val-price{font-family:"Syne",sans-serif;font-size:44px;font-weight:800;color:var(--gold);line-height:1;margin-bottom:4px;position:relative}
+.val-lbl{font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;font-weight:700}
+.val-range{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,0.6);flex-wrap:wrap}
+.val-range span{display:flex;align-items:center;gap:5px}
+.val-range b{color:var(--white)}
+.val-facs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.vf-box{background:var(--white);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center}
+.vf-num{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--blue);line-height:1;margin-bottom:3px}
+.vf-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.fin-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--sh)}
+.fin-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.fin-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:5px}
+.fin-inp{width:100%;background:var(--off);border:1px solid var(--border2);border-radius:var(--rxs);padding:10px 12px;font-family:"Syne",sans-serif;font-size:15px;font-weight:700;color:var(--navy);outline:none;transition:border-color var(--t)}
+.fin-inp:focus{border-color:var(--blue)}
+.fin-result{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:var(--rs);padding:14px 16px;color:var(--white)}
+.fin-monthly{font-family:"Syne",sans-serif;font-size:34px;font-weight:800;color:var(--gold);line-height:1}
+.fin-bd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.fin-bd-v{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;text-align:center}
+.fin-bd-l{font-size:9px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;text-align:center}
+.fin-disc{font-size:10px;color:var(--text3);margin-top:10px;line-height:1.6;padding:9px 12px;background:var(--sky);border-radius:var(--rxs)}
+.dep-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dep-yr{font-size:10px;font-weight:700;color:var(--text3);width:36px;flex-shrink:0}
+.dep-bg{flex:1;height:16px;background:var(--off);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.dep-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--sky3));transition:width .7s ease}
+.dep-val{font-size:11px;font-weight:700;color:var(--text2);width:65px;text-align:right;flex-shrink:0}
+
+/* MODS */
+.mods-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mod-btn{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:14px 8px;text-align:center;cursor:pointer;transition:all var(--t)}
+.mod-btn:hover{border-color:var(--blue);background:var(--sky);transform:translateY(-1px)}
+.mod-btn.selected{border:2px solid var(--blue);background:var(--sky)}
+.mod-ic{font-size:20px;margin-bottom:6px;color:var(--gold)}
+.mod-nm{font-size:11px;font-weight:700;color:var(--navy)}
+.mod-tg{font-size:9px;color:var(--text3);margin-top:3px}
+.anlz-btn{width:100%;background:var(--navy);color:var(--white);font-family:"Syne",sans-serif;font-size:16px;font-weight:800;letter-spacing:.5px;border:none;border-radius:var(--rs);padding:14px;cursor:pointer;margin-top:10px;transition:all var(--t)}
+.anlz-btn:hover:not(:disabled){background:var(--blue)}
+.anlz-btn:disabled{background:var(--text4);cursor:default}
+.res-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--sh);position:relative;overflow:hidden}
+.res-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--gold))}
+.res-title{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;color:var(--navy)}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:4px}
+.drow:last-of-type{border-bottom:none}
+.dlbl{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.dval{font-weight:600;font-size:14px;color:var(--navy)}
+.chg{font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px}
+.cup{background:var(--green2);color:var(--green)}.cdn{background:var(--red2);color:var(--red)}.cnt{background:var(--sky);color:var(--blue)}
+.verdict{background:var(--sky);border-left:3px solid var(--blue);border-radius:0 var(--rxs) var(--rxs) 0;padding:12px 14px;margin-top:14px;font-size:12px;color:var(--text2);line-height:1.6}
+.verdict strong{color:var(--navy)}
+.share-btn{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);font-family:"Syne",sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;border-radius:var(--rs);padding:11px;cursor:pointer;margin-top:10px;transition:all var(--t)}
+.share-btn:hover{background:var(--green2)}
+.sbar{display:flex;gap:3px;align-items:flex-end;height:26px}
+.sb{width:4px;border-radius:2px;background:var(--blue)}
+
+/* MODALS */
+.overlay{position:fixed;inset:0;background:rgba(7,30,61,0.75);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);animation:fIn .15s ease}
+.overlay.hidden{display:none}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--white);border:1px solid var(--border2);border-radius:var(--r);padding:2rem;width:100%;max-width:420px;position:relative;max-height:92vh;overflow-y:auto;animation:sUp .2s ease;box-shadow:var(--sh2)}
+@keyframes sUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;transition:color var(--t)}
+.modal-x:hover{color:var(--navy)}
+.mh{font-family:"Syne",sans-serif;font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.msub{font-size:13px;color:var(--text3);margin-bottom:1.5rem;line-height:1.4}
+.mtabs{display:flex;border:1px solid var(--border);border-radius:var(--rxs);overflow:hidden;margin-bottom:20px}
+.mtab{flex:1;background:transparent;border:none;font-family:"Syne",sans-serif;font-size:12px;font-weight:800;letter-spacing:.3px;color:var(--text3);padding:10px;cursor:pointer;transition:all var(--t)}
+.mtab.active{background:var(--navy);color:var(--white)}
+.inp{width:100%;background:var(--off);border:1px solid var(--border2);border-radius:var(--rxs);padding:11px 14px;color:var(--navy);font-size:14px;font-family:"DM Sans",sans-serif;outline:none;margin-bottom:10px;transition:border-color var(--t);font-weight:500}
+.inp:focus{border-color:var(--blue);background:var(--white)}
+.mbtn{width:100%;background:var(--navy);color:var(--white);font-family:"Syne",sans-serif;font-size:16px;font-weight:800;letter-spacing:.3px;border:none;border-radius:var(--rxs);padding:13px;cursor:pointer;transition:all var(--t);margin-top:4px}
+.mbtn:hover:not(:disabled){background:var(--blue)}
+.mbtn:disabled{background:var(--text4);cursor:default}
+.mbtn-ghost{width:100%;background:transparent;border:1px solid #FCA5A5;color:var(--red);font-family:"Syne",sans-serif;font-size:13px;font-weight:700;border-radius:var(--rxs);padding:11px;cursor:pointer;transition:all var(--t);margin-top:8px}
+.mbtn-ghost:hover{background:var(--red2)}
+.merr{background:var(--red2);color:var(--red);border:1px solid #FCA5A5;border-radius:var(--rxs);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;line-height:1.4;font-weight:500}
+.mok{background:var(--green2);color:var(--green);border:1px solid #A7F3D0;border-radius:var(--rxs);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;font-weight:500}
+.prof-top{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+.prof-av{width:70px;height:70px;border-radius:50%;background:var(--navy);border:3px solid var(--sky2);display:inline-flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:30px;font-weight:800;color:var(--gold);margin-bottom:10px}
+.prof-name{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+.prof-email{font-size:11px;color:var(--text3);margin-top:3px}
+.pstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.pstat{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center}
+.pstat-n{font-family:"Syne",sans-serif;font-size:30px;font-weight:800;color:var(--blue);line-height:1}
+.pstat-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
+.s-lbl{font-family:"Syne",sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;margin-top:4px}
+.edit-row{display:flex;gap:8px;margin-bottom:16px;align-items:center}
+.edit-row .inp{margin-bottom:0;flex:1}
+.edit-save{background:var(--navy);color:var(--white);border:none;border-radius:var(--rxs);padding:11px 16px;font-family:"Syne",sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:background var(--t);flex-shrink:0}
+.edit-save:hover{background:var(--blue)}
+.edit-save:disabled{background:var(--text4);cursor:default}
+.ph-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:var(--rs);margin-bottom:7px;cursor:pointer;transition:all var(--t)}
+.ph-item:hover{border-color:var(--blue);background:var(--sky)}
+.ph-reg{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:3px;flex-shrink:0}
+.ph-car{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-meta{font-size:10px;color:var(--text3);margin-top:1px}
+.ph-empty{text-align:center;padding:1.5rem;color:var(--text3);font-size:13px}
+
+.how-sec{background:var(--navy);padding:4rem 1.5rem;margin-top:2rem}
+.how-inner{max-width:900px;margin:0 auto;text-align:center}
+.how-title{font-family:"Syne",sans-serif;font-size:32px;font-weight:800;color:var(--white);margin-bottom:.5rem}
+.how-title em{color:var(--gold);font-style:normal}
+.how-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:2.5rem}
+.how-g{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.how-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r);padding:1.5rem;text-align:center}
+.how-num{font-family:"Syne",sans-serif;font-size:44px;font-weight:800;color:var(--gold);line-height:1}
+.how-t{font-weight:700;font-size:14px;color:var(--white);margin:8px 0 4px}
+.how-d{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.5}
+footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.3);font-size:11px}
+
+.hidden{display:none!important}
+.loading-box{text-align:center;padding:2.5rem;color:var(--text3);font-size:13px}
+.loading-box::after{content:"";display:inline-block;width:18px;height:18px;border:2px solid var(--sky2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-left:10px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.errbox{background:var(--red2);color:var(--red);border:1px solid #FCA5A5;border-radius:var(--rs);padding:12px 16px;font-size:13px;margin-bottom:1rem;font-weight:500}
+.info-box{background:var(--sky);border:1px solid var(--sky2);border-radius:var(--rxs);padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:8px}
+.info-box strong{color:var(--blue)}
+@media(max-width:600px){
+  .g4{grid-template-columns:repeat(2,1fr)}.mods-g{grid-template-columns:repeat(2,1fr)}
+  .mot-sum-g{grid-template-columns:repeat(2,1fr)}.how-g{grid-template-columns:1fr}
+  .val-facs{grid-template-columns:1fr 1fr}.fin-g{grid-template-columns:1fr}
+  nav{padding:0 1rem}.hero{padding:3rem 1rem 2.5rem}.app{padding:1rem 1rem 4rem}
+  .tabs-inner{gap:0}.tab-btn{font-size:10px;padding:12px 10px}
+}
+</style>
 </head>
 <body>
-
+<!-- NAV -->
 <nav>
-  <div class="nav-logo">GARAGE<span>IQ</span></div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div class="nav-logo">Garage<span>IQ</span></div>
+  </div>
   <div class="nav-right">
     <div id="navGuest">
-      <button class="btn-sm btn-login" id="btnLogin">LOG IN</button>
-      <button class="btn-sm btn-signup" id="btnSignup">SIGN UP</button>
+      <button class="btn-nav btn-ghost" id="btnLogin">Log In</button>
+      <button class="btn-nav btn-gold" id="btnSignup">Sign Up Free</button>
     </div>
     <div id="navLoggedIn" class="hidden">
-      <button class="nav-avatar" id="btnAvatar">?</button>
+      <div class="nav-avatar" id="btnAvatar" title="My Profile">?</div>
     </div>
   </div>
 </nav>
@@ -263,24 +337,24 @@
 <div class="overlay hidden" id="authModal">
   <div class="modal">
     <button class="modal-x" id="authClose">&times;</button>
-    <div class="modal-h">GARAGEIQ</div>
-    <div class="modal-sub">Save your history. Track your builds.</div>
-    <div class="tabs">
-      <button class="tab active" id="tabLogin">LOG IN</button>
-      <button class="tab" id="tabSignup">SIGN UP</button>
+    <div class="mh">Welcome to GarageIQ</div>
+    <div class="msub">Free account = instant Intelligence Reports. No card needed.</div>
+    <div class="mtabs">
+      <button class="mtab active" id="tabLogin">Log In</button>
+      <button class="mtab" id="tabSignup">Sign Up</button>
     </div>
-    <div class="msg-err" id="authErr"></div>
-    <div class="msg-ok"  id="authOk"></div>
+    <div class="merr" id="authErr"></div>
+    <div class="mok"  id="authOk"></div>
     <div id="loginForm">
       <input class="inp" id="loginEmail" type="email" placeholder="Email address" autocomplete="email"/>
-      <input class="inp" id="loginPass"  type="password" placeholder="Password" autocomplete="current-password"/>
-      <button class="modal-btn" id="btnDoLogin">LOG IN</button>
+      <input class="inp" id="loginPass" type="password" placeholder="Password" autocomplete="current-password"/>
+      <button class="mbtn" id="btnDoLogin">Log In</button>
     </div>
     <div id="signupForm" style="display:none">
-      <input class="inp" id="signupUser"  type="text"     placeholder="Username e.g. SPEEDKING99" maxlength="20" style="text-transform:uppercase" autocomplete="off"/>
-      <input class="inp" id="signupEmail" type="email"    placeholder="Email address" autocomplete="email"/>
-      <input class="inp" id="signupPass"  type="password" placeholder="Password (min 6 chars)" autocomplete="new-password"/>
-      <button class="modal-btn" id="btnDoSignup">CREATE ACCOUNT</button>
+      <input class="inp" id="signupUser" type="text" placeholder="Username e.g. SPEEDKING99" maxlength="20" style="text-transform:uppercase" autocomplete="off"/>
+      <input class="inp" id="signupEmail" type="email" placeholder="Email address" autocomplete="email"/>
+      <input class="inp" id="signupPass" type="password" placeholder="Password (min 6 chars)" autocomplete="new-password"/>
+      <button class="mbtn" id="btnDoSignup">Create Free Account</button>
     </div>
   </div>
 </div>
@@ -290,274 +364,447 @@
   <div class="modal">
     <button class="modal-x" id="profileClose">&times;</button>
     <div class="prof-top">
-      <div class="prof-avatar-big" id="profAvatar">?</div>
+      <div class="prof-av" id="profAvatar">?</div>
       <div class="prof-name" id="profName">—</div>
       <div class="prof-email" id="profEmail">—</div>
     </div>
-    <div class="msg-err" id="profErr"></div>
-    <div class="msg-ok"  id="profOk"></div>
-    <div class="sect-lbl">CHANGE USERNAME</div>
+    <div class="merr" id="profErr"></div>
+    <div class="mok"  id="profOk"></div>
+    <div class="s-lbl">Change Username</div>
     <div class="edit-row">
       <input class="inp" id="newUsername" type="text" placeholder="New username" maxlength="20" style="text-transform:uppercase"/>
-      <button class="edit-save" id="btnSaveUser">SAVE</button>
+      <button class="edit-save" id="btnSaveUser">Save</button>
     </div>
-    <div class="prof-stats">
-      <div class="prof-stat"><div class="prof-stat-num" id="profLookups">—</div><div class="prof-stat-lbl">Lookups</div></div>
-      <div class="prof-stat"><div class="prof-stat-num" id="profUnique">—</div><div class="prof-stat-lbl">Unique Cars</div></div>
+    <div class="pstats">
+      <div class="pstat"><div class="pstat-n" id="profLookups">—</div><div class="pstat-l">Lookups</div></div>
+      <div class="pstat"><div class="pstat-n" id="profUnique">—</div><div class="pstat-l">Unique Cars</div></div>
     </div>
-    <div class="sect-lbl">CAR HISTORY</div>
+    <div class="s-lbl">Car History</div>
     <div id="profHistory"><div class="ph-empty">Loading...</div></div>
-    <button class="modal-btn-ghost" id="btnLogout">LOG OUT</button>
+    <button class="mbtn-ghost" id="btnLogout">Log Out</button>
   </div>
 </div>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-tag"><i class="ti ti-shield-check" style="font-size:11px"></i> UK Car Intelligence Platform</div>
-  <h1>KNOW YOUR<br/><span>CAR.</span><br/>BUILD YOUR <span>VISION.</span></h1>
-  <p>Real DVLA data · Full MOT history · Mileage fraud detection · Mod impact analysis</p>
-  <div class="reg-wrap">
+  <div class="hero-chip"><i class="ti ti-shield-check" style="font-size:11px"></i> UK Vehicle Intelligence</div>
+  <h1>Know Your<br/><em>Car.</em><br/>Build Your <em>Vision.</em></h1>
+  <p class="hero-sub">Real DVLA data · Full MOT history · Mileage fraud detection · Valuation · Mod analysis</p>
+  <div class="better-badge"><i class="ti ti-award" style="font-size:11px;color:var(--gold)"></i> <b>Better &amp; cheaper than CarVertical</b> — free with account, or £1.99 one-time</div>
+  <div class="reg-form">
     <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="8"/>
     <button class="reg-btn" id="runBtn">RUN</button>
   </div>
-  <p class="hero-note">Real DVLA + DVSA data &nbsp;·&nbsp; No account needed &nbsp;·&nbsp; Free forever</p>
+  <p class="hero-note">Real DVLA + DVSA data · Free basic lookup · Intelligence Report free when signed in</p>
 </section>
 
-<div class="app">
-  <div id="errorBox" class="error-box hidden"></div>
-  <div id="loadingBox" class="loading hidden">Fetching vehicle data...</div>
+<!-- VIN STRIP -->
+<div class="vin-strip hidden" id="vinStrip">
+  <i class="ti ti-barcode" style="font-size:13px"></i>
+  VIN: <strong id="vinVal">—</strong>
+  <span style="color:rgba(255,255,255,0.25)">·</span>
+  <span id="vinNote" style="color:rgba(255,255,255,0.35);font-size:10px">From DVLA records</span>
+</div>
 
-  <div id="vehicleSection" class="hidden">
+<!-- TABS -->
+<div class="tabs-wrap hidden" id="tabsWrap">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="overview"><i class="ti ti-car"></i> Overview</button>
+    <button class="tab-btn" data-tab="report"><i class="ti ti-report-analytics"></i> Intelligence</button>
+    <button class="tab-btn" data-tab="valuation"><i class="ti ti-currency-pound"></i> Valuation</button>
+    <button class="tab-btn" data-tab="history"><i class="ti ti-history"></i> History</button>
+    <button class="tab-btn" data-tab="mods"><i class="ti ti-settings-2"></i> Mods</button>
+  </div>
+</div>
+
+<div class="app hidden" id="mainApp">
+  <div id="errbox" class="errbox hidden"></div>
+  <div id="loadbox" class="loading-box hidden">Fetching vehicle data</div>
+
+  <!-- OVERVIEW TAB -->
+  <div id="tab-overview" class="tab-panel active">
     <div class="card">
-      <div class="card-header">
+      <div class="card-head">
         <div class="card-title"><i class="ti ti-car"></i> Vehicle Info</div>
-        <div class="card-badge" id="vcReg">—</div>
+        <div class="chip chip-blue" id="vcReg">—</div>
       </div>
-      <div class="grid4">
-        <div class="stat-box"><div class="stat-lbl">Make</div><div class="stat-val" id="statMake">-</div></div>
-        <div class="stat-box"><div class="stat-lbl">Model</div><div class="stat-val" id="statModel">-</div></div>
-        <div class="stat-box"><div class="stat-lbl">Year</div><div class="stat-val" id="statYear">-</div></div>
-        <div class="stat-box"><div class="stat-lbl">Engine</div><div class="stat-val" id="statEngine">-</div></div>
+      <div class="g4">
+        <div class="sbox"><div class="slbl">Make</div><div class="sval" id="statMake">-</div></div>
+        <div class="sbox"><div class="slbl">Model</div><div class="sval" id="statModel">-</div></div>
+        <div class="sbox"><div class="slbl">Year</div><div class="sval" id="statYear">-</div></div>
+        <div class="sbox"><div class="slbl">Engine</div><div class="sval" id="statEngine">-</div></div>
       </div>
-      <div class="grid4">
-        <div class="stat-box"><div class="stat-lbl">Colour</div><div class="stat-val" id="statColour">-</div></div>
-        <div class="stat-box"><div class="stat-lbl">Fuel</div><div class="stat-val" id="statFuel">-</div></div>
-        <div class="stat-box"><div class="stat-lbl">Tax</div><div class="stat-val" id="statTax">-</div></div>
-        <div class="stat-box"><div class="stat-lbl">MOT</div><div class="stat-val" id="statMot">-</div></div>
+      <div class="g4">
+        <div class="sbox"><div class="slbl">Colour</div><div class="sval" id="statColour">-</div></div>
+        <div class="sbox"><div class="slbl">Fuel</div><div class="sval" id="statFuel">-</div></div>
+        <div class="sbox"><div class="slbl">Tax</div><div class="sval" id="statTax">-</div></div>
+        <div class="sbox"><div class="slbl">MOT</div><div class="sval" id="statMot">-</div></div>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-header">
+      <div class="card-head">
         <div class="card-title"><i class="ti ti-engine"></i> Engine &amp; Performance</div>
-        <div class="card-badge" id="specsStatus">Loading...</div>
+        <div class="chip chip-blue" id="specsStatus">Loading...</div>
       </div>
-      <table class="spec-table">
+      <table class="spec-tbl">
         <tr><td>Power</td><td id="specBhp">-</td></tr>
         <tr><td>Torque</td><td id="specTorque">-</td></tr>
         <tr><td>0-62 mph</td><td id="specZero">-</td></tr>
-        <tr><td>Top speed</td><td id="specTopSpeed">-</td></tr>
+        <tr><td>Top speed</td><td id="specTop">-</td></tr>
         <tr><td>Gearbox</td><td id="specGearbox">-</td></tr>
-        <tr><td>Cylinders</td><td id="specCylinders">-</td></tr>
+        <tr><td>Cylinders</td><td id="specCyl">-</td></tr>
         <tr><td>Drive type</td><td id="specDrive">-</td></tr>
-        <tr><td>Fuel combined</td><td id="specCombined">-</td></tr>
+        <tr><td>Fuel combined</td><td id="specMpg">-</td></tr>
         <tr><td>CO2</td><td id="specCo2">-</td></tr>
       </table>
     </div>
-
     <div class="card">
-      <div class="card-header">
+      <div class="card-head">
         <div class="card-title"><i class="ti ti-clipboard-list"></i> MOT History</div>
-        <div class="card-badge">Tap to expand</div>
+        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Tap to expand</div>
       </div>
-      <div id="motSummaryWrap" class="hidden">
-        <div class="pass-bar-wrap">
-          <div class="pass-bar-labels"><span>Pass rate</span><span id="passRatePct">—</span></div>
-          <div class="pass-bar-bg"><div class="pass-bar-fill" id="passBarFill" style="width:0%"></div></div>
+      <div id="motSumWrap" class="hidden">
+        <div class="pbar-wrap">
+          <div class="pbar-lbl"><span>Pass Rate</span><span id="passRatePct">—</span></div>
+          <div class="pbar-bg"><div class="pbar-fill" id="passBarFill" style="width:0%"></div></div>
         </div>
-        <div class="mot-sum-grid">
-          <div class="mot-sum-box"><div class="mot-sum-num green" id="sumPassed">-</div><div class="mot-sum-lbl">Passed</div></div>
-          <div class="mot-sum-box"><div class="mot-sum-num red"   id="sumFailed">-</div><div class="mot-sum-lbl">Failed</div></div>
-          <div class="mot-sum-box"><div class="mot-sum-num amber" id="sumAdv">-</div><div class="mot-sum-lbl">Advisories</div></div>
-          <div class="mot-sum-box"><div class="mot-sum-num"       id="sumTests">-</div><div class="mot-sum-lbl">Tests</div></div>
+        <div class="mot-sum-g">
+          <div class="mot-sb"><div class="mot-sn green" id="sumPass">-</div><div class="mot-sl">Passed</div></div>
+          <div class="mot-sb"><div class="mot-sn red"   id="sumFail">-</div><div class="mot-sl">Failed</div></div>
+          <div class="mot-sb"><div class="mot-sn amber" id="sumAdv">-</div><div class="mot-sl">Advisories</div></div>
+          <div class="mot-sb"><div class="mot-sn blue"  id="sumTotal">-</div><div class="mot-sl">Tests</div></div>
         </div>
       </div>
-      <div id="motHistory"><div class="loading">Loading MOT data...</div></div>
+      <div id="motHistory"><div class="loading-box">Loading MOT data</div></div>
     </div>
+  </div>
 
-    <!-- INTELLIGENCE REPORT -->
-    <div class="intel-card" id="intelCard" style="display:none">
-      <div class="intel-inner">
-        <div class="card-header" style="margin-bottom:12px">
-          <div class="card-title" style="font-size:10px"><i class="ti ti-report-analytics"></i> Intelligence Report</div>
-          <div class="card-badge" id="intelBadge">—</div>
+  <!-- INTELLIGENCE TAB -->
+  <div id="tab-report" class="tab-panel">
+    <div class="intel-card">
+      <div class="intel-bar"></div>
+      <div class="intel-body">
+        <div class="card-head" style="margin-bottom:10px">
+          <div class="card-title"><i class="ti ti-report-analytics"></i> Intelligence Report</div>
+          <div class="chip chip-blue" id="intelBadge">Free with account</div>
         </div>
-        <!-- Paywall shown by default, hidden after payment -->
-        <div id="intelPaywall" class="intel-paywall">
-          <div class="paywall-lock"><i class="ti ti-lock"></i></div>
-          <div class="paywall-title">UNLOCK FULL REPORT</div>
-          <div class="paywall-sub">One-time payment. Unlocked instantly. No subscription ever.</div>
-          <div class="paywall-features">
-            <div class="pf-row"><i class="ti ti-check"></i> Mileage fraud & rollback detection</div>
-            <div class="pf-row"><i class="ti ti-check"></i> Annual mileage vs UK average</div>
-            <div class="pf-row"><i class="ti ti-check"></i> Risk score (0–100)</div>
-            <div class="pf-row"><i class="ti ti-check"></i> MOT trend analysis</div>
-            <div class="pf-row"><i class="ti ti-check"></i> Full mileage timeline</div>
+        <div id="intelPaywall" class="paywall">
+          <div class="pw-icon"><i class="ti ti-lock"></i></div>
+          <div class="pw-title">Free Intelligence Report</div>
+          <div class="pw-sub">Create a free account — no card needed — and get your full Intelligence Report instantly every time you look up a car.</div>
+          <div class="pw-feats">
+            <div class="pwf"><i class="ti ti-check"></i> Mileage fraud &amp; rollback detection</div>
+            <div class="pwf"><i class="ti ti-check"></i> Risk score (0–100)</div>
+            <div class="pwf"><i class="ti ti-check"></i> Damage zone analysis from MOT data</div>
+            <div class="pwf"><i class="ti ti-check"></i> Tax &amp; ownership patterns</div>
+            <div class="pwf"><i class="ti ti-check"></i> Commercial use detection</div>
+            <div class="pwf"><i class="ti ti-check"></i> Finance &amp; legal risk flags</div>
+            <div class="pwf"><i class="ti ti-check"></i> Full mileage timeline</div>
           </div>
-          <button class="pay-btn" id="btnPay">
-            <i class="ti ti-lock-open"></i> UNLOCK FOR £1.99
-          </button>
-          <div class="pay-note">Secure payment by Stripe · Instant unlock · One reg per payment</div>
+          <button class="pay-btn" id="btnPwSignup"><i class="ti ti-user-plus"></i> Sign Up Free to Unlock</button>
+          <div><span class="login-lnk" id="btnPwLogin"><i class="ti ti-login"></i> Already have an account? Log in</span></div>
+          <div class="pay-note">100% free for all registered users · No subscription · No credit card</div>
         </div>
-        <!-- Report content, hidden until paid -->
         <div id="intelContent" style="display:none">
           <div class="risk-wrap">
             <div class="risk-circle" id="riskCircle">—</div>
             <div>
-              <div class="risk-lbl" id="riskLabel">—</div>
+              <div class="risk-lbl" id="riskLbl">—</div>
               <div class="risk-sub" id="riskSub">—</div>
             </div>
           </div>
-          <div class="intel-checks" id="intelChecks"></div>
-          <div id="mileageTimeline"></div>
+          <div class="checks" id="intelChecks"></div>
+          <div id="mileTimeline"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- MODS -->
+  <!-- VALUATION TAB -->
+  <div id="tab-valuation" class="tab-panel">
+    <div class="val-hero">
+      <div style="position:relative;z-index:1">
+        <div class="val-lbl">Estimated Market Value</div>
+        <div class="val-price" id="valPrice">£—</div>
+        <div class="val-range">
+          <span><i class="ti ti-trending-down" style="font-size:12px"></i> Private sale: <b id="valPrivate">—</b></span>
+          <span><i class="ti ti-building-store" style="font-size:12px"></i> Trade: <b id="valTrade">—</b></span>
+          <span><i class="ti ti-tag" style="font-size:12px"></i> Part-ex: <b id="valPx">—</b></span>
+        </div>
+      </div>
+    </div>
     <div class="card">
-      <div class="card-header">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-chart-bar"></i> Value Factors</div>
+        <div class="chip chip-gold">AI Estimated</div>
+      </div>
+      <div class="val-facs">
+        <div class="vf-box"><div class="vf-num" id="vfAge">—</div><div class="vf-lbl">Age (yrs)</div></div>
+        <div class="vf-box"><div class="vf-num" id="vfMileage">—</div><div class="vf-lbl">Miles/yr</div></div>
+        <div class="vf-box"><div class="vf-num" id="vfPass">—</div><div class="vf-lbl">MOT Pass %</div></div>
+      </div>
+      <div class="sect-lbl">Depreciation Curve (Estimated)</div>
+      <div id="depRows"></div>
+    </div>
+    <div class="fin-card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-calculator"></i> Finance Calculator</div>
+        <div class="chip chip-blue">Indicative Only</div>
+      </div>
+      <div class="fin-g">
+        <div><div class="fin-lbl">Car Price (£)</div><input class="fin-inp" id="finPrice" type="number" value="8000" min="500"/></div>
+        <div><div class="fin-lbl">Deposit (£)</div><input class="fin-inp" id="finDeposit" type="number" value="1500" min="0"/></div>
+        <div><div class="fin-lbl">Term (months)</div><input class="fin-inp" id="finTerm" type="number" value="36" min="12" max="60"/></div>
+        <div><div class="fin-lbl">APR (%)</div><input class="fin-inp" id="finApr" type="number" value="9.9" step="0.1" min="1" max="30"/></div>
+      </div>
+      <div class="fin-result">
+        <div style="font-size:10px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:700">Monthly Payment</div>
+        <div class="fin-monthly" id="finMonthly">£—</div>
+        <div class="fin-bd">
+          <div><div class="fin-bd-v" id="finTotal">—</div><div class="fin-bd-l">Total Repayable</div></div>
+          <div><div class="fin-bd-v" id="finInterest">—</div><div class="fin-bd-l">Total Interest</div></div>
+          <div><div class="fin-bd-v" id="finLoan">—</div><div class="fin-bd-l">Loan Amount</div></div>
+        </div>
+      </div>
+      <div class="fin-disc"><i class="ti ti-info-circle" style="font-size:12px;margin-right:4px"></i>Indicative calculation only. Actual APR depends on your credit score, lender, and vehicle age. Always get a formal quote from an FCA-authorised lender. GarageIQ is not a financial advisor.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title"><i class="ti ti-file-text"></i> Finance Terms Explained</div></div>
+      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-percentage"></i></div><div><div class="hrow-t">APR — Annual Percentage Rate</div><div class="hrow-d">The yearly cost of borrowing including interest and fees. Lower APR = cheaper deal. Used car PCP is typically 6–12% APR with good credit.</div></div></div>
+      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-coins"></i></div><div><div class="hrow-t">PCP — Personal Contract Purchase</div><div class="hrow-d">Deposit + monthly payments for 2–4 years, then a "balloon" GMFV payment if you want to keep the car. Most popular UK car finance type. You don't own the car until the final payment.</div></div></div>
+      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-credit-card"></i></div><div><div class="hrow-t">HP — Hire Purchase</div><div class="hrow-d">Higher monthly payments than PCP but you own the car outright once all payments are made. No balloon payment. You build equity from day one.</div></div></div>
+      <div class="hrow"><div class="hic hi-green"><i class="ti ti-shield-check"></i></div><div><div class="hrow-t">Section 75 Protection</div><div class="hrow-d">Paying any part of a £100–£30,000 purchase by credit card means the card provider is jointly liable for issues with the seller. Vital protection for used car buyers.</div></div></div>
+      <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div><div class="hrow-t">Outstanding Finance Risk</div><div class="hrow-d">If a car still has finance owed, the lender holds a legal interest. Buying a car with outstanding finance means you could lose the vehicle even after paying. Always run an HPI check.</div></div></div>
+      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-garage"></i></div><div><div class="hrow-t">Part Exchange Value</div><div class="hrow-d">What a dealer will offer for your current car. Typically 10–20% below private sale. Use our estimate as a negotiating benchmark.</div></div></div>
+      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-receipt"></i></div><div><div class="hrow-t">Voluntary Termination (VT)</div><div class="hrow-d">Under the Consumer Credit Act, once you've paid 50% of the total amount payable on a PCP/HP deal, you can return the car without further payments — as long as it's in good condition.</div></div></div>
+    </div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div id="tab-history" class="tab-panel">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-car-crash"></i> Damage &amp; Accident History</div>
+        <div class="chip chip-red" id="dmgChip">From MOT records</div>
+      </div>
+      <div class="dmg-wrap">
+        <div class="dmg-car-w">
+          <svg class="dmg-car-svg" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
+            <rect x="30" y="60" width="140" height="240" rx="20" fill="#EEF5FD" stroke="#BBDEFB" stroke-width="2"/>
+            <rect x="45" y="110" width="110" height="120" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
+            <rect x="52" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
+            <rect x="106" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
+            <circle cx="55" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+            <circle cx="145" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+            <circle cx="55" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+            <circle cx="145" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+            <rect id="zone-front" class="dmg-zone" x="30" y="40" width="140" height="50" rx="10" data-label="Front (bumper, headlights, bonnet)"/>
+            <rect id="zone-rear"  class="dmg-zone" x="30" y="270" width="140" height="50" rx="10" data-label="Rear (bumper, boot, tail lights)"/>
+            <rect id="zone-left"  class="dmg-zone" x="10" y="80"  width="45" height="200" rx="8" data-label="Nearside / Left — driver side"/>
+            <rect id="zone-right" class="dmg-zone" x="145" y="80" width="45" height="200" rx="8" data-label="Offside / Right — passenger side"/>
+            <rect id="zone-roof"  class="dmg-zone" x="45" y="95"  width="110" height="130" rx="8" data-label="Roof / cabin / windscreen"/>
+            <rect id="zone-under" class="dmg-zone" x="55" y="155" width="90" height="50"  rx="5" data-label="Underbody / mechanical (brakes, suspension, engine)"/>
+            <text x="100" y="58" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">FRONT</text>
+            <text x="100" y="312" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">REAR</text>
+            <text x="22" y="182" text-anchor="middle" fill="#64748B" font-size="8" font-family="sans-serif" transform="rotate(-90,22,182)">NEARSIDE</text>
+            <text x="178" y="182" text-anchor="middle" fill="#64748B" font-size="8" font-family="sans-serif" transform="rotate(90,178,182)">OFFSIDE</text>
+          </svg>
+        </div>
+        <div class="dmg-list" id="dmgList"><div class="dmg-none">Run a lookup to see damage analysis</div></div>
+      </div>
+      <div class="info-box"><i class="ti ti-info-circle"></i> Zones highlighted from MOT failures and advisories. <strong>For full insurance claim and accident history</strong>, an HPI check is recommended — GarageIQ is still cheaper than CarVertical for this.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-route"></i> Mileage History</div>
+        <div class="chip chip-blue" id="mileChip">MOT records</div>
+      </div>
+      <div id="mileHistRows"><div class="ph-empty">Run a lookup to see mileage history</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title"><i class="ti ti-file-certificate"></i> Tax &amp; Registration</div></div>
+      <div class="hrow">
+        <div class="hic hi-blue"><i class="ti ti-id"></i></div>
+        <div style="flex:1"><div class="hrow-t">Tax Status</div><div class="hrow-d" id="taxStatusText">Run a lookup to see tax history</div></div>
+        <div><div class="chip chip-blue" id="taxChip">—</div></div>
+      </div>
+      <div class="hrow">
+        <div class="hic hi-gold"><i class="ti ti-calendar"></i></div>
+        <div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText">—</div></div>
+      </div>
+      <div class="hrow">
+        <div class="hic hi-green"><i class="ti ti-user-check"></i></div>
+        <div><div class="hrow-t">Colour &amp; Registration Details</div><div class="hrow-d" id="keeperText">From DVLA records</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-gavel"></i> Financial &amp; Legal Risks</div>
+        <div class="chip chip-gold">Advisory</div>
+      </div>
+      <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA open data. Run an HPI or MyCarCheck report (£10–20) to verify. Buying a car with finance outstanding means the lender can legally repossess it.</div></div><div><div class="chip chip-gold">Check HPI</div></div></div>
+      <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Theft Register</div><div class="hrow-d">Not in DVLA/DVSA data. Verify via Police.uk or HPI. Stolen vehicles can be seized even from innocent buyers.</div></div><div><div class="chip chip-gold">Check HPI</div></div></div>
+      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Write-off Category (Cat A/B/S/N)</div><div class="hrow-d">Not in DVLA public data. A Cat S/N car can be repaired and sold legally but must be declared. Always check via HPI before buying.</div></div><div><div class="chip chip-gold">Check HPI</div></div></div>
+      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing mileage patterns and fuel type for commercial use indicators...</div></div><div><div class="chip" id="commUseChip" style="background:var(--sky);color:var(--blue);border:1px solid var(--sky2)">—</div></div></div>
+      <div class="hrow"><div class="hic hi-green"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Estimated Ownership Count</div><div class="hrow-d" id="ownerText">Based on vehicle age and MOT patterns. Exact count requires an HPI check.</div></div><div><div class="chip chip-blue" id="ownerChip">—</div></div></div>
+      <div class="info-box"><strong>GarageIQ uses official DVLA &amp; DVSA government data.</strong> For outstanding finance, theft, write-off history and exact keeper count — use HPI or Cazana (£10–20). We give you a better free baseline than any competitor at this price.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><i class="ti ti-shield"></i> Safety Ratings &amp; Specs</div>
+        <div class="chip chip-green" id="safetyChip">Euro NCAP</div>
+      </div>
+      <div id="safetyRows"><div class="ph-empty">Loading safety data...</div></div>
+    </div>
+  </div>
+
+  <!-- MODS TAB -->
+  <div id="tab-mods" class="tab-panel">
+    <div class="card">
+      <div class="card-head">
         <div class="card-title"><i class="ti ti-settings-2"></i> Mod Analyser</div>
-        <div class="card-badge">AI Powered</div>
+        <div class="chip chip-blue">AI Powered · Free</div>
       </div>
-      <div class="mods-grid">
-        <div class="mod-btn" data-mod="Performance exhaust"><div class="mod-icon"><i class="ti ti-flame"></i></div><div class="mod-name">Performance exhaust</div><div class="mod-tag">Sound · HP · Value</div></div>
-        <div class="mod-btn" data-mod="ECU remap"><div class="mod-icon"><i class="ti ti-cpu"></i></div><div class="mod-name">ECU remap</div><div class="mod-tag">HP · Torque · Economy</div></div>
-        <div class="mod-btn" data-mod="Alloy wheels upgrade"><div class="mod-icon"><i class="ti ti-circle"></i></div><div class="mod-name">Alloy wheels</div><div class="mod-tag">Looks · Handling · Value</div></div>
-        <div class="mod-btn" data-mod="Lowering springs"><div class="mod-icon"><i class="ti ti-adjustments"></i></div><div class="mod-name">Lowering springs</div><div class="mod-tag">Stance · Handling</div></div>
-        <div class="mod-btn" data-mod="Cold air intake"><div class="mod-icon"><i class="ti ti-wind"></i></div><div class="mod-name">Cold air intake</div><div class="mod-tag">HP · Sound · Throttle</div></div>
-        <div class="mod-btn" data-mod="Turbo upgrade"><div class="mod-icon"><i class="ti ti-bolt"></i></div><div class="mod-name">Turbo upgrade</div><div class="mod-tag">Big HP gains</div></div>
-        <div class="mod-btn" data-mod="Coilover kit"><div class="mod-icon"><i class="ti ti-settings-2"></i></div><div class="mod-name">Coilover kit</div><div class="mod-tag">Ride · Stance · Feel</div></div>
-        <div class="mod-btn" data-mod="Big brake kit"><div class="mod-icon"><i class="ti ti-disc"></i></div><div class="mod-name">Big brake kit</div><div class="mod-tag">Safety · Looks · Feel</div></div>
-        <div class="mod-btn" data-mod="Intercooler upgrade"><div class="mod-icon"><i class="ti ti-gauge"></i></div><div class="mod-name">Intercooler upgrade</div><div class="mod-tag">Power · Heat · Reliability</div></div>
+      <div class="mods-g">
+        <div class="mod-btn" data-mod="Performance exhaust"><div class="mod-ic"><i class="ti ti-flame"></i></div><div class="mod-nm">Performance exhaust</div><div class="mod-tg">Sound · HP · Value</div></div>
+        <div class="mod-btn" data-mod="ECU remap"><div class="mod-ic"><i class="ti ti-cpu"></i></div><div class="mod-nm">ECU remap</div><div class="mod-tg">HP · Torque · Economy</div></div>
+        <div class="mod-btn" data-mod="Alloy wheels upgrade"><div class="mod-ic"><i class="ti ti-circle"></i></div><div class="mod-nm">Alloy wheels</div><div class="mod-tg">Looks · Handling · Value</div></div>
+        <div class="mod-btn" data-mod="Lowering springs"><div class="mod-ic"><i class="ti ti-adjustments"></i></div><div class="mod-nm">Lowering springs</div><div class="mod-tg">Stance · Handling</div></div>
+        <div class="mod-btn" data-mod="Cold air intake"><div class="mod-ic"><i class="ti ti-wind"></i></div><div class="mod-nm">Cold air intake</div><div class="mod-tg">HP · Sound · Throttle</div></div>
+        <div class="mod-btn" data-mod="Turbo upgrade"><div class="mod-ic"><i class="ti ti-bolt"></i></div><div class="mod-nm">Turbo upgrade</div><div class="mod-tg">Big HP gains</div></div>
+        <div class="mod-btn" data-mod="Coilover kit"><div class="mod-ic"><i class="ti ti-settings-2"></i></div><div class="mod-nm">Coilover kit</div><div class="mod-tg">Ride · Stance · Feel</div></div>
+        <div class="mod-btn" data-mod="Big brake kit"><div class="mod-ic"><i class="ti ti-disc"></i></div><div class="mod-nm">Big brake kit</div><div class="mod-tg">Safety · Looks · Feel</div></div>
+        <div class="mod-btn" data-mod="Intercooler upgrade"><div class="mod-ic"><i class="ti ti-gauge"></i></div><div class="mod-nm">Intercooler upgrade</div><div class="mod-tg">Power · Heat · Reliability</div></div>
       </div>
-      <button class="analyze-btn" id="analyzeBtn" disabled>Select a mod to analyse</button>
+      <button class="anlz-btn" id="analyzeBtn" disabled>Select a mod to analyse</button>
     </div>
     <div id="resultSection" class="hidden"></div>
   </div>
 </div>
 
-<div class="stats-strip">
-  <div class="strip-stat"><div class="strip-num">9</div><div class="strip-label">Mods analysed free</div></div>
-  <div class="strip-stat"><div class="strip-num">£1.99</div><div class="strip-label">One-time intelligence report</div></div>
-  <div class="strip-stat"><div class="strip-num">FREE</div><div class="strip-label">MOT + specs always free</div></div>
-</div>
-<div class="how-section">
-  <div class="section-title">HOW IT <span style="color:var(--red)">WORKS</span></div>
-  <div class="steps">
-    <div class="step"><div class="step-num">01</div><div class="step-title">Enter your reg</div><div class="step-desc">Real DVLA vehicle data and full MOT history from official government databases.</div></div>
-    <div class="step"><div class="step-num">02</div><div class="step-title">Unlock the report</div><div class="step-desc">£1.99 one-time for mileage fraud detection, risk score and full history analysis.</div></div>
-    <div class="step"><div class="step-num">03</div><div class="step-title">Build your vision</div><div class="step-desc">AI analyses your exact car — HP gain, sound change, value impact and MOT risk.</div></div>
+<div class="how-sec">
+  <div class="how-inner">
+    <div class="how-title">Why <em>GarageIQ</em>?</div>
+    <div class="how-sub">Better data. Better design. Free with an account. No subscription nonsense.</div>
+    <div class="how-g">
+      <div class="how-card"><div class="how-num">01</div><div class="how-t">Enter Your Reg</div><div class="how-d">Instant DVLA lookup. VIN, specs, tax status and full MOT history in seconds.</div></div>
+      <div class="how-card"><div class="how-num">02</div><div class="how-t">Free Intelligence Report</div><div class="how-d">Sign up free — unlock mileage fraud detection, risk score, damage map and more. No card needed.</div></div>
+      <div class="how-card"><div class="how-num">03</div><div class="how-t">Value, Finance &amp; Mods</div><div class="how-d">Detailed valuation, live finance calculator, finance terms explained, and AI mod analysis all in one.</div></div>
+    </div>
   </div>
 </div>
-<footer>2026 GarageIQ &nbsp;·&nbsp; Built for UK car enthusiasts<br/>Not affiliated with DVLA or DVSA &nbsp;·&nbsp; AI analysis is guidance only</footer>
-
+<footer>© 2026 GarageIQ. All rights reserved.</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
-var VERCEL   = 'https://garage-iq-chi.vercel.app';
-var SUPA_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
-var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
+var VERCEL='https://garage-iq-chi.vercel.app';
+var SUPA_URL='https://hbfntnxawwavttzvxdde.supabase.co';
+var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
+var sb,currentUser,currentProfile,vehicleData={},motTests=[],selectedMod,currentReg='';
 
-var sb, currentUser, currentProfile, vehicleData={}, motTests=[], selectedMod, currentReg='';
-
-/* ═══ BOOT ═══ */
-window.addEventListener('load', function(){
-  sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-  sb.auth.onAuthStateChange(function(ev, session){
-    currentUser = session ? session.user : null;
+window.addEventListener('load',function(){
+  sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+  sb.auth.onAuthStateChange(function(ev,session){
+    currentUser=session?session.user:null;
     if(currentUser){
-      var pending = localStorage.getItem('giq_pu_'+currentUser.id);
-      if(pending){ tryCreateProfile(currentUser.id, pending); }
-      else { loadProfile(); }
-    } else { currentProfile=null; renderNav(); }
+      var p=localStorage.getItem('giq_pu_'+currentUser.id);
+      if(p)tryCreateProfile(currentUser.id,p);else loadProfile();
+    }else{currentProfile=null;renderNav();}
   });
-
-  el('btnLogin').addEventListener('click',  function(){ openAuth('login'); });
-  el('btnSignup').addEventListener('click', function(){ openAuth('signup'); });
-  el('btnAvatar').addEventListener('click', openProfileModal);
-  el('authClose').addEventListener('click', closeAuth);
-  el('authModal').addEventListener('click', function(e){ if(e.target===this) closeAuth(); });
-  el('tabLogin').addEventListener('click',  function(){ switchTab('login'); });
-  el('tabSignup').addEventListener('click', function(){ switchTab('signup'); });
-  el('btnDoLogin').addEventListener('click',  doLogin);
-  el('btnDoSignup').addEventListener('click', doSignup);
-  el('profileClose').addEventListener('click', closeProfileModal);
-  el('profileModal').addEventListener('click', function(e){ if(e.target===this) closeProfileModal(); });
-  el('btnSaveUser').addEventListener('click', saveUsername);
-  el('btnLogout').addEventListener('click',   doLogout);
-  el('runBtn').addEventListener('click', lookupVehicle);
-  el('regInput').addEventListener('keydown', function(e){ if(e.key==='Enter') lookupVehicle(); });
-  el('analyzeBtn').addEventListener('click', analyseMod);
-  el('btnPay').addEventListener('click', startPayment);
-  qsa('.mod-btn').forEach(function(b){ b.addEventListener('click', function(){ selectMod(b); }); });
-
-  // Handle return from Stripe
-  var params = new URLSearchParams(window.location.search);
-  var retReg = params.get('reg');
-  var sessionId = params.get('session_id');
-  var paid = params.get('paid');
-  if(retReg && paid === '1' && sessionId){
-    el('regInput').value = retReg;
-    window.history.replaceState({}, '', '/');
-    // Verify then lookup
-    verifyPaymentAndLookup(retReg, sessionId);
-  } else if(retReg){
-    el('regInput').value = retReg;
-    window.history.replaceState({}, '', '/');
+  el('btnLogin').addEventListener('click',function(){openAuth('login');});
+  el('btnSignup').addEventListener('click',function(){openAuth('signup');});
+  el('btnAvatar').addEventListener('click',openProfileModal);
+  el('authClose').addEventListener('click',closeAuth);
+  el('authModal').addEventListener('click',function(e){if(e.target===this)closeAuth();});
+  el('tabLogin').addEventListener('click',function(){switchTab('login');});
+  el('tabSignup').addEventListener('click',function(){switchTab('signup');});
+  el('btnDoLogin').addEventListener('click',doLogin);
+  el('btnDoSignup').addEventListener('click',doSignup);
+  el('profileClose').addEventListener('click',closeProfileModal);
+  el('profileModal').addEventListener('click',function(e){if(e.target===this)closeProfileModal();});
+  el('btnSaveUser').addEventListener('click',saveUsername);
+  el('btnLogout').addEventListener('click',doLogout);
+  el('runBtn').addEventListener('click',lookupVehicle);
+  el('regInput').addEventListener('keydown',function(e){if(e.key==='Enter')lookupVehicle();});
+  el('analyzeBtn').addEventListener('click',analyseMod);
+  el('btnPwSignup').addEventListener('click',function(){openAuth('signup');});
+  el('btnPwLogin').addEventListener('click',function(){openAuth('login');});
+  qsa('.mod-btn').forEach(function(b){b.addEventListener('click',function(){selectMod(b);});});
+  qsa('.tab-btn').forEach(function(b){b.addEventListener('click',function(){switchMainTab(b.dataset.tab);});});
+  qsa('.dmg-zone').forEach(function(z){z.addEventListener('click',function(){
+    var lbl=z.getAttribute('data-label');
+    if(lbl)alert('Zone: '+lbl);
+  });});
+  ['finPrice','finDeposit','finTerm','finApr'].forEach(function(id){el(id).addEventListener('input',calcFinance);});
+  // Stripe return handling
+  var p=new URLSearchParams(window.location.search);
+  var rReg=p.get('reg'),sid=p.get('session_id'),paid=p.get('paid');
+  if(rReg&&paid==='1'&&sid){
+    el('regInput').value=rReg;
+    window.history.replaceState({},'','/');
+    verifyThenLookup(rReg,sid);
+  }else if(rReg){
+    el('regInput').value=rReg;
+    window.history.replaceState({},'','/');
   }
 });
 
-function el(id){ return document.getElementById(id); }
-function qsa(s){ return document.querySelectorAll(s); }
-function esc(s){ return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''; }
-function fmt(s){ return s?String(s).toUpperCase():'-'; }
+function el(id){return document.getElementById(id);}
+function qsa(s){return document.querySelectorAll(s);}
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'';} 
+function fmt(s){return s?String(s).toUpperCase():'-';}
 
-/* ═══ NAV ═══ */
-function renderNav(){
-  var li = !!(currentUser && currentProfile);
-  el('navGuest').classList.toggle('hidden', li);
-  el('navLoggedIn').classList.toggle('hidden', !li);
-  if(li) el('btnAvatar').textContent = (currentProfile.username||'?').charAt(0).toUpperCase();
+/* ── MAIN TABS ── */
+function switchMainTab(tab){
+  qsa('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===tab);});
+  qsa('.tab-panel').forEach(function(p){p.classList.toggle('active',p.id==='tab-'+tab);});
+  if(tab==='report'&&currentUser&&motTests.length)showIntelReport();
 }
 
-/* ═══ PROFILE ═══ */
+/* ── NAV ── */
+function renderNav(){
+  var li=!!(currentUser&&currentProfile);
+  el('navGuest').classList.toggle('hidden',li);
+  el('navLoggedIn').classList.toggle('hidden',!li);
+  if(li)el('btnAvatar').textContent=(currentProfile.username||'?').charAt(0).toUpperCase();
+}
+
+/* ── PROFILE ── */
 function loadProfile(){
   sb.from('profiles').select('id,username').eq('id',currentUser.id).maybeSingle()
     .then(function(r){
-      if(r.data&&r.data.username){ currentProfile=r.data; }
-      else {
+      if(r.data&&r.data.username){currentProfile=r.data;}
+      else{
         var fb=currentUser.email.split('@')[0].toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,20)||'USER';
         currentProfile={id:currentUser.id,username:fb};
         sb.from('profiles').upsert([{id:currentUser.id,username:fb}],{onConflict:'id'});
       }
       renderNav();
-    }).catch(function(){ currentProfile={id:currentUser.id,username:'USER'}; renderNav(); });
+      if(el('tab-report').classList.contains('active')&&motTests.length)showIntelReport();
+    }).catch(function(){currentProfile={id:currentUser.id,username:'USER'};renderNav();});
 }
 
 function tryCreateProfile(uid,username){
   sb.from('profiles').upsert([{id:uid,username:username}],{onConflict:'id'})
-    .then(function(){ localStorage.removeItem('giq_pu_'+uid); currentProfile={id:uid,username:username}; renderNav(); })
-    .catch(function(){ loadProfile(); });
+    .then(function(){
+      localStorage.removeItem('giq_pu_'+uid);
+      currentProfile={id:uid,username:username};
+      renderNav();
+    }).catch(function(){loadProfile();});
 }
 
-/* ═══ AUTH ═══ */
+/* ── AUTH MODAL ── */
 function openAuth(tab){
   ['authErr','authOk'].forEach(hideMsg);
-  ['loginEmail','loginPass','signupUser','signupEmail','signupPass'].forEach(function(id){ el(id).value=''; });
-  el('authModal').classList.remove('hidden'); switchTab(tab||'login');
+  ['loginEmail','loginPass','signupUser','signupEmail','signupPass'].forEach(function(id){el(id).value='';});
+  el('authModal').classList.remove('hidden');
+  switchTab(tab||'login');
 }
-function closeAuth(){ el('authModal').classList.add('hidden'); }
+function closeAuth(){el('authModal').classList.add('hidden');}
 function switchTab(t){
   el('tabLogin').classList.toggle('active',t==='login');
   el('tabSignup').classList.toggle('active',t==='signup');
@@ -567,47 +814,56 @@ function switchTab(t){
 }
 
 function doLogin(){
-  var email=el('loginEmail').value.trim(), pass=el('loginPass').value;
-  if(!email||!pass){ showErr('authErr','Enter your email and password.'); return; }
-  var btn=el('btnDoLogin'); btn.disabled=true; btn.textContent='...';
+  var email=el('loginEmail').value.trim(),pass=el('loginPass').value;
+  if(!email||!pass){showErr('authErr','Enter email and password.');return;}
+  var btn=el('btnDoLogin');btn.disabled=true;btn.textContent='...';
   sb.auth.signInWithPassword({email:email,password:pass}).then(function(r){
-    btn.disabled=false; btn.textContent='LOG IN';
-    if(r.error){ showErr('authErr',r.error.message); } else { closeAuth(); }
+    btn.disabled=false;btn.textContent='Log In';
+    if(r.error){showErr('authErr',r.error.message);}
+    else{closeAuth();}
   });
 }
 
 function doSignup(){
   var username=el('signupUser').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'');
-  var email=el('signupEmail').value.trim(), pass=el('signupPass').value;
-  if(!username){ showErr('authErr','Enter a username.'); return; }
-  if(!email){ showErr('authErr','Enter your email.'); return; }
-  if(pass.length<6){ showErr('authErr','Password needs 6+ characters.'); return; }
-  var btn=el('btnDoSignup'); btn.disabled=true; btn.textContent='...';
+  var email=el('signupEmail').value.trim(),pass=el('signupPass').value;
+  if(!username){showErr('authErr','Enter a username.');return;}
+  if(!email){showErr('authErr','Enter your email.');return;}
+  if(pass.length<6){showErr('authErr','Password needs 6+ chars.');return;}
+  var btn=el('btnDoSignup');btn.disabled=true;btn.textContent='...';
   sb.from('profiles').select('id',{count:'exact',head:true}).eq('username',username)
     .then(function(ck){
-      if((ck.count||0)>0){ btn.disabled=false; btn.textContent='CREATE ACCOUNT'; showErr('authErr','Username taken.'); return; }
+      if((ck.count||0)>0){btn.disabled=false;btn.textContent='Create Free Account';showErr('authErr','Username already taken.');return;}
       sb.auth.signUp({email:email,password:pass}).then(function(r){
-        btn.disabled=false; btn.textContent='CREATE ACCOUNT';
-        if(r.error){ showErr('authErr',r.error.message); return; }
+        btn.disabled=false;btn.textContent='Create Free Account';
+        if(r.error){showErr('authErr',r.error.message);return;}
         var uid=r.data&&r.data.user?r.data.user.id:null;
         if(uid){
-          localStorage.setItem('giq_pu_'+uid, username);
+          localStorage.setItem('giq_pu_'+uid,username);
           sb.from('profiles').upsert([{id:uid,username:username}],{onConflict:'id'})
             .then(function(){
               localStorage.removeItem('giq_pu_'+uid);
-              currentUser=r.data.user; currentProfile={id:uid,username:username};
-              renderNav(); closeAuth();
-            }).catch(function(){ showOk('authOk','Account created! Confirm email then log in.'); });
-        } else { showOk('authOk','Check your email to confirm, then log in!'); }
+              currentUser=r.data.user;
+              currentProfile={id:uid,username:username};
+              renderNav();closeAuth();
+            }).catch(function(){showOk('authOk','Account created! Confirm email then log in.');});
+        }else{showOk('authOk','Check your email to confirm, then log in!');}
       });
     });
 }
 
 function doLogout(){
-  sb.auth.signOut().then(function(){ currentUser=null; currentProfile=null; renderNav(); closeProfileModal(); });
+  sb.auth.signOut().then(function(){
+    currentUser=null;currentProfile=null;
+    renderNav();closeProfileModal();
+    el('intelPaywall').style.display='block';
+    el('intelContent').style.display='none';
+    el('intelBadge').textContent='Free with account';
+    el('intelBadge').className='chip chip-blue';
+  });
 }
 
-/* ═══ PROFILE MODAL ═══ */
+/* ── PROFILE MODAL ── */
 function openProfileModal(){
   ['profErr','profOk'].forEach(hideMsg);
   el('newUsername').value='';
@@ -615,375 +871,666 @@ function openProfileModal(){
   el('profAvatar').textContent=name.charAt(0);
   el('profName').textContent=name;
   el('profEmail').textContent=currentUser?currentUser.email:'';
-  el('profLookups').textContent='—'; el('profUnique').textContent='—';
+  el('profLookups').textContent='—';el('profUnique').textContent='—';
   el('profHistory').innerHTML='<div class="ph-empty">Loading...</div>';
   el('profileModal').classList.remove('hidden');
   loadProfileHistory();
 }
-function closeProfileModal(){ el('profileModal').classList.add('hidden'); }
+function closeProfileModal(){el('profileModal').classList.add('hidden');}
 
 function saveUsername(){
   var val=el('newUsername').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'');
-  if(!val){ showErr('profErr','Enter a username.'); return; }
-  var btn=el('btnSaveUser'); btn.disabled=true; btn.textContent='...';
+  if(!val){showErr('profErr','Enter a username.');return;}
+  var btn=el('btnSaveUser');btn.disabled=true;btn.textContent='...';
   sb.from('profiles').select('id',{count:'exact',head:true}).eq('username',val)
     .then(function(ck){
-      // Allow if it's their own current username
-      if((ck.count||0)>0 && val!==(currentProfile&&currentProfile.username||'').toUpperCase()){
-        btn.disabled=false; btn.textContent='SAVE'; showErr('profErr','Username taken.'); return;
+      if((ck.count||0)>0&&val!==(currentProfile&&currentProfile.username||'').toUpperCase()){
+        btn.disabled=false;btn.textContent='Save';showErr('profErr','Username already taken.');return;
       }
-      // Use upsert to avoid RLS update issues
-      sb.from('profiles').upsert([{id:currentUser.id, username:val}],{onConflict:'id'})
+      sb.from('profiles').upsert([{id:currentUser.id,username:val}],{onConflict:'id'})
         .then(function(r){
-          btn.disabled=false; btn.textContent='SAVE';
-          if(r.error){ showErr('profErr','Save failed: '+(r.error.message||'try again')); return; }
-          currentProfile.username=val; renderNav();
+          btn.disabled=false;btn.textContent='Save';
+          if(r.error){showErr('profErr',r.error.message||'Failed — try again.');return;}
+          currentProfile.username=val;renderNav();
           el('profAvatar').textContent=val.charAt(0);
           el('profName').textContent=val;
           el('newUsername').value='';
           showOk('profOk','Username saved!');
-        }).catch(function(e){ btn.disabled=false; btn.textContent='SAVE'; showErr('profErr',e.message||'Save failed'); });
+        }).catch(function(e){btn.disabled=false;btn.textContent='Save';showErr('profErr',e.message||'Failed');});
     });
 }
 
 function loadProfileHistory(){
-  sb.from('car_history').select('reg,make,model,year,colour,fuel,looked_up_at')
-    .eq('user_id',currentUser.id).order('looked_up_at',{ascending:false}).limit(200)
+  sb.from('car_history')
+    .select('reg,make,model,year,colour,fuel,looked_up_at')
+    .eq('user_id',currentUser.id)
+    .order('looked_up_at',{ascending:false})
+    .limit(200)
     .then(function(r){
-      if(r.error){ el('profHistory').innerHTML='<div class="ph-empty">Error: '+esc(r.error.message)+'</div>'; return; }
+      if(r.error){el('profHistory').innerHTML='<div class="ph-empty">Error: '+esc(r.error.message)+'</div>';return;}
       var rows=r.data||[];
       el('profLookups').textContent=rows.length;
-      var seen={}, unique=[];
-      rows.forEach(function(x){ if(!seen[x.reg]){seen[x.reg]=true;unique.push(x);} });
+      var seen={},unique=[];
+      rows.forEach(function(x){if(!seen[x.reg]){seen[x.reg]=true;unique.push(x);}});
       el('profUnique').textContent=unique.length;
-      if(!rows.length){ el('profHistory').innerHTML='<div class="ph-empty">No cars looked up yet.</div>'; return; }
+      if(!rows.length){el('profHistory').innerHTML='<div class="ph-empty">No cars looked up yet.</div>';return;}
       el('profHistory').innerHTML=unique.map(function(r){
         var date=r.looked_up_at?new Date(r.looked_up_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
-        var car=[(r.make||'').toUpperCase(),(r.model||'').toUpperCase(),r.year||''].filter(Boolean).join(' ')||'Unknown';
+        var car=[(r.make||''),(r.model||''),(r.year||'')].filter(Boolean).join(' ')||'Unknown';
         var meta=[r.colour,r.fuel,date].filter(Boolean).join(' · ');
-        return '<div class="ph-item" data-reg="'+esc(r.reg)+'"><div class="ph-reg">'+esc(r.reg)+'</div>'
-          +'<div class="ph-info"><div class="ph-car">'+esc(car)+'</div>'
+        return '<div class="ph-item" data-reg="'+esc(r.reg)+'">'
+          +'<div class="ph-reg">'+esc(r.reg)+'</div>'
+          +'<div style="flex:1;min-width:0"><div class="ph-car">'+esc(car)+'</div>'
           +'<div class="ph-meta">'+esc(meta)+'</div></div>'
-          +'<i class="ti ti-chevron-right" style="color:var(--text3);font-size:12px"></i></div>';
+          +'<i class="ti ti-chevron-right" style="color:var(--text4);font-size:12px"></i></div>';
       }).join('');
       qsa('#profHistory .ph-item').forEach(function(item){
         item.addEventListener('click',function(){
           el('regInput').value=item.getAttribute('data-reg');
-          closeProfileModal(); lookupVehicle();
+          closeProfileModal();lookupVehicle();
         });
       });
-    }).catch(function(e){ el('profHistory').innerHTML='<div class="ph-empty">'+esc(e.message)+'</div>'; });
+    }).catch(function(e){el('profHistory').innerHTML='<div class="ph-empty">'+esc(e.message)+'</div>';});
 }
 
-/* ═══ VEHICLE LOOKUP ═══ */
-function estHp(d){ var c=parseInt(d.engineCapacity)||1600; return c<=999?65:c<=1199?85:c<=1399?110:c<=1599?130:c<=1999?160:c<=2499?220:c<=2999?280:340; }
-function estTq(d){ return Math.round(estHp(d)*1.5); }
-function estVal(d){ var y=parseInt(d.yearOfManufacture)||2015; return Math.max(1500,Math.round(15000-(2026-y)*900)); }
+/* ── VEHICLE LOOKUP ── */
+function estHp(d){var c=parseInt(d.engineCapacity)||1600;return c<=999?65:c<=1199?85:c<=1399?110:c<=1599?130:c<=1999?160:c<=2499?220:c<=2999?280:340;}
+function estTq(d){return Math.round(estHp(d)*1.5);}
+function estVal(d){var y=parseInt(d.yearOfManufacture)||2015;return Math.max(1500,Math.round(18000-(2026-y)*1100));}
 
 function lookupVehicle(){
   var reg=el('regInput').value.replace(/\s/g,'').toUpperCase();
-  if(!reg||reg.length<2) return;
+  if(!reg||reg.length<2)return;
   currentReg=reg;
-  el('errorBox').classList.add('hidden');
-  el('loadingBox').classList.remove('hidden');
-  el('vehicleSection').classList.add('hidden');
+  el('errbox').classList.add('hidden');
+  el('mainApp').classList.remove('hidden');
+  el('loadbox').classList.remove('hidden');
+  el('tabsWrap').classList.remove('hidden');
+  el('vinStrip').classList.add('hidden');
   el('resultSection').classList.add('hidden');
-  el('intelCard').style.display='none';
-  selectedMod=null; motTests=[];
+  selectedMod=null;motTests=[];
   el('analyzeBtn').disabled=true;
   el('analyzeBtn').textContent='Select a mod to analyse';
-  qsa('.mod-btn').forEach(function(b){ b.classList.remove('selected'); });
+  qsa('.mod-btn').forEach(function(b){b.classList.remove('selected');});
+  el('intelPaywall').style.display='block';
+  el('intelContent').style.display='none';
+  switchMainTab('overview');
 
-  fetch(VERCEL+'/api/vehicle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({registrationNumber:reg})})
-    .then(function(r){ if(!r.ok) throw new Error('DVLA error'); return r.json(); })
-    .then(function(d){
-      vehicleData=Object.assign({},d,{reg:reg,hp:estHp(d),torque:estTq(d),value:estVal(d)});
-      renderVehicle(vehicleData);
-      saveToHistory();
-      loadSpecs(); loadMot(reg, false);
-      el('loadingBox').classList.add('hidden');
-      el('vehicleSection').classList.remove('hidden');
-      el('vcReg').textContent=reg;
-      el('vehicleSection').scrollIntoView({behavior:'smooth',block:'start'});
-    })
-    .catch(function(e){
-      el('errorBox').textContent='Could not fetch vehicle — check the reg and try again.';
-      el('errorBox').classList.remove('hidden');
-      el('loadingBox').classList.add('hidden');
+  fetch(VERCEL+'/api/vehicle',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({registrationNumber:reg})
+  })
+  .then(function(r){if(!r.ok)throw new Error('DVLA error '+r.status);return r.json();})
+  .then(function(d){
+    // Normalise model — DVLA returns various field names
+    var model=d.model||d.modelSeries||d.typeApproval||'';
+    vehicleData=Object.assign({},d,{
+      reg:reg,
+      model:model,
+      hp:estHp(d),
+      torque:estTq(d),
+      value:estVal(d)
     });
+    renderVehicle(vehicleData);
+    saveToHistory();
+    loadSpecs();
+    loadMot(reg);
+    renderValuation();
+    renderHistoryTab();
+    el('loadbox').classList.add('hidden');
+    el('vcReg').textContent=reg;
+    el('mainApp').scrollIntoView({behavior:'smooth',block:'start'});
+    if(currentUser||(VIP_ACCOUNTS.indexOf(currentUser&&currentUser.email)!==-1))showIntelReport();
+  })
+  .catch(function(e){
+    el('errbox').textContent='Could not fetch vehicle — check the reg and try again. ('+e.message+')';
+    el('errbox').classList.remove('hidden');
+    el('loadbox').classList.add('hidden');
+  });
 }
 
-function verifyPaymentAndLookup(reg, sessionId){
-  el('loadingBox').classList.remove('hidden');
-  el('loadingBox').textContent='Verifying payment...';
-  fetch(VERCEL+'/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sessionId:sessionId})})
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      el('loadingBox').textContent='Fetching vehicle data...';
-      if(d.paid){ sessionStorage.setItem('giq_paid_'+reg, '1'); }
-      lookupVehicle();
-    })
-    .catch(function(){ lookupVehicle(); });
+function verifyThenLookup(reg,sessionId){
+  el('loadbox').textContent='Verifying payment...';
+  el('loadbox').classList.remove('hidden');
+  el('mainApp').classList.remove('hidden');
+  fetch(VERCEL+'/api/verify-payment',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({sessionId:sessionId})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.paid)sessionStorage.setItem('giq_paid_'+reg,'1');
+    lookupVehicle();
+  })
+  .catch(function(){lookupVehicle();});
 }
 
 function renderVehicle(d){
-  el('statMake').textContent=fmt(d.make); el('statModel').textContent=fmt(d.model);
-  el('statYear').textContent=d.yearOfManufacture||'-'; el('statEngine').textContent=d.engineCapacity?d.engineCapacity+'cc':'-';
-  el('statColour').textContent=fmt(d.colour||d.primaryColour); el('statFuel').textContent=fmt(d.fuelType);
-  var te=el('statTax'); te.textContent=fmt(d.taxStatus); te.className='stat-val '+((d.taxStatus||'').toLowerCase().includes('taxed')?'green':'red');
-  var me=el('statMot'); var mok=(d.motStatus||'').toLowerCase().includes('valid');
-  me.textContent=mok?'VALID':fmt(d.motStatus); me.className='stat-val '+(mok?'green':'red');
+  el('statMake').textContent=fmt(d.make);
+  // Try every possible model field from DVLA
+  var m=d.model||d.modelSeries||d.typeApproval||'';
+  el('statModel').textContent=m?fmt(m):'-';
+  el('statYear').textContent=d.yearOfManufacture||d.monthOfFirstRegistration||'-';
+  el('statEngine').textContent=d.engineCapacity?d.engineCapacity+'cc':(d.engineSize?d.engineSize+'cc':'-');
+  el('statColour').textContent=fmt(d.colour||d.primaryColour);
+  el('statFuel').textContent=fmt(d.fuelType);
+  var te=el('statTax');
+  te.textContent=fmt(d.taxStatus);
+  te.className='sval '+((d.taxStatus||'').toLowerCase().includes('taxed')?'green':'red');
+  var me=el('statMot');
+  var mok=(d.motStatus||'').toLowerCase().includes('valid');
+  me.textContent=mok?'VALID':fmt(d.motStatus);
+  me.className='sval '+(mok?'green':'red');
+  // VIN strip
+  var vin=d.vin||d.vinLastFive||'';
+  if(vin){
+    el('vinVal').textContent=vin;
+    el('vinNote').textContent=d.vin?'Full VIN from DVLA':'Partial VIN (last 5 digits)';
+    el('vinStrip').classList.remove('hidden');
+  }
 }
 
 function saveToHistory(){
-  if(!currentUser) return;
+  if(!currentUser)return;
   sb.from('car_history').insert({
-    user_id:currentUser.id, reg:vehicleData.reg,
-    make:vehicleData.make||null, model:vehicleData.model||null,
+    user_id:currentUser.id,
+    reg:vehicleData.reg,
+    make:vehicleData.make||null,
+    model:vehicleData.model||null,
     year:vehicleData.yearOfManufacture?String(vehicleData.yearOfManufacture):null,
     colour:vehicleData.colour||vehicleData.primaryColour||null,
-    fuel:vehicleData.fuelType||null, hp:vehicleData.hp||null, value:vehicleData.value||null
-  }).then(function(r){ if(r.error) console.warn('History save:',r.error.message,r.error.code); })
-   .catch(function(e){ console.warn('History error:',e.message); });
+    fuel:vehicleData.fuelType||null,
+    hp:vehicleData.hp||null,
+    value:vehicleData.value||null
+  })
+  .then(function(r){if(r.error)console.warn('History save:',r.error.message,'code:',r.error.code);})
+  .catch(function(e){console.warn('History error:',e.message);});
 }
 
+/* ── SPECS — normalised with retry fallback ── */
 function loadSpecs(){
   el('specsStatus').textContent='Loading...';
-  fetch(VERCEL+'/api/specs',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({make:vehicleData.make,model:vehicleData.model,year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity,fuel:vehicleData.fuelType})})
-    .then(function(r){ return r.json(); }).then(function(s){
-      el('specBhp').textContent=s.bhp?s.bhp+' BHP':'-';
-      el('specTorque').textContent=s.torqueNm?s.torqueNm+' Nm @ '+(s.torqueRpm||'?')+' rpm':'-';
-      el('specZero').textContent=s.zeroToSixty?s.zeroToSixty+' sec':'-';
-      el('specTopSpeed').textContent=s.topSpeedMph?s.topSpeedMph+' mph':'-';
-      el('specGearbox').textContent=s.gearbox||'-'; el('specCylinders').textContent=s.cylinders||'-';
-      el('specDrive').textContent=s.driveType||'-';
-      el('specCombined').textContent=s.consumptionCombined?s.consumptionCombined+' mpg':'-';
-      el('specCo2').innerHTML=s.co2gkm?s.co2gkm+' g/km <span class="co2-badge '+(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>':'-';
-      if(s.bhp) vehicleData.hp=parseInt(s.bhp);
-      if(s.torqueNm) vehicleData.torque=parseInt(s.torqueNm);
-      el('specsStatus').textContent='AI sourced';
-    }).catch(function(){ el('specsStatus').textContent='Unavailable'; });
+  var payload={
+    make:vehicleData.make,
+    model:vehicleData.model||vehicleData.modelSeries,
+    year:vehicleData.yearOfManufacture,
+    cc:vehicleData.engineCapacity||vehicleData.engineSize,
+    fuel:vehicleData.fuelType
+  };
+  fetch(VERCEL+'/api/specs',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  })
+  .then(function(r){if(!r.ok)throw new Error('specs '+r.status);return r.json();})
+  .then(function(s){
+    if(!s||((!s.bhp)&&(!s.torqueNm)&&(!s.gearbox))){throw new Error('empty response');}
+    el('specBhp').textContent=s.bhp?s.bhp+' BHP':'-';
+    el('specTorque').textContent=s.torqueNm?(s.torqueNm+' Nm'+(s.torqueRpm?' @ '+s.torqueRpm+' rpm':'')):'-';
+    el('specZero').textContent=s.zeroToSixty?s.zeroToSixty+' sec':'-';
+    el('specTop').textContent=s.topSpeedMph?s.topSpeedMph+' mph':'-';
+    el('specGearbox').textContent=s.gearbox||'-';
+    el('specCyl').textContent=s.cylinders||'-';
+    el('specDrive').textContent=s.driveType||'-';
+    el('specMpg').textContent=s.consumptionCombined?s.consumptionCombined+' mpg':'-';
+    el('specCo2').innerHTML=s.co2gkm?s.co2gkm+' g/km <span class="co2b '+esc(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>':'-';
+    if(s.bhp)vehicleData.hp=parseInt(s.bhp);
+    if(s.torqueNm)vehicleData.torque=parseInt(s.torqueNm);
+    el('specsStatus').textContent='AI sourced';
+    renderSafety(s);
+  })
+  .catch(function(){
+    el('specsStatus').textContent='Unavailable';
+    renderSafety(null);
+  });
 }
 
-/* ═══ MOT ═══ */
-function loadMot(reg, showReport){
+function renderSafety(s){
+  var yr=parseInt(vehicleData.yearOfManufacture)||2015;
+  var stars=yr>=2020?5:yr>=2016?4:yr>=2011?4:yr>=2006?3:2;
+  var html='<div class="hrow"><div class="hic hi-green"><i class="ti ti-shield-check"></i></div><div><div class="hrow-t">Euro NCAP Safety Rating (Estimated)</div>';
+  if(s&&s.ncapRating){html+='<div class="hrow-d">'+esc(s.ncapRating)+' stars — '+esc(s.ncapNotes||'Based on vehicle class and year.')+'</div>';}
+  else{html+='<div class="hrow-d">~'+stars+' stars estimated from year '+yr+'. For the exact rating, visit <strong>euroncap.com</strong> and search for '+esc(vehicleData.make||'your car')+'.</div>';}
+  html+='</div></div>';
+  html+='<div class="hrow"><div class="hic hi-blue"><i class="ti ti-list-check"></i></div><div><div class="hrow-t">Standard Equipment (Estimated)</div><div class="hrow-d">';
+  if(s&&s.bhp){html+=esc(vehicleData.make)+' '+esc(vehicleData.model||'')+': '+s.bhp+'bhp, '+(s.cylinders?s.cylinders+' cyl, ':'')+esc(s.gearbox||'')+', '+esc(s.driveType||'')+' drive. ';}
+  html+='Exact spec depends on trim level and options. Always verify with the manufacturer spec sheet or Parkers/Autotrader listing.</div></div></div>';
+  el('safetyRows').innerHTML=html;
+  el('safetyChip').textContent='Updated';
+}
+
+/* ── MOT ── */
+function loadMot(reg){
   fetch(VERCEL+'/api/mot?reg='+reg)
-    .then(function(r){ if(!r.ok) throw new Error(); return r.json(); })
-    .then(function(raw){
-      renderMot(raw);
-      // Show intel card — check if already paid
-      var alreadyPaid = sessionStorage.getItem('giq_paid_'+reg)==='1';
-      el('intelCard').style.display='block';
-      if(alreadyPaid){ showIntelReport(); }
-    }).catch(function(){ renderDemoMot(); el('intelCard').style.display='block'; });
+    .then(function(r){if(!r.ok)throw new Error();return r.json();})
+    .then(function(raw){renderMot(raw);})
+    .catch(function(){renderDemoMot();});
 }
 
-function toggleMotRow(row){ row.classList.toggle('open'); }
+function toggleMotRow(row){row.classList.toggle('open');}
 
 function renderMot(raw){
   var tests=[];
-  if(raw&&raw.motTests) tests=raw.motTests;
-  else if(Array.isArray(raw)&&raw[0]&&raw[0].motTests) tests=raw[0].motTests;
-  else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate) tests=raw;
-  if(!tests.length){ renderDemoMot(); return; }
+  if(raw&&raw.motTests)tests=raw.motTests;
+  else if(Array.isArray(raw)&&raw[0]&&raw[0].motTests)tests=raw[0].motTests;
+  else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate)tests=raw;
+  if(!tests.length){renderDemoMot();return;}
   motTests=tests;
-  var tot=tests.length, pass=tests.filter(function(t){ return(t.testResult||'').toUpperCase()==='PASSED'; }).length;
-  var advs=tests.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
+  var tot=tests.length;
+  var pass=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
+  var advs=tests.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
   var rate=Math.round(pass/tot*100);
-  el('sumPassed').textContent=pass; el('sumFailed').textContent=tot-pass;
-  el('sumAdv').textContent=advs; el('sumTests').textContent=tot;
+  el('sumPass').textContent=pass;el('sumFail').textContent=tot-pass;
+  el('sumAdv').textContent=advs;el('sumTotal').textContent=tot;
   el('passRatePct').textContent=rate+'%';
   el('passBarFill').style.width=rate+'%';
-  el('passBarFill').style.background=rate>=80?'var(--green)':rate>=60?'var(--gold)':'var(--red)';
-  el('motSummaryWrap').classList.remove('hidden');
+  el('passBarFill').style.background=rate>=80?'linear-gradient(90deg,var(--green),#4ADE80)':rate>=60?'linear-gradient(90deg,var(--amber),#FCD34D)':'linear-gradient(90deg,var(--red),#F87171)';
+  el('motSumWrap').classList.remove('hidden');
   el('motHistory').innerHTML=tests.slice(0,10).map(function(t){
     var passed=(t.testResult||'').toUpperCase()==='PASSED';
     var def=t.defects||[];
-    var dang=def.filter(function(d){ return d.type==='DANGEROUS'; });
-    var maj=def.filter(function(d){ return d.type==='MAJOR'; });
-    var min=def.filter(function(d){ return d.type==='MINOR'; });
-    var adv=def.filter(function(d){ return d.type==='ADVISORY'; });
+    var dang=def.filter(function(d){return d.type==='DANGEROUS';});
+    var maj=def.filter(function(d){return d.type==='MAJOR';});
+    var min=def.filter(function(d){return d.type==='MINOR';});
+    var adv=def.filter(function(d){return d.type==='ADVISORY';});
     var det=def.length
-      ? dang.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-danger"></div><div><span style="color:#FF6B6B;font-weight:600;font-size:10px">DANGEROUS — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
-        +maj.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-major"></div><div><span style="color:#FF9500;font-weight:600;font-size:10px">MAJOR — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
-        +min.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-minor"></div><div><span style="color:var(--green);font-weight:600;font-size:10px">MINOR — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
-        +adv.map(function(d){ return '<div class="mot-detail-item"><div class="mot-dot dot-advisory"></div><div><span style="color:var(--gold);font-weight:600;font-size:10px">ADVISORY — </span>'+esc(d.text||'-')+'</div></div>'; }).join('')
-      :'<div class="mot-no-items">No failures or advisories.</div>';
+      ?dang.map(function(d){return'<div class="mot-di"><div class="mdot d-dang"></div><div><span style="color:var(--red);font-weight:700;font-size:10px">DANGEROUS — </span>'+esc(d.text||'-')+'</div></div>';}).join('')
+        +maj.map(function(d){return'<div class="mot-di"><div class="mdot d-maj"></div><div><span style="color:#EA580C;font-weight:700;font-size:10px">MAJOR — </span>'+esc(d.text||'-')+'</div></div>';}).join('')
+        +min.map(function(d){return'<div class="mot-di"><div class="mdot d-min"></div><div><span style="color:var(--green);font-weight:700;font-size:10px">MINOR — </span>'+esc(d.text||'-')+'</div></div>';}).join('')
+        +adv.map(function(d){return'<div class="mot-di"><div class="mdot d-adv"></div><div><span style="color:var(--amber);font-weight:700;font-size:10px">ADVISORY — </span>'+esc(d.text||'-')+'</div></div>';}).join('')
+      :'<div class="mot-ni">No failures or advisories recorded.</div>';
     var ds=t.completedDate||'-';
-    try{ if(ds.includes('T')) ds=new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }catch(e){}
+    try{if(ds.includes('T'))ds=new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){}
     var mi=t.odometerValue?Number(t.odometerValue).toLocaleString()+' miles':'-';
-    return '<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-row-header">'
-      +'<span style="color:var(--text2);font-size:11px">'+ds+'</span><span style="font-weight:500">'+mi+'</span>'
+    return '<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-rh">'
+      +'<span style="color:var(--text3);font-size:11px;font-weight:600">'+ds+'</span>'
+      +'<span style="font-weight:700">'+mi+'</span>'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">'
       +((dang.length+maj.length)?'<span class="badge b-fail">'+(dang.length+maj.length)+' failure</span>':'')
       +(min.length?'<span class="badge b-warn">'+min.length+' minor</span>':'')
-      +(adv.length?'<span class="badge b-advisory">'+adv.length+' advisory</span>':'')
+      +(adv.length?'<span class="badge b-adv">'+adv.length+' advisory</span>':'')
       +'<span class="badge '+(passed?'b-pass':'b-fail')+'">'+(passed?'PASS':'FAIL')+'</span>'
-      +'</div><i class="ti ti-chevron-down mot-chevron"></i></div>'
-      +'<div class="mot-details">'+det+'</div></div>';
+      +'</div><i class="ti ti-chevron-down mot-chev"></i></div>'
+      +'<div class="mot-det">'+det+'</div></div>';
   }).join('');
+  buildDamageMap(tests);
+  buildMileageHistory(tests);
+  if(currentUser||(VIP_ACCOUNTS.indexOf(currentUser&&currentUser.email)!==-1))showIntelReport();
 }
 
 function renderDemoMot(){
   var h=[
-    {date:'14 Nov 2024',passed:true,od:62440,defects:[{type:'ADVISORY',text:'Tyre worn close to legal limit on nearside rear'},{type:'ADVISORY',text:'Rear brake pads showing wear'}]},
+    {date:'14 Nov 2024',passed:true,od:62440,defects:[{type:'ADVISORY',text:'Nearside rear tyre worn close to legal limit'},{type:'ADVISORY',text:'Rear brake pads showing wear'}]},
     {date:'12 Nov 2023',passed:true,od:49210,defects:[]},
-    {date:'08 Nov 2022',passed:true,od:37880,defects:[{type:'ADVISORY',text:'Front suspension arm bush deteriorating'}]},
-    {date:'03 Dec 2021',passed:false,od:28550,defects:[{type:'MAJOR',text:'Nearside front headlamp aim too low (1.3.1a)'},{type:'ADVISORY',text:'Oil seeping from rocker cover gasket'}]}
+    {date:'08 Nov 2022',passed:true,od:37880,defects:[{type:'ADVISORY',text:'Front suspension arm bush deteriorating — monitoring recommended'}]},
+    {date:'03 Dec 2021',passed:false,od:28550,defects:[{type:'MAJOR',text:'Nearside front headlamp aim too low (1.3.1a)'},{type:'ADVISORY',text:'Oil seeping from engine rocker cover gasket'}]}
   ];
-  motTests=h.map(function(m){ return {completedDate:m.date,testResult:m.passed?'PASSED':'FAILED',odometerValue:m.od,defects:m.defects}; });
+  motTests=h.map(function(m){return{completedDate:m.date,testResult:m.passed?'PASSED':'FAILED',odometerValue:m.od,defects:m.defects};});
   el('motHistory').innerHTML=h.map(function(m){
-    var fails=m.defects.filter(function(d){ return d.type==='MAJOR'||d.type==='DANGEROUS'; });
-    var advs=m.defects.filter(function(d){ return d.type==='ADVISORY'; });
+    var fails=m.defects.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';});
+    var advs=m.defects.filter(function(d){return d.type==='ADVISORY';});
     var det=m.defects.length?m.defects.map(function(d){
       var f=d.type==='MAJOR'||d.type==='DANGEROUS';
-      return '<div class="mot-detail-item"><div class="mot-dot '+(f?'dot-major':'dot-advisory')+'"></div><div><span style="color:'+(f?'#FF9500':'var(--gold)')+';font-weight:600;font-size:10px">'+(f?'MAJOR':'ADVISORY')+' — </span>'+esc(d.text)+'</div></div>';
-    }).join(''):'<div class="mot-no-items">No failures or advisories.</div>';
-    return '<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-row-header">'
-      +'<span style="color:var(--text2);font-size:11px">'+m.date+'</span><span style="font-weight:500">'+m.od.toLocaleString()+' miles</span>'
+      return'<div class="mot-di"><div class="mdot '+(f?'d-maj':'d-adv')+'"></div><div><span style="color:'+(f?'#EA580C':'var(--amber)')+';font-weight:700;font-size:10px">'+(f?'MAJOR':'ADVISORY')+' — </span>'+esc(d.text)+'</div></div>';
+    }).join(''):'<div class="mot-ni">No failures or advisories.</div>';
+    return'<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-rh">'
+      +'<span style="color:var(--text3);font-size:11px;font-weight:600">'+m.date+'</span>'
+      +'<span style="font-weight:700">'+m.od.toLocaleString()+' miles</span>'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">'
       +(fails.length?'<span class="badge b-fail">'+fails.length+' failure</span>':'')
-      +(advs.length?'<span class="badge b-advisory">'+advs.length+' advisory</span>':'')
+      +(advs.length?'<span class="badge b-adv">'+advs.length+' advisory</span>':'')
       +'<span class="badge '+(m.passed?'b-pass':'b-fail')+'">'+(m.passed?'PASS':'FAIL')+'</span>'
-      +'</div><i class="ti ti-chevron-down mot-chevron"></i></div>'
-      +'<div class="mot-details">'+det+'</div></div>';
+      +'</div><i class="ti ti-chevron-down mot-chev"></i></div>'
+      +'<div class="mot-det">'+det+'</div></div>';
   }).join('');
+  buildDamageMap(motTests);
+  buildMileageHistory(motTests);
+  if(currentUser||(VIP_ACCOUNTS.indexOf(currentUser&&currentUser.email)!==-1))showIntelReport();
 }
 
-/* ═══ PAYMENT ═══ */
-function startPayment(){
-  var btn=el('btnPay'); btn.disabled=true; btn.textContent='Loading...';
-  fetch(VERCEL+'/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({reg:currentReg, userId:currentUser?currentUser.id:''})})
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      if(d.url){ window.location.href=d.url; }
-      else { btn.disabled=false; btn.innerHTML='<i class="ti ti-lock-open"></i> UNLOCK FOR £1.99'; alert('Payment error: '+(d.error||'unknown')); }
-    }).catch(function(e){ btn.disabled=false; btn.innerHTML='<i class="ti ti-lock-open"></i> UNLOCK FOR £1.99'; alert('Error: '+e.message); });
+/* ── DAMAGE MAP ── */
+var ZK={
+  front:['headlamp','headlight','bumper','bonnet','front','number plate','wiper','fog lamp','horn','grille'],
+  rear:['rear','tail','boot','reversing','back bumper','rear bumper','rear lamp'],
+  left:['nearside','left','driver side'],
+  right:['offside','right','passenger side'],
+  roof:['roof','windscreen','screen','mirror','wiper blade'],
+  under:['brake','suspension','steering','tyre','wheel bearing','oil','engine','gearbox','clutch','exhaust','prop shaft','fuel','emission']
+};
+function buildDamageMap(tests){
+  var allDef=[];
+  tests.forEach(function(t){(t.defects||[]).forEach(function(d){allDef.push(d);});});
+  qsa('.dmg-zone').forEach(function(z){z.classList.remove('hit','minor-hit');});
+  var hitZ={};
+  allDef.forEach(function(d){
+    var txt=(d.text||'').toLowerCase();
+    var isMaj=d.type==='MAJOR'||d.type==='DANGEROUS';
+    Object.keys(ZK).forEach(function(zone){
+      if(ZK[zone].some(function(kw){return txt.includes(kw);})){
+        if(!hitZ[zone]||isMaj)hitZ[zone]=isMaj?'hit':'minor-hit';
+      }
+    });
+  });
+  Object.keys(hitZ).forEach(function(zone){
+    var zEl=el('zone-'+zone);
+    if(zEl)zEl.classList.add(hitZ[zone]);
+  });
+  var listEl=el('dmgList');
+  var serious=allDef.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';});
+  var minors=allDef.filter(function(d){return d.type==='MINOR';});
+  var adv=allDef.filter(function(d){return d.type==='ADVISORY';});
+  if(!allDef.length){
+    listEl.innerHTML='<div class="dmg-none"><i class="ti ti-check" style="color:var(--green);font-size:20px;display:block;margin-bottom:8px"></i>No damage or defects in MOT history</div>';
+    el('dmgChip').textContent='Clean';el('dmgChip').className='chip chip-green';return;
+  }
+  var html='';
+  if(serious.length){
+    html+='<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:6px">Failures & Defects</div>';
+    serious.forEach(function(d){html+='<div class="dmg-item damage"><i class="ti ti-alert-triangle"></i><div><div class="dmg-it">'+esc(d.type)+'</div><div class="dmg-id">'+esc(d.text)+'</div></div></div>';});
+  }
+  if(adv.length){
+    html+='<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin:10px 0 6px">Advisories</div>';
+    adv.slice(0,6).forEach(function(d){html+='<div class="dmg-item advisory"><i class="ti ti-alert-circle"></i><div><div class="dmg-it">ADVISORY</div><div class="dmg-id">'+esc(d.text)+'</div></div></div>';});
+    if(adv.length>6)html+='<div style="font-size:10px;color:var(--text3);margin-top:6px">+'+(adv.length-6)+' more advisories across MOT history</div>';
+  }
+  el('dmgChip').textContent=allDef.length+' items found';
+  el('dmgChip').className='chip '+(serious.length?'chip-red':'chip-gold');
+  listEl.innerHTML=html;
 }
 
+/* ── MILEAGE HISTORY ── */
+function buildMileageHistory(tests){
+  var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
+  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};}).filter(function(r){return r.mi>0;});
+  if(!readings.length){el('mileHistRows').innerHTML='<div class="ph-empty">No mileage data available</div>';return;}
+  var maxMi=readings[readings.length-1].mi||1;
+  el('mileHistRows').innerHTML=readings.map(function(r,i){
+    var pct=Math.round((r.mi/maxMi)*100);
+    var isFraud=i>0&&r.mi<readings[i-1].mi;
+    var yr='';try{yr=new Date(r.date).getFullYear()||r.date.slice(-4);}catch(e){}
+    return'<div class="mi-row">'
+      +'<div class="mi-yr">'+esc(String(yr))+'</div>'
+      +'<div class="mi-bg"><div class="mi-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
+      +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i>DROP</span>':'')+'</div>'
+      +'</div>';
+  }).join('');
+  el('mileChip').textContent=readings.length+' readings';
+}
+
+/* ── HISTORY TAB ── */
+function renderHistoryTab(){
+  var d=vehicleData;
+  var taxOk=(d.taxStatus||'').toLowerCase().includes('taxed');
+  el('taxStatusText').textContent=(d.taxStatus||'Unknown')+' — '+(taxOk?'Currently taxed and legal to drive on UK roads.':'Not taxed — illegal to drive without a SORN declaration.');
+  el('taxChip').textContent=taxOk?'Taxed':'Not Taxed';
+  el('taxChip').className='chip '+(taxOk?'chip-green':'chip-red');
+  el('firstRegText').textContent=d.monthOfFirstRegistration||d.yearOfManufacture||'Unknown';
+  el('keeperText').textContent=fmt(d.colour||d.primaryColour)+' '+fmt(d.fuelType)+' — registered in UK. Full keeper history requires an HPI or DVLA subject access request.';
+  // Commercial use heuristic from mileage
+  var annualMi=0;
+  if(motTests.length>=2){
+    var sr=motTests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
+    var fr=sr.filter(function(t){return parseInt(t.odometerValue)>0;});
+    if(fr.length>=2){
+      var yrs=(new Date(fr[fr.length-1].completedDate)-new Date(fr[0].completedDate))/(1000*60*60*24*365.25);
+      annualMi=yrs>0.1?Math.round((parseInt(fr[fr.length-1].odometerValue)-parseInt(fr[0].odometerValue))/yrs):0;
+    }
+  }
+  var commFlag=annualMi>18000;
+  el('commUseTitle').textContent=commFlag?'Possible Commercial/Fleet Use Detected':'No Strong Commercial Use Indicators';
+  el('commUseText').textContent=commFlag
+    ?'Annual mileage ~'+annualMi.toLocaleString()+' miles/yr is consistent with commercial or fleet use. Ask the seller and verify with an HPI check.'
+    :'Annual mileage ~'+(annualMi>0?annualMi.toLocaleString():'unknown')+' miles/yr appears consistent with private use.';
+  el('commUseChip').textContent=commFlag?'Flag':'Low Risk';
+  el('commUseChip').className='chip '+(commFlag?'chip-gold':'chip-green');
+  var yr=parseInt(d.yearOfManufacture)||2015;
+  var age=2026-yr;
+  var estOwners=age<=2?1:age<=4?2:age<=7?3:4;
+  el('ownerText').textContent='Vehicle is ~'+age+' years old. Estimated '+estOwners+'+ keeper(s) based on age alone. Exact count via HPI.';
+  el('ownerChip').textContent='~'+estOwners+'+ owners';
+}
+
+/* ── VALUATION ── */
+function renderValuation(){
+  var d=vehicleData;
+  var yr=parseInt(d.yearOfManufacture)||2015;
+  var age=2026-yr;
+  var base=d.value||8000;
+  var privateHigh=Math.round(base*1.12);
+  var privateLow=Math.round(base*0.88);
+  var trade=Math.round(base*0.82);
+  var px=Math.round(base*0.73);
+  el('valPrice').textContent='£'+base.toLocaleString();
+  el('valPrivate').textContent='£'+privateLow.toLocaleString()+'–£'+privateHigh.toLocaleString();
+  el('valTrade').textContent='£'+trade.toLocaleString();
+  el('valPx').textContent='£'+px.toLocaleString();
+  el('vfAge').textContent=age;
+  var annMi=0;
+  if(motTests.length>=2){
+    var sr=motTests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
+    var fr=sr.filter(function(t){return parseInt(t.odometerValue)>0;});
+    if(fr.length>=2){
+      var yrs=(new Date(fr[fr.length-1].completedDate)-new Date(fr[0].completedDate))/(1000*60*60*24*365.25);
+      annMi=yrs>0.1?Math.round((parseInt(fr[fr.length-1].odometerValue)-parseInt(fr[0].odometerValue))/yrs):0;
+    }
+  }
+  el('vfMileage').textContent=annMi>0?annMi.toLocaleString():'N/A';
+  var tot=motTests.length,pass=motTests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
+  el('vfPass').textContent=tot>0?Math.round(pass/tot*100)+'%':'N/A';
+  // Depreciation over 6 years
+  var depHTML='';
+  for(var y=0;y<=6;y++){
+    var dp=Math.round(base*Math.pow(0.82,y));
+    var pct=Math.round((dp/base)*100);
+    depHTML+='<div class="dep-row"><div class="dep-yr">'+(yr+y)+'</div><div class="dep-bg"><div class="dep-fill" style="width:'+pct+'%"></div></div><div class="dep-val">£'+dp.toLocaleString()+'</div></div>';
+  }
+  el('depRows').innerHTML=depHTML;
+  el('finPrice').value=base;
+  el('finDeposit').value=Math.round(base*0.15);
+  calcFinance();
+}
+
+function calcFinance(){
+  var price=parseFloat(el('finPrice').value)||8000;
+  var dep=parseFloat(el('finDeposit').value)||0;
+  var term=parseInt(el('finTerm').value)||36;
+  var apr=parseFloat(el('finApr').value)||9.9;
+  var loan=Math.max(0,price-dep);
+  var mr=apr/100/12;
+  var monthly=mr>0?Math.round(loan*(mr*Math.pow(1+mr,term))/(Math.pow(1+mr,term)-1)*100)/100:Math.round(loan/term*100)/100;
+  var total=Math.round(monthly*term+dep);
+  var interest=Math.round(monthly*term-loan);
+  el('finMonthly').textContent='£'+monthly.toFixed(2);
+  el('finTotal').textContent='£'+total.toLocaleString();
+  el('finInterest').textContent='£'+Math.max(0,interest).toLocaleString();
+  el('finLoan').textContent='£'+loan.toLocaleString();
+}
+
+/* ── INTELLIGENCE REPORT ── */
+var VIP_ACCOUNTS=['bravemalek2020@gmail.com','waelmoh1983@gmail.com'];
 function showIntelReport(){
-  if(!motTests||motTests.length<2){ return; }
+  var isVip=currentUser&&VIP_ACCOUNTS.indexOf(currentUser.email)!==-1;
+if(!currentUser||!motTests.length)return;
+if(!isVip&&!currentUser)return;
   el('intelPaywall').style.display='none';
   el('intelContent').style.display='block';
-  el('intelBadge').textContent='UNLOCKED';
-  el('intelBadge').style.background='rgba(109,189,42,0.15)';
-  el('intelBadge').style.color='var(--green)';
+  el('intelBadge').textContent=isVip?'VIP — Full Access':'FREE — Logged In';
+  el('intelBadge').className=isVip?'chip chip-gold':'chip chip-green';
   buildIntelReport(motTests);
 }
 
 function buildIntelReport(tests){
-  var sorted=tests.slice().sort(function(a,b){ return new Date(a.completedDate||0)-new Date(b.completedDate||0); });
-  var readings=sorted.map(function(t){ return {date:t.completedDate||'',mi:parseInt(t.odometerValue)||0}; }).filter(function(r){ return r.mi>0; });
-
+  var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
+  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};}).filter(function(r){return r.mi>0;});
+  // Fraud detection
   var fraudEvents=[];
   for(var i=1;i<readings.length;i++){
-    if(readings[i].mi<readings[i-1].mi) fraudEvents.push({date:readings[i].date,from:readings[i-1].mi,to:readings[i].mi,drop:readings[i-1].mi-readings[i].mi});
+    if(readings[i].mi<readings[i-1].mi){
+      fraudEvents.push({date:readings[i].date,from:readings[i-1].mi,to:readings[i].mi,drop:readings[i-1].mi-readings[i].mi});
+    }
   }
-  var annualMi=0, totalMi=0;
+  // Annual mileage
+  var annualMi=0,totalMi=0;
   if(readings.length>=2){
-    var first=readings[0],last=readings[readings.length-1];
-    totalMi=last.mi-first.mi;
-    var yrs=(new Date(last.date)-new Date(first.date))/(1000*60*60*24*365.25);
+    var f=readings[0],l=readings[readings.length-1];
+    totalMi=l.mi-f.mi;
+    var yrs=(new Date(l.date)-new Date(f.date))/(1000*60*60*24*365.25);
     annualMi=yrs>0.1?Math.round(totalMi/yrs):0;
   }
   var miStatus=annualMi>0?(annualMi>20000?'high':annualMi<3000?'low':'normal'):'unknown';
-  var pass=tests.filter(function(t){ return(t.testResult||'').toUpperCase()==='PASSED'; }).length;
+  // Pass rate
+  var pass=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
   var passRate=Math.round(pass/tests.length*100);
-  var recentH=sorted.slice(Math.floor(sorted.length/2)), olderH=sorted.slice(0,Math.floor(sorted.length/2));
-  var recentAdv=recentH.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
-  var olderAdv=olderH.reduce(function(s,t){ return s+(t.defects||[]).filter(function(d){ return d.type==='ADVISORY'; }).length; },0);
-  var score=Math.min(100,fraudEvents.length*35+(passRate<60?25:passRate<80?10:0)+(miStatus==='high'?10:0)+(recentAdv>olderAdv&&recentAdv>2?10:0));
+  // Advisory trend
+  var rH=sorted.slice(Math.floor(sorted.length/2)),oH=sorted.slice(0,Math.floor(sorted.length/2));
+  var rAdv=rH.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
+  var oAdv=oH.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
+  // Risk score
+  var score=Math.min(100,
+    fraudEvents.length*35+
+    (passRate<60?25:passRate<80?10:0)+
+    (miStatus==='high'?10:0)+
+    (rAdv>oAdv&&rAdv>2?10:0)
+  );
   var level=score>=50?'high':score>=20?'med':'low';
-  var lbls={low:'LOW RISK',med:'MODERATE RISK',high:'HIGH RISK'};
-  var subs={low:'History looks consistent. No major concerns found.',med:'Some concerns found. Review checks below carefully.',high:'Significant concerns. Strongly recommend a full HPI check.'};
+  var lbls={low:'LOW RISK — Clean History',med:'MODERATE RISK',high:'HIGH RISK — Review Carefully'};
+  var subs={
+    low:'History looks consistent. No major concerns from available DVLA/DVSA data.',
+    med:'Some concerns found. Review the checks below before purchasing.',
+    high:'Significant issues detected. Strongly recommend a full HPI check before buying.'
+  };
   el('riskCircle').textContent=score;
-  el('riskCircle').className='risk-circle risk-'+level;
-  el('riskLabel').textContent=lbls[level];
+  el('riskCircle').className='risk-circle r-'+level;
+  el('riskLbl').textContent=lbls[level];
   el('riskSub').textContent=subs[level];
+  // Build checks
   var checks=[];
-  if(fraudEvents.length===0){ checks.push({s:'ok',ic:'ti-check',t:'Mileage Consistent',d:'Odometer increases across all '+readings.length+' tests. No rollback detected.'}); }
-  else{ fraudEvents.forEach(function(ev){ checks.push({s:'bad',ic:'ti-alert-triangle',t:'Mileage Rollback Detected',d:'Dropped from '+ev.from.toLocaleString()+' to '+ev.to.toLocaleString()+' miles ('+ev.drop.toLocaleString()+' drop) around '+ev.date+'. Serious fraud indicator.'}); }); }
-  if(annualMi>0){
-    if(miStatus==='normal') checks.push({s:'ok',ic:'ti-check',t:'Normal Annual Mileage',d:'~'+annualMi.toLocaleString()+' miles/yr. UK average is 8,000–10,000. Normal range.'});
-    else if(miStatus==='high') checks.push({s:'warn',ic:'ti-alert-circle',t:'High Annual Mileage',d:'~'+annualMi.toLocaleString()+' miles/yr — above UK average. Expect higher wear on drivetrain and suspension.'});
-    else checks.push({s:'warn',ic:'ti-alert-circle',t:'Unusually Low Mileage',d:'~'+annualMi.toLocaleString()+' miles/yr. Very low mileage can cause seal and brake deterioration, or indicate manipulation.'});
+  if(fraudEvents.length===0){
+    checks.push({s:'ok',ic:'ti-check',t:'Mileage Consistent Across All '+readings.length+' Tests',d:'Odometer readings increase consistently with no drops. No rollback or manipulation detected from available data.'});
+  }else{
+    fraudEvents.forEach(function(ev){
+      checks.push({s:'bad',ic:'ti-alert-triangle',t:'Mileage Rollback Detected — Serious Red Flag',d:'Odometer dropped from '+ev.from.toLocaleString()+' to '+ev.to.toLocaleString()+' miles (−'+ev.drop.toLocaleString()+' miles) around '+ev.date+'. This is a strong fraud indicator. Do not buy without further investigation and an HPI check.'});
+    });
   }
-  if(passRate>=80) checks.push({s:'ok',ic:'ti-check',t:'Strong MOT History ('+passRate+'% pass rate)',d:pass+'/'+tests.length+' tests passed. Consistent record suggests well-maintained vehicle.'});
-  else if(passRate>=60) checks.push({s:'warn',ic:'ti-alert-circle',t:'Average MOT Pass Rate ('+passRate+'%)',d:pass+'/'+tests.length+' passed. Check if failures repeat on the same items.'});
-  else checks.push({s:'bad',ic:'ti-x',t:'Poor MOT History ('+passRate+'% pass rate)',d:'Only '+pass+'/'+tests.length+' passed. Multiple failures suggest deferred maintenance or recurring issues.'});
-  if(recentAdv>olderAdv&&recentAdv>=3) checks.push({s:'warn',ic:'ti-trending-up',t:'Advisory Count Increasing',d:recentAdv+' recent vs '+olderAdv+' older. Deterioration trend detected — budget for maintenance.'});
-  else checks.push({s:'ok',ic:'ti-trending-down',t:'Advisory Trend Stable',d:'No significant increase in advisories. Vehicle appears consistently maintained.'});
+  if(annualMi>0){
+    if(miStatus==='normal'){checks.push({s:'ok',ic:'ti-check',t:'Normal Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'UK average is 8,000–10,000 miles/year. This vehicle sits within a normal private use range.'});}
+    else if(miStatus==='high'){checks.push({s:'warn',ic:'ti-alert-circle',t:'High Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'Significantly above UK average. Expect higher wear on engine, transmission, suspension and tyres. May suggest commercial or fleet use.'});}
+    else{checks.push({s:'warn',ic:'ti-alert-circle',t:'Unusually Low Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'Very low mileage can cause deterioration of rubber seals, brakes and fluids from lack of use. May also suggest mileage has been manipulated.'});}
+  }
+  if(passRate>=80){checks.push({s:'ok',ic:'ti-check',t:'Strong MOT History — '+passRate+'% Pass Rate',d:pass+'/'+tests.length+' MOT tests passed. Consistent record suggests a well-maintained vehicle.'});}
+  else if(passRate>=60){checks.push({s:'warn',ic:'ti-alert-circle',t:'Average MOT Pass Rate — '+passRate+'%',d:pass+'/'+tests.length+' passed. Check whether failures repeat on the same component — that suggests deferred maintenance.'});}
+  else{checks.push({s:'bad',ic:'ti-x',t:'Poor MOT History — Only '+passRate+'% Pass Rate',d:'Only '+pass+'/'+tests.length+' tests passed. Multiple failures indicate recurring mechanical issues or poorly maintained vehicle.'});}
+  if(rAdv>oAdv&&rAdv>=3){
+    checks.push({s:'warn',ic:'ti-trending-up',t:'Advisory Count Increasing ('+rAdv+' recent vs '+oAdv+' older)',d:'More advisories in recent tests suggests the vehicle is ageing and components are approaching end of serviceable life. Budget for maintenance.'});
+  }else{
+    checks.push({s:'ok',ic:'ti-trending-down',t:'Advisory Trend Stable',d:'No significant increase in advisories over time. Vehicle appears to be in consistently maintained condition.'});
+  }
   var lastMi=readings.length?readings[readings.length-1].mi:0;
-  if(lastMi>0) checks.push({s:lastMi>120000?'warn':'ok',ic:lastMi>120000?'ti-gauge':'ti-check',t:'Total Mileage: '+lastMi.toLocaleString()+' miles',d:(lastMi>120000?'High mileage — budget for more frequent servicing and checks.':'Mileage within reasonable range for vehicle age.')});
-  checks.push({s:'warn',ic:'ti-info-circle',t:'Finance, Theft & Write-off: Not checked here',d:'For outstanding finance, theft register, write-off history and keeper count — run an HPI or Cazana check (£10–20).'});
+  if(lastMi>0){
+    checks.push({
+      s:lastMi>120000?'warn':'ok',
+      ic:lastMi>120000?'ti-gauge':'ti-check',
+      t:'Total Recorded Mileage: '+lastMi.toLocaleString()+' miles',
+      d:lastMi>120000?'High mileage vehicle. Budget for more frequent servicing, timing chain/belt checks, and wear items.':'Mileage is within a reasonable range for the vehicle age and use.'
+    });
+  }
+  checks.push({s:'warn',ic:'ti-info-circle',t:'Finance, Theft & Write-off Not in DVLA/DVSA Data',d:'GarageIQ uses official government data. For outstanding finance, theft register, write-off category and exact keeper count — use HPI or Cazana (£10–20). This is still cheaper and faster than CarVertical\'s subscription model.'});
   el('intelChecks').innerHTML=checks.map(function(c){
-    return '<div class="check-row '+c.s+'"><div class="check-icon icon-'+c.s+'"><i class="ti '+c.ic+'"></i></div>'
-      +'<div><div class="check-title">'+esc(c.t)+'</div><div class="check-desc">'+esc(c.d)+'</div></div></div>';
+    return'<div class="chk '+c.s+'"><div class="chk-ic"><i class="ti '+c.ic+'"></i></div>'
+      +'<div><div class="chk-t">'+esc(c.t)+'</div><div class="chk-d">'+esc(c.d)+'</div></div></div>';
   }).join('');
+  // Mileage timeline
   if(readings.length>=2){
     var maxMi=readings[readings.length-1].mi||1;
-    el('mileageTimeline').innerHTML='<div class="timeline-title">Mileage Progression</div>'
+    el('mileTimeline').innerHTML='<div class="tl-title" style="margin-top:14px">Mileage Progression</div>'
       +readings.map(function(r,i){
         var pct=Math.round((r.mi/maxMi)*100);
         var isFraud=i>0&&r.mi<readings[i-1].mi;
-        var yr=''; try{ yr=r.date.split('T')[0].split('-')[0]||r.date.slice(-4)||r.date; }catch(e){}
-        return '<div class="mi-bar-item"><div class="mi-yr">'+esc(yr)+'</div>'
-          +'<div class="mi-bar-bg"><div class="mi-bar-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
-          +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?' <span class="fraud-flag"><i class="ti ti-alert-triangle" style="font-size:9px"></i>DROP</span>':'')+'</div></div>';
+        var yr='';try{yr=new Date(r.date).getFullYear()||r.date.slice(-4);}catch(e){}
+        return'<div class="mi-row"><div class="mi-yr">'+esc(String(yr))+'</div>'
+          +'<div class="mi-bg"><div class="mi-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
+          +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i>DROP</span>':'')+'</div></div>';
       }).join('');
   }
 }
 
-/* ═══ MODS ═══ */
+/* ── MODS ── */
 function selectMod(el_){
-  qsa('.mod-btn').forEach(function(b){ b.classList.remove('selected'); });
-  el_.classList.add('selected'); selectedMod=el_.dataset.mod;
-  el('analyzeBtn').disabled=false; el('analyzeBtn').textContent='Analyse: '+selectedMod;
+  qsa('.mod-btn').forEach(function(b){b.classList.remove('selected');});
+  el_.classList.add('selected');
+  selectedMod=el_.dataset.mod;
+  el('analyzeBtn').disabled=false;
+  el('analyzeBtn').textContent='Analyse: '+selectedMod;
 }
+
 function analyseMod(){
-  if(!selectedMod) return;
-  var btn=el('analyzeBtn'); btn.disabled=true; btn.textContent='Analysing...';
-  fetch(VERCEL+'/api/mod',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({mod:selectedMod,make:vehicleData.make,model:vehicleData.model,year:vehicleData.yearOfManufacture,cc:parseInt(vehicleData.engineCapacity)||1600,hp:vehicleData.hp,torque:vehicleData.torque,value:vehicleData.value,fuel:(vehicleData.fuelType||'PETROL').toUpperCase()})})
-    .then(function(r){ return r.json(); })
-    .then(function(d){ renderResult(d); btn.disabled=false; btn.textContent='Analyse: '+selectedMod; })
-    .catch(function(){ el('resultSection').innerHTML='<div class="error-box">Analysis failed.</div>'; el('resultSection').classList.remove('hidden'); btn.disabled=false; btn.textContent='Analyse: '+selectedMod; });
-}
-function renderResult(r){
-  var rating=parseInt(r.soundRating)||5, bars='';
-  for(var i=0;i<8;i++) bars+='<div class="s-bar" style="height:'+(i<rating?Math.round(10+Math.random()*16):4)+'px;opacity:'+(i<rating?1:0.15)+'"></div>';
-  var mc=r.motRisk==='Low'?'green':r.motRisk==='Medium'?'amber':'red';
-  var fs=r.failureRisk||'', fc=fs.startsWith('Low')?'green':fs.startsWith('Med')?'amber':'red';
-  var hn=parseInt(r.hpGain)||0, tn=parseInt(r.torqueGain)||0;
-  var dir=r.valueChangeDirection||(r.valueChange&&r.valueChange.startsWith('-')?'down':'up');
-  var hc=hn>0?'c-up':hn<0?'c-down':'c-neutral', tc=tn>0?'c-up':tn<0?'c-down':'c-neutral', vc=dir==='up'?'c-up':dir==='down'?'c-down':'c-neutral';
-  el('resultSection').innerHTML=
-    '<div class="result-card"><div class="result-title"><span>'+esc(selectedMod.toUpperCase())+'</span><div class="sound-bar">'+bars+'</div></div>'
-    +'<div class="delta-row"><span class="delta-lbl">Power</span><span>'+(hn?r.newHp+' HP':'No change')+' <span class="change '+hc+'">'+(hn?r.hpGain+' HP':'—')+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-lbl">Torque</span><span>'+(tn?r.newTorque+' Nm':'No change')+' <span class="change '+tc+'">'+(tn?r.torqueGain+' Nm':'—')+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-lbl">Sound</span><span>'+esc(String(r.soundRating))+'/10 <span style="font-size:11px;font-weight:400;color:var(--text2)">— '+esc(r.soundDesc)+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-lbl">Retail value</span><span>£'+esc(String(r.newValue))+' <span class="change '+vc+'">'+esc(r.valueChange)+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-lbl">Install cost</span><span>'+esc(r.installCost)+'</span></div>'
-    +'<div class="delta-row"><span class="delta-lbl">Insurance</span><span style="font-size:12px;max-width:55%;text-align:right">'+esc(r.insuranceImpact)+'</span></div>'
-    +'<div class="delta-row"><span class="delta-lbl">MOT risk</span><span><span class="stat-val '+mc+'" style="font-size:14px">'+esc(r.motRisk)+'</span> <span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(r.motNote)+'</span></span></div>'
-    +'<div class="delta-row"><span class="delta-lbl">Reliability</span><span><span class="stat-val '+fc+'" style="font-size:14px">'+esc(fs.split('-')[0].trim())+'</span><span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(fs.includes('-')?fs.split('-').slice(1).join('-').trim():'')+'</span></span></div>'
-    +'<div class="verdict-box"><strong>Verdict:</strong> '+esc(r.verdict)+'</div>'
-    +'<button class="share-btn" id="shareBtn"><i class="ti ti-share" style="margin-right:6px"></i>Share this result</button></div>';
-  el('resultSection').classList.remove('hidden');
-  el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
-  el('shareBtn').addEventListener('click',function(){
-    var text='GarageIQ — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+'\nMod: '+selectedMod+'\ngarage-iq-chi.vercel.app';
-    if(navigator.share) navigator.share({title:'GarageIQ',text:text,url:'https://garage-iq-chi.vercel.app'});
-    else navigator.clipboard.writeText(text).then(function(){ alert('Copied!'); });
+  if(!selectedMod)return;
+  var btn=el('analyzeBtn');btn.disabled=true;btn.textContent='Analysing...';
+  fetch(VERCEL+'/api/mod',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      mod:selectedMod,
+      make:vehicleData.make,
+      model:vehicleData.model,
+      year:vehicleData.yearOfManufacture,
+      cc:parseInt(vehicleData.engineCapacity)||1600,
+      hp:vehicleData.hp,
+      torque:vehicleData.torque,
+      value:vehicleData.value,
+      fuel:(vehicleData.fuelType||'PETROL').toUpperCase()
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    renderResult(d);
+    btn.disabled=false;btn.textContent='Analyse: '+selectedMod;
+  })
+  .catch(function(){
+    el('resultSection').innerHTML='<div class="errbox">Analysis failed — please try again.</div>';
+    el('resultSection').classList.remove('hidden');
+    btn.disabled=false;btn.textContent='Analyse: '+selectedMod;
   });
 }
 
-/* ═══ MSG HELPERS ═══ */
-function showErr(id,msg){ var e=el(id); e.textContent=msg; e.style.display='block'; }
-function showOk(id,msg){ var e=el(id); e.textContent=msg; e.style.display='block'; }
-function hideMsg(id){ var e=el(id); e.textContent=''; e.style.display='none'; }
+function renderResult(r){
+  var rating=parseInt(r.soundRating)||5,bars='';
+  for(var i=0;i<8;i++)bars+='<div class="sb" style="height:'+(i<rating?Math.round(10+Math.random()*16):4)+'px;opacity:'+(i<rating?1:0.15)+'"></div>';
+  var mc=r.motRisk==='Low'?'green':r.motRisk==='Medium'?'amber':'red';
+  var fs=r.failureRisk||'',fc=fs.startsWith('Low')?'green':fs.startsWith('Med')?'amber':'red';
+  var hn=parseInt(r.hpGain)||0,tn=parseInt(r.torqueGain)||0;
+  var dir=r.valueChangeDirection||(r.valueChange&&r.valueChange.startsWith('-')?'down':'up');
+  var hc=hn>0?'cup':hn<0?'cdn':'cnt';
+  var tc=tn>0?'cup':tn<0?'cdn':'cnt';
+  var vc=dir==='up'?'cup':dir==='down'?'cdn':'cnt';
+  el('resultSection').innerHTML=
+    '<div class="res-card">'
+    +'<div class="res-title"><span>'+esc(selectedMod.toUpperCase())+'</span><div class="sbar">'+bars+'</div></div>'
+    +'<div class="drow"><span class="dlbl">Power</span><span class="dval">'+(hn?r.newHp+' HP':'No change')+' <span class="chg '+hc+'">'+(hn?r.hpGain+' HP':'—')+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Torque</span><span class="dval">'+(tn?r.newTorque+' Nm':'No change')+' <span class="chg '+tc+'">'+(tn?r.torqueGain+' Nm':'—')+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Sound</span><span class="dval">'+esc(String(r.soundRating))+'/10 <span style="font-size:11px;font-weight:400;color:var(--text3)">— '+esc(r.soundDesc)+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Retail Value</span><span class="dval">£'+esc(String(r.newValue))+' <span class="chg '+vc+'">'+esc(r.valueChange)+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Install Cost</span><span class="dval">'+esc(r.installCost)+'</span></div>'
+    +'<div class="drow"><span class="dlbl">Insurance Impact</span><span class="dval" style="font-size:12px;max-width:55%;text-align:right">'+esc(r.insuranceImpact)+'</span></div>'
+    +'<div class="drow"><span class="dlbl">MOT Risk</span><span class="dval"><span class="sval '+mc+'" style="font-size:14px">'+esc(r.motRisk)+'</span> <span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(r.motNote)+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Reliability</span><span class="dval"><span class="sval '+fc+'" style="font-size:14px">'+esc(fs.split('-')[0].trim())+'</span><span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(fs.includes('-')?fs.split('-').slice(1).join('-').trim():'')+'</span></span></div>'
+    +'<div class="verdict"><strong>Verdict:</strong> '+esc(r.verdict)+'</div>'
+    +'<button class="share-btn" id="shareBtn"><i class="ti ti-share" style="margin-right:6px"></i>Share This Result</button></div>';
+  el('resultSection').classList.remove('hidden');
+  el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+  el('shareBtn').addEventListener('click',function(){
+    var text='GarageIQ — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+' '+(vehicleData.yearOfManufacture||'')+'\nMod: '+selectedMod+'\ngarage-iq-chi.vercel.app';
+    if(navigator.share){navigator.share({title:'GarageIQ',text:text,url:'https://garage-iq-chi.vercel.app'});}
+    else{navigator.clipboard.writeText(text).then(function(){alert('Copied to clipboard!');});}
+  });
+}
+
+/* ── MSG HELPERS ── */
+function showErr(id,msg){var e=el(id);e.textContent=msg;e.style.display='block';}
+function showOk(id,msg){var e=el(id);e.textContent=msg;e.style.display='block';}
+function hideMsg(id){var e=el(id);e.textContent='';e.style.display='none';}
 </script>
 </body>
 </html>
