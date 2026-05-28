@@ -725,7 +725,13 @@ window.addEventListener('load',function(){
     if(currentUser){
       var p=localStorage.getItem('giq_pu_'+currentUser.id);
       if(p)tryCreateProfile(currentUser.id,p);else loadProfile();
-    }else{currentProfile=null;renderNav();}
+      // Re-evaluate intel report immediately — VIP check uses currentUser.email directly
+      if(motTests.length)setTimeout(showIntelReport,100);
+    }else{
+      currentProfile=null;
+      renderNav();
+      if(motTests.length)showIntelReport();
+    }
   });
   el('btnLogin').addEventListener('click',function(){openAuth('login');});
   el('btnSignup').addEventListener('click',function(){openAuth('signup');});
@@ -797,8 +803,13 @@ function loadProfile(){
         sb.from('profiles').upsert([{id:currentUser.id,username:fb}],{onConflict:'id'});
       }
       renderNav();
+      // Always re-evaluate intel after profile loaded
       if(motTests.length)showIntelReport();
-    }).catch(function(){currentProfile={id:currentUser.id,username:'USER'};renderNav();});
+    }).catch(function(){
+      currentProfile={id:currentUser.id,username:'USER'};
+      renderNav();
+      if(motTests.length)showIntelReport();
+    });
 }
 
 function tryCreateProfile(uid,username){
@@ -1019,9 +1030,13 @@ function lookupVehicle(){
     showIntelReport();
   })
   .catch(function(e){
-    el('errbox').textContent='Could not fetch vehicle — check the reg and try again. ('+e.message+')';
-    el('errbox').classList.remove('hidden');
     el('loadbox').classList.add('hidden');
+    // Only show error if it's a real error (not a network abort from fast re-click)
+    if(e&&e.message&&e.message!=='Failed to fetch')
+      el('errbox').textContent='Could not fetch vehicle — check the reg and try again.';
+    else
+      el('errbox').textContent='Could not reach server — check your connection and try again.';
+    el('errbox').classList.remove('hidden');
   });
 }
 
@@ -1086,6 +1101,11 @@ function saveToHistory(){
 }
 
 /* ── SPECS — normalised with retry fallback ── */
+function clearSpecFields(){
+  ['specBhp','specTorque','specZero','specTop','specGearbox','specCyl','specDrive','specMpg','specCo2'].forEach(function(id){
+    var e=document.getElementById(id);if(e)e.textContent='-';
+  });
+}
 function applySpecs(s){
   el('specBhp').textContent=s.bhp?s.bhp+' BHP':'-';
   el('specTorque').textContent=s.torqueNm?(s.torqueNm+' Nm'+(s.torqueRpm?' @ '+s.torqueRpm+' rpm':'')):'-';
@@ -1418,34 +1438,44 @@ function calcFinance(){
 
 /* ── INTELLIGENCE REPORT ── */
 var VIP_ACCOUNTS=['bravemalek2020@gmail.com','waelmoh1983@gmail.com'];
-function isVipUser(){return currentUser&&VIP_ACCOUNTS.indexOf(currentUser.email)!==-1;}
+// Check VIP using currentUser.email directly — don't rely on currentProfile
+function isVipUser(){
+  if(!currentUser)return false;
+  var email=(currentUser.email||'').toLowerCase().trim();
+  return VIP_ACCOUNTS.some(function(v){return v.toLowerCase()===email;});
+}
 function hasPaidForReg(reg){return sessionStorage.getItem('giq_paid_'+(reg||currentReg))==='1';}
 
 function showIntelReport(){
   if(!motTests.length)return;
-  // Update paywall UI based on login state
+
   if(!currentUser){
-    // Not logged in — show sign up CTA
+    // Not logged in
     el('pwLoggedOut').style.display='block';
     el('pwLoggedIn').style.display='none';
     el('intelPaywall').style.display='block';
     el('intelContent').style.display='none';
+    el('intelBadge').textContent='£1.99 per report';
+    el('intelBadge').className='chip chip-blue';
     return;
   }
-  // Logged in — check VIP or paid
-  if(isVipUser()||hasPaidForReg(currentReg)){
-    // Unlock for VIP or paid
+
+  var vip=isVipUser();
+  var paid=hasPaidForReg(currentReg);
+
+  if(vip||paid){
     el('intelPaywall').style.display='none';
     el('intelContent').style.display='block';
-    el('intelHistorySections').style.display='block';
-    el('intelBadge').textContent=isVipUser()?'VIP — Full Access':'UNLOCKED';
-    el('intelBadge').className=isVipUser()?'chip chip-gold':'chip chip-green';
+    var hist=document.getElementById('intelHistorySections');
+    if(hist)hist.style.display='block';
+    el('intelBadge').textContent=vip?'VIP — Full Access':'UNLOCKED';
+    el('intelBadge').className=vip?'chip chip-gold':'chip chip-green';
     buildIntelReport(motTests);
     renderHistoryTab();
     buildDamageMap(motTests);
     buildMileageHistory(motTests);
   } else {
-    // Logged in but not VIP and not paid — show Stripe button
+    // Logged in, not VIP, not paid
     el('pwLoggedOut').style.display='none';
     el('pwLoggedIn').style.display='block';
     el('intelPaywall').style.display='block';
