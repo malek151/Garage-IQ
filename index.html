@@ -1,362 +1,1054 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>GarageIQ — UK Car Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 <style>
+/* ════════════════════════════════════════════
+   RESET & TOKENS
+════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --navy:#071E3D;--navy2:#0B2A50;--navy3:#0F3460;
-  --blue:#1565C0;--blue2:#1976D2;--sky:#E3F2FD;--sky2:#BBDEFB;--sky3:#90CAF9;
-  --gold:#F5B731;--gold2:#E6A800;--gold3:#FFF9E6;
-  --white:#FFFFFF;--off:#F8FBFF;
-  --text:#071E3D;--text2:#2C4A6E;--text3:#6B8CAE;--text4:#A8C0D6;
-  --green:#1B7F4F;--green2:#E8F5EE;
-  --red:#C0392B;--red2:#FDECEA;
-  --amber:#B45309;--amber2:#FEF3C7;
-  --border:rgba(21,101,192,0.1);--border2:rgba(21,101,192,0.2);
-  --sh:0 2px 16px rgba(7,30,61,0.08);--sh2:0 8px 40px rgba(7,30,61,0.14);
-  --r:14px;--rs:8px;--rxs:5px;--t:0.18s ease;
+  /* Core palette */
+  --ink:#06132B;
+  --ink2:#0D2248;
+  --ink3:#122B5A;
+  --blue:#1554B0;
+  --blue2:#1A6FD4;
+  --blue3:#2181F0;
+  --sky:#EBF3FF;
+  --sky2:#C8DEFF;
+  --sky3:#97BFF8;
+  --gold:#E8A800;
+  --gold2:#F5B731;
+  --gold3:#FFF8E1;
+  --gold4:#FFFBF0;
+  --white:#FFFFFF;
+  --off:#F5F8FF;
+  --off2:#EEF4FF;
+
+  /* Text */
+  --t1:#06132B;
+  --t2:#1C3660;
+  --t3:#4E6D96;
+  --t4:#8DAAC8;
+
+  /* Semantic */
+  --green:#0F7A4A;
+  --green2:#E6F7EF;
+  --green3:#A3DFBF;
+  --red:#B91C1C;
+  --red2:#FEF2F2;
+  --red3:#FCA5A5;
+  --amber:#92400E;
+  --amber2:#FFFBEB;
+  --amber3:#FDE68A;
+
+  /* Borders */
+  --b1:rgba(21,84,176,0.1);
+  --b2:rgba(21,84,176,0.18);
+  --b3:rgba(21,84,176,0.28);
+
+  /* Shadows */
+  --s1:0 1px 8px rgba(6,19,43,0.06);
+  --s2:0 4px 24px rgba(6,19,43,0.1);
+  --s3:0 12px 48px rgba(6,19,43,0.16);
+
+  /* Radii */
+  --r:16px;--rs:10px;--rxs:6px;
+
+  /* Transition */
+  --t:0.16s ease;
 }
+
 html{scroll-behavior:smooth}
-body{font-family:"DM Sans",sans-serif;background:var(--off);color:var(--text);min-height:100vh;overflow-x:hidden}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--sky)}::-webkit-scrollbar-thumb{background:var(--sky3);border-radius:3px}
+body{
+  font-family:"DM Sans",sans-serif;
+  background:var(--off);
+  color:var(--t1);
+  min-height:100vh;
+  overflow-x:hidden;
+}
 
-nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:62px;background:var(--navy);position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(7,30,61,0.4)}
-.nav-logo{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--white);display:flex;align-items:center;gap:2px}
-.nav-logo span{color:var(--gold)}
-.nav-right{display:flex;gap:8px;align-items:center}
-.btn-nav{font-family:"Syne",sans-serif;font-size:12px;font-weight:700;letter-spacing:.3px;border:none;border-radius:var(--rxs);padding:8px 16px;cursor:pointer;transition:all var(--t)}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.85)}
-.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.btn-gold{background:var(--gold);color:var(--navy)}
-.btn-gold:hover{background:var(--gold2);transform:translateY(-1px)}
-.nav-avatar{width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:15px;font-weight:800;color:var(--navy);cursor:pointer;transition:all var(--t);flex-shrink:0;border:2px solid transparent}
-.nav-avatar:hover{border-color:var(--white);transform:scale(1.05)}
+/* Scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--sky3);border-radius:2px}
 
-.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy3) 60%,#0D47A1 100%);padding:4.5rem 1.5rem 3.5rem;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 70% 40%,rgba(245,183,49,0.09) 0%,transparent 60%)}
-.hero-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(245,183,49,0.15);border:1px solid rgba(245,183,49,0.3);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.75rem}
-.hero h1{font-family:"Syne",sans-serif;font-size:clamp(40px,8vw,74px);font-weight:800;line-height:.98;letter-spacing:-1px;color:var(--white);margin-bottom:.75rem;position:relative}
-.hero h1 em{color:var(--gold);font-style:normal}
-.hero-sub{font-size:14px;color:rgba(255,255,255,0.55);max-width:440px;margin:0 auto 1.5rem;line-height:1.6;font-weight:300}
-.better-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,183,49,0.1);border:1px solid rgba(245,183,49,0.2);color:rgba(255,255,255,0.65);font-size:10px;padding:4px 12px;border-radius:20px;margin-bottom:1.75rem}
-.better-badge b{color:var(--gold)}
-.reg-form{display:flex;gap:10px;max-width:480px;margin:0 auto;filter:drop-shadow(0 8px 30px rgba(7,30,61,0.5))}
-.reg-input{flex:1;font-family:"Syne",sans-serif;font-size:28px;font-weight:800;letter-spacing:6px;text-transform:uppercase;text-align:center;background:var(--gold);color:var(--navy);border:3px solid var(--gold2);border-radius:var(--rs);padding:13px 16px;outline:none;transition:border-color var(--t)}
-.reg-input:focus{border-color:var(--white)}
-.reg-input::placeholder{color:rgba(7,30,61,0.3);font-size:18px;letter-spacing:3px}
-.reg-btn{font-family:"Syne",sans-serif;font-size:15px;font-weight:800;letter-spacing:1px;background:var(--navy2);color:var(--white);border:3px solid rgba(255,255,255,0.15);border-radius:var(--rs);padding:0 28px;cursor:pointer;transition:all var(--t);white-space:nowrap}
-.reg-btn:hover{background:var(--blue);border-color:var(--blue2)}
-.hero-note{font-size:10px;color:rgba(255,255,255,0.3);margin-top:14px;letter-spacing:.5px}
+/* ════════════════════════════════════════════
+   TYPOGRAPHY
+════════════════════════════════════════════ */
+.syne{font-family:"Syne",sans-serif}
 
-.vin-strip{background:var(--navy2);padding:.6rem 1.5rem;text-align:center;font-size:11px;color:var(--sky3);letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.05)}
-.vin-strip strong{color:var(--gold);letter-spacing:2px;font-family:"Syne",sans-serif}
+/* ════════════════════════════════════════════
+   NAVBAR
+════════════════════════════════════════════ */
+nav{
+  height:60px;
+  background:var(--ink);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 1.75rem;
+  position:sticky;
+  top:0;
+  z-index:200;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  box-shadow:0 2px 24px rgba(6,19,43,0.5);
+}
+.logo{
+  font-family:"Syne",sans-serif;
+  font-size:21px;
+  font-weight:800;
+  color:var(--white);
+  letter-spacing:-.3px;
+  display:flex;
+  align-items:center;
+  gap:2px;
+}
+.logo span{color:var(--gold2)}
+.logo-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--gold2);
+  margin-left:3px;
+  box-shadow:0 0 8px var(--gold2);
+}
 
-.tabs-wrap{background:var(--white);border-bottom:2px solid var(--border);position:sticky;top:62px;z-index:100;overflow-x:auto}
-.tabs-inner{display:flex;max-width:900px;margin:0 auto;padding:0 1rem}
-.tab-btn{font-family:"Syne",sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--text3);border:none;background:none;padding:14px 16px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all var(--t);display:flex;align-items:center;gap:6px;text-transform:uppercase}
-.tab-btn i{font-size:14px}
+.nav-r{display:flex;gap:8px;align-items:center}
+.btn-ghost-sm{
+  font-family:"Syne",sans-serif;
+  font-size:12px;font-weight:700;
+  letter-spacing:.3px;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.18);
+  color:rgba(255,255,255,0.8);
+  border-radius:var(--rxs);
+  padding:7px 16px;
+  cursor:pointer;
+  transition:all var(--t);
+}
+.btn-ghost-sm:hover{border-color:var(--gold2);color:var(--gold2)}
+.btn-gold-sm{
+  font-family:"Syne",sans-serif;
+  font-size:12px;font-weight:800;
+  background:var(--gold2);
+  color:var(--ink);
+  border:none;
+  border-radius:var(--rxs);
+  padding:7px 18px;
+  cursor:pointer;
+  transition:all var(--t);
+}
+.btn-gold-sm:hover{background:var(--gold);transform:translateY(-1px)}
+.nav-av{
+  width:34px;height:34px;
+  border-radius:50%;
+  background:var(--gold2);
+  color:var(--ink);
+  font-family:"Syne",sans-serif;
+  font-size:14px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:all var(--t);
+  flex-shrink:0;
+}
+.nav-av:hover{border-color:var(--white);transform:scale(1.06)}
+
+/* ════════════════════════════════════════════
+   HERO
+════════════════════════════════════════════ */
+.hero{
+  background:var(--ink);
+  padding:5rem 1.5rem 4rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+/* Subtle noise/grain overlay */
+.hero::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%,rgba(21,84,176,0.35) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 60%,rgba(232,168,0,0.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+/* Grid lines */
+.hero::after{
+  content:"";
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;
+}
+
+.hero-inner{position:relative;z-index:1}
+.hero-label{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(232,168,0,0.12);
+  border:1px solid rgba(232,168,0,0.25);
+  color:var(--gold2);
+  font-family:"Syne",sans-serif;
+  font-size:9px;font-weight:800;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  padding:5px 14px 5px 10px;
+  border-radius:30px;
+  margin-bottom:1.75rem;
+}
+.hero-label i{font-size:10px}
+
+.hero h1{
+  font-family:"Syne",sans-serif;
+  font-size:clamp(48px,9vw,88px);
+  font-weight:800;
+  line-height:.92;
+  letter-spacing:-2px;
+  color:var(--white);
+  margin-bottom:1rem;
+}
+.hero h1 em{
+  color:transparent;
+  -webkit-text-stroke:2px var(--gold2);
+  font-style:normal;
+}
+
+.hero-sub{
+  font-size:13px;
+  color:rgba(255,255,255,0.45);
+  max-width:420px;
+  margin:0 auto 2rem;
+  line-height:1.7;
+  font-weight:300;
+}
+
+/* REG INPUT */
+.reg-wrap{
+  max-width:500px;
+  margin:0 auto 1rem;
+}
+.reg-row{
+  display:flex;
+  gap:10px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:var(--r);
+  padding:8px;
+  backdrop-filter:blur(12px);
+}
+.reg-plate{
+  flex:1;
+  font-family:"Syne",sans-serif;
+  font-size:30px;
+  font-weight:800;
+  letter-spacing:6px;
+  text-align:center;
+  text-transform:uppercase;
+  background:var(--gold2);
+  color:var(--ink);
+  border:none;
+  border-radius:var(--rs);
+  padding:12px 16px;
+  outline:none;
+  transition:all var(--t);
+  min-width:0;
+}
+.reg-plate::placeholder{color:rgba(6,19,43,0.3);font-size:20px;letter-spacing:3px}
+.reg-plate:focus{background:var(--white);box-shadow:0 0 0 3px rgba(232,168,0,0.4)}
+.reg-go{
+  font-family:"Syne",sans-serif;
+  font-size:14px;font-weight:800;
+  letter-spacing:.5px;
+  background:var(--blue3);
+  color:var(--white);
+  border:none;
+  border-radius:var(--rs);
+  padding:0 28px;
+  cursor:pointer;
+  transition:all var(--t);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.reg-go:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,111,212,0.4)}
+.hero-note{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:.5px}
+
+/* Compare badge */
+.vs-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  color:rgba(255,255,255,0.5);
+  margin-bottom:1.75rem;
+}
+.vs-badge b{color:var(--gold2)}
+
+/* ════════════════════════════════════════════
+   VIN STRIP
+════════════════════════════════════════════ */
+.vin-strip{
+  background:var(--ink2);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  padding:.55rem 1.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:11px;
+  color:var(--sky3);
+  letter-spacing:.5px;
+}
+.vin-strip strong{
+  font-family:"Syne",sans-serif;
+  letter-spacing:2px;
+  color:var(--gold2);
+}
+
+/* ════════════════════════════════════════════
+   TABS
+════════════════════════════════════════════ */
+.tab-rail{
+  background:var(--white);
+  border-bottom:1px solid var(--b1);
+  position:sticky;
+  top:60px;
+  z-index:100;
+  overflow-x:auto;
+}
+.tab-inner{
+  display:flex;
+  max-width:960px;
+  margin:0 auto;
+  padding:0 1rem;
+}
+.tab-btn{
+  font-family:"Syne",sans-serif;
+  font-size:10.5px;font-weight:700;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  color:var(--t3);
+  background:none;border:none;
+  padding:14px 18px;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  white-space:nowrap;
+  transition:all var(--t);
+  display:flex;align-items:center;gap:5px;
+}
+.tab-btn i{font-size:13px}
 .tab-btn:hover{color:var(--blue)}
 .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
 
-.app{max-width:900px;margin:0 auto;padding:1.5rem 1.5rem 5rem}
-.tab-panel{display:none}.tab-panel.active{display:block}
+/* ════════════════════════════════════════════
+   APP SHELL
+════════════════════════════════════════════ */
+.app{
+  max-width:960px;
+  margin:0 auto;
+  padding:1.5rem 1.5rem 6rem;
+}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
 
-.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--sh)}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.card-title{font-family:"Syne",sans-serif;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text2);display:flex;align-items:center;gap:7px}
-.card-title i{font-size:15px;color:var(--blue)}
-.chip{font-size:9px;font-weight:700;letter-spacing:.5px;padding:3px 9px;border-radius:20px;border:1px solid}
+/* ════════════════════════════════════════════
+   CARDS
+════════════════════════════════════════════ */
+.card{
+  background:var(--white);
+  border:1px solid var(--b1);
+  border-radius:var(--r);
+  padding:1.25rem;
+  margin-bottom:1rem;
+  box-shadow:var(--s1);
+}
+.card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+.card-title{
+  font-family:"Syne",sans-serif;
+  font-size:10px;font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--t2);
+  display:flex;align-items:center;gap:7px;
+}
+.card-title i{font-size:14px;color:var(--blue)}
+
+/* ════════════════════════════════════════════
+   CHIPS/BADGES
+════════════════════════════════════════════ */
+.chip{
+  font-family:"Syne",sans-serif;
+  font-size:9px;font-weight:700;
+  letter-spacing:.5px;
+  padding:3px 10px;
+  border-radius:20px;
+  border:1px solid;
+  display:inline-block;
+}
 .chip-blue{background:var(--sky);color:var(--blue);border-color:var(--sky2)}
-.chip-gold{background:var(--gold3);color:var(--amber);border-color:#FBBF24}
-.chip-green{background:var(--green2);color:var(--green);border-color:#A7F3D0}
-.chip-red{background:var(--red2);color:var(--red);border-color:#FCA5A5}
+.chip-gold{background:var(--gold3);color:var(--amber);border-color:var(--amber3)}
+.chip-green{background:var(--green2);color:var(--green);border-color:var(--green3)}
+.chip-red{background:var(--red2);color:var(--red);border-color:var(--red3)}
+.chip-ink{background:var(--ink);color:var(--white);border-color:var(--ink)}
 
+/* ════════════════════════════════════════════
+   STAT BOXES
+════════════════════════════════════════════ */
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sbox{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:12px;transition:border-color var(--t)}
+.sbox{
+  background:var(--off);
+  border:1px solid var(--b1);
+  border-radius:var(--rs);
+  padding:12px;
+  transition:border-color var(--t);
+}
 .sbox:hover{border-color:var(--sky3)}
-.slbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-weight:700}
-.sval{font-family:"Syne",sans-serif;font-size:18px;font-weight:700;color:var(--text);line-height:1;word-break:break-word}
+.slbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-weight:700}
+.sval{
+  font-family:"Syne",sans-serif;
+  font-size:17px;font-weight:700;
+  color:var(--t1);
+  line-height:1.1;
+  word-break:break-word;
+}
 .sval.green{color:var(--green)}.sval.red{color:var(--red)}.sval.amber{color:var(--amber)}.sval.blue{color:var(--blue)}
 
+/* ════════════════════════════════════════════
+   SPEC TABLE
+════════════════════════════════════════════ */
 .spec-tbl{width:100%;border-collapse:collapse}
-.spec-tbl tr{border-bottom:1px solid var(--border)}
+.spec-tbl tr{border-bottom:1px solid var(--b1)}
 .spec-tbl tr:last-child{border-bottom:none}
 .spec-tbl td{padding:9px 4px;font-size:13px}
-.spec-tbl td:first-child{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;width:44%;font-weight:700}
-.spec-tbl td:last-child{font-weight:600;color:var(--text);text-align:right}
-.co2b{display:inline-block;font-family:"Syne",sans-serif;font-size:11px;font-weight:800;padding:1px 7px;border-radius:3px;margin-left:6px;background:var(--green);color:#fff}
-.co2b.C{background:#8BC34A}.co2b.D{background:var(--gold);color:var(--navy)}.co2b.E{background:#FF9800}.co2b.F{background:#FF5722}.co2b.G{background:#F44336}
+.spec-tbl td:first-child{
+  color:var(--t3);font-size:10px;
+  text-transform:uppercase;letter-spacing:1px;
+  width:44%;font-weight:700;
+}
+.spec-tbl td:last-child{font-weight:600;color:var(--t1);text-align:right}
+.co2b{
+  display:inline-block;
+  font-family:"Syne",sans-serif;font-size:11px;font-weight:800;
+  padding:1px 7px;border-radius:3px;margin-left:5px;
+  background:var(--green);color:#fff;
+}
+.co2b.B{background:#5B9F30}
+.co2b.C{background:#8BC34A;color:var(--ink)}
+.co2b.D{background:var(--gold2);color:var(--ink)}
+.co2b.E{background:#F59E0B}
+.co2b.F{background:#EF6C00}
+.co2b.G{background:#E53E3E}
 
-.mot-sum-g{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-.mot-sb{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:10px;text-align:center}
-.mot-sn{font-family:"Syne",sans-serif;font-size:26px;font-weight:800;line-height:1}
-.mot-sl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
+/* ════════════════════════════════════════════
+   MOT HISTORY
+════════════════════════════════════════════ */
+.mot-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.mot-sb{
+  background:var(--off);border:1px solid var(--b1);
+  border-radius:var(--rs);padding:10px;text-align:center;
+}
+.mot-sn{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;line-height:1}
+.mot-sn.green{color:var(--green)}.mot-sn.red{color:var(--red)}.mot-sn.amber{color:var(--amber)}.mot-sn.blue{color:var(--blue)}
+.mot-sl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
+
 .pbar-wrap{margin-bottom:14px}
-.pbar-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.pbar-bg{background:var(--red2);border-radius:20px;height:8px;overflow:hidden}
-.pbar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green),#4ADE80);transition:width .8s cubic-bezier(.4,0,.2,1)}
-.mot-row{border-bottom:1px solid var(--border);cursor:pointer;border-radius:var(--rxs);transition:background var(--t)}
+.pbar-row{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.pbar-bg{background:var(--red2);border-radius:20px;height:7px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--green),#22C55E);transition:width .9s cubic-bezier(.4,0,.2,1)}
+
+.mot-row{border-bottom:1px solid var(--b1);cursor:pointer;border-radius:var(--rxs);transition:background var(--t)}
 .mot-row:last-child{border-bottom:none}
 .mot-row:hover{background:var(--off)}
 .mot-rh{display:flex;align-items:center;justify-content:space-between;padding:11px 8px;flex-wrap:wrap;gap:6px}
-.mot-chev{color:var(--text4);font-size:13px;transition:transform .2s;flex-shrink:0}
+.mot-chev{color:var(--t4);font-size:12px;transition:transform .2s;flex-shrink:0}
 .mot-row.open .mot-chev{transform:rotate(180deg)}
-.mot-det{display:none;padding:4px 8px 14px}
+.mot-det{display:none;padding:2px 8px 14px}
 .mot-row.open .mot-det{display:block}
-.mot-di{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px solid var(--border);font-size:12px;line-height:1.5;color:var(--text2)}
+.mot-di{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px solid var(--b1);font-size:12px;line-height:1.5;color:var(--t2)}
 .mot-di:first-child{border-top:none}
 .mdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.d-dang{background:#EF4444}.d-maj{background:#F97316}.d-min{background:#22C55E}.d-adv{background:var(--gold)}
-.mot-ni{font-size:12px;color:var(--text3);padding:6px 0}
-.badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px}
-.b-pass{background:var(--green2);color:var(--green);border:1px solid #A7F3D0}
-.b-fail{background:var(--red2);color:var(--red);border:1px solid #FCA5A5}
-.b-adv{background:var(--amber2);color:var(--amber);border:1px solid #FDE68A}
+.d-dang{background:#EF4444}.d-maj{background:#F97316}.d-min{background:#22C55E}.d-adv{background:var(--gold2)}
+.mot-ni{font-size:12px;color:var(--t3);padding:6px 0}
+
+.badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;font-family:"Syne",sans-serif}
+.b-pass{background:var(--green2);color:var(--green);border:1px solid var(--green3)}
+.b-fail{background:var(--red2);color:var(--red);border:1px solid var(--red3)}
+.b-adv{background:var(--amber2);color:var(--amber);border:1px solid var(--amber3)}
 .b-warn{background:#FFF7ED;color:#C2410C;border:1px solid #FED7AA}
 
-/* INTELLIGENCE */
-.intel-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:1rem;overflow:hidden;box-shadow:var(--sh)}
-.intel-bar{height:3px;background:linear-gradient(90deg,var(--blue),var(--gold))}
-.intel-body{padding:1.25rem}
-.paywall{text-align:center;padding:2.5rem 1rem}
-.pw-icon{width:58px;height:58px;border-radius:50%;background:var(--sky);border:2px solid var(--sky2);display:inline-flex;align-items:center;justify-content:center;font-size:24px;color:var(--blue);margin-bottom:14px}
-.pw-title{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px}
-.pw-sub{font-size:12px;color:var(--text3);line-height:1.7;max-width:340px;margin:0 auto 16px}
-.pw-feats{display:flex;flex-direction:column;gap:7px;margin-bottom:20px;text-align:left;max-width:300px;margin-left:auto;margin-right:auto}
-.pwf{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);font-weight:500}
-.pwf i{color:var(--green);font-size:13px;flex-shrink:0}
-.pay-btn{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:var(--white);font-family:"Syne",sans-serif;font-size:15px;font-weight:800;letter-spacing:.3px;border:none;border-radius:var(--rs);padding:14px 32px;cursor:pointer;transition:all var(--t)}
-.pay-btn:hover{background:var(--blue);transform:translateY(-1px)}
-.pay-btn:disabled{background:var(--text3);cursor:default;transform:none}
-.login-lnk{display:inline-flex;align-items:center;gap:6px;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;margin-top:10px;text-decoration:underline}
-.pay-note{font-size:10px;color:var(--text3);margin-top:8px}
-.risk-wrap{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--off);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:14px}
-.risk-circle{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:20px;font-weight:800;border:3px solid;flex-shrink:0}
+/* ════════════════════════════════════════════
+   INTELLIGENCE TAB
+════════════════════════════════════════════ */
+.intel-card{
+  background:var(--white);
+  border:1px solid var(--b1);
+  border-radius:var(--r);
+  overflow:hidden;
+  margin-bottom:1rem;
+  box-shadow:var(--s1);
+}
+.intel-top-bar{
+  height:3px;
+  background:linear-gradient(90deg,var(--blue3),var(--gold2));
+}
+
+/* PAYWALL */
+.paywall{text-align:center;padding:3rem 1.25rem}
+.pw-lock{
+  width:60px;height:60px;border-radius:50%;
+  background:var(--sky);border:2px solid var(--sky2);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:24px;color:var(--blue);margin-bottom:14px;
+}
+.pw-title{
+  font-family:"Syne",sans-serif;
+  font-size:24px;font-weight:800;
+  color:var(--ink);margin-bottom:6px;
+}
+.pw-sub{font-size:12px;color:var(--t3);line-height:1.7;max-width:340px;margin:0 auto 16px}
+.pw-list{
+  display:flex;flex-direction:column;gap:7px;
+  margin-bottom:20px;text-align:left;
+  max-width:300px;margin-left:auto;margin-right:auto;
+}
+.pwi{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);font-weight:500}
+.pwi i{color:var(--green);font-size:13px;flex-shrink:0}
+
+.pay-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--ink);color:var(--white);
+  font-family:"Syne",sans-serif;font-size:15px;font-weight:800;
+  border:none;border-radius:var(--rs);padding:14px 32px;
+  cursor:pointer;transition:all var(--t);
+}
+.pay-btn:hover{background:var(--blue);transform:translateY(-1px);box-shadow:var(--s2)}
+.pay-btn:disabled{background:var(--t3);cursor:default;transform:none;box-shadow:none}
+.pay-note{font-size:10px;color:var(--t3);margin-top:8px}
+.login-lnk{color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;text-decoration:underline}
+
+/* RISK */
+.risk-bar{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  background:var(--off);
+  border:1px solid var(--b1);
+  border-radius:var(--rs);
+  margin-bottom:14px;
+}
+.risk-ring{
+  width:60px;height:60px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Syne",sans-serif;font-size:22px;font-weight:800;
+  border:3px solid;flex-shrink:0;
+}
 .r-low{border-color:var(--green);color:var(--green);background:var(--green2)}
-.r-med{border-color:#D97706;color:#D97706;background:var(--amber2)}
+.r-med{border-color:var(--amber);color:var(--amber);background:var(--amber2)}
 .r-high{border-color:var(--red);color:var(--red);background:var(--red2)}
-.risk-lbl{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;color:var(--navy)}
-.risk-sub{font-size:11px;color:var(--text3);margin-top:3px;line-height:1.4}
+.risk-label{font-family:"Syne",sans-serif;font-size:17px;font-weight:800;color:var(--ink)}
+.risk-note{font-size:11px;color:var(--t3);margin-top:3px;line-height:1.4}
+
+/* CHECKS */
 .checks{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.chk{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:var(--rs);border-left:3px solid transparent}
+.chk{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 13px;
+  border-radius:var(--rs);
+  border-left:3px solid transparent;
+}
 .chk.ok{background:var(--green2);border-left-color:var(--green)}
-.chk.warn{background:var(--amber2);border-left-color:#D97706}
+.chk.warn{background:var(--amber2);border-left-color:var(--amber)}
 .chk.bad{background:var(--red2);border-left-color:var(--red)}
-.chk-ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;background:rgba(255,255,255,0.6)}
-.chk.ok .chk-ic{color:var(--green)}.chk.warn .chk-ic{color:#D97706}.chk.bad .chk-ic{color:var(--red)}
-.chk-t{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
-.chk-d{font-size:11px;color:var(--text2);line-height:1.5}
-.tl-title{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
-.mi-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
-.mi-yr{font-size:10px;color:var(--text3);width:42px;flex-shrink:0;font-weight:700}
-.mi-bg{flex:1;height:14px;background:var(--off);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.chk-ic{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;flex-shrink:0;margin-top:1px;
+  background:rgba(255,255,255,.6);
+}
+.chk.ok .chk-ic{color:var(--green)}.chk.warn .chk-ic{color:var(--amber)}.chk.bad .chk-ic{color:var(--red)}
+.chk-t{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.chk-d{font-size:11px;color:var(--t2);line-height:1.5}
+
+/* MILEAGE TIMELINE */
+.tl-label{font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:10px}
+.mi-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.mi-yr{font-size:10px;color:var(--t3);width:42px;flex-shrink:0;font-weight:700}
+.mi-bg{flex:1;height:13px;background:var(--off);border-radius:4px;overflow:hidden;border:1px solid var(--b1)}
 .mi-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--sky3));transition:width .7s ease}
 .mi-fill.fraud{background:linear-gradient(90deg,var(--red),#F87171)}
-.mi-val{font-size:10px;color:var(--text2);width:80px;text-align:right;flex-shrink:0;font-weight:600}
-.fraud-tag{display:inline-flex;align-items:center;gap:3px;background:var(--red2);border:1px solid #FCA5A5;color:var(--red);font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:5px}
+.mi-val{font-size:10px;color:var(--t2);width:80px;text-align:right;flex-shrink:0;font-weight:600}
+.fraud-tag{
+  display:inline-flex;align-items:center;gap:2px;
+  background:var(--red2);border:1px solid var(--red3);
+  color:var(--red);font-size:9px;font-weight:700;
+  padding:1px 5px;border-radius:10px;margin-left:4px;
+}
 
-/* DAMAGE */
+/* ════════════════════════════════════════════
+   HISTORY ROWS
+════════════════════════════════════════════ */
+.sect-lbl{
+  font-family:"Syne",sans-serif;
+  font-size:9px;font-weight:800;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--t3);
+  margin:18px 0 10px;
+  padding-bottom:6px;
+  border-bottom:1px solid var(--b1);
+}
+.hrow{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:11px;
+  border:1px solid var(--b1);border-radius:var(--rs);
+  margin-bottom:7px;
+  background:var(--off);
+  transition:border-color var(--t);
+}
+.hrow:hover{border-color:var(--sky3)}
+.hic{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+}
+.hi-blue{background:var(--sky);color:var(--blue)}
+.hi-gold{background:var(--gold3);color:var(--amber)}
+.hi-green{background:var(--green2);color:var(--green)}
+.hi-red{background:var(--red2);color:var(--red)}
+.hrow-t{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.hrow-d{font-size:11px;color:var(--t3);line-height:1.5}
+
+/* DAMAGE MAP */
 .dmg-wrap{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}
 .dmg-car-w{flex:0 0 200px}
 .dmg-car-svg{width:100%;height:auto}
 .dmg-zone{fill:transparent;cursor:pointer;transition:fill .2s}
-.dmg-zone:hover{fill:rgba(245,183,49,0.25)}
-.dmg-zone.hit{fill:rgba(192,57,43,0.25)}
-.dmg-zone.minor-hit{fill:rgba(245,183,49,0.2)}
+.dmg-zone:hover{fill:rgba(232,168,0,0.2)}
+.dmg-zone.hit{fill:rgba(185,28,28,0.22)}
+.dmg-zone.minor-hit{fill:rgba(232,168,0,0.18)}
 .dmg-list{flex:1;min-width:180px;display:flex;flex-direction:column;gap:6px}
 .dmg-item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border-radius:var(--rxs);font-size:11px}
-.dmg-item.damage{background:var(--red2);border:1px solid #FCA5A5}
-.dmg-item.advisory{background:var(--amber2);border:1px solid #FDE68A}
+.dmg-item.damage{background:var(--red2);border:1px solid var(--red3)}
+.dmg-item.advisory{background:var(--amber2);border:1px solid var(--amber3)}
 .dmg-item i{font-size:13px;flex-shrink:0;margin-top:1px}
-.dmg-item.damage i{color:var(--red)}.dmg-item.advisory i{color:#D97706}
-.dmg-it{font-weight:700;color:var(--navy);margin-bottom:2px;font-size:11px}
-.dmg-id{color:var(--text2);line-height:1.4}
-.dmg-none{font-size:12px;color:var(--text3);text-align:center;padding:1rem;width:100%}
+.dmg-item.damage i{color:var(--red)}.dmg-item.advisory i{color:var(--amber)}
+.dmg-it{font-weight:700;color:var(--ink);margin-bottom:2px;font-size:11px}
+.dmg-id{color:var(--t2);line-height:1.4}
+.dmg-none{font-size:12px;color:var(--t3);text-align:center;padding:1rem;width:100%}
 
-/* HISTORY ROWS */
-.hrow{display:flex;align-items:flex-start;gap:12px;padding:12px;border:1px solid var(--border);border-radius:var(--rs);margin-bottom:8px;background:var(--off)}
-.hic{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.hi-blue{background:var(--sky);color:var(--blue)}.hi-gold{background:var(--gold3);color:var(--amber)}
-.hi-green{background:var(--green2);color:var(--green)}.hi-red{background:var(--red2);color:var(--red)}
-.hrow-t{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
-.hrow-d{font-size:11px;color:var(--text3);line-height:1.5}
-.sect-lbl{font-family:"Syne",sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-
-/* VALUATION */
-.val-hero{background:linear-gradient(135deg,var(--navy) 0%,var(--blue) 100%);border-radius:var(--r);padding:1.5rem;color:var(--white);margin-bottom:1rem;position:relative;overflow:hidden;box-shadow:var(--sh2)}
-.val-hero::before{content:"";position:absolute;right:-20px;top:-20px;width:160px;height:160px;background:rgba(245,183,49,0.1);border-radius:50%}
-.val-price{font-family:"Syne",sans-serif;font-size:44px;font-weight:800;color:var(--gold);line-height:1;margin-bottom:4px;position:relative}
-.val-lbl{font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;font-weight:700}
-.val-range{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,0.6);flex-wrap:wrap}
+/* ════════════════════════════════════════════
+   VALUATION
+════════════════════════════════════════════ */
+.val-hero{
+  background:linear-gradient(140deg,var(--ink) 0%,var(--ink3) 55%,#163D86 100%);
+  border-radius:var(--r);
+  padding:1.5rem;
+  color:var(--white);
+  margin-bottom:1rem;
+  position:relative;overflow:hidden;
+  box-shadow:var(--s2);
+}
+.val-hero::before{
+  content:"";
+  position:absolute;
+  right:-30px;top:-30px;
+  width:200px;height:200px;
+  background:rgba(232,168,0,.08);
+  border-radius:50%;
+}
+.val-price{
+  font-family:"Syne",sans-serif;
+  font-size:52px;font-weight:800;
+  color:var(--gold2);line-height:1;
+  margin-bottom:4px;
+  position:relative;
+}
+.val-lbl{font-size:10px;color:rgba(255,255,255,.45);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;font-weight:700}
+.val-range{display:flex;gap:16px;font-size:12px;color:rgba(255,255,255,.55);flex-wrap:wrap}
 .val-range span{display:flex;align-items:center;gap:5px}
 .val-range b{color:var(--white)}
+
 .val-facs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
-.vf-box{background:var(--white);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center}
-.vf-num{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--blue);line-height:1;margin-bottom:3px}
-.vf-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.fin-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--sh)}
+.vf{background:var(--white);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;text-align:center}
+.vf-n{font-family:"Syne",sans-serif;font-size:24px;font-weight:800;color:var(--blue);line-height:1;margin-bottom:3px}
+.vf-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+
+/* Finance */
 .fin-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.fin-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:5px}
-.fin-inp{width:100%;background:var(--off);border:1px solid var(--border2);border-radius:var(--rxs);padding:10px 12px;font-family:"Syne",sans-serif;font-size:15px;font-weight:700;color:var(--navy);outline:none;transition:border-color var(--t)}
-.fin-inp:focus{border-color:var(--blue)}
-.fin-result{background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:var(--rs);padding:14px 16px;color:var(--white)}
-.fin-monthly{font-family:"Syne",sans-serif;font-size:34px;font-weight:800;color:var(--gold);line-height:1}
+.fin-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:5px}
+.fin-inp{
+  width:100%;
+  background:var(--off);border:1px solid var(--b2);
+  border-radius:var(--rxs);padding:10px 12px;
+  font-family:"Syne",sans-serif;font-size:15px;font-weight:700;
+  color:var(--ink);outline:none;
+  transition:border-color var(--t);
+}
+.fin-inp:focus{border-color:var(--blue);background:var(--white)}
+.fin-result{
+  background:linear-gradient(135deg,var(--ink),var(--blue));
+  border-radius:var(--rs);padding:16px;color:var(--white);
+}
+.fin-monthly{font-family:"Syne",sans-serif;font-size:40px;font-weight:800;color:var(--gold2);line-height:1}
 .fin-bd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .fin-bd-v{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;text-align:center}
-.fin-bd-l{font-size:9px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;text-align:center}
-.fin-disc{font-size:10px;color:var(--text3);margin-top:10px;line-height:1.6;padding:9px 12px;background:var(--sky);border-radius:var(--rxs)}
-.dep-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.dep-yr{font-size:10px;font-weight:700;color:var(--text3);width:36px;flex-shrink:0}
-.dep-bg{flex:1;height:16px;background:var(--off);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
-.dep-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--sky3));transition:width .7s ease}
-.dep-val{font-size:11px;font-weight:700;color:var(--text2);width:65px;text-align:right;flex-shrink:0}
+.fin-bd-l{font-size:9px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;text-align:center}
+.fin-disc{font-size:10px;color:var(--t3);margin-top:10px;line-height:1.6;padding:9px 12px;background:var(--sky);border-radius:var(--rxs)}
 
-/* MODS */
+/* Depreciation */
+.dep-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.dep-yr{font-size:10px;font-weight:700;color:var(--t3);width:48px;flex-shrink:0}
+.dep-bg{flex:1;height:15px;background:var(--off);border-radius:4px;overflow:hidden;border:1px solid var(--b1)}
+.dep-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--blue),var(--sky3));transition:width .7s ease}
+.dep-val{font-size:11px;font-weight:700;color:var(--t2);width:65px;text-align:right;flex-shrink:0}
+
+/* ════════════════════════════════════════════
+   MODS
+════════════════════════════════════════════ */
 .mods-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.mod-btn{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:14px 8px;text-align:center;cursor:pointer;transition:all var(--t)}
+.mod-btn{
+  background:var(--off);border:1px solid var(--b1);
+  border-radius:var(--rs);padding:14px 8px;
+  text-align:center;cursor:pointer;
+  transition:all var(--t);
+}
 .mod-btn:hover{border-color:var(--blue);background:var(--sky);transform:translateY(-1px)}
 .mod-btn.selected{border:2px solid var(--blue);background:var(--sky)}
-.mod-ic{font-size:20px;margin-bottom:6px;color:var(--gold)}
-.mod-nm{font-size:11px;font-weight:700;color:var(--navy)}
-.mod-tg{font-size:9px;color:var(--text3);margin-top:3px}
-.anlz-btn{width:100%;background:var(--navy);color:var(--white);font-family:"Syne",sans-serif;font-size:16px;font-weight:800;letter-spacing:.5px;border:none;border-radius:var(--rs);padding:14px;cursor:pointer;margin-top:10px;transition:all var(--t)}
-.anlz-btn:hover:not(:disabled){background:var(--blue)}
-.anlz-btn:disabled{background:var(--text4);cursor:default}
-.res-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem;box-shadow:var(--sh);position:relative;overflow:hidden}
-.res-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--gold))}
-.res-title{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;color:var(--navy)}
-.drow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:4px}
+.mod-ic{font-size:22px;margin-bottom:6px;color:var(--gold2)}
+.mod-nm{font-size:11px;font-weight:700;color:var(--ink)}
+.mod-tg{font-size:9px;color:var(--t3);margin-top:2px}
+
+.anlz-btn{
+  width:100%;
+  background:var(--ink);color:var(--white);
+  font-family:"Syne",sans-serif;font-size:16px;font-weight:800;
+  border:none;border-radius:var(--rs);padding:14px;
+  cursor:pointer;margin-top:10px;
+  transition:all var(--t);
+}
+.anlz-btn:hover:not(:disabled){background:var(--blue);box-shadow:var(--s2)}
+.anlz-btn:disabled{background:var(--t4);cursor:default}
+
+.res-card{
+  background:var(--white);border:1px solid var(--b1);
+  border-radius:var(--r);padding:1.25rem;
+  margin-bottom:1rem;box-shadow:var(--s1);
+  position:relative;overflow:hidden;
+}
+.res-card::before{
+  content:"";position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--gold2));
+}
+.res-title{
+  font-family:"Syne",sans-serif;
+  font-size:19px;font-weight:800;
+  letter-spacing:-.5px;
+  margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+  color:var(--ink);
+}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--b1);flex-wrap:wrap;gap:4px}
 .drow:last-of-type{border-bottom:none}
-.dlbl{color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
-.dval{font-weight:600;font-size:14px;color:var(--navy)}
-.chg{font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px}
+.dlbl{color:var(--t3);font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.dval{font-weight:600;font-size:14px;color:var(--ink)}
+.chg{font-size:11px;padding:2px 8px;border-radius:10px;margin-left:5px}
 .cup{background:var(--green2);color:var(--green)}.cdn{background:var(--red2);color:var(--red)}.cnt{background:var(--sky);color:var(--blue)}
-.verdict{background:var(--sky);border-left:3px solid var(--blue);border-radius:0 var(--rxs) var(--rxs) 0;padding:12px 14px;margin-top:14px;font-size:12px;color:var(--text2);line-height:1.6}
-.verdict strong{color:var(--navy)}
-.share-btn{width:100%;background:transparent;border:1px solid var(--green);color:var(--green);font-family:"Syne",sans-serif;font-size:14px;font-weight:700;letter-spacing:.5px;border-radius:var(--rs);padding:11px;cursor:pointer;margin-top:10px;transition:all var(--t)}
+.verdict{
+  background:var(--sky);border-left:3px solid var(--blue);
+  border-radius:0 var(--rxs) var(--rxs) 0;
+  padding:11px 13px;margin-top:14px;
+  font-size:12px;color:var(--t2);line-height:1.6;
+}
+.verdict strong{color:var(--ink)}
+.share-btn{
+  width:100%;background:transparent;
+  border:1px solid var(--green);color:var(--green);
+  font-family:"Syne",sans-serif;font-size:14px;font-weight:700;
+  border-radius:var(--rs);padding:11px;cursor:pointer;
+  margin-top:10px;transition:all var(--t);
+}
 .share-btn:hover{background:var(--green2)}
 .sbar{display:flex;gap:3px;align-items:flex-end;height:26px}
 .sb{width:4px;border-radius:2px;background:var(--blue)}
 
-/* MODALS */
-.overlay{position:fixed;inset:0;background:rgba(7,30,61,0.75);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px);animation:fIn .15s ease}
+/* ════════════════════════════════════════════
+   INFO BOX
+════════════════════════════════════════════ */
+.info-box{
+  background:var(--sky);border:1px solid var(--sky2);
+  border-radius:var(--rxs);padding:10px 14px;
+  font-size:11px;color:var(--t2);line-height:1.6;margin-top:8px;
+}
+.info-box strong{color:var(--blue)}
+.info-box a{color:var(--blue)}
+
+/* ════════════════════════════════════════════
+   HOW IT WORKS
+════════════════════════════════════════════ */
+.how-sec{
+  background:var(--ink);
+  padding:4rem 1.5rem;
+}
+.how-inner{max-width:960px;margin:0 auto;text-align:center}
+.how-title{
+  font-family:"Syne",sans-serif;
+  font-size:34px;font-weight:800;
+  color:var(--white);margin-bottom:.4rem;
+}
+.how-title em{color:var(--gold2);font-style:normal}
+.how-sub{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:2.5rem}
+.how-g{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.how-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:var(--r);padding:1.5rem;
+  text-align:center;
+}
+.how-n{font-family:"Syne",sans-serif;font-size:48px;font-weight:800;color:var(--gold2);line-height:1}
+.how-t{font-weight:700;font-size:14px;color:var(--white);margin:8px 0 4px}
+.how-d{font-size:11px;color:rgba(255,255,255,.4);line-height:1.5}
+
+/* ════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════ */
+footer{
+  background:var(--ink);
+  border-top:1px solid rgba(255,255,255,.06);
+  padding:1.25rem;text-align:center;
+  color:rgba(255,255,255,.25);font-size:11px;
+}
+
+/* ════════════════════════════════════════════
+   MODALS
+════════════════════════════════════════════ */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(6,19,43,.8);
+  z-index:300;
+  display:flex;align-items:center;justify-content:center;
+  padding:1rem;
+  backdrop-filter:blur(10px);
+  animation:fIn .15s ease;
+}
 .overlay.hidden{display:none}
 @keyframes fIn{from{opacity:0}to{opacity:1}}
-.modal{background:var(--white);border:1px solid var(--border2);border-radius:var(--r);padding:2rem;width:100%;max-width:420px;position:relative;max-height:92vh;overflow-y:auto;animation:sUp .2s ease;box-shadow:var(--sh2)}
+
+.modal{
+  background:var(--white);
+  border:1px solid var(--b2);
+  border-radius:var(--r);
+  padding:2rem;
+  width:100%;max-width:420px;
+  position:relative;
+  max-height:92vh;overflow-y:auto;
+  animation:sUp .2s ease;
+  box-shadow:var(--s3);
+}
 @keyframes sUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-x{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;transition:color var(--t)}
-.modal-x:hover{color:var(--navy)}
-.mh{font-family:"Syne",sans-serif;font-size:24px;font-weight:800;color:var(--navy);margin-bottom:4px}
-.msub{font-size:13px;color:var(--text3);margin-bottom:1.5rem;line-height:1.4}
-.mtabs{display:flex;border:1px solid var(--border);border-radius:var(--rxs);overflow:hidden;margin-bottom:20px}
-.mtab{flex:1;background:transparent;border:none;font-family:"Syne",sans-serif;font-size:12px;font-weight:800;letter-spacing:.3px;color:var(--text3);padding:10px;cursor:pointer;transition:all var(--t)}
-.mtab.active{background:var(--navy);color:var(--white)}
-.inp{width:100%;background:var(--off);border:1px solid var(--border2);border-radius:var(--rxs);padding:11px 14px;color:var(--navy);font-size:14px;font-family:"DM Sans",sans-serif;outline:none;margin-bottom:10px;transition:border-color var(--t);font-weight:500}
+.modal-x{
+  position:absolute;top:14px;right:16px;
+  background:none;border:none;
+  color:var(--t3);font-size:22px;
+  cursor:pointer;transition:color var(--t);
+}
+.modal-x:hover{color:var(--ink)}
+
+.mh{font-family:"Syne",sans-serif;font-size:24px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.msub{font-size:13px;color:var(--t3);margin-bottom:1.5rem;line-height:1.4}
+
+.mtabs{display:flex;border:1px solid var(--b1);border-radius:var(--rxs);overflow:hidden;margin-bottom:20px}
+.mtab{
+  flex:1;background:transparent;border:none;
+  font-family:"Syne",sans-serif;font-size:12px;font-weight:800;
+  color:var(--t3);padding:10px;cursor:pointer;
+  transition:all var(--t);
+}
+.mtab.active{background:var(--ink);color:var(--white)}
+
+.inp{
+  width:100%;
+  background:var(--off);border:1px solid var(--b2);
+  border-radius:var(--rxs);padding:11px 14px;
+  color:var(--ink);font-size:14px;
+  font-family:"DM Sans",sans-serif;
+  outline:none;margin-bottom:10px;
+  transition:border-color var(--t);font-weight:500;
+}
 .inp:focus{border-color:var(--blue);background:var(--white)}
-.mbtn{width:100%;background:var(--navy);color:var(--white);font-family:"Syne",sans-serif;font-size:16px;font-weight:800;letter-spacing:.3px;border:none;border-radius:var(--rxs);padding:13px;cursor:pointer;transition:all var(--t);margin-top:4px}
+
+.mbtn{
+  width:100%;
+  background:var(--ink);color:var(--white);
+  font-family:"Syne",sans-serif;font-size:16px;font-weight:800;
+  border:none;border-radius:var(--rxs);padding:13px;
+  cursor:pointer;transition:all var(--t);margin-top:4px;
+}
 .mbtn:hover:not(:disabled){background:var(--blue)}
-.mbtn:disabled{background:var(--text4);cursor:default}
-.mbtn-ghost{width:100%;background:transparent;border:1px solid #FCA5A5;color:var(--red);font-family:"Syne",sans-serif;font-size:13px;font-weight:700;border-radius:var(--rxs);padding:11px;cursor:pointer;transition:all var(--t);margin-top:8px}
+.mbtn:disabled{background:var(--t4);cursor:default}
+
+.mbtn-ghost{
+  width:100%;background:transparent;
+  border:1px solid var(--red3);color:var(--red);
+  font-family:"Syne",sans-serif;font-size:13px;font-weight:700;
+  border-radius:var(--rxs);padding:11px;cursor:pointer;
+  transition:all var(--t);margin-top:8px;
+}
 .mbtn-ghost:hover{background:var(--red2)}
-.merr{background:var(--red2);color:var(--red);border:1px solid #FCA5A5;border-radius:var(--rxs);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;line-height:1.4;font-weight:500}
-.mok{background:var(--green2);color:var(--green);border:1px solid #A7F3D0;border-radius:var(--rxs);padding:8px 12px;font-size:12px;margin-bottom:10px;display:none;font-weight:500}
-.prof-top{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
-.prof-av{width:70px;height:70px;border-radius:50%;background:var(--navy);border:3px solid var(--sky2);display:inline-flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:30px;font-weight:800;color:var(--gold);margin-bottom:10px}
-.prof-name{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
-.prof-email{font-size:11px;color:var(--text3);margin-top:3px}
+
+.merr{
+  background:var(--red2);color:var(--red);
+  border:1px solid var(--red3);
+  border-radius:var(--rxs);padding:8px 12px;
+  font-size:12px;margin-bottom:10px;
+  display:none;line-height:1.4;font-weight:500;
+}
+.mok{
+  background:var(--green2);color:var(--green);
+  border:1px solid var(--green3);
+  border-radius:var(--rxs);padding:8px 12px;
+  font-size:12px;margin-bottom:10px;display:none;font-weight:500;
+}
+
+/* PROFILE MODAL */
+.prof-top{text-align:center;margin-bottom:1.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--b1)}
+.prof-av{
+  width:70px;height:70px;border-radius:50%;
+  background:var(--ink);border:3px solid var(--sky2);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:"Syne",sans-serif;font-size:30px;font-weight:800;
+  color:var(--gold2);margin-bottom:10px;
+}
+.prof-name{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;color:var(--ink)}
+.prof-email{font-size:11px;color:var(--t3);margin-top:3px}
 .pstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.pstat{background:var(--off);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center}
-.pstat-n{font-family:"Syne",sans-serif;font-size:30px;font-weight:800;color:var(--blue);line-height:1}
-.pstat-l{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
-.s-lbl{font-family:"Syne",sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px;margin-top:4px}
+.pstat{background:var(--off);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;text-align:center}
+.pstat-n{font-family:"Syne",sans-serif;font-size:32px;font-weight:800;color:var(--blue);line-height:1}
+.pstat-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
+.s-lbl{font-family:"Syne",sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;margin-top:4px}
 .edit-row{display:flex;gap:8px;margin-bottom:16px;align-items:center}
 .edit-row .inp{margin-bottom:0;flex:1}
-.edit-save{background:var(--navy);color:var(--white);border:none;border-radius:var(--rxs);padding:11px 16px;font-family:"Syne",sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:background var(--t);flex-shrink:0}
+.edit-save{
+  background:var(--ink);color:var(--white);
+  border:none;border-radius:var(--rxs);
+  padding:11px 16px;
+  font-family:"Syne",sans-serif;font-size:13px;font-weight:800;
+  cursor:pointer;transition:background var(--t);flex-shrink:0;
+}
 .edit-save:hover{background:var(--blue)}
-.edit-save:disabled{background:var(--text4);cursor:default}
-.ph-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:var(--rs);margin-bottom:7px;cursor:pointer;transition:all var(--t)}
+.edit-save:disabled{background:var(--t4);cursor:default}
+
+.ph-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px;border:1px solid var(--b1);
+  border-radius:var(--rs);margin-bottom:7px;
+  cursor:pointer;transition:all var(--t);
+}
 .ph-item:hover{border-color:var(--blue);background:var(--sky)}
-.ph-reg{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;background:var(--gold);color:var(--navy);padding:3px 9px;border-radius:3px;flex-shrink:0}
-.ph-car{font-size:12px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ph-meta{font-size:10px;color:var(--text3);margin-top:1px}
-.ph-empty{text-align:center;padding:1.5rem;color:var(--text3);font-size:13px}
+.ph-reg{
+  font-family:"Syne",sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:2px;background:var(--gold2);color:var(--ink);
+  padding:3px 9px;border-radius:3px;flex-shrink:0;
+}
+.ph-car{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-meta{font-size:10px;color:var(--t3);margin-top:1px}
+.ph-empty{text-align:center;padding:1.5rem;color:var(--t3);font-size:13px}
 
-.how-sec{background:var(--navy);padding:4rem 1.5rem;margin-top:2rem}
-.how-inner{max-width:900px;margin:0 auto;text-align:center}
-.how-title{font-family:"Syne",sans-serif;font-size:32px;font-weight:800;color:var(--white);margin-bottom:.5rem}
-.how-title em{color:var(--gold);font-style:normal}
-.how-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:2.5rem}
-.how-g{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.how-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r);padding:1.5rem;text-align:center}
-.how-num{font-family:"Syne",sans-serif;font-size:44px;font-weight:800;color:var(--gold);line-height:1}
-.how-t{font-weight:700;font-size:14px;color:var(--white);margin:8px 0 4px}
-.how-d{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.5}
-footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.3);font-size:11px}
-
+/* ════════════════════════════════════════════
+   UTILITIES
+════════════════════════════════════════════ */
 .hidden{display:none!important}
-.loading-box{text-align:center;padding:2.5rem;color:var(--text3);font-size:13px}
-.loading-box::after{content:"";display:inline-block;width:18px;height:18px;border:2px solid var(--sky2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin-left:10px;vertical-align:middle}
+.loading-box{
+  text-align:center;padding:3rem;
+  color:var(--t3);font-size:13px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.spin{
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--sky2);border-top-color:var(--blue);
+  animation:spin .7s linear infinite;flex-shrink:0;
+  display:inline-block;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
-.errbox{background:var(--red2);color:var(--red);border:1px solid #FCA5A5;border-radius:var(--rs);padding:12px 16px;font-size:13px;margin-bottom:1rem;font-weight:500}
-.info-box{background:var(--sky);border:1px solid var(--sky2);border-radius:var(--rxs);padding:10px 14px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:8px}
-.info-box strong{color:var(--blue)}
+.errbox{
+  background:var(--red2);color:var(--red);
+  border:1px solid var(--red3);
+  border-radius:var(--rs);
+  padding:12px 16px;font-size:13px;
+  margin-bottom:1rem;font-weight:500;
+}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════ */
 @media(max-width:640px){
-  .g4{grid-template-columns:repeat(2,1fr)}.mods-g{grid-template-columns:repeat(2,1fr)}
-  .mot-sum-g{grid-template-columns:repeat(2,1fr)}.how-g{grid-template-columns:1fr}
-  .val-facs{grid-template-columns:1fr 1fr}.fin-g{grid-template-columns:1fr}
-  nav{padding:0 1rem}.hero{padding:3rem 1rem 2.5rem}.app{padding:1rem 1rem 4rem}
-  .tabs-inner{gap:0}.tab-btn{font-size:10px;padding:12px 8px;letter-spacing:0}
-  .hrow{flex-wrap:wrap;gap:8px}.hrow .chip{margin-top:4px}
-  .val-hero{padding:1rem}.val-price{font-size:34px}
-  .dmg-wrap{flex-direction:column}.dmg-car-w{max-width:180px;margin:0 auto}
-  .reg-form{flex-direction:column}.reg-btn{padding:14px;font-size:16px}
-  .reg-input{font-size:24px;letter-spacing:4px;padding:12px}
-  .fin-bd{grid-template-columns:1fr}.fin-bd-v{font-size:14px}
-  .pw-feats{max-width:100%}
-  .checks .chk{padding:9px 10px}
-  .hero h1{font-size:clamp(36px,10vw,60px)}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .mods-g{grid-template-columns:repeat(2,1fr)}
+  .mot-sum{grid-template-columns:repeat(2,1fr)}
+  .how-g{grid-template-columns:1fr}
+  .val-facs{grid-template-columns:1fr 1fr}
+  .fin-g{grid-template-columns:1fr}
+  nav{padding:0 1rem}
+  .hero{padding:3.5rem 1rem 3rem}
+  .app{padding:1rem 1rem 5rem}
+  .tab-inner{gap:0}.tab-btn{font-size:10px;padding:12px 10px;letter-spacing:0}
   .tab-btn i{display:none}
+  .val-hero{padding:1rem}.val-price{font-size:38px}
+  .dmg-wrap{flex-direction:column}.dmg-car-w{max-width:180px;margin:0 auto}
+  .reg-row{flex-direction:column}
+  .reg-go{padding:13px;font-size:15px}
+  .reg-plate{font-size:24px;letter-spacing:4px}
+  .fin-bd{grid-template-columns:1fr}
+  .hero h1{font-size:clamp(40px,11vw,66px);letter-spacing:-1.5px}
   .modal{padding:1.5rem}
   .pstats{grid-template-columns:1fr 1fr}
+  .how-title{font-size:26px}
+  .hrow{flex-wrap:wrap}
 }
 </style>
 </head>
 <body>
-<!-- NAV -->
+
+<!-- ══════════════ NAVBAR ══════════════ -->
 <nav>
-  <div style="display:flex;align-items:center;gap:6px">
-    <div class="nav-logo">Garage<span>IQ</span></div>
-  </div>
-  <div class="nav-right">
+  <div class="logo">Garage<span>IQ</span><div class="logo-dot"></div></div>
+  <div class="nav-r">
     <div id="navGuest">
-      <button class="btn-nav btn-ghost" id="btnLogin">Log In</button>
-      <button class="btn-nav btn-gold" id="btnSignup">Sign Up Free</button>
+      <button class="btn-ghost-sm" id="btnLogin">Log In</button>
+      <button class="btn-gold-sm" id="btnSignup">Sign Up Free</button>
     </div>
     <div id="navLoggedIn" class="hidden">
-      <div class="nav-avatar" id="btnAvatar" title="My Profile">?</div>
+      <div class="nav-av" id="btnAvatar" title="My Profile">?</div>
     </div>
   </div>
 </nav>
 
-<!-- AUTH MODAL -->
+<!-- ══════════════ AUTH MODAL ══════════════ -->
 <div class="overlay hidden" id="authModal">
   <div class="modal">
     <button class="modal-x" id="authClose">&times;</button>
     <div class="mh">Welcome to GarageIQ</div>
-    <div class="msub">Free account = instant Intelligence Reports. No card needed.</div>
+    <div class="msub">Free account · Instant Intelligence Reports · No card needed.</div>
     <div class="mtabs">
       <button class="mtab active" id="tabLogin">Log In</button>
       <button class="mtab" id="tabSignup">Sign Up</button>
     </div>
     <div class="merr" id="authErr"></div>
-    <div class="mok"  id="authOk"></div>
+    <div class="mok" id="authOk"></div>
     <div id="loginForm">
       <input class="inp" id="loginEmail" type="email" placeholder="Email address" autocomplete="email"/>
       <input class="inp" id="loginPass" type="password" placeholder="Password" autocomplete="current-password"/>
@@ -371,7 +1063,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
   </div>
 </div>
 
-<!-- PROFILE MODAL -->
+<!-- ══════════════ PROFILE MODAL ══════════════ -->
 <div class="overlay hidden" id="profileModal">
   <div class="modal">
     <button class="modal-x" id="profileClose">&times;</button>
@@ -381,7 +1073,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
       <div class="prof-email" id="profEmail">—</div>
     </div>
     <div class="merr" id="profErr"></div>
-    <div class="mok"  id="profOk"></div>
+    <div class="mok" id="profOk"></div>
     <div class="s-lbl">Change Username</div>
     <div class="edit-row">
       <input class="inp" id="newUsername" type="text" placeholder="New username" maxlength="20" style="text-transform:uppercase"/>
@@ -397,43 +1089,49 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
   </div>
 </div>
 
-<!-- HERO -->
+<!-- ══════════════ HERO ══════════════ -->
 <section class="hero">
-  <div class="hero-chip"><i class="ti ti-shield-check" style="font-size:11px"></i> UK Vehicle Intelligence</div>
-  <h1>Know Your<br/><em>Car.</em><br/>Build Your <em>Vision.</em></h1>
-  <p class="hero-sub">Real DVLA data · Full MOT history · Mileage fraud detection · Valuation · Mod analysis</p>
-  <div class="better-badge"><i class="ti ti-award" style="font-size:11px;color:var(--gold)"></i> <b>Better &amp; cheaper than CarVertical</b></div>
-  <div class="reg-form">
-    <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="8"/>
-    <button class="reg-btn" id="runBtn">RUN</button>
+  <div class="hero-inner">
+    <div class="hero-label"><i class="ti ti-shield-check"></i> UK Vehicle Intelligence</div>
+    <h1>Know Your<br/><em>Car.</em><br/>Build Your <em>Vision.</em></h1>
+    <div class="vs-badge"><i class="ti ti-award" style="color:var(--gold2);font-size:13px"></i> Better &amp; cheaper than <b>CarVertical</b> — just £1.99 per report</div>
+    <p class="hero-sub">Real DVLA data · Full MOT history · Mileage fraud detection · Valuation · Mod analysis</p>
+    <div class="reg-wrap">
+      <div class="reg-row">
+        <input class="reg-plate" id="regInput" placeholder="AB12 CDE" maxlength="8"/>
+        <button class="reg-go" id="runBtn"><i class="ti ti-search" style="font-size:14px;margin-right:5px"></i>Run Check</button>
+      </div>
+    </div>
+    <p class="hero-note">Official DVLA + DVSA data · Secure · No spam</p>
   </div>
-  <p class="hero-note">Real DVLA + DVSA data · Official government records</p>
 </section>
 
 <!-- VIN STRIP -->
 <div class="vin-strip hidden" id="vinStrip">
   <i class="ti ti-barcode" style="font-size:13px"></i>
   VIN: <strong id="vinVal">—</strong>
-  <span style="color:rgba(255,255,255,0.25)">·</span>
-  <span id="vinNote" style="color:rgba(255,255,255,0.35);font-size:10px">From DVLA records</span>
+  <span style="color:rgba(255,255,255,0.2)">·</span>
+  <span id="vinNote" style="font-size:10px;color:rgba(255,255,255,0.3)">From DVLA records</span>
 </div>
 
-<!-- TABS -->
-<div class="tabs-wrap hidden" id="tabsWrap">
-  <div class="tabs-inner">
+<!-- ══════════════ TABS ══════════════ -->
+<div class="tab-rail hidden" id="tabsWrap">
+  <div class="tab-inner">
     <button class="tab-btn active" data-tab="overview"><i class="ti ti-car"></i> Overview</button>
     <button class="tab-btn" data-tab="report"><i class="ti ti-report-analytics"></i> Intelligence</button>
     <button class="tab-btn" data-tab="valuation"><i class="ti ti-currency-pound"></i> Valuation</button>
-    
     <button class="tab-btn" data-tab="mods"><i class="ti ti-settings-2"></i> Mods</button>
   </div>
 </div>
 
+<!-- ══════════════ MAIN APP ══════════════ -->
 <div class="app hidden" id="mainApp">
   <div id="errbox" class="errbox hidden"></div>
-  <div id="loadbox" class="loading-box hidden">Fetching vehicle data</div>
+  <div id="loadbox" class="loading-box hidden">
+    <div class="spin"></div> Fetching vehicle data...
+  </div>
 
-  <!-- OVERVIEW TAB -->
+  <!-- ─── OVERVIEW TAB ─── -->
   <div id="tab-overview" class="tab-panel active">
     <div class="card">
       <div class="card-head">
@@ -453,6 +1151,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
         <div class="sbox"><div class="slbl">MOT</div><div class="sval" id="statMot">-</div></div>
       </div>
     </div>
+
     <div class="card">
       <div class="card-head">
         <div class="card-title"><i class="ti ti-engine"></i> Engine &amp; Performance</div>
@@ -461,167 +1160,166 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
       <table class="spec-tbl">
         <tr><td>Power</td><td id="specBhp">-</td></tr>
         <tr><td>Torque</td><td id="specTorque">-</td></tr>
-        <tr><td>0-62 mph</td><td id="specZero">-</td></tr>
+        <tr><td>0–62 mph</td><td id="specZero">-</td></tr>
         <tr><td>Top speed</td><td id="specTop">-</td></tr>
         <tr><td>Gearbox</td><td id="specGearbox">-</td></tr>
         <tr><td>Cylinders</td><td id="specCyl">-</td></tr>
         <tr><td>Drive type</td><td id="specDrive">-</td></tr>
         <tr><td>Fuel combined</td><td id="specMpg">-</td></tr>
-        <tr><td>CO2</td><td id="specCo2">-</td></tr>
+        <tr><td>CO₂</td><td id="specCo2">-</td></tr>
       </table>
     </div>
+
     <div class="card">
       <div class="card-head">
         <div class="card-title"><i class="ti ti-clipboard-list"></i> MOT History</div>
-        <div style="font-size:9px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Tap to expand</div>
+        <div style="font-size:9px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Tap to expand</div>
       </div>
       <div id="motSumWrap" class="hidden">
         <div class="pbar-wrap">
-          <div class="pbar-lbl"><span>Pass Rate</span><span id="passRatePct">—</span></div>
+          <div class="pbar-row"><span>Pass Rate</span><span id="passRatePct">—</span></div>
           <div class="pbar-bg"><div class="pbar-fill" id="passBarFill" style="width:0%"></div></div>
         </div>
-        <div class="mot-sum-g">
+        <div class="mot-sum">
           <div class="mot-sb"><div class="mot-sn green" id="sumPass">-</div><div class="mot-sl">Passed</div></div>
-          <div class="mot-sb"><div class="mot-sn red"   id="sumFail">-</div><div class="mot-sl">Failed</div></div>
+          <div class="mot-sb"><div class="mot-sn red" id="sumFail">-</div><div class="mot-sl">Failed</div></div>
           <div class="mot-sb"><div class="mot-sn amber" id="sumAdv">-</div><div class="mot-sl">Advisories</div></div>
-          <div class="mot-sb"><div class="mot-sn blue"  id="sumTotal">-</div><div class="mot-sl">Tests</div></div>
+          <div class="mot-sb"><div class="mot-sn blue" id="sumTotal">-</div><div class="mot-sl">Tests</div></div>
         </div>
       </div>
-      <div id="motHistory"><div class="loading-box">Loading MOT data</div></div>
+      <div id="motHistory"><div class="loading-box"><div class="spin"></div> Loading MOT data</div></div>
     </div>
   </div>
 
-  <!-- INTELLIGENCE TAB -->
+  <!-- ─── INTELLIGENCE TAB ─── -->
   <div id="tab-report" class="tab-panel">
     <div class="intel-card">
-      <div class="intel-bar"></div>
-      <div class="intel-body">
+      <div class="intel-top-bar"></div>
+      <div style="padding:1.25rem">
         <div class="card-head" style="margin-bottom:10px">
           <div class="card-title"><i class="ti ti-report-analytics"></i> Intelligence Report</div>
           <div class="chip chip-blue" id="intelBadge">£1.99 per report</div>
         </div>
+
+        <!-- PAYWALL -->
         <div id="intelPaywall" class="paywall">
-          <div class="pw-icon"><i class="ti ti-lock"></i></div>
+          <div class="pw-lock"><i class="ti ti-lock"></i></div>
           <div class="pw-title" id="pwTitle">Intelligence Report</div>
           <div class="pw-sub" id="pwSub">One-time payment of £1.99 per vehicle. Instant unlock. No subscription.</div>
-          <div class="pw-feats">
-            <div class="pwf"><i class="ti ti-check"></i> Mileage fraud &amp; rollback detection</div>
-            <div class="pwf"><i class="ti ti-check"></i> Risk score (0–100)</div>
-            <div class="pwf"><i class="ti ti-check"></i> Damage zone analysis from MOT data</div>
-            <div class="pwf"><i class="ti ti-check"></i> Tax &amp; ownership history</div>
-            <div class="pwf"><i class="ti ti-check"></i> Commercial use detection</div>
-            <div class="pwf"><i class="ti ti-check"></i> Finance &amp; legal risk flags</div>
-            <div class="pwf"><i class="ti ti-check"></i> Full mileage timeline</div>
+          <div class="pw-list">
+            <div class="pwi"><i class="ti ti-check"></i> Mileage fraud &amp; rollback detection</div>
+            <div class="pwi"><i class="ti ti-check"></i> Risk score (0–100)</div>
+            <div class="pwi"><i class="ti ti-check"></i> Damage zone analysis from MOT data</div>
+            <div class="pwi"><i class="ti ti-check"></i> Tax &amp; ownership history</div>
+            <div class="pwi"><i class="ti ti-check"></i> Commercial use detection</div>
+            <div class="pwi"><i class="ti ti-check"></i> Finance &amp; legal risk flags</div>
+            <div class="pwi"><i class="ti ti-check"></i> Full mileage timeline</div>
           </div>
           <div id="pwLoggedOut">
             <button class="pay-btn" id="btnPwSignup" style="margin-bottom:8px"><i class="ti ti-lock-open"></i> Log In to Pay £1.99</button>
-            <div style="font-size:11px;color:var(--text3);margin-bottom:10px">No account? <span class="login-lnk" id="btnPwLogin" style="font-size:11px">Create one free (no card needed)</span> then unlock for £1.99</div>
+            <div style="font-size:11px;color:var(--t3)">No account? <span class="login-lnk" id="btnPwLogin">Create one free</span> then unlock for £1.99</div>
           </div>
           <div id="pwLoggedIn" style="display:none">
             <button class="pay-btn" id="btnPay"><i class="ti ti-lock-open"></i> Unlock for £1.99</button>
             <div class="pay-note">Secure payment by Stripe · Instant unlock · One reg per payment</div>
           </div>
         </div>
+
+        <!-- UNLOCKED CONTENT -->
         <div id="intelContent" style="display:none">
-          <div class="risk-wrap">
-            <div class="risk-circle" id="riskCircle">—</div>
+          <div class="risk-bar">
+            <div class="risk-ring" id="riskCircle">—</div>
             <div>
-              <div class="risk-lbl" id="riskLbl">—</div>
-              <div class="risk-sub" id="riskSub">—</div>
+              <div class="risk-label" id="riskLbl">—</div>
+              <div class="risk-note" id="riskSub">—</div>
             </div>
           </div>
           <div class="checks" id="intelChecks"></div>
           <div id="mileTimeline"></div>
-          <!-- HISTORY inside intelligence report -->
-          <div id="intelHistorySections" style="margin-top:16px">
-            <!-- Damage map -->
-            <div class="sect-lbl">Damage &amp; Accident History</div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-                <span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--text2)">MOT Damage Zones</span>
-                <div class="chip chip-red" id="dmgChip">From MOT records</div>
+
+          <!-- Damage map -->
+          <div class="sect-lbl">Damage &amp; Accident History</div>
+          <div style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--t2)">MOT Damage Zones</span>
+              <div class="chip chip-blue" id="dmgChip">From MOT records</div>
+            </div>
+            <div class="dmg-wrap">
+              <div class="dmg-car-w">
+                <svg class="dmg-car-svg" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="30" y="60" width="140" height="240" rx="20" fill="#EEF5FD" stroke="#BBDEFB" stroke-width="2"/>
+                  <rect x="45" y="110" width="110" height="120" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
+                  <rect x="52" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
+                  <rect x="106" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
+                  <circle cx="55" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                  <circle cx="145" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                  <circle cx="55" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                  <circle cx="145" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                  <rect id="zone-front" class="dmg-zone" x="30" y="40" width="140" height="50" rx="10" data-label="Front (bumper, headlights, bonnet)"/>
+                  <rect id="zone-rear" class="dmg-zone" x="30" y="270" width="140" height="50" rx="10" data-label="Rear (bumper, boot, tail lights)"/>
+                  <rect id="zone-left" class="dmg-zone" x="10" y="80" width="45" height="200" rx="8" data-label="Nearside/Left — driver side"/>
+                  <rect id="zone-right" class="dmg-zone" x="145" y="80" width="45" height="200" rx="8" data-label="Offside/Right — passenger side"/>
+                  <rect id="zone-roof" class="dmg-zone" x="45" y="95" width="110" height="130" rx="8" data-label="Roof / cabin / windscreen"/>
+                  <rect id="zone-under" class="dmg-zone" x="55" y="155" width="90" height="50" rx="5" data-label="Underbody / mechanical"/>
+                  <text x="100" y="58" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">FRONT</text>
+                  <text x="100" y="312" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">REAR</text>
+                </svg>
               </div>
-              <div class="dmg-wrap">
-                <div class="dmg-car-w">
-                  <svg class="dmg-car-svg" viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="30" y="60" width="140" height="240" rx="20" fill="#EEF5FD" stroke="#BBDEFB" stroke-width="2"/>
-                    <rect x="45" y="110" width="110" height="120" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
-                    <rect x="52" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
-                    <rect x="106" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,0.4)" stroke="#93C5FD" stroke-width="1"/>
-                    <circle cx="55" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-                    <circle cx="145" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-                    <circle cx="55" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-                    <circle cx="145" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-                    <rect id="zone-front" class="dmg-zone" x="30" y="40" width="140" height="50" rx="10" data-label="Front (bumper, headlights, bonnet)"/>
-                    <rect id="zone-rear"  class="dmg-zone" x="30" y="270" width="140" height="50" rx="10" data-label="Rear (bumper, boot, tail lights)"/>
-                    <rect id="zone-left"  class="dmg-zone" x="10" y="80"  width="45" height="200" rx="8" data-label="Nearside/Left — driver side"/>
-                    <rect id="zone-right" class="dmg-zone" x="145" y="80" width="45" height="200" rx="8" data-label="Offside/Right — passenger side"/>
-                    <rect id="zone-roof"  class="dmg-zone" x="45" y="95"  width="110" height="130" rx="8" data-label="Roof / cabin / windscreen"/>
-                    <rect id="zone-under" class="dmg-zone" x="55" y="155" width="90" height="50"  rx="5" data-label="Underbody / mechanical"/>
-                    <text x="100" y="58" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">FRONT</text>
-                    <text x="100" y="312" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">REAR</text>
-                  </svg>
-                </div>
-                <div class="dmg-list" id="dmgList"><div class="dmg-none">Loading damage data...</div></div>
-              </div>
-              <div class="info-box" style="margin-top:10px"><i class="ti ti-info-circle"></i> Zones from MOT data only. <strong>Full accident/insurance history</strong> requires an HPI check.</div>
+              <div class="dmg-list" id="dmgList"><div class="dmg-none">Loading...</div></div>
             </div>
-            <!-- Mileage history -->
-            <div class="sect-lbl">Mileage History</div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div id="mileHistRows"><div class="ph-empty">Loading...</div></div>
-            </div>
-            <!-- Tax & ownership -->
-            <div class="sect-lbl">Tax &amp; Registration</div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-id"></i></div><div style="flex:1"><div class="hrow-t">Tax Status</div><div class="hrow-d" id="taxStatusText">—</div></div><div><div class="chip chip-blue" id="taxChip">—</div></div></div>
-              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-calendar"></i></div><div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText">—</div></div></div>
-              <div class="hrow"><div class="hic hi-green"><i class="ti ti-user-check"></i></div><div><div class="hrow-t">Registration Details</div><div class="hrow-d" id="keeperText">—</div></div></div>
-            </div>
-            <!-- Financial & Legal -->
-            <div class="sect-lbl">Financial &amp; Legal Risks</div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. Run an HPI or MyCarCheck (£10–20). Buying a car with finance outstanding means the lender can legally repossess it.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="white-space:nowrap;cursor:pointer">Check HPI →</div></a></div></div>
-              <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Theft Register</div><div class="hrow-d">Not in DVLA/DVSA data. Verify via Police.uk or HPI. Stolen vehicles can be seized even from innocent buyers.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="white-space:nowrap;cursor:pointer">Check HPI →</div></a></div></div>
-              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Write-off Category (Cat A/B/S/N)</div><div class="hrow-d">Not in DVLA public data. A Cat S/N car can be repaired and sold legally but must be declared. Always check via HPI.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="white-space:nowrap;cursor:pointer">Check HPI →</div></a></div></div>
-              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing mileage patterns...</div></div><div><div class="chip" id="commUseChip" style="background:var(--sky);color:var(--blue);border:1px solid var(--sky2)">—</div></div></div>
-              <div class="hrow"><div class="hic hi-green"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Ownership History</div><div class="hrow-d" id="ownerText">Based on vehicle age and MOT patterns.</div></div><div><div class="chip chip-blue" id="ownerChip">—</div></div></div>
-            </div>
-            <!-- Safety -->
-            <div class="sect-lbl">Safety &amp; Specs</div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div id="safetyRows"><div class="ph-empty">Loading...</div></div>
-            </div>
-            <!-- Insurance section -->
-            <div class="sect-lbl">Insurance</div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-shield"></i></div><div><div class="hrow-t">Insurance Group</div><div class="hrow-d" id="insuranceGroupText">Analysing vehicle data...</div></div><div><div class="chip chip-blue" id="insuranceGroupChip">—</div></div></div>
-              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-currency-pound"></i></div><div><div class="hrow-t">Estimated Annual Premium</div><div class="hrow-d" id="insuranceCostText">Based on vehicle group, age and UK average driver profile.</div></div><div><div class="chip chip-gold" id="insuranceCostChip">—</div></div></div>
-              <div class="hrow"><div class="hic hi-green"><i class="ti ti-check"></i></div><div><div class="hrow-t">SORN Check</div><div class="hrow-d" id="sornText">Vehicle tax status from DVLA records.</div></div></div>
-              <div class="info-box"><strong>Always declare modifications</strong> to your insurer. Undeclared mods can void your policy. Use <a href="https://www.confused.com" target="_blank" style="color:var(--blue)">Confused.com</a> or <a href="https://www.comparethemarket.com" target="_blank" style="color:var(--blue)">Compare the Market</a> for accurate quotes.</div>
-            </div>
-            <!-- Finance check -->
-            <div class="sect-lbl">Finance &amp; Provenance</div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
-              <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. If finance is outstanding, the lender can legally repossess the car even after you've paid for it.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
-              <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Stolen Vehicle Check</div><div class="hrow-d">Cross-reference with Police National Computer. Not available in public DVLA data — requires HPI.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
-              <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-crash"></i></div><div style="flex:1"><div class="hrow-t">Insurance Write-off (Cat A/B/S/N)</div><div class="hrow-d">Not in public DVLA data. Cat S &amp; N cars can be legally sold but must be declared. Always verify before buying.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
-              <div class="hrow"><div class="hic hi-blue"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Exact Keeper History</div><div class="hrow-d">Precise number of previous registered keepers not available in DVLA open data. HPI provides exact count.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
-            </div>
+            <div class="info-box"><i class="ti ti-info-circle"></i> Zones derived from MOT data only. <strong>Full insurance/accident history</strong> requires an HPI check.</div>
+          </div>
+
+          <!-- Mileage history -->
+          <div class="sect-lbl">Mileage History</div>
+          <div style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+            <div id="mileHistRows"><div class="ph-empty">Loading...</div></div>
+          </div>
+
+          <!-- Tax & ownership -->
+          <div class="sect-lbl">Tax &amp; Registration</div>
+          <div style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+            <div class="hrow"><div class="hic hi-blue"><i class="ti ti-id"></i></div><div style="flex:1"><div class="hrow-t">Tax Status</div><div class="hrow-d" id="taxStatusText">—</div></div><div><div class="chip chip-blue" id="taxChip">—</div></div></div>
+            <div class="hrow"><div class="hic hi-gold"><i class="ti ti-calendar"></i></div><div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText">—</div></div></div>
+            <div class="hrow"><div class="hic hi-green"><i class="ti ti-user-check"></i></div><div><div class="hrow-t">Registration Details</div><div class="hrow-d" id="keeperText">—</div></div></div>
+          </div>
+
+          <!-- Financial risks -->
+          <div class="sect-lbl">Financial &amp; Legal Risks</div>
+          <div style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+            <div class="hrow"><div class="hic hi-blue"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing mileage patterns...</div></div><div><div class="chip" id="commUseChip" style="background:var(--sky);color:var(--blue);border:1px solid var(--sky2)">—</div></div></div>
+            <div class="hrow"><div class="hic hi-green"><i class="ti ti-users"></i></div><div style="flex:1"><div class="hrow-t">Ownership History</div><div class="hrow-d" id="ownerText">Based on vehicle age and MOT patterns.</div></div><div><div class="chip chip-blue" id="ownerChip">—</div></div></div>
+            <div class="hrow"><div class="hic hi-red"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. Buying a car with outstanding finance means the lender can legally repossess it — always run an HPI check.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
+            <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Theft &amp; Write-off Register</div><div class="hrow-d">Not in DVLA public data. Cat S/N cars can be sold legally but must be declared. Always verify before buying.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold" style="cursor:pointer;white-space:nowrap">HPI Check →</div></a></div></div>
+          </div>
+
+          <!-- Insurance -->
+          <div class="sect-lbl">Insurance</div>
+          <div style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+            <div class="hrow"><div class="hic hi-blue"><i class="ti ti-shield"></i></div><div><div class="hrow-t">Estimated Insurance Group</div><div class="hrow-d" id="insuranceGroupText">Analysing...</div></div><div><div class="chip chip-blue" id="insuranceGroupChip">—</div></div></div>
+            <div class="hrow"><div class="hic hi-gold"><i class="ti ti-currency-pound"></i></div><div><div class="hrow-t">Estimated Annual Premium</div><div class="hrow-d" id="insuranceCostText">Based on vehicle group and UK average.</div></div><div><div class="chip chip-gold" id="insuranceCostChip">—</div></div></div>
+            <div class="hrow"><div class="hic hi-green"><i class="ti ti-receipt"></i></div><div><div class="hrow-t">SORN / Tax Status</div><div class="hrow-d" id="sornText">From DVLA records.</div></div></div>
+            <div class="info-box"><strong>Always declare modifications</strong> to your insurer. Undeclared mods can void your policy.</div>
+          </div>
+
+          <!-- Safety -->
+          <div class="sect-lbl">Safety &amp; Specs</div>
+          <div style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+            <div id="safetyRows"><div class="ph-empty">Loading...</div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- VALUATION TAB -->
+  <!-- ─── VALUATION TAB ─── -->
   <div id="tab-valuation" class="tab-panel">
     <div class="val-hero">
       <div style="position:relative;z-index:1">
         <div class="val-lbl">Current Market Value</div>
         <div class="val-price" id="valPrice">£—</div>
         <div class="val-range">
-          <span><i class="ti ti-trending-down" style="font-size:12px"></i> Private sale: <b id="valPrivate">—</b></span>
+          <span><i class="ti ti-trending-down" style="font-size:12px"></i> Private: <b id="valPrivate">—</b></span>
           <span><i class="ti ti-building-store" style="font-size:12px"></i> Trade: <b id="valTrade">—</b></span>
           <span><i class="ti ti-tag" style="font-size:12px"></i> Part-ex: <b id="valPx">—</b></span>
         </div>
@@ -633,14 +1331,14 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
         <div class="chip chip-blue">Projected</div>
       </div>
       <div class="val-facs">
-        <div class="vf-box"><div class="vf-num" id="vfAge">—</div><div class="vf-lbl">Age (yrs)</div></div>
-        <div class="vf-box"><div class="vf-num" id="vfMileage">—</div><div class="vf-lbl">Miles/yr</div></div>
-        <div class="vf-box"><div class="vf-num" id="vfPass">—</div><div class="vf-lbl">MOT Pass %</div></div>
+        <div class="vf"><div class="vf-n" id="vfAge">—</div><div class="vf-l">Age (yrs)</div></div>
+        <div class="vf"><div class="vf-n" id="vfMileage">—</div><div class="vf-l">Miles/yr</div></div>
+        <div class="vf"><div class="vf-n" id="vfPass">—</div><div class="vf-l">MOT Pass %</div></div>
       </div>
-      <div class="sect-lbl">Depreciation Curve (Estimated)</div>
+      <div class="sect-lbl">Depreciation Curve</div>
       <div id="depRows"></div>
     </div>
-    <div class="fin-card">
+    <div class="card">
       <div class="card-head">
         <div class="card-title"><i class="ti ti-calculator"></i> Finance Calculator</div>
         <div class="chip chip-blue">Indicative Only</div>
@@ -652,7 +1350,7 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
         <div><div class="fin-lbl">APR (%)</div><input class="fin-inp" id="finApr" type="number" value="9.9" step="0.1" min="1" max="30"/></div>
       </div>
       <div class="fin-result">
-        <div style="font-size:10px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:700">Monthly Payment</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:700">Monthly Payment</div>
         <div class="fin-monthly" id="finMonthly">£—</div>
         <div class="fin-bd">
           <div><div class="fin-bd-v" id="finTotal">—</div><div class="fin-bd-l">Total Repayable</div></div>
@@ -660,21 +1358,20 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
           <div><div class="fin-bd-v" id="finLoan">—</div><div class="fin-bd-l">Loan Amount</div></div>
         </div>
       </div>
-      <div class="fin-disc"><i class="ti ti-info-circle" style="font-size:12px;margin-right:4px"></i>Indicative calculation only. Actual APR depends on your credit score, lender, and vehicle age. Always get a formal quote from an FCA-authorised lender. GarageIQ is not a financial advisor.</div>
+      <div class="fin-disc"><i class="ti ti-info-circle" style="font-size:12px;margin-right:4px"></i>Indicative only. Actual APR depends on your credit score, lender and vehicle age. Always get a formal quote from an FCA-authorised lender. GarageIQ is not a financial adviser.</div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title"><i class="ti ti-file-text"></i> Finance Terms Explained</div></div>
-      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-percentage"></i></div><div><div class="hrow-t">APR — Annual Percentage Rate</div><div class="hrow-d">The yearly cost of borrowing including interest and fees. Lower APR = cheaper deal. Used car PCP is typically 6–12% APR with good credit.</div></div></div>
-      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-coins"></i></div><div><div class="hrow-t">PCP — Personal Contract Purchase</div><div class="hrow-d">Deposit + monthly payments for 2–4 years, then a "balloon" GMFV payment if you want to keep the car. Most popular UK car finance type. You don't own the car until the final payment.</div></div></div>
-      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-credit-card"></i></div><div><div class="hrow-t">HP — Hire Purchase</div><div class="hrow-d">Higher monthly payments than PCP but you own the car outright once all payments are made. No balloon payment. You build equity from day one.</div></div></div>
-      <div class="hrow"><div class="hic hi-green"><i class="ti ti-shield-check"></i></div><div><div class="hrow-t">Section 75 Protection</div><div class="hrow-d">Paying any part of a £100–£30,000 purchase by credit card means the card provider is jointly liable for issues with the seller. Vital protection for used car buyers.</div></div></div>
-      <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div><div class="hrow-t">Outstanding Finance Risk</div><div class="hrow-d">If a car still has finance owed, the lender holds a legal interest. Buying a car with outstanding finance means you could lose the vehicle even after paying. Always run an HPI check.</div></div></div>
-      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-car-garage"></i></div><div><div class="hrow-t">Part Exchange Value</div><div class="hrow-d">What a dealer will offer for your current car. Typically 10–20% below private sale. Use our estimate as a negotiating benchmark.</div></div></div>
-      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-receipt"></i></div><div><div class="hrow-t">Voluntary Termination (VT)</div><div class="hrow-d">Under the Consumer Credit Act, once you've paid 50% of the total amount payable on a PCP/HP deal, you can return the car without further payments — as long as it's in good condition.</div></div></div>
+      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-percentage"></i></div><div><div class="hrow-t">APR — Annual Percentage Rate</div><div class="hrow-d">The yearly cost of borrowing. Lower APR = cheaper deal. Used car PCP is typically 6–12% with good credit.</div></div></div>
+      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-coins"></i></div><div><div class="hrow-t">PCP — Personal Contract Purchase</div><div class="hrow-d">Deposit + monthly payments for 2–4 years, then a balloon GMFV payment if you want to own it. Most popular UK car finance type.</div></div></div>
+      <div class="hrow"><div class="hic hi-blue"><i class="ti ti-credit-card"></i></div><div><div class="hrow-t">HP — Hire Purchase</div><div class="hrow-d">Higher monthly payments but you own outright once all are made. No balloon payment. Build equity from day one.</div></div></div>
+      <div class="hrow"><div class="hic hi-green"><i class="ti ti-shield-check"></i></div><div><div class="hrow-t">Section 75 Protection</div><div class="hrow-d">Pay any part of £100–£30,000 by credit card and the card provider is jointly liable for issues with the seller.</div></div></div>
+      <div class="hrow"><div class="hic hi-red"><i class="ti ti-alert-triangle"></i></div><div><div class="hrow-t">Outstanding Finance Risk</div><div class="hrow-d">If a car still has finance owed the lender holds a legal interest. Always run an HPI check before buying.</div></div></div>
+      <div class="hrow"><div class="hic hi-gold"><i class="ti ti-receipt"></i></div><div><div class="hrow-t">Voluntary Termination (VT)</div><div class="hrow-d">Once you've paid 50% of total amount payable on PCP/HP you can return the car without further payments (Consumer Credit Act).</div></div></div>
     </div>
   </div>
 
-  <!-- MODS TAB -->
+  <!-- ─── MODS TAB ─── -->
   <div id="tab-mods" class="tab-panel">
     <div class="card">
       <div class="card-head">
@@ -698,34 +1395,48 @@ footer{background:var(--navy);padding:1.25rem;text-align:center;border-top:1px s
   </div>
 </div>
 
+<!-- ══════════════ HOW IT WORKS ══════════════ -->
 <div class="how-sec">
   <div class="how-inner">
     <div class="how-title">Why <em>GarageIQ</em>?</div>
     <div class="how-sub">Better data. Better design. Just £1.99 for a full report. No subscription ever.</div>
     <div class="how-g">
-      <div class="how-card"><div class="how-num">01</div><div class="how-t">Enter Your Reg</div><div class="how-d">Instant DVLA lookup. VIN, specs, tax status and full MOT history in seconds.</div></div>
-      <div class="how-card"><div class="how-num">02</div><div class="how-t">£1.99 Intelligence Report</div><div class="how-d">One-time payment per vehicle. Mileage fraud detection, risk score, damage analysis, financial risks and more.</div></div>
-      <div class="how-card"><div class="how-num">03</div><div class="how-t">Value, Finance &amp; Mods</div><div class="how-d">Detailed valuation, live finance calculator, finance terms explained, and AI mod analysis all in one.</div></div>
+      <div class="how-card"><div class="how-n">01</div><div class="how-t">Enter Your Reg</div><div class="how-d">Instant DVLA lookup. VIN, specs, tax status and full MOT history in seconds.</div></div>
+      <div class="how-card"><div class="how-n">02</div><div class="how-t">£1.99 Intelligence Report</div><div class="how-d">One-time per vehicle. Mileage fraud detection, risk score, damage analysis, financial risks and more.</div></div>
+      <div class="how-card"><div class="how-n">03</div><div class="how-t">Value, Finance &amp; Mods</div><div class="how-d">Detailed valuation, live finance calculator, and AI mod analysis all in one place.</div></div>
     </div>
   </div>
 </div>
-<footer>© 2026 GarageIQ. All rights reserved.</footer>
+<footer>© 2026 GarageIQ. All rights reserved. · Not financial advice · Always verify with an official HPI check before purchasing.</footer>
+
+<!-- ══════════════ SUPABASE ══════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 'use strict';
 var VERCEL='https://garage-iq-chi.vercel.app';
 var SUPA_URL='https://hbfntnxawwavttzvxdde.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
-var sb,currentUser,currentProfile,vehicleData={},motTests=[],selectedMod,currentReg='';
 
+var sb, currentUser, currentProfile;
+var vehicleData={}, motTests=[], selectedMod, currentReg='';
+var _specCache={};
+
+/* ── HELPERS ── */
+function el(id){return document.getElementById(id);}
+function qsa(s){return document.querySelectorAll(s);}
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+function fmt(s){return s?String(s).toUpperCase():'-'}
+
+/* ── INIT ── */
 window.addEventListener('load',function(){
   sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+
   sb.auth.onAuthStateChange(function(ev,session){
     currentUser=session?session.user:null;
     if(currentUser){
       var p=localStorage.getItem('giq_pu_'+currentUser.id);
-      if(p)tryCreateProfile(currentUser.id,p);else loadProfile();
-      // Re-evaluate intel report immediately — VIP check uses currentUser.email directly
+      if(p)tryCreateProfile(currentUser.id,p);
+      else loadProfile();
       if(motTests.length)setTimeout(showIntelReport,100);
     }else{
       currentProfile=null;
@@ -733,33 +1444,52 @@ window.addEventListener('load',function(){
       if(motTests.length)showIntelReport();
     }
   });
-  el('btnLogin').addEventListener('click',function(){openAuth('login');});
-  el('btnSignup').addEventListener('click',function(){openAuth('signup');});
-  el('btnAvatar').addEventListener('click',openProfileModal);
-  el('authClose').addEventListener('click',closeAuth);
-  el('authModal').addEventListener('click',function(e){if(e.target===this)closeAuth();});
-  el('tabLogin').addEventListener('click',function(){switchTab('login');});
-  el('tabSignup').addEventListener('click',function(){switchTab('signup');});
-  el('btnDoLogin').addEventListener('click',doLogin);
-  el('btnDoSignup').addEventListener('click',doSignup);
-  el('profileClose').addEventListener('click',closeProfileModal);
-  el('profileModal').addEventListener('click',function(e){if(e.target===this)closeProfileModal();});
-  el('btnSaveUser').addEventListener('click',saveUsername);
-  el('btnLogout').addEventListener('click',doLogout);
-  el('runBtn').addEventListener('click',lookupVehicle);
-  el('regInput').addEventListener('keydown',function(e){if(e.key==='Enter')lookupVehicle();});
-  el('analyzeBtn').addEventListener('click',analyseMod);
-  el('btnPwSignup').addEventListener('click',function(){openAuth('login');});
-  el('btnPay').addEventListener('click',startPayment);
-  el('btnPwLogin').addEventListener('click',function(){openAuth('login');});
-  qsa('.mod-btn').forEach(function(b){b.addEventListener('click',function(){selectMod(b);});});
-  qsa('.tab-btn').forEach(function(b){b.addEventListener('click',function(){switchMainTab(b.dataset.tab);});});
-  qsa('.dmg-zone').forEach(function(z){z.addEventListener('click',function(){
-    var lbl=z.getAttribute('data-label');
-    if(lbl)alert('Zone: '+lbl);
-  });});
-  ['finPrice','finDeposit','finTerm','finApr'].forEach(function(id){el(id).addEventListener('input',calcFinance);});
-  // Stripe return handling
+
+  /* Nav */
+  el('btnLogin').onclick=function(){openAuth('login');};
+  el('btnSignup').onclick=function(){openAuth('signup');};
+  el('btnAvatar').onclick=openProfileModal;
+  el('authClose').onclick=closeAuth;
+  el('authModal').onclick=function(e){if(e.target===this)closeAuth();};
+  el('tabLogin').onclick=function(){switchAuthTab('login');};
+  el('tabSignup').onclick=function(){switchAuthTab('signup');};
+  el('btnDoLogin').onclick=doLogin;
+  el('btnDoSignup').onclick=doSignup;
+  el('profileClose').onclick=closeProfileModal;
+  el('profileModal').onclick=function(e){if(e.target===this)closeProfileModal();};
+  el('btnSaveUser').onclick=saveUsername;
+  el('btnLogout').onclick=doLogout;
+
+  /* Search */
+  el('runBtn').onclick=lookupVehicle;
+  el('regInput').onkeydown=function(e){if(e.key==='Enter')lookupVehicle();};
+
+  /* Mods */
+  el('analyzeBtn').onclick=analyseMod;
+  el('btnPwSignup').onclick=function(){openAuth('login');};
+  el('btnPay').onclick=startPayment;
+  el('btnPwLogin').onclick=function(){openAuth('login');};
+
+  qsa('.mod-btn').forEach(function(b){
+    b.onclick=function(){selectMod(b);};
+  });
+
+  qsa('.tab-btn').forEach(function(b){
+    b.onclick=function(){switchMainTab(b.dataset.tab);};
+  });
+
+  qsa('.dmg-zone').forEach(function(z){
+    z.onclick=function(){
+      var lbl=z.getAttribute('data-label');
+      if(lbl)alert('Zone: '+lbl);
+    };
+  });
+
+  ['finPrice','finDeposit','finTerm','finApr'].forEach(function(id){
+    el(id).oninput=calcFinance;
+  });
+
+  /* Stripe return */
   var p=new URLSearchParams(window.location.search);
   var rReg=p.get('reg'),sid=p.get('session_id'),paid=p.get('paid');
   if(rReg&&paid==='1'&&sid){
@@ -771,11 +1501,6 @@ window.addEventListener('load',function(){
     window.history.replaceState({},'','/');
   }
 });
-
-function el(id){return document.getElementById(id);}
-function qsa(s){return document.querySelectorAll(s);}
-function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'';} 
-function fmt(s){return s?String(s).toUpperCase():'-';}
 
 /* ── MAIN TABS ── */
 function switchMainTab(tab){
@@ -796,14 +1521,14 @@ function renderNav(){
 function loadProfile(){
   sb.from('profiles').select('id,username').eq('id',currentUser.id).maybeSingle()
     .then(function(r){
-      if(r.data&&r.data.username){currentProfile=r.data;}
-      else{
+      if(r.data&&r.data.username){
+        currentProfile=r.data;
+      }else{
         var fb=currentUser.email.split('@')[0].toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,20)||'USER';
         currentProfile={id:currentUser.id,username:fb};
         sb.from('profiles').upsert([{id:currentUser.id,username:fb}],{onConflict:'id'});
       }
       renderNav();
-      // Always re-evaluate intel after profile loaded
       if(motTests.length)showIntelReport();
     }).catch(function(){
       currentProfile={id:currentUser.id,username:'USER'};
@@ -826,10 +1551,10 @@ function openAuth(tab){
   ['authErr','authOk'].forEach(hideMsg);
   ['loginEmail','loginPass','signupUser','signupEmail','signupPass'].forEach(function(id){el(id).value='';});
   el('authModal').classList.remove('hidden');
-  switchTab(tab||'login');
+  switchAuthTab(tab||'login');
 }
 function closeAuth(){el('authModal').classList.add('hidden');}
-function switchTab(t){
+function switchAuthTab(t){
   el('tabLogin').classList.toggle('active',t==='login');
   el('tabSignup').classList.toggle('active',t==='signup');
   el('loginForm').style.display=t==='login'?'block':'none';
@@ -843,8 +1568,8 @@ function doLogin(){
   var btn=el('btnDoLogin');btn.disabled=true;btn.textContent='...';
   sb.auth.signInWithPassword({email:email,password:pass}).then(function(r){
     btn.disabled=false;btn.textContent='Log In';
-    if(r.error){showErr('authErr',r.error.message);}
-    else{closeAuth();}
+    if(r.error)showErr('authErr',r.error.message);
+    else closeAuth();
   });
 }
 
@@ -857,7 +1582,7 @@ function doSignup(){
   var btn=el('btnDoSignup');btn.disabled=true;btn.textContent='...';
   sb.from('profiles').select('id',{count:'exact',head:true}).eq('username',username)
     .then(function(ck){
-      if((ck.count||0)>0){btn.disabled=false;btn.textContent='Create Free Account';showErr('authErr','Username already taken.');return;}
+      if((ck.count||0)>0){btn.disabled=false;btn.textContent='Create Free Account';showErr('authErr','Username taken.');return;}
       sb.auth.signUp({email:email,password:pass}).then(function(r){
         btn.disabled=false;btn.textContent='Create Free Account';
         if(r.error){showErr('authErr',r.error.message);return;}
@@ -870,7 +1595,7 @@ function doSignup(){
               currentUser=r.data.user;
               currentProfile={id:uid,username:username};
               renderNav();closeAuth();
-            }).catch(function(){showOk('authOk','Account created! Confirm email then log in.');});
+            }).catch(function(){showOk('authOk','Account created! Log in to continue.');});
         }else{showOk('authOk','Check your email to confirm, then log in!');}
       });
     });
@@ -882,8 +1607,6 @@ function doLogout(){
     renderNav();closeProfileModal();
     el('intelPaywall').style.display='block';
     el('intelContent').style.display='none';
-    el('intelBadge').textContent='Free with account';
-    el('intelBadge').className='chip chip-blue';
   });
 }
 
@@ -902,34 +1625,41 @@ function openProfileModal(){
 }
 function closeProfileModal(){el('profileModal').classList.add('hidden');}
 
+/* FIX: UPDATE first, INSERT fallback — avoids upsert conflicts */
 function saveUsername(){
   var val=el('newUsername').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'');
   if(!val){showErr('profErr','Enter a username.');return;}
   var btn=el('btnSaveUser');btn.disabled=true;btn.textContent='...';
+  var currentName=(currentProfile&&currentProfile.username||'').toUpperCase();
   sb.from('profiles').select('id',{count:'exact',head:true}).eq('username',val)
     .then(function(ck){
-      if((ck.count||0)>0&&val!==(currentProfile&&currentProfile.username||'').toUpperCase()){
+      if((ck.count||0)>0&&val!==currentName){
         btn.disabled=false;btn.textContent='Save';showErr('profErr','Username already taken.');return;
       }
-      // First try UPDATE (profile row exists), then INSERT if not
+      /* Try UPDATE first */
       sb.from('profiles').update({username:val}).eq('id',currentUser.id)
         .then(function(r){
-          btn.disabled=false;btn.textContent='Save';
-          if(r.error&&r.error.code==='PGRST116'){
-            // Row doesn't exist yet - insert it
-            return sb.from('profiles').insert([{id:currentUser.id,username:val}]).then(function(r2){
-              if(r2.error){showErr('profErr',r2.error.message||'Failed');return;}
-              currentProfile.username=val;renderNav();
-              el('profAvatar').textContent=val.charAt(0);el('profName').textContent=val;
-              el('newUsername').value='';showOk('profOk','Username saved!');
-            });
+          /* If no row updated (count = 0), fall back to INSERT */
+          if(r.error||(r.count===0)){
+            return sb.from('profiles').insert([{id:currentUser.id,username:val}])
+              .then(function(r2){
+                btn.disabled=false;btn.textContent='Save';
+                if(r2.error){showErr('profErr',r2.error.message||'Failed');return;}
+                applyUsernameChange(val,btn);
+              });
           }
-          if(r.error){showErr('profErr',r.error.message||'Failed — try again.');return;}
-          currentProfile.username=val;renderNav();
-          el('profAvatar').textContent=val.charAt(0);el('profName').textContent=val;
-          el('newUsername').value='';showOk('profOk','Username saved!');
+          btn.disabled=false;btn.textContent='Save';
+          if(r.error){showErr('profErr',r.error.message||'Failed');return;}
+          applyUsernameChange(val,btn);
         }).catch(function(e){btn.disabled=false;btn.textContent='Save';showErr('profErr',e.message||'Failed');});
     });
+}
+function applyUsernameChange(val,btn){
+  currentProfile.username=val;renderNav();
+  el('profAvatar').textContent=val.charAt(0);
+  el('profName').textContent=val;
+  el('newUsername').value='';
+  showOk('profOk','Username saved!');
 }
 
 function loadProfileHistory(){
@@ -939,7 +1669,7 @@ function loadProfileHistory(){
     .order('looked_up_at',{ascending:false})
     .limit(200)
     .then(function(r){
-      if(r.error){el('profHistory').innerHTML='<div class="ph-empty">Error: '+esc(r.error.message)+'</div>';return;}
+      if(r.error){el('profHistory').innerHTML='<div class="ph-empty">Error loading history.</div>';return;}
       var rows=r.data||[];
       el('profLookups').textContent=rows.length;
       var seen={},unique=[];
@@ -954,27 +1684,31 @@ function loadProfileHistory(){
           +'<div class="ph-reg">'+esc(r.reg)+'</div>'
           +'<div style="flex:1;min-width:0"><div class="ph-car">'+esc(car)+'</div>'
           +'<div class="ph-meta">'+esc(meta)+'</div></div>'
-          +'<i class="ti ti-chevron-right" style="color:var(--text4);font-size:12px"></i></div>';
+          +'<i class="ti ti-chevron-right" style="color:var(--t4);font-size:12px"></i></div>';
       }).join('');
       qsa('#profHistory .ph-item').forEach(function(item){
-        item.addEventListener('click',function(){
+        item.onclick=function(){
           el('regInput').value=item.getAttribute('data-reg');
           closeProfileModal();lookupVehicle();
-        });
+        };
       });
-    }).catch(function(e){el('profHistory').innerHTML='<div class="ph-empty">'+esc(e.message)+'</div>';});
+    }).catch(function(){el('profHistory').innerHTML='<div class="ph-empty">Could not load history.</div>';});
 }
 
 /* ── VEHICLE LOOKUP ── */
-function estHp(d){var c=parseInt(d.engineCapacity)||1600;return c<=999?65:c<=1199?85:c<=1399?110:c<=1599?130:c<=1999?160:c<=2499?220:c<=2999?280:340;}
-function estTq(d){return Math.round(estHp(d)*1.5);}
+function estHp(d){
+  var c=parseInt(d.engineCapacity)||1600;
+  var fuel=(d.fuelType||'').toUpperCase();
+  if(fuel.includes('ELECTRIC'))return 150;
+  if(fuel.includes('HYBRID'))return c<=1500?116:180;
+  return c<=999?95:c<=1199?110:c<=1399?128:c<=1599?138:c<=1999?163:c<=2499?228:c<=2999?298:375;
+}
+function estTq(d){return Math.round(estHp(d)*1.55);}
 function estVal(d){
   var y=parseInt(d.yearOfManufacture)||2015;
   var age=2026-y;
   var cc=parseInt(d.engineCapacity)||1600;
-  // Base value by engine size
   var baseNew=cc<=1000?12000:cc<=1400?15000:cc<=2000?22000:cc<=3000?35000:50000;
-  // Depreciation: ~15% year 1, ~12% years 2-3, ~10% thereafter
   var val=baseNew;
   if(age>=1)val=Math.round(val*0.85);
   if(age>=2)val=Math.round(val*0.88);
@@ -983,7 +1717,6 @@ function estVal(d){
   return Math.max(800,val);
 }
 
-var _specCache={};
 function lookupVehicle(){
   var reg=el('regInput').value.replace(/\s/g,'').toUpperCase();
   if(!reg||reg.length<2)return;
@@ -1009,8 +1742,10 @@ function lookupVehicle(){
   })
   .then(function(r){if(!r.ok)throw new Error('DVLA error '+r.status);return r.json();})
   .then(function(d){
-    // Normalise model — DVLA returns various field names
-    var model=d.model||d.modelSeries||d.typeApproval||'';
+    /* FIX: Try all model field variants, never show blank */
+    var model=d.model||d.modelSeries||d.typeApproval||d.vehicleDescription||d.vehicleClass||'';
+    /* Strip short DVLA codes that aren't useful (e.g. "M1") */
+    if(model&&model.length<=2)model='';
     vehicleData=Object.assign({},d,{
       reg:reg,
       model:model,
@@ -1023,7 +1758,6 @@ function lookupVehicle(){
     loadSpecs();
     loadMot(reg);
     renderValuation();
-    renderHistoryTab();
     el('loadbox').classList.add('hidden');
     el('vcReg').textContent=reg;
     el('mainApp').scrollIntoView({behavior:'smooth',block:'start'});
@@ -1031,17 +1765,15 @@ function lookupVehicle(){
   })
   .catch(function(e){
     el('loadbox').classList.add('hidden');
-    // Only show error if it's a real error (not a network abort from fast re-click)
-    if(e&&e.message&&e.message!=='Failed to fetch')
-      el('errbox').textContent='Could not fetch vehicle — check the reg and try again.';
-    else
-      el('errbox').textContent='Could not reach server — check your connection and try again.';
+    el('errbox').textContent=e&&e.message&&!e.message.includes('Failed to fetch')
+      ?'Could not fetch vehicle — check the reg and try again.'
+      :'Could not reach server — check your connection.';
     el('errbox').classList.remove('hidden');
   });
 }
 
 function verifyThenLookup(reg,sessionId){
-  el('loadbox').textContent='Verifying payment...';
+  el('loadbox').querySelector('span')?el('loadbox').querySelector('span').textContent='Verifying payment...':0;
   el('loadbox').classList.remove('hidden');
   el('mainApp').classList.remove('hidden');
   fetch(VERCEL+'/api/verify-payment',{
@@ -1059,26 +1791,28 @@ function verifyThenLookup(reg,sessionId){
 
 function renderVehicle(d){
   el('statMake').textContent=fmt(d.make);
-  // All DVLA model field variants
-  var m=d.model||d.modelSeries||d.typeApproval||d.vehicleClass||'';
-  if(m&&m.length<=2)m=''; // strip short codes
+  /* FIX: All DVLA model field variants */
+  var m=d.model||d.modelSeries||d.typeApproval||d.vehicleDescription||'';
+  if(m&&m.length<=2)m='';
   el('statModel').textContent=m?fmt(m):'-';
   el('statYear').textContent=d.yearOfManufacture||d.monthOfFirstRegistration||'-';
-  el('statEngine').textContent=d.engineCapacity?d.engineCapacity+'cc':(d.engineSize?d.engineSize+'cc':'-');
+  var cc=d.engineCapacity||d.engineSize;
+  el('statEngine').textContent=cc?cc+'cc':'-';
   el('statColour').textContent=fmt(d.colour||d.primaryColour);
   el('statFuel').textContent=fmt(d.fuelType);
   var te=el('statTax');
-  te.textContent=fmt(d.taxStatus);
-  te.className='sval '+((d.taxStatus||'').toLowerCase().includes('taxed')?'green':'red');
+  var taxOk=(d.taxStatus||'').toLowerCase().includes('taxed');
+  te.textContent=taxOk?'TAXED':fmt(d.taxStatus);
+  te.className='sval '+(taxOk?'green':'red');
   var me=el('statMot');
   var mok=(d.motStatus||'').toLowerCase().includes('valid');
-  me.textContent=mok?'VALID':fmt(d.motStatus);
+  me.textContent=mok?'VALID':fmt(d.motStatus||'Unknown');
   me.className='sval '+(mok?'green':'red');
-  // VIN strip
+  /* VIN */
   var vin=d.vin||d.vinLastFive||'';
   if(vin){
     el('vinVal').textContent=vin;
-    el('vinNote').textContent=d.vin?'Full VIN from DVLA':'Partial VIN (last 5 digits)';
+    el('vinNote').textContent=d.vin?'Full VIN':'Partial VIN (last 5)';
     el('vinStrip').classList.remove('hidden');
   }
 }
@@ -1096,45 +1830,41 @@ function saveToHistory(){
     hp:vehicleData.hp||null,
     value:vehicleData.value||null
   })
-  .then(function(r){if(r.error)console.warn('History save:',r.error.message,'code:',r.error.code);})
-  .catch(function(e){console.warn('History error:',e.message);});
+  .then(function(r){if(r.error)console.warn('History:',r.error.code);})
+  .catch(function(e){console.warn('History:',e.message);});
 }
 
-/* ── SPECS — normalised with retry fallback ── */
-function clearSpecFields(){
-  ['specBhp','specTorque','specZero','specTop','specGearbox','specCyl','specDrive','specMpg','specCo2'].forEach(function(id){
-    var e=document.getElementById(id);if(e)e.textContent='-';
-  });
-}
+/* ── SPECS ── */
 function applySpecs(s){
   el('specBhp').textContent=s.bhp?s.bhp+' BHP':'-';
   el('specTorque').textContent=s.torqueNm?(s.torqueNm+' Nm'+(s.torqueRpm?' @ '+s.torqueRpm+' rpm':'')):'-';
   el('specZero').textContent=s.zeroToSixty?s.zeroToSixty+' sec':'-';
   el('specTop').textContent=s.topSpeedMph?s.topSpeedMph+' mph':'-';
   el('specGearbox').textContent=s.gearbox||'-';
-  el('specCyl').textContent=s.cylinders||'-';
+  el('specCyl').textContent=s.cylinders!=null?String(s.cylinders):'-';
   el('specDrive').textContent=s.driveType||'-';
   el('specMpg').textContent=s.consumptionCombined?s.consumptionCombined+' mpg':'-';
-  el('specCo2').innerHTML=s.co2gkm?s.co2gkm+' g/km <span class="co2b '+esc(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>':'-';
+  el('specCo2').innerHTML=s.co2gkm
+    ?s.co2gkm+' g/km <span class="co2b '+esc(s.co2Label||'')+'">'+esc(s.co2Label||'')+'</span>'
+    :'-';
   if(s.bhp)vehicleData.hp=parseInt(s.bhp);
   if(s.torqueNm)vehicleData.torque=parseInt(s.torqueNm);
   el('specsStatus').textContent='Loaded';
   renderSafety(s);
 }
+
 function loadSpecs(){
   el('specsStatus').textContent='Loading...';
+  /* FIX: pass all fallback variants */
   var payload={
     make:vehicleData.make,
-    model:vehicleData.model||vehicleData.modelSeries,
+    model:vehicleData.model||vehicleData.modelSeries||vehicleData.typeApproval||'',
     year:vehicleData.yearOfManufacture,
     cc:vehicleData.engineCapacity||vehicleData.engineSize,
     fuel:vehicleData.fuelType
   };
-  var cacheKey=payload.make+'_'+payload.model+'_'+payload.year+'_'+payload.cc;
-  if(_specCache[cacheKey]){
-    var s=_specCache[cacheKey];
-    applySpecs(s);return;
-  }
+  var cacheKey=[payload.make,payload.model,payload.year,payload.cc].join('_');
+  if(_specCache[cacheKey]){applySpecs(_specCache[cacheKey]);return;}
   fetch(VERCEL+'/api/specs',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -1142,12 +1872,11 @@ function loadSpecs(){
   })
   .then(function(r){if(!r.ok)throw new Error('specs '+r.status);return r.json();})
   .then(function(s){
-    if(!s||((!s.bhp)&&(!s.torqueNm)&&(!s.gearbox))){throw new Error('empty response');}
+    if(!s||(!s.bhp&&!s.torqueNm&&!s.gearbox))throw new Error('empty');
     _specCache[cacheKey]=s;
     applySpecs(s);
   })
   .catch(function(){
-    // Show what we know from DVLA even if specs API fails
     el('specBhp').textContent=vehicleData.hp?vehicleData.hp+' BHP (est.)':'-';
     el('specTorque').textContent=vehicleData.torque?vehicleData.torque+' Nm (est.)':'-';
     el('specsStatus').textContent='Partial';
@@ -1158,15 +1887,19 @@ function loadSpecs(){
 function renderSafety(s){
   var yr=parseInt(vehicleData.yearOfManufacture)||2015;
   var stars=yr>=2020?5:yr>=2016?4:yr>=2011?4:yr>=2006?3:2;
-  var html='<div class="hrow"><div class="hic hi-green"><i class="ti ti-shield-check"></i></div><div><div class="hrow-t">Euro NCAP Safety Rating (Estimated)</div>';
-  if(s&&s.ncapRating){html+='<div class="hrow-d">'+esc(s.ncapRating)+' stars — '+esc(s.ncapNotes||'Based on vehicle class and year.')+'</div>';}
-  else{html+='<div class="hrow-d">~'+stars+' stars estimated from year '+yr+'. For the exact rating, visit <strong>euroncap.com</strong> and search for '+esc(vehicleData.make||'your car')+'.</div>';}
-  html+='</div></div>';
-  html+='<div class="hrow"><div class="hic hi-blue"><i class="ti ti-list-check"></i></div><div><div class="hrow-t">Standard Equipment (Estimated)</div><div class="hrow-d">';
-  if(s&&s.bhp){html+=esc(vehicleData.make)+' '+esc(vehicleData.model||'')+': '+s.bhp+'bhp, '+(s.cylinders?s.cylinders+' cyl, ':'')+esc(s.gearbox||'')+', '+esc(s.driveType||'')+' drive. ';}
-  html+='Exact spec depends on trim level and options. Always verify with the manufacturer spec sheet or Parkers/Autotrader listing.</div></div></div>';
+  var make=esc(vehicleData.make||'your car');
+  var model=esc(vehicleData.model||'');
+  var html='<div class="hrow"><div class="hic hi-green"><i class="ti ti-shield-check"></i></div><div>'
+    +'<div class="hrow-t">Euro NCAP Safety (Estimated)</div>'
+    +'<div class="hrow-d">~'+stars+' stars estimated from year '+yr+'. Check <a href="https://www.euroncap.com" target="_blank" style="color:var(--blue)">euroncap.com</a> for '+make+' exact rating.</div>'
+    +'</div></div>';
+  if(s&&s.bhp){
+    html+='<div class="hrow"><div class="hic hi-blue"><i class="ti ti-list-check"></i></div><div>'
+      +'<div class="hrow-t">Factory Spec ('+make+(model?' '+model:'')+')</div>'
+      +'<div class="hrow-d">'+s.bhp+'bhp'+(s.cylinders?', '+s.cylinders+' cyl':'')+(s.gearbox?', '+esc(s.gearbox):'')+', '+esc(s.driveType||'')+' drive. Exact spec depends on trim and options.</div>'
+      +'</div></div>';
+  }
   el('safetyRows').innerHTML=html;
-  el('safetyChip').textContent='Updated';
 }
 
 /* ── MOT ── */
@@ -1186,16 +1919,26 @@ function renderMot(raw){
   else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate)tests=raw;
   if(!tests.length){renderDemoMot();return;}
   motTests=tests;
+  buildMotUI(tests);
+}
+
+function buildMotUI(tests){
   var tot=tests.length;
   var pass=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
   var advs=tests.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
   var rate=Math.round(pass/tot*100);
-  el('sumPass').textContent=pass;el('sumFail').textContent=tot-pass;
-  el('sumAdv').textContent=advs;el('sumTotal').textContent=tot;
+  el('sumPass').textContent=pass;
+  el('sumFail').textContent=tot-pass;
+  el('sumAdv').textContent=advs;
+  el('sumTotal').textContent=tot;
   el('passRatePct').textContent=rate+'%';
   el('passBarFill').style.width=rate+'%';
-  el('passBarFill').style.background=rate>=80?'linear-gradient(90deg,var(--green),#4ADE80)':rate>=60?'linear-gradient(90deg,var(--amber),#FCD34D)':'linear-gradient(90deg,var(--red),#F87171)';
+  el('passBarFill').style.background=rate>=80
+    ?'linear-gradient(90deg,var(--green),#22C55E)'
+    :rate>=60?'linear-gradient(90deg,var(--amber),#FCD34D)'
+    :'linear-gradient(90deg,var(--red),#F87171)';
   el('motSumWrap').classList.remove('hidden');
+
   el('motHistory').innerHTML=tests.slice(0,10).map(function(t){
     var passed=(t.testResult||'').toUpperCase()==='PASSED';
     var def=t.defects||[];
@@ -1213,17 +1956,17 @@ function renderMot(raw){
     try{if(ds.includes('T'))ds=new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){}
     var mi=t.odometerValue?Number(t.odometerValue).toLocaleString()+' miles':'-';
     return '<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-rh">'
-      +'<span style="color:var(--text3);font-size:11px;font-weight:600">'+ds+'</span>'
+      +'<span style="color:var(--t3);font-size:11px;font-weight:600">'+ds+'</span>'
       +'<span style="font-weight:700">'+mi+'</span>'
       +'<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">'
       +((dang.length+maj.length)?'<span class="badge b-fail">'+(dang.length+maj.length)+' failure</span>':'')
       +(min.length?'<span class="badge b-warn">'+min.length+' minor</span>':'')
-      +(adv.length?'<span class="badge b-adv">'+adv.length+' advisory</span>':'')
+      +(adv.length?'<span class="badge b-adv">'+adv.length+' adv</span>':'')
       +'<span class="badge '+(passed?'b-pass':'b-fail')+'">'+(passed?'PASS':'FAIL')+'</span>'
       +'</div><i class="ti ti-chevron-down mot-chev"></i></div>'
       +'<div class="mot-det">'+det+'</div></div>';
   }).join('');
-  // Don't build damage/mile here — showIntelReport handles it when unlocked
+
   if(el('tab-report').classList.contains('active'))showIntelReport();
 }
 
@@ -1231,34 +1974,17 @@ function renderDemoMot(){
   var h=[
     {date:'14 Nov 2024',passed:true,od:62440,defects:[{type:'ADVISORY',text:'Nearside rear tyre worn close to legal limit'},{type:'ADVISORY',text:'Rear brake pads showing wear'}]},
     {date:'12 Nov 2023',passed:true,od:49210,defects:[]},
-    {date:'08 Nov 2022',passed:true,od:37880,defects:[{type:'ADVISORY',text:'Front suspension arm bush deteriorating — monitoring recommended'}]},
+    {date:'08 Nov 2022',passed:true,od:37880,defects:[{type:'ADVISORY',text:'Front suspension arm bush deteriorating'}]},
     {date:'03 Dec 2021',passed:false,od:28550,defects:[{type:'MAJOR',text:'Nearside front headlamp aim too low (1.3.1a)'},{type:'ADVISORY',text:'Oil seeping from engine rocker cover gasket'}]}
   ];
   motTests=h.map(function(m){return{completedDate:m.date,testResult:m.passed?'PASSED':'FAILED',odometerValue:m.od,defects:m.defects};});
-  el('motHistory').innerHTML=h.map(function(m){
-    var fails=m.defects.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';});
-    var advs=m.defects.filter(function(d){return d.type==='ADVISORY';});
-    var det=m.defects.length?m.defects.map(function(d){
-      var f=d.type==='MAJOR'||d.type==='DANGEROUS';
-      return'<div class="mot-di"><div class="mdot '+(f?'d-maj':'d-adv')+'"></div><div><span style="color:'+(f?'#EA580C':'var(--amber)')+';font-weight:700;font-size:10px">'+(f?'MAJOR':'ADVISORY')+' — </span>'+esc(d.text)+'</div></div>';
-    }).join(''):'<div class="mot-ni">No failures or advisories.</div>';
-    return'<div class="mot-row" onclick="toggleMotRow(this)"><div class="mot-rh">'
-      +'<span style="color:var(--text3);font-size:11px;font-weight:600">'+m.date+'</span>'
-      +'<span style="font-weight:700">'+m.od.toLocaleString()+' miles</span>'
-      +'<div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">'
-      +(fails.length?'<span class="badge b-fail">'+fails.length+' failure</span>':'')
-      +(advs.length?'<span class="badge b-adv">'+advs.length+' advisory</span>':'')
-      +'<span class="badge '+(m.passed?'b-pass':'b-fail')+'">'+(m.passed?'PASS':'FAIL')+'</span>'
-      +'</div><i class="ti ti-chevron-down mot-chev"></i></div>'
-      +'<div class="mot-det">'+det+'</div></div>';
-  }).join('');
-  if(el('tab-report').classList.contains('active'))showIntelReport();
+  buildMotUI(motTests);
 }
 
 /* ── DAMAGE MAP ── */
 var ZK={
   front:['headlamp','headlight','bumper','bonnet','front','number plate','wiper','fog lamp','horn','grille'],
-  rear:['rear','tail','boot','reversing','back bumper','rear bumper','rear lamp'],
+  rear:['rear','tail','boot','reversing','back bumper','rear lamp'],
   left:['nearside','left','driver side'],
   right:['offside','right','passenger side'],
   roof:['roof','windscreen','screen','mirror','wiper blade'],
@@ -1284,32 +2010,31 @@ function buildDamageMap(tests){
   });
   var listEl=el('dmgList');
   var serious=allDef.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';});
-  var minors=allDef.filter(function(d){return d.type==='MINOR';});
   var adv=allDef.filter(function(d){return d.type==='ADVISORY';});
   if(!allDef.length){
-    listEl.innerHTML='<div class="dmg-none"><i class="ti ti-check" style="color:var(--green);font-size:20px;display:block;margin-bottom:8px"></i>No damage or defects in MOT history</div>';
+    listEl.innerHTML='<div class="dmg-none"><i class="ti ti-check" style="color:var(--green);font-size:20px;display:block;margin-bottom:8px"></i>No damage in MOT history</div>';
     el('dmgChip').textContent='Clean';el('dmgChip').className='chip chip-green';return;
   }
   var html='';
   if(serious.length){
-    html+='<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:6px">Failures & Defects</div>';
+    html+='<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:6px">Failures</div>';
     serious.forEach(function(d){html+='<div class="dmg-item damage"><i class="ti ti-alert-triangle"></i><div><div class="dmg-it">'+esc(d.type)+'</div><div class="dmg-id">'+esc(d.text)+'</div></div></div>';});
   }
   if(adv.length){
     html+='<div style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin:10px 0 6px">Advisories</div>';
     adv.slice(0,6).forEach(function(d){html+='<div class="dmg-item advisory"><i class="ti ti-alert-circle"></i><div><div class="dmg-it">ADVISORY</div><div class="dmg-id">'+esc(d.text)+'</div></div></div>';});
-    if(adv.length>6)html+='<div style="font-size:10px;color:var(--text3);margin-top:6px">+'+(adv.length-6)+' more advisories across MOT history</div>';
+    if(adv.length>6)html+='<div style="font-size:10px;color:var(--t3);margin-top:6px">+'+(adv.length-6)+' more advisories</div>';
   }
-  el('dmgChip').textContent=allDef.length+' items found';
+  el('dmgChip').textContent=allDef.length+' items';
   el('dmgChip').className='chip '+(serious.length?'chip-red':'chip-gold');
   listEl.innerHTML=html;
 }
 
-/* ── MILEAGE HISTORY ── */
+/* ── MILEAGE ── */
 function buildMileageHistory(tests){
   var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
   var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};}).filter(function(r){return r.mi>0;});
-  if(!readings.length){el('mileHistRows').innerHTML='<div class="ph-empty">No mileage data available</div>';return;}
+  if(!readings.length){el('mileHistRows').innerHTML='<div class="ph-empty">No mileage data</div>';return;}
   var maxMi=readings[readings.length-1].mi||1;
   el('mileHistRows').innerHTML=readings.map(function(r,i){
     var pct=Math.round((r.mi/maxMi)*100);
@@ -1318,62 +2043,9 @@ function buildMileageHistory(tests){
     return'<div class="mi-row">'
       +'<div class="mi-yr">'+esc(String(yr))+'</div>'
       +'<div class="mi-bg"><div class="mi-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
-      +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i>DROP</span>':'')+'</div>'
+      +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i> DROP</span>':'')+'</div>'
       +'</div>';
   }).join('');
-  el('mileChip').textContent=readings.length+' readings';
-}
-
-/* ── HISTORY TAB ── */
-function renderHistoryTab(){
-  var d=vehicleData;
-  var taxOk=(d.taxStatus||'').toLowerCase().includes('taxed');
-  el('taxStatusText').textContent=(d.taxStatus||'Unknown')+' — '+(taxOk?'Currently taxed and legal to drive on UK roads.':'Not taxed — illegal to drive without a SORN declaration.');
-  el('taxChip').textContent=taxOk?'Taxed':'Not Taxed';
-  el('taxChip').className='chip '+(taxOk?'chip-green':'chip-red');
-  el('firstRegText').textContent=d.monthOfFirstRegistration||d.yearOfManufacture||'Unknown';
-  el('keeperText').textContent=fmt(d.colour||d.primaryColour)+' '+fmt(d.fuelType)+' — registered in UK. Full keeper history requires an HPI or DVLA subject access request.';
-  // Commercial use heuristic from mileage
-  var annualMi=0;
-  if(motTests.length>=2){
-    var sr=motTests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
-    var fr=sr.filter(function(t){return parseInt(t.odometerValue)>0;});
-    if(fr.length>=2){
-      var yrs=(new Date(fr[fr.length-1].completedDate)-new Date(fr[0].completedDate))/(1000*60*60*24*365.25);
-      annualMi=yrs>0.1?Math.round((parseInt(fr[fr.length-1].odometerValue)-parseInt(fr[0].odometerValue))/yrs):0;
-    }
-  }
-  var commFlag=annualMi>18000;
-  el('commUseTitle').textContent=commFlag?'Possible Commercial/Fleet Use Detected':'No Strong Commercial Use Indicators';
-  el('commUseText').textContent=commFlag
-    ?'Annual mileage ~'+annualMi.toLocaleString()+' miles/yr is consistent with commercial or fleet use. Ask the seller and verify with an HPI check.'
-    :'Annual mileage ~'+(annualMi>0?annualMi.toLocaleString():'unknown')+' miles/yr appears consistent with private use.';
-  el('commUseChip').textContent=commFlag?'Flag':'Low Risk';
-  el('commUseChip').className='chip '+(commFlag?'chip-gold':'chip-green');
-  var yr=parseInt(d.yearOfManufacture)||2015;
-  var age=2026-yr;
-  var estOwners=age<=2?1:age<=4?2:age<=7?3:4;
-  el('ownerText').textContent='Exact keeper count is not available in DVLA/DVSA public data. Run an HPI check to get the precise number of previous owners.';
-  el('ownerChip').textContent='HPI Required';
-  el('ownerChip').className='chip chip-gold';
-  // Insurance group estimate from engine size
-  var cc2=parseInt(vehicleData.engineCapacity)||1600;
-  var ig=cc2<=1000?'Group 1-8':cc2<=1400?'Group 9-16':cc2<=1600?'Group 15-22':cc2<=2000?'Group 20-28':cc2<=2500?'Group 25-35':'Group 35-50';
-  var ic=cc2<=1000?'~£600-900/yr':cc2<=1400?'~£800-1200/yr':cc2<=1600?'~£900-1400/yr':cc2<=2000?'~£1100-1800/yr':'~£1500-3000/yr';
-  var insurEl=document.getElementById('insuranceGroupText');
-  var insurCostEl=document.getElementById('insuranceCostText');
-  var insurChipEl=document.getElementById('insuranceGroupChip');
-  var insurCostChipEl=document.getElementById('insuranceCostChip');
-  if(insurEl)insurEl.textContent=ig+' — based on '+cc2+'cc engine. Exact group depends on trim, doors and safety rating.';
-  if(insurChipEl)insurChipEl.textContent=ig;
-  if(insurCostEl)insurCostEl.textContent=ic+' estimate for average UK driver. Use comparison sites for your exact quote.';
-  if(insurCostChipEl)insurCostChipEl.textContent=ic;
-  var sornEl=document.getElementById('sornText');
-  var sornEl2=document.getElementById('taxStatusText');
-  if(sornEl){
-    var taxOk2=(vehicleData.taxStatus||'').toLowerCase().includes('taxed');
-    sornEl.textContent=taxOk2?'Vehicle is currently taxed — no SORN in effect.':'Vehicle may be SORN (off-road declaration) or tax lapsed. Do not drive without valid tax.';
-  }
 }
 
 /* ── VALUATION ── */
@@ -1382,42 +2054,37 @@ function renderValuation(){
   var yr=parseInt(d.yearOfManufacture)||2015;
   var age=2026-yr;
   var base=d.value||8000;
-  var privateHigh=Math.round(base*1.12);
-  var privateLow=Math.round(base*0.88);
-  var trade=Math.round(base*0.82);
-  var px=Math.round(base*0.73);
   el('valPrice').textContent='£'+base.toLocaleString();
-  el('valPrivate').textContent='£'+privateLow.toLocaleString()+'–£'+privateHigh.toLocaleString();
-  el('valTrade').textContent='£'+trade.toLocaleString();
-  el('valPx').textContent='£'+px.toLocaleString();
+  el('valPrivate').textContent='£'+Math.round(base*.88).toLocaleString()+'–£'+Math.round(base*1.12).toLocaleString();
+  el('valTrade').textContent='£'+Math.round(base*.82).toLocaleString();
+  el('valPx').textContent='£'+Math.round(base*.73).toLocaleString();
   el('vfAge').textContent=age;
-  var annMi=0;
-  if(motTests.length>=2){
-    var sr=motTests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
-    var fr=sr.filter(function(t){return parseInt(t.odometerValue)>0;});
-    if(fr.length>=2){
-      var yrs=(new Date(fr[fr.length-1].completedDate)-new Date(fr[0].completedDate))/(1000*60*60*24*365.25);
-      annMi=yrs>0.1?Math.round((parseInt(fr[fr.length-1].odometerValue)-parseInt(fr[0].odometerValue))/yrs):0;
-    }
-  }
+  var annMi=calcAnnualMi();
   el('vfMileage').textContent=annMi>0?annMi.toLocaleString():'N/A';
   var tot=motTests.length,pass=motTests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
   el('vfPass').textContent=tot>0?Math.round(pass/tot*100)+'%':'N/A';
-  // Depreciation from NOW forward 5 years (2026 = current value, then projected)
   var depHTML='';
-  var currentYear=2026;
   for(var y=0;y<=5;y++){
     var dp=Math.round(base*Math.pow(0.85,y));
     var pct=Math.round((dp/base)*100);
-    var label=y===0?'Now ('+currentYear+')':String(currentYear+y);
-    depHTML+='<div class="dep-row"><div class="dep-yr" style="width:52px;font-size:9px">'+label+'</div><div class="dep-bg"><div class="dep-fill" style="width:'+pct+'%"></div></div><div class="dep-val">£'+dp.toLocaleString()+'</div></div>';
+    var lbl=y===0?'Now (2026)':String(2026+y);
+    depHTML+='<div class="dep-row"><div class="dep-yr">'+lbl+'</div>'
+      +'<div class="dep-bg"><div class="dep-fill" style="width:'+pct+'%"></div></div>'
+      +'<div class="dep-val">£'+dp.toLocaleString()+'</div></div>';
   }
   el('depRows').innerHTML=depHTML;
-  // Update finance price to current value
   el('finPrice').value=base;
-  el('finDeposit').value=Math.round(base*0.15);
+  el('finDeposit').value=Math.round(base*.15);
   calcFinance();
+}
 
+function calcAnnualMi(){
+  if(motTests.length<2)return 0;
+  var sr=motTests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
+  var fr=sr.filter(function(t){return parseInt(t.odometerValue)>0;});
+  if(fr.length<2)return 0;
+  var yrs=(new Date(fr[fr.length-1].completedDate)-new Date(fr[0].completedDate))/(1000*60*60*24*365.25);
+  return yrs>0.1?Math.round((parseInt(fr[fr.length-1].odometerValue)-parseInt(fr[0].odometerValue))/yrs):0;
 }
 
 function calcFinance(){
@@ -1437,20 +2104,18 @@ function calcFinance(){
 }
 
 /* ── INTELLIGENCE REPORT ── */
-var VIP_ACCOUNTS=['bravemalek2020@gmail.com','waelmoh1983@gmail.com'];
-// Check VIP using currentUser.email directly — don't rely on currentProfile
-function isVipUser(){
+var VIP=['bravemalek2020@gmail.com','waelmoh1983@gmail.com'];
+function isVip(){
   if(!currentUser)return false;
-  var email=(currentUser.email||'').toLowerCase().trim();
-  return VIP_ACCOUNTS.some(function(v){return v.toLowerCase()===email;});
+  var e=(currentUser.email||'').toLowerCase().trim();
+  return VIP.some(function(v){return v.toLowerCase()===e;});
 }
-function hasPaidForReg(reg){return sessionStorage.getItem('giq_paid_'+(reg||currentReg))==='1';}
+function hasPaid(reg){return sessionStorage.getItem('giq_paid_'+(reg||currentReg))==='1';}
 
 function showIntelReport(){
   if(!motTests.length)return;
 
   if(!currentUser){
-    // Not logged in
     el('pwLoggedOut').style.display='block';
     el('pwLoggedIn').style.display='none';
     el('intelPaywall').style.display='block';
@@ -1460,22 +2125,17 @@ function showIntelReport(){
     return;
   }
 
-  var vip=isVipUser();
-  var paid=hasPaidForReg(currentReg);
-
+  var vip=isVip(),paid=hasPaid(currentReg);
   if(vip||paid){
     el('intelPaywall').style.display='none';
     el('intelContent').style.display='block';
-    var hist=document.getElementById('intelHistorySections');
-    if(hist)hist.style.display='block';
     el('intelBadge').textContent=vip?'VIP — Full Access':'UNLOCKED';
     el('intelBadge').className=vip?'chip chip-gold':'chip chip-green';
     buildIntelReport(motTests);
-    renderHistoryTab();
     buildDamageMap(motTests);
     buildMileageHistory(motTests);
-  } else {
-    // Logged in, not VIP, not paid
+    renderHistorySections();
+  }else{
     el('pwLoggedOut').style.display='none';
     el('pwLoggedIn').style.display='block';
     el('intelPaywall').style.display='block';
@@ -1485,17 +2145,49 @@ function showIntelReport(){
   }
 }
 
+function renderHistorySections(){
+  var d=vehicleData;
+  var taxOk=(d.taxStatus||'').toLowerCase().includes('taxed');
+  el('taxStatusText').textContent=(d.taxStatus||'Unknown')+' — '+(taxOk?'Currently taxed and legal to drive.':'Not taxed — illegal to drive without a SORN.');
+  el('taxChip').textContent=taxOk?'Taxed':'Not Taxed';
+  el('taxChip').className='chip '+(taxOk?'chip-green':'chip-red');
+  el('firstRegText').textContent=d.monthOfFirstRegistration||d.yearOfManufacture||'Unknown';
+  el('keeperText').textContent=fmt(d.colour||d.primaryColour)+' '+fmt(d.fuelType)+' — full keeper count requires HPI or DVLA SAR.';
+
+  var annMi=calcAnnualMi();
+  var commFlag=annMi>18000;
+  el('commUseTitle').textContent=commFlag?'Possible Commercial/Fleet Use':'No Commercial Use Indicators';
+  el('commUseText').textContent=commFlag
+    ?'~'+annMi.toLocaleString()+' miles/yr — consistent with commercial or fleet use. Ask seller and verify with HPI.'
+    :'~'+(annMi>0?annMi.toLocaleString():'unknown')+' miles/yr — consistent with private use.';
+  el('commUseChip').textContent=commFlag?'Flag':'Low Risk';
+  el('commUseChip').className='chip '+(commFlag?'chip-gold':'chip-green');
+
+  el('ownerText').textContent='Exact keeper count not in DVLA/DVSA public data. Run an HPI check for the precise number.';
+  el('ownerChip').textContent='HPI Required';
+  el('ownerChip').className='chip chip-gold';
+
+  var cc2=parseInt(vehicleData.engineCapacity)||1600;
+  var ig=cc2<=1000?'Group 1–8':cc2<=1400?'Group 9–16':cc2<=1600?'Group 15–22':cc2<=2000?'Group 20–28':cc2<=2500?'Group 25–35':'Group 35–50';
+  var ic=cc2<=1000?'~£600–900/yr':cc2<=1400?'~£800–1,200/yr':cc2<=1600?'~£900–1,400/yr':cc2<=2000?'~£1,100–1,800/yr':'~£1,500–3,000/yr';
+  el('insuranceGroupText').textContent=ig+' — based on '+cc2+'cc. Exact group depends on trim and safety rating.';
+  el('insuranceGroupChip').textContent=ig;
+  el('insuranceCostText').textContent=ic+' estimate for average UK driver profile.';
+  el('insuranceCostChip').textContent=ic;
+  el('sornText').textContent=taxOk?'Vehicle currently taxed — no SORN in effect.':'Vehicle may be SORN. Do not drive without valid tax.';
+}
+
 function buildIntelReport(tests){
   var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
   var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};}).filter(function(r){return r.mi>0;});
-  // Fraud detection
+
   var fraudEvents=[];
   for(var i=1;i<readings.length;i++){
     if(readings[i].mi<readings[i-1].mi){
       fraudEvents.push({date:readings[i].date,from:readings[i-1].mi,to:readings[i].mi,drop:readings[i-1].mi-readings[i].mi});
     }
   }
-  // Annual mileage
+
   var annualMi=0,totalMi=0;
   if(readings.length>=2){
     var f=readings[0],l=readings[readings.length-1];
@@ -1504,87 +2196,81 @@ function buildIntelReport(tests){
     annualMi=yrs>0.1?Math.round(totalMi/yrs):0;
   }
   var miStatus=annualMi>0?(annualMi>20000?'high':annualMi<3000?'low':'normal'):'unknown';
-  // Pass rate
+
   var pass=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
   var passRate=Math.round(pass/tests.length*100);
-  // Advisory trend
+
   var rH=sorted.slice(Math.floor(sorted.length/2)),oH=sorted.slice(0,Math.floor(sorted.length/2));
   var rAdv=rH.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
   var oAdv=oH.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
-  // Risk score
-  var score=Math.min(100,
-    fraudEvents.length*35+
-    (passRate<60?25:passRate<80?10:0)+
-    (miStatus==='high'?10:0)+
-    (rAdv>oAdv&&rAdv>2?10:0)
-  );
+
+  var score=Math.min(100,fraudEvents.length*35+(passRate<60?25:passRate<80?10:0)+(miStatus==='high'?10:0)+(rAdv>oAdv&&rAdv>2?10:0));
   var level=score>=50?'high':score>=20?'med':'low';
   var lbls={low:'LOW RISK — Clean History',med:'MODERATE RISK',high:'HIGH RISK — Review Carefully'};
-  var subs={
-    low:'History looks consistent. No major concerns from available DVLA/DVSA data.',
-    med:'Some concerns found. Review the checks below before purchasing.',
-    high:'Significant issues detected. Strongly recommend a full HPI check before buying.'
-  };
+  var subs={low:'History looks consistent. No major concerns from available data.',med:'Some concerns. Review checks below before purchasing.',high:'Significant issues detected. Full HPI check strongly recommended.'};
+
   el('riskCircle').textContent=score;
-  el('riskCircle').className='risk-circle r-'+level;
+  el('riskCircle').className='risk-ring r-'+level;
   el('riskLbl').textContent=lbls[level];
   el('riskSub').textContent=subs[level];
-  // Build checks
+
   var checks=[];
   if(fraudEvents.length===0){
-    checks.push({s:'ok',ic:'ti-check',t:'Mileage Consistent Across All '+readings.length+' Tests',d:'Odometer readings increase consistently with no drops. No rollback or manipulation detected from available data.'});
+    checks.push({s:'ok',ic:'ti-check',t:'Mileage Consistent — '+readings.length+' Tests',d:'No odometer drops detected. Readings increase consistently across all MOT history.'});
   }else{
     fraudEvents.forEach(function(ev){
-      checks.push({s:'bad',ic:'ti-alert-triangle',t:'Mileage Rollback Detected — Serious Red Flag',d:'Odometer dropped from '+ev.from.toLocaleString()+' to '+ev.to.toLocaleString()+' miles (−'+ev.drop.toLocaleString()+' miles) around '+ev.date+'. This is a strong fraud indicator. Do not buy without further investigation and an HPI check.'});
+      checks.push({s:'bad',ic:'ti-alert-triangle',t:'Mileage Rollback Detected — SERIOUS RED FLAG',d:'Odometer dropped from '+ev.from.toLocaleString()+' to '+ev.to.toLocaleString()+' miles (−'+ev.drop.toLocaleString()+') around '+ev.date+'. Strong fraud indicator. Do not buy without full HPI investigation.'});
     });
   }
+
   if(annualMi>0){
-    if(miStatus==='normal'){checks.push({s:'ok',ic:'ti-check',t:'Normal Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'UK average is 8,000–10,000 miles/year. This vehicle sits within a normal private use range.'});}
-    else if(miStatus==='high'){checks.push({s:'warn',ic:'ti-alert-circle',t:'High Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'Significantly above UK average. Expect higher wear on engine, transmission, suspension and tyres. May suggest commercial or fleet use.'});}
-    else{checks.push({s:'warn',ic:'ti-alert-circle',t:'Unusually Low Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'Very low mileage can cause deterioration of rubber seals, brakes and fluids from lack of use. May also suggest mileage has been manipulated.'});}
+    if(miStatus==='normal')checks.push({s:'ok',ic:'ti-check',t:'Normal Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'UK average is 8,000–10,000 miles/year. This vehicle sits in a normal private use range.'});
+    else if(miStatus==='high')checks.push({s:'warn',ic:'ti-alert-circle',t:'High Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'Above UK average. Expect higher wear on engine, transmission, suspension and tyres. May indicate commercial use.'});
+    else checks.push({s:'warn',ic:'ti-alert-circle',t:'Low Annual Mileage (~'+annualMi.toLocaleString()+' miles/yr)',d:'Very low mileage can cause rubber seal and brake deterioration. May also indicate odometer manipulation.'});
   }
-  if(passRate>=80){checks.push({s:'ok',ic:'ti-check',t:'Strong MOT History — '+passRate+'% Pass Rate',d:pass+'/'+tests.length+' MOT tests passed. Consistent record suggests a well-maintained vehicle.'});}
-  else if(passRate>=60){checks.push({s:'warn',ic:'ti-alert-circle',t:'Average MOT Pass Rate — '+passRate+'%',d:pass+'/'+tests.length+' passed. Check whether failures repeat on the same component — that suggests deferred maintenance.'});}
-  else{checks.push({s:'bad',ic:'ti-x',t:'Poor MOT History — Only '+passRate+'% Pass Rate',d:'Only '+pass+'/'+tests.length+' tests passed. Multiple failures indicate recurring mechanical issues or poorly maintained vehicle.'});}
-  if(rAdv>oAdv&&rAdv>=3){
-    checks.push({s:'warn',ic:'ti-trending-up',t:'Advisory Count Increasing ('+rAdv+' recent vs '+oAdv+' older)',d:'More advisories in recent tests suggests the vehicle is ageing and components are approaching end of serviceable life. Budget for maintenance.'});
-  }else{
-    checks.push({s:'ok',ic:'ti-trending-down',t:'Advisory Trend Stable',d:'No significant increase in advisories over time. Vehicle appears to be in consistently maintained condition.'});
-  }
+
+  if(passRate>=80)checks.push({s:'ok',ic:'ti-check',t:'Strong MOT History — '+passRate+'% Pass Rate',d:pass+'/'+tests.length+' MOT tests passed. Consistent record suggests a well-maintained vehicle.'});
+  else if(passRate>=60)checks.push({s:'warn',ic:'ti-alert-circle',t:'Average MOT Pass Rate — '+passRate+'%',d:'Check if failures repeat on the same component — that suggests deferred maintenance.'});
+  else checks.push({s:'bad',ic:'ti-x',t:'Poor MOT History — '+passRate+'% Pass Rate',d:'Only '+pass+'/'+tests.length+' passed. Multiple failures indicate recurring issues or neglect.'});
+
+  if(rAdv>oAdv&&rAdv>=3)checks.push({s:'warn',ic:'ti-trending-up',t:'Advisories Increasing ('+rAdv+' recent vs '+oAdv+' older)',d:'More advisories in recent tests. Components are ageing — budget for maintenance.'});
+  else checks.push({s:'ok',ic:'ti-trending-down',t:'Advisory Trend Stable',d:'No significant increase in advisories over time. Consistently maintained vehicle.'});
+
   var lastMi=readings.length?readings[readings.length-1].mi:0;
-  if(lastMi>0){
-    checks.push({
-      s:lastMi>120000?'warn':'ok',
-      ic:lastMi>120000?'ti-gauge':'ti-check',
-      t:'Total Recorded Mileage: '+lastMi.toLocaleString()+' miles',
-      d:lastMi>120000?'High mileage vehicle. Budget for more frequent servicing, timing chain/belt checks, and wear items.':'Mileage is within a reasonable range for the vehicle age and use.'
-    });
-  }
-  checks.push({s:'warn',ic:'ti-info-circle',t:'Finance, Theft & Write-off Not in DVLA/DVSA Data',d:'GarageIQ uses official government data. For outstanding finance, theft register, write-off category and exact keeper count — use HPI or Cazana (£10–20). This is still cheaper and faster than CarVertical\'s subscription model.'});
+  if(lastMi>0)checks.push({
+    s:lastMi>120000?'warn':'ok',
+    ic:lastMi>120000?'ti-gauge':'ti-check',
+    t:'Total Recorded Mileage: '+lastMi.toLocaleString()+' miles',
+    d:lastMi>120000?'High mileage. Budget for timing chain/belt checks, service items and wear parts.':'Mileage within a reasonable range for vehicle age and use.'
+  });
+
+  checks.push({s:'warn',ic:'ti-info-circle',t:'Finance, Theft & Write-off Not in DVLA Data',d:'GarageIQ uses official government data only. For outstanding finance, theft register and write-off category, use HPI or MyCarCheck (£10–20). Still cheaper than CarVertical.'});
+
   el('intelChecks').innerHTML=checks.map(function(c){
     return'<div class="chk '+c.s+'"><div class="chk-ic"><i class="ti '+c.ic+'"></i></div>'
       +'<div><div class="chk-t">'+esc(c.t)+'</div><div class="chk-d">'+esc(c.d)+'</div></div></div>';
   }).join('');
-  // Mileage timeline
+
+  /* Mileage timeline in intel */
   if(readings.length>=2){
     var maxMi=readings[readings.length-1].mi||1;
-    el('mileTimeline').innerHTML='<div class="tl-title" style="margin-top:14px">Mileage Progression</div>'
+    el('mileTimeline').innerHTML='<div class="tl-label" style="margin-top:14px">Mileage Progression</div>'
       +readings.map(function(r,i){
         var pct=Math.round((r.mi/maxMi)*100);
         var isFraud=i>0&&r.mi<readings[i-1].mi;
         var yr='';try{yr=new Date(r.date).getFullYear()||r.date.slice(-4);}catch(e){}
         return'<div class="mi-row"><div class="mi-yr">'+esc(String(yr))+'</div>'
           +'<div class="mi-bg"><div class="mi-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
-          +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i>DROP</span>':'')+'</div></div>';
+          +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i> DROP</span>':'')+'</div></div>';
       }).join('');
   }
 }
 
 /* ── MODS ── */
-function selectMod(el_){
+function selectMod(btn){
   qsa('.mod-btn').forEach(function(b){b.classList.remove('selected');});
-  el_.classList.add('selected');
-  selectedMod=el_.dataset.mod;
+  btn.classList.add('selected');
+  selectedMod=btn.dataset.mod;
   el('analyzeBtn').disabled=false;
   el('analyzeBtn').textContent='Analyse: '+selectedMod;
 }
@@ -1608,10 +2294,7 @@ function analyseMod(){
     })
   })
   .then(function(r){return r.json();})
-  .then(function(d){
-    renderResult(d);
-    btn.disabled=false;btn.textContent='Analyse: '+selectedMod;
-  })
+  .then(function(d){renderResult(d);btn.disabled=false;btn.textContent='Analyse: '+selectedMod;})
   .catch(function(){
     el('resultSection').innerHTML='<div class="errbox">Analysis failed — please try again.</div>';
     el('resultSection').classList.remove('hidden');
@@ -1626,36 +2309,34 @@ function renderResult(r){
   var fs=r.failureRisk||'',fc=fs.startsWith('Low')?'green':fs.startsWith('Med')?'amber':'red';
   var hn=parseInt(r.hpGain)||0,tn=parseInt(r.torqueGain)||0;
   var dir=r.valueChangeDirection||(r.valueChange&&r.valueChange.startsWith('-')?'down':'up');
-  var hc=hn>0?'cup':hn<0?'cdn':'cnt';
-  var tc=tn>0?'cup':tn<0?'cdn':'cnt';
-  var vc=dir==='up'?'cup':dir==='down'?'cdn':'cnt';
   el('resultSection').innerHTML=
     '<div class="res-card">'
     +'<div class="res-title"><span>'+esc(selectedMod.toUpperCase())+'</span><div class="sbar">'+bars+'</div></div>'
-    +'<div class="drow"><span class="dlbl">Power</span><span class="dval">'+(hn?r.newHp+' HP':'No change')+' <span class="chg '+hc+'">'+(hn?r.hpGain+' HP':'—')+'</span></span></div>'
-    +'<div class="drow"><span class="dlbl">Torque</span><span class="dval">'+(tn?r.newTorque+' Nm':'No change')+' <span class="chg '+tc+'">'+(tn?r.torqueGain+' Nm':'—')+'</span></span></div>'
-    +'<div class="drow"><span class="dlbl">Sound</span><span class="dval">'+esc(String(r.soundRating))+'/10 <span style="font-size:11px;font-weight:400;color:var(--text3)">— '+esc(r.soundDesc)+'</span></span></div>'
-    +'<div class="drow"><span class="dlbl">Retail Value</span><span class="dval">£'+esc(String(r.newValue))+' <span class="chg '+vc+'">'+esc(r.valueChange)+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Power</span><span class="dval">'+(hn?r.newHp+' BHP':'No change')+' <span class="chg '+(hn>0?'cup':hn<0?'cdn':'cnt')+'">'+(hn?r.hpGain+' HP':'—')+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Torque</span><span class="dval">'+(tn?r.newTorque+' Nm':'No change')+' <span class="chg '+(tn>0?'cup':tn<0?'cdn':'cnt')+'">'+(tn?r.torqueGain+' Nm':'—')+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Sound</span><span class="dval">'+esc(String(r.soundRating))+'/10 <span style="font-size:11px;font-weight:400;color:var(--t3)">'+esc(r.soundDesc)+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Retail Value</span><span class="dval">£'+esc(String(r.newValue))+' <span class="chg '+(dir==='up'?'cup':dir==='down'?'cdn':'cnt')+'">'+esc(r.valueChange)+'</span></span></div>'
     +'<div class="drow"><span class="dlbl">Install Cost</span><span class="dval">'+esc(r.installCost)+'</span></div>'
     +'<div class="drow"><span class="dlbl">Insurance Impact</span><span class="dval" style="font-size:12px;max-width:55%;text-align:right">'+esc(r.insuranceImpact)+'</span></div>'
-    +'<div class="drow"><span class="dlbl">MOT Risk</span><span class="dval"><span class="sval '+mc+'" style="font-size:14px">'+esc(r.motRisk)+'</span> <span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(r.motNote)+'</span></span></div>'
-    +'<div class="drow"><span class="dlbl">Reliability</span><span class="dval"><span class="sval '+fc+'" style="font-size:14px">'+esc(fs.split('-')[0].trim())+'</span><span style="font-size:11px;color:var(--text3);margin-left:6px">'+esc(fs.includes('-')?fs.split('-').slice(1).join('-').trim():'')+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">MOT Risk</span><span class="dval"><span class="sval '+mc+'" style="font-size:14px">'+esc(r.motRisk)+'</span> <span style="font-size:11px;color:var(--t3);margin-left:5px">'+esc(r.motNote)+'</span></span></div>'
+    +'<div class="drow"><span class="dlbl">Reliability</span><span class="dval"><span class="sval '+fc+'" style="font-size:14px">'+esc(fs.split('-')[0].trim())+'</span><span style="font-size:11px;color:var(--t3);margin-left:5px">'+esc(fs.includes('-')?fs.split('-').slice(1).join('-').trim():'')+'</span></span></div>'
     +'<div class="verdict"><strong>Verdict:</strong> '+esc(r.verdict)+'</div>'
     +'<button class="share-btn" id="shareBtn"><i class="ti ti-share" style="margin-right:6px"></i>Share This Result</button></div>';
   el('resultSection').classList.remove('hidden');
   el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
-  el('shareBtn').addEventListener('click',function(){
+  el('shareBtn').onclick=function(){
     var text='GarageIQ — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+' '+(vehicleData.yearOfManufacture||'')+'\nMod: '+selectedMod+'\ngarage-iq-chi.vercel.app';
-    if(navigator.share){navigator.share({title:'GarageIQ',text:text,url:'https://garage-iq-chi.vercel.app'});}
-    else{navigator.clipboard.writeText(text).then(function(){alert('Copied to clipboard!');});}
-  });
+    if(navigator.share)navigator.share({title:'GarageIQ',text:text,url:'https://garage-iq-chi.vercel.app'});
+    else navigator.clipboard.writeText(text).then(function(){alert('Copied!');});
+  };
 }
 
-/* ── STRIPE PAYMENT ── */
+/* ── STRIPE ── */
 function startPayment(){
   if(!currentUser){openAuth('login');return;}
   var btn=el('btnPay');
-  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader" style="animation:spin .7s linear infinite"></i> Loading...';
+  btn.disabled=true;
+  btn.innerHTML='<span class="spin" style="margin-right:8px"></span> Loading...';
   fetch(VERCEL+'/api/checkout',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
@@ -1663,12 +2344,8 @@ function startPayment(){
   })
   .then(function(r){return r.json();})
   .then(function(d){
-    if(d.url){window.location.href=d.url;}
-    else{
-      btn.disabled=false;
-      btn.innerHTML='<i class="ti ti-lock-open"></i> Unlock for £1.99';
-      alert('Payment error: '+(d.error||'Unknown error. Please try again.'));
-    }
+    if(d.url)window.location.href=d.url;
+    else{btn.disabled=false;btn.innerHTML='<i class="ti ti-lock-open"></i> Unlock for £1.99';alert('Error: '+(d.error||'Unknown'));}
   })
   .catch(function(e){
     btn.disabled=false;
@@ -1677,10 +2354,10 @@ function startPayment(){
   });
 }
 
-/* ── MSG HELPERS ── */
-function showErr(id,msg){var e=el(id);e.textContent=msg;e.style.display='block';}
-function showOk(id,msg){var e=el(id);e.textContent=msg;e.style.display='block';}
-function hideMsg(id){var e=el(id);e.textContent='';e.style.display='none';}
+/* ── MESSAGE HELPERS ── */
+function showErr(id,msg){var e=el(id);if(!e)return;e.textContent=msg;e.style.display='block';}
+function showOk(id,msg){var e=el(id);if(!e)return;e.textContent=msg;e.style.display='block';}
+function hideMsg(id){var e=el(id);if(!e)return;e.textContent='';e.style.display='none';}
 </script>
 </body>
 </html>
