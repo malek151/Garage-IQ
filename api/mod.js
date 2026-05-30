@@ -52,7 +52,7 @@ Respond ONLY with this exact JSON, no markdown, no other text:
         'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
+        model: 'deepseek-r1-distill-llama-70b',
         max_tokens: 600,
         messages: [{ role: 'user', content: prompt }],
       }),
