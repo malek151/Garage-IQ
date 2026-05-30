@@ -1237,6 +1237,16 @@ footer{
           <div class="checks" id="intelChecks"></div>
           <div id="mileTimeline"></div>
 
+          <!-- AI Risk Analysis -->
+          <div class="sect-lbl">AI Risk Analysis</div>
+          <div id="aiRiskWrap" style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <span style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--t2);display:flex;align-items:center;gap:6px"><i class="ti ti-brain" style="color:var(--blue);font-size:14px"></i> Groq AI Vehicle Assessment</span>
+              <div class="chip chip-blue" id="aiRiskChip">Running...</div>
+            </div>
+            <div id="aiRiskContent"><div class="loading-box" style="padding:1.5rem"><div class="spin"></div> Analysing vehicle profile...</div></div>
+          </div>
+
           <!-- Damage map -->
           <div class="sect-lbl">Damage &amp; Accident History</div>
           <div style="background:var(--white);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;margin-bottom:1rem">
@@ -1756,8 +1766,8 @@ function lookupVehicle(){
     renderVehicle(vehicleData);
     saveToHistory();
     loadSpecs();
-    loadMot(reg);
-    renderValuation();
+    loadMot(reg); /* valuation + intel re-rendered inside loadMot once MOT data arrives */
+    renderValuation(); /* initial render with no mileage yet — updated again after MOT */
     el('loadbox').classList.add('hidden');
     el('vcReg').textContent=reg;
     el('mainApp').scrollIntoView({behavior:'smooth',block:'start'});
@@ -1919,7 +1929,17 @@ function renderMot(raw){
   else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate)tests=raw;
   if(!tests.length){renderDemoMot();return;}
   motTests=tests;
+  /* Extract model from MOT response if DVLA left it blank */
+  if((!vehicleData.model||vehicleData.model.length<=2)){
+    var motModel=(raw&&(raw.model||raw.make))?raw.model||'':'';
+    if(motModel&&motModel.length>2){
+      vehicleData.model=motModel.toUpperCase();
+      el('statModel').textContent=vehicleData.model;
+    }
+  }
   buildMotUI(tests);
+  renderValuation(); /* Re-render with real mileage data now available */
+  showIntelReport();
 }
 
 function buildMotUI(tests){
@@ -1979,6 +1999,8 @@ function renderDemoMot(){
   ];
   motTests=h.map(function(m){return{completedDate:m.date,testResult:m.passed?'PASSED':'FAILED',odometerValue:m.od,defects:m.defects};});
   buildMotUI(motTests);
+  renderValuation();
+  showIntelReport();
 }
 
 /* ── DAMAGE MAP ── */
@@ -2033,9 +2055,16 @@ function buildDamageMap(tests){
 /* ── MILEAGE ── */
 function buildMileageHistory(tests){
   var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
-  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};}).filter(function(r){return r.mi>0;});
+  var carYear=parseInt(vehicleData.yearOfManufacture)||0;
+  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};})
+    .filter(function(r){
+      if(r.mi<=0)return false;
+      /* Filter out readings before car was manufactured */
+      if(carYear>0){var yr=new Date(r.date).getFullYear();if(yr>0&&yr<carYear)return false;}
+      return true;
+    });
   if(!readings.length){el('mileHistRows').innerHTML='<div class="ph-empty">No mileage data</div>';return;}
-  var maxMi=readings[readings.length-1].mi||1;
+  var maxMi=Math.max.apply(null,readings.map(function(r){return r.mi;}))||1;
   el('mileHistRows').innerHTML=readings.map(function(r,i){
     var pct=Math.round((r.mi/maxMi)*100);
     var isFraud=i>0&&r.mi<readings[i-1].mi;
@@ -2135,6 +2164,7 @@ function showIntelReport(){
     buildDamageMap(motTests);
     buildMileageHistory(motTests);
     renderHistorySections();
+    runAiRisk(motTests);
   }else{
     el('pwLoggedOut').style.display='none';
     el('pwLoggedIn').style.display='block';
@@ -2179,7 +2209,13 @@ function renderHistorySections(){
 
 function buildIntelReport(tests){
   var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
-  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};}).filter(function(r){return r.mi>0;});
+  var carYear=parseInt(vehicleData.yearOfManufacture)||0;
+  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};})
+    .filter(function(r){
+      if(r.mi<=0)return false;
+      if(carYear>0){var yr=new Date(r.date).getFullYear();if(yr>0&&yr<carYear)return false;}
+      return true;
+    });
 
   var fraudEvents=[];
   for(var i=1;i<readings.length;i++){
@@ -2264,6 +2300,91 @@ function buildIntelReport(tests){
           +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i> DROP</span>':'')+'</div></div>';
       }).join('');
   }
+}
+
+/* ── AI RISK ANALYSIS ── */
+function runAiRisk(tests){
+  var d=vehicleData;
+  var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
+  var carYear=parseInt(d.yearOfManufacture)||0;
+  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};})
+    .filter(function(r){if(r.mi<=0)return false;if(carYear>0){var yr=new Date(r.date).getFullYear();if(yr>0&&yr<carYear)return false;}return true;});
+  var fraudDrops=[];
+  for(var i=1;i<readings.length;i++){if(readings[i].mi<readings[i-1].mi)fraudDrops.push(readings[i-1].mi-readings[i].mi);}
+  var lastMi=readings.length?readings[readings.length-1].mi:0;
+  var annMi=calcAnnualMi();
+  var pass=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
+  var passRate=tests.length?Math.round(pass/tests.length*100):100;
+  var allDef=[];tests.forEach(function(t){(t.defects||[]).forEach(function(x){allDef.push(x);});});
+  var majors=allDef.filter(function(x){return x.type==='MAJOR'||x.type==='DANGEROUS';}).map(function(x){return x.text||'';});
+  fetch(VERCEL+'/api/ai-risk',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      make:d.make,model:d.model||'',year:d.yearOfManufacture,
+      cc:d.engineCapacity,fuel:d.fuelType,
+      colour:d.colour||d.primaryColour,
+      taxStatus:d.taxStatus,motStatus:d.motStatus,
+      passRate:passRate,totalTests:tests.length,
+      lastMileage:lastMi,annualMileage:annMi,
+      fraudDrops:fraudDrops,majorFailures:majors.slice(0,5)
+    })
+  })
+  .then(function(r){return r.json();})
+  .then(function(resp){
+    if(resp.error)renderAiRiskFallback(fraudDrops,passRate,annMi,majors);
+    else renderAiRisk(resp);
+  })
+  .catch(function(){renderAiRiskFallback(fraudDrops,passRate,annMi,majors);});
+}
+
+function renderAiRisk(r){
+  var vc=r.overallVerdict||'UNKNOWN';
+  var vcClass=vc==='CLEAN'?'chip-green':vc==='HIGH RISK'?'chip-red':'chip-gold';
+  el('aiRiskChip').textContent=vc;
+  el('aiRiskChip').className='chip '+vcClass;
+  var html='';
+  var findings=r.keyFindings||[];
+  if(findings.length){
+    html+='<div style="margin-bottom:10px">';
+    findings.forEach(function(f){
+      html+='<div class="pwi" style="margin-bottom:5px"><i class="ti ti-point-filled" style="color:var(--blue)"></i>'+esc(f)+'</div>';
+    });
+    html+='</div>';
+  }
+  var rows=[
+    {l:'Stolen Risk',v:r.stolenRisk,n:r.stolenNote,c:r.stolenRisk==='Low'?'green':r.stolenRisk==='High'?'red':'amber'},
+    {l:'Finance Outstanding',v:'Cannot verify',n:'Requires HPI check — not in DVLA/DVSA data',c:'amber'},
+    {l:'Clone/Plate Risk',v:r.cloneRisk,n:r.cloneNote,c:r.cloneRisk==='Low'?'green':r.cloneRisk==='High'?'red':'amber'},
+    {l:'Mileage',v:r.mileageVerdict,n:'',c:r.mileageVerdict==='Consistent'?'green':r.mileageVerdict==='Fraudulent'?'red':'amber'},
+  ];
+  rows.forEach(function(row){
+    html+='<div class="hrow"><div class="hic hi-'+(row.c==='green'?'green':row.c==='red'?'red':'gold')+'"><i class="ti ti-'+(row.c==='green'?'check':row.c==='red'?'alert-triangle':'alert-circle')+'"></i></div>'
+      +'<div style="flex:1"><div class="hrow-t">'+esc(row.l)+'</div><div class="hrow-d">'+esc(row.n)+'</div></div>'
+      +'<div><div class="chip chip-'+(row.c==='green'?'green':row.c==='red'?'red':'gold')+'">'+esc(row.v)+'</div></div></div>';
+  });
+  if(r.buyerAdvice){
+    html+='<div class="verdict" style="margin-top:10px"><strong>Buyer Advice:</strong> '+esc(r.buyerAdvice)+'</div>';
+  }
+  html+='<div class="info-box" style="margin-top:8px"><i class="ti ti-info-circle"></i> AI assessment based on DVLA/DVSA data patterns only. <strong>Always run an HPI check</strong> for definitive stolen, finance and write-off verification.</div>';
+  el('aiRiskContent').innerHTML=html;
+}
+
+function renderAiRiskFallback(fraudDrops,passRate,annMi,majors){
+  var vc=fraudDrops.length?'SUSPICIOUS':passRate<60?'SUSPICIOUS':'CLEAN';
+  el('aiRiskChip').textContent=vc;
+  el('aiRiskChip').className='chip '+(vc==='CLEAN'?'chip-green':'chip-gold');
+  var html='';
+  var findings=[];
+  if(fraudDrops.length)findings.push('Mileage rollback detected — '+fraudDrops.length+' drop(s) found in MOT history');
+  if(passRate<60)findings.push('Below-average MOT pass rate ('+passRate+'%) — possible maintenance neglect');
+  if(annMi>20000)findings.push('High annual mileage suggests commercial or fleet use');
+  if(majors.length)findings.push(majors.length+' major/dangerous MOT failure(s) on record');
+  if(!findings.length)findings.push('No major red flags detected from available DVLA/DVSA data');
+  findings.forEach(function(f){html+='<div class="pwi" style="margin-bottom:5px"><i class="ti ti-point-filled" style="color:var(--blue)"></i>'+esc(f)+'</div>';});
+  html+='<div class="hrow" style="margin-top:10px"><div class="hic hi-gold"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Finance & Theft</div><div class="hrow-d">Cannot verify from DVLA/DVSA data. HPI check required for definitive stolen, finance and write-off status.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-gold">HPI Check →</div></a></div></div>';
+  html+='<div class="info-box" style="margin-top:8px"><i class="ti ti-info-circle"></i> Assessment based on DVLA/DVSA data only. <strong>Always run an HPI check</strong> before purchasing.</div>';
+  el('aiRiskContent').innerHTML=html;
 }
 
 /* ── MODS ── */
