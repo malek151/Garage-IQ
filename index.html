@@ -2057,22 +2057,22 @@ function buildMileageHistory(tests){
   var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
   var carYear=parseInt(vehicleData.yearOfManufacture)||0;
   var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};})
-    .filter(function(r){
-      if(r.mi<=0)return false;
-      /* Filter out readings before car was manufactured */
-      if(carYear>0){var yr=new Date(r.date).getFullYear();if(yr>0&&yr<carYear)return false;}
-      return true;
-    });
+    .filter(function(r){return r.mi>0;});
   if(!readings.length){el('mileHistRows').innerHTML='<div class="ph-empty">No mileage data</div>';return;}
+  /* Prepend a 0-mile entry at registration year */
+  var regMonth=vehicleData.monthOfFirstRegistration||'';
+  var regYr=carYear||(regMonth?parseInt(regMonth.split('.')[1]||regMonth.slice(-4)):0);
+  if(regYr>0){readings.unshift({date:String(regYr)+'-01-01',mi:0,isReg:true});}
   var maxMi=Math.max.apply(null,readings.map(function(r){return r.mi;}))||1;
   el('mileHistRows').innerHTML=readings.map(function(r,i){
     var pct=Math.round((r.mi/maxMi)*100);
-    var isFraud=i>0&&r.mi<readings[i-1].mi;
-    var yr='';try{yr=new Date(r.date).getFullYear()||r.date.slice(-4);}catch(e){}
+    var isFraud=!r.isReg&&i>0&&r.mi<readings[i-1].mi;
+    var yr='';try{yr=new Date(r.date).getFullYear()||r.date.slice(0,4);}catch(e){}
+    var label=r.isReg?'<span style="font-size:8px;color:var(--green);font-weight:800">REG</span>':esc(String(yr));
     return'<div class="mi-row">'
-      +'<div class="mi-yr">'+esc(String(yr))+'</div>'
+      +'<div class="mi-yr" style="font-size:9px">'+label+'</div>'
       +'<div class="mi-bg"><div class="mi-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
-      +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i> DROP</span>':'')+'</div>'
+      +'<div class="mi-val">'+(r.isReg?'0 miles':r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i> DROP</span>':''))+'</div>'
       +'</div>';
   }).join('');
 }
@@ -2288,16 +2288,20 @@ function buildIntelReport(tests){
   }).join('');
 
   /* Mileage timeline in intel */
-  if(readings.length>=2){
-    var maxMi=readings[readings.length-1].mi||1;
+  if(readings.length>=1){
+    var regYr2=parseInt(vehicleData.yearOfManufacture)||0;
+    var tlReadings=readings.slice();
+    if(regYr2>0)tlReadings.unshift({date:String(regYr2)+'-01-01',mi:0,isReg:true});
+    var maxMi2=Math.max.apply(null,tlReadings.map(function(r){return r.mi;}))||1;
     el('mileTimeline').innerHTML='<div class="tl-label" style="margin-top:14px">Mileage Progression</div>'
-      +readings.map(function(r,i){
-        var pct=Math.round((r.mi/maxMi)*100);
-        var isFraud=i>0&&r.mi<readings[i-1].mi;
-        var yr='';try{yr=new Date(r.date).getFullYear()||r.date.slice(-4);}catch(e){}
-        return'<div class="mi-row"><div class="mi-yr">'+esc(String(yr))+'</div>'
+      +tlReadings.map(function(r,i){
+        var pct=Math.round((r.mi/maxMi2)*100);
+        var isFraud=!r.isReg&&i>0&&r.mi<tlReadings[i-1].mi;
+        var yr='';try{yr=new Date(r.date).getFullYear()||r.date.slice(0,4);}catch(e){}
+        var label=r.isReg?'<span style="font-size:8px;color:var(--green);font-weight:800">REG</span>':esc(String(yr));
+        return'<div class="mi-row"><div class="mi-yr" style="font-size:9px">'+label+'</div>'
           +'<div class="mi-bg"><div class="mi-fill'+(isFraud?' fraud':'')+'" style="width:'+pct+'%"></div></div>'
-          +'<div class="mi-val">'+r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i> DROP</span>':'')+'</div></div>';
+          +'<div class="mi-val">'+(r.isReg?'0 miles':r.mi.toLocaleString()+(isFraud?'<span class="fraud-tag"><i class="ti ti-alert-triangle" style="font-size:9px"></i> DROP</span>':''))+'</div></div>';
       }).join('');
   }
 }
@@ -2405,7 +2409,7 @@ function analyseMod(){
     body:JSON.stringify({
       mod:selectedMod,
       make:vehicleData.make,
-      model:vehicleData.model,
+      model:vehicleData.model||'',
       year:vehicleData.yearOfManufacture,
       cc:parseInt(vehicleData.engineCapacity)||1600,
       hp:vehicleData.hp,
@@ -2414,10 +2418,35 @@ function analyseMod(){
       fuel:(vehicleData.fuelType||'PETROL').toUpperCase()
     })
   })
-  .then(function(r){return r.json();})
-  .then(function(d){renderResult(d);btn.disabled=false;btn.textContent='Analyse: '+selectedMod;})
+  .then(function(r){if(!r.ok)throw new Error('mod '+r.status);return r.json();})
+  .then(function(d){
+    /* Defensive: ensure all expected fields exist with fallbacks */
+    var safe={
+      hpGain:    parseInt(d.hpGain)||0,
+      torqueGain:parseInt(d.torqueGain)||0,
+      newHp:     parseInt(d.newHp)||(vehicleData.hp||0),
+      newTorque: parseInt(d.newTorque)||(vehicleData.torque||0),
+      newValue:  parseInt(d.newValue)||(vehicleData.value||0),
+      soundRating:parseInt(d.soundRating)||5,
+      soundDesc: d.soundDesc||'Noticeable change',
+      valueChange:d.valueChange||'—',
+      valueChangeDirection:d.valueChangeDirection||'neutral',
+      installCost:d.installCost||'£200–£800',
+      insuranceImpact:d.insuranceImpact||'Declare to insurer — may increase premium',
+      motRisk:   d.motRisk||'Medium',
+      motNote:   d.motNote||'Check with your MOT tester before fitting',
+      failureRisk:d.failureRisk||'Medium — monitor carefully',
+      verdict:   d.verdict||'Consult a specialist before fitting this modification.'
+    };
+    renderResult(safe);
+    btn.disabled=false;btn.textContent='Analyse: '+selectedMod;
+  })
   .catch(function(){
-    el('resultSection').innerHTML='<div class="errbox">Analysis failed — please try again.</div>';
+    el('resultSection').innerHTML='<div class="errbox">Analysis failed — check your internet connection and try again.</div>';
+    el('resultSection').classList.remove('hidden');
+    btn.disabled=false;btn.textContent='Analyse: '+selectedMod;
+  });
+}
     el('resultSection').classList.remove('hidden');
     btn.disabled=false;btn.textContent='Analyse: '+selectedMod;
   });
