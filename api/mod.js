@@ -61,7 +61,7 @@ Respond ONLY with this exact JSON, no markdown, no other text:
     const data = await response.json();
     if (!response.ok) return res.status(500).json({ error: 'AI error', detail: data });
 
-    const txt = (data.choices?.[0]?.message?.content || '').replace(/```json|```/g, '').trim();
+    const txt = (data.choices?.[0]?.message?.content || '').replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(txt);
     return res.status(200).json(parsed);
   } catch (err) {
