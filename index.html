@@ -502,6 +502,27 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   .mods-g{grid-template-columns:repeat(4,1fr)}
   .stat-grid-6{grid-template-columns:repeat(3,1fr)}
 }
+
+/* ── VIN DECODE CARD ── */
+.vin-card{background:linear-gradient(135deg,var(--ink2) 0%,#1E3A6E 100%);border-radius:var(--r);padding:1.1rem;margin-bottom:.9rem;color:#fff;box-shadow:var(--s2);animation:fadeUp .3s ease both}
+.vin-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.vin-flag{font-size:28px;flex-shrink:0}
+.vin-title{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:#fff;line-height:1.2}
+.vin-country{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.vin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.vin-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);padding:10px}
+.vin-box-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);margin-bottom:4px}
+.vin-box-val{font-family:"Syne",sans-serif;font-size:14px;font-weight:800;color:#fff;word-break:break-all}
+.vin-num{font-family:"Syne",sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold2);background:rgba(245,183,49,.1);border:1px solid rgba(245,183,49,.2);border-radius:6px;padding:8px 12px;text-align:center;margin-bottom:12px;word-break:break-all}
+.vin-check-ok{color:#5EF0A0}.vin-check-fail{color:#F87171}
+.vin-detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:11.5px}
+.vin-detail-row:last-child{border-bottom:none}
+.vin-detail-lbl{color:rgba(255,255,255,.4);font-size:9px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+.vin-detail-val{color:#fff;font-weight:600}
+.reg-toggle{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin-bottom:12px;width:fit-content}
+.reg-toggle-btn{font-family:"Syne",sans-serif;font-size:10px;font-weight:700;padding:6px 16px;border:none;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;transition:all .18s;letter-spacing:.3px}
+.reg-toggle-btn.active{background:var(--gold2);color:var(--ink)}
+
 </style>
 </head>
 <body>
@@ -594,15 +615,21 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <p class="hero-sub">Real DVLA data · Full MOT history · Mileage fraud detection · AI risk analysis · Valuation</p>
     <div class="vs-row"><i class="ti ti-award" style="color:var(--gold2);font-size:11px"></i> &nbsp;Better &amp; cheaper than <b>CarVertical</b> — just £1.99 per report</div>
     <div class="reg-wrap">
-      <div class="reg-row">
-        <div class="reg-uk-badge">
-          <svg width="18" height="12" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg>
-          <span>UK</span>
+      <div style="display:flex;justify-content:center;margin-bottom:10px">
+        <div class="reg-toggle">
+          <button class="reg-toggle-btn active" id="modeReg" onclick="setSearchMode('reg')">UK Reg</button>
+          <button class="reg-toggle-btn" id="modeVin" onclick="setSearchMode('vin')">VIN (Any Country)</button>
         </div>
-        <input class="reg-plate" id="regInput" placeholder="AB12 CDE" maxlength="8"/>
+      </div>
+      <div class="reg-row">
+        <div class="reg-uk-badge" id="regBadge">
+          <svg width="18" height="12" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg>
+          <span id="regBadgeTxt">UK</span>
+        </div>
+        <input class="reg-plate" id="regInput" placeholder="AB12 CDE" maxlength="20" style="letter-spacing:2px"/>
         <button class="reg-go" id="runBtn"><i class="ti ti-search"></i> LOOK UP</button>
       </div>
-      <p class="reg-note">Enter any UK registration · Official DVLA data · Secure · No spam</p>
+      <p class="reg-note" id="searchNote">UK reg plate · DVLA data · Secure · No spam</p>
     </div>
     <div class="hero-stats">
       <div class="hs-item"><div class="hs-n">200+</div><div class="hs-l">Car Models</div></div>
@@ -1117,11 +1144,278 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+
+/* ══════════════════════════════════════════
+   VIN DECODER — works for any country
+   ══════════════════════════════════════════ */
+var SEARCH_MODE='reg';
+function setSearchMode(m){
+  SEARCH_MODE=m;
+  el('modeReg').classList.toggle('active',m==='reg');
+  el('modeVin').classList.toggle('active',m==='vin');
+  var inp=el('regInput'),note=el('searchNote'),badge=el('regBadgeTxt');
+  if(m==='vin'){
+    inp.placeholder='e.g. WBAFR7C55BC123456';
+    inp.style.letterSpacing='1px';
+    inp.style.fontSize='14px';
+    inp.maxLength=17;
+    if(note)note.textContent='17-character VIN · Any country worldwide';
+    if(badge)badge.textContent='VIN';
+  }else{
+    inp.placeholder='AB12 CDE';
+    inp.style.letterSpacing='5px';
+    inp.style.fontSize='24px';
+    inp.maxLength=8;
+    if(note)note.textContent='UK reg plate · DVLA data · Secure · No spam';
+    if(badge)badge.textContent='UK';
+  }
+  inp.value='';inp.focus();
+}
+
+/* Auto-detect: 17 alphanum (no I O Q) = VIN */
+function detectInputType(v){
+  var clean=v.replace(/\s/g,'').toUpperCase();
+  if(/^[A-HJ-NPR-Z0-9]{17}$/.test(clean))return'vin';
+  return'reg';
+}
+
+/* WMI country map */
+var WMI_MAP={
+  /* Africa */
+  'AA':'South Africa','AB':'South Africa','AC':'South Africa','AD':'South Africa',
+  'AE':'South Africa','AF':'South Africa','AG':'South Africa','AH':'South Africa',
+  'AJ':'Ivory Coast','BA':'Angola','DA':'Egypt','DB':'Egypt','DC':'Egypt','DD':'Egypt',
+  'EA':'Ethiopia','FA':'Ghana','GA':'Nigeria','GB':'Nigeria','GC':'Nigeria',
+  'LA':'China','LB':'China','LC':'China','LD':'China','LE':'China','LF':'China',
+  'LG':'China','LH':'China','LJ':'China','LK':'China','LL':'China','LM':'China',
+  'LN':'China','LP':'China','LR':'China','LS':'China','LT':'China','LU':'China',
+  'LV':'China','LW':'China','LX':'China','LY':'China','L5':'China','L6':'China',
+  /* Asia */
+  'MA':'India','MB':'India','MC':'India','MD':'India','ME':'India',
+  'MF':'Indonesia','ML':'Thailand','MM':'Thailand',
+  'NF':'Turkey','NG':'Turkey','NH':'Turkey','NJ':'Turkey','NK':'Turkey',
+  'NM':'Turkey','NN':'Turkey',
+  'PA':'Philippines','PL':'Malaysia','PM':'Malaysia',
+  'PC':'Pakistan',
+  /* Japan */
+  'JA':'Japan','JB':'Japan','JC':'Japan','JD':'Japan','JE':'Japan','JF':'Japan',
+  'JG':'Japan','JH':'Japan','JK':'Japan','JL':'Japan','JM':'Japan','JN':'Japan',
+  'JP':'Japan','JR':'Japan','JS':'Japan','JT':'Japan',
+  /* Korea */
+  'KL':'South Korea','KM':'South Korea','KN':'South Korea','KP':'South Korea',
+  'KR':'South Korea',
+  /* Europe */
+  'SA':'United Kingdom','SB':'United Kingdom','SC':'United Kingdom','SD':'United Kingdom',
+  'SE':'United Kingdom','SF':'United Kingdom','SG':'United Kingdom','SH':'United Kingdom',
+  'SJ':'United Kingdom','SK':'United Kingdom','SL':'United Kingdom','SM':'United Kingdom',
+  'SN':'Germany','SP':'Germany',
+  'SU':'Poland','SV':'Poland','SW':'Poland',
+  'TA':'Switzerland','TB':'Switzerland','TC':'Switzerland','TD':'Switzerland',
+  'TE':'Austria','TF':'Austria',
+  'TJ':'Czech Republic','TK':'Czech Republic',
+  'TM':'Hungary','TN':'Hungary',
+  'TP':'Portugal','TR':'Portugal',
+  'UA':'Austria','UB':'Austria','UC':'Austria',
+  'VA':'Austria','VF':'France','VG':'France','VH':'France','VJ':'France',
+  'VK':'France','VL':'France','VM':'France','VN':'France','VP':'France',
+  'VR':'France','VS':'Spain','VT':'Spain','VU':'Spain','VV':'Spain','VW':'Spain',
+  'WA':'Germany','WB':'Germany','WC':'Germany','WD':'Germany','WE':'Germany',
+  'WF':'Germany','WG':'Germany','WH':'Germany','WJ':'Germany','WK':'Germany',
+  'WL':'Germany','WM':'Germany','WN':'Germany','WP':'Germany','WV':'Germany',
+  'WW':'Germany',
+  'XA':'Bulgaria','XB':'Bulgaria',
+  'XF':'Greece','XG':'Greece',
+  'XL':'Netherlands','XM':'Netherlands','XN':'Netherlands',
+  'XS':'Russia','XT':'Russia','XU':'Russia','XV':'Russia','XW':'Russia',
+  'XY':'Russia','XZ':'Russia','X3':'Russia','X4':'Russia','X5':'Russia',
+  'X7':'Russia','X9':'Russia',
+  'YA':'Belgium','YB':'Belgium','YC':'Belgium','YD':'Belgium',
+  'YF':'Finland','YG':'Finland',
+  'YS':'Sweden','YT':'Sweden','YV':'Sweden',
+  'ZA':'Italy','ZB':'Italy','ZC':'Italy','ZD':'Italy','ZE':'Italy','ZF':'Italy',
+  'ZG':'Italy','ZH':'Italy','ZJ':'Italy','ZK':'Italy','ZL':'Italy','ZM':'Italy',
+  'ZN':'Italy','ZP':'Italy','ZR':'Italy',
+  /* North America */
+  '1A':'United States','1B':'United States','1C':'United States','1D':'United States',
+  '1E':'United States','1F':'United States','1G':'United States','1H':'United States',
+  '1J':'United States','1K':'United States','1L':'United States','1M':'United States',
+  '1N':'United States','1P':'United States','1R':'United States','1S':'United States',
+  '1T':'United States','1V':'United States','1W':'United States','1X':'United States',
+  '1Y':'United States','1Z':'United States',
+  '2A':'Canada','2B':'Canada','2C':'Canada','2F':'Canada','2G':'Canada',
+  '2H':'Canada','2M':'Canada','2P':'Canada','2T':'Canada','2W':'Canada',
+  '3A':'Mexico','3B':'Mexico','3C':'Mexico','3D':'Mexico','3E':'Mexico',
+  '3F':'Mexico','3G':'Mexico','3H':'Mexico','3J':'Mexico','3K':'Mexico',
+  '3L':'Mexico','3M':'Mexico','3N':'Mexico','3P':'Mexico','3R':'Mexico',
+  '3S':'Mexico','3T':'Mexico','3V':'Mexico','3W':'Mexico',
+  '4A':'United States','4B':'United States','4C':'United States','4D':'United States',
+  '4F':'United States','4J':'United States','4M':'United States','4N':'United States',
+  '4S':'United States','4T':'United States','4U':'United States','4V':'United States',
+  '5F':'United States','5L':'United States','5N':'United States','5T':'United States',
+  '5X':'United States','5Y':'United States','5Z':'United States',
+  /* South America / Oceania */
+  '6F':'Australia','6G':'Australia','6H':'Australia','6J':'Australia','6K':'Australia',
+  '6L':'Australia','6M':'Australia','6N':'Australia','6P':'Australia','6R':'Australia',
+  '6W':'Australia',
+  '7A':'New Zealand','8A':'Argentina','8C':'Argentina','8G':'Argentina',
+  '9A':'Brazil','9B':'Brazil','9C':'Brazil','9D':'Brazil','9E':'Brazil',
+};
+
+/* Country flags (emoji) */
+var COUNTRY_FLAGS={
+  'United Kingdom':'🇬🇧','Germany':'🇩🇪','France':'🇫🇷','Italy':'🇮🇹',
+  'Spain':'🇪🇸','Japan':'🇯🇵','South Korea':'🇰🇷','United States':'🇺🇸',
+  'Canada':'🇨🇦','Mexico':'🇲🇽','China':'🇨🇳','India':'🇮🇳',
+  'Sweden':'🇸🇪','Netherlands':'🇳🇱','Belgium':'🇧🇪','Austria':'🇦🇹',
+  'Switzerland':'🇨🇭','Czech Republic':'🇨🇿','Hungary':'🇭🇺','Portugal':'🇵🇹',
+  'Poland':'🇵🇱','Russia':'🇷🇺','Turkey':'🇹🇷','Australia':'🇦🇺',
+  'South Africa':'🇿🇦','Egypt':'🇪🇬','Brazil':'🇧🇷','Argentina':'🇦🇷',
+  'Nigeria':'🇳🇬','Ghana':'🇬🇭','Ethiopia':'🇪🇹','Kenya':'🇰🇪',
+  'Thailand':'🇹🇭','Malaysia':'🇲🇾','Indonesia':'🇮🇩','Philippines':'🇵🇭',
+  'Pakistan':'🇵🇰','Finland':'🇫🇮','Greece':'🇬🇷','Bulgaria':'🇧🇬',
+  'New Zealand':'🇳🇿','Israel':'🇮🇱',
+};
+
+/* VIN year decode — position 10 */
+var VIN_YEARS={
+  'A':1980,'B':1981,'C':1982,'D':1983,'E':1984,'F':1985,'G':1986,'H':1987,
+  'J':1988,'K':1989,'L':1990,'M':1991,'N':1992,'P':1993,'R':1994,'S':1995,
+  'T':1996,'V':1997,'W':1998,'X':1999,'Y':2000,
+  '1':2001,'2':2002,'3':2003,'4':2004,'5':2005,'6':2006,'7':2007,'8':2008,'9':2009,
+  'A2':2010,'B2':2011,'C2':2012,'D2':2013,'E2':2014,'F2':2015,'G2':2016,'H2':2017,
+  'J2':2018,'K2':2019,'L2':2020,'M2':2021,'N2':2022,'P2':2023,'R2':2024,'S2':2025,
+};
+
+/* VIN check digit validation */
+function vinCheckDigit(vin){
+  var VALS={0:0,1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,
+    J:1,K:2,L:3,M:4,N:5,P:7,R:9,S:2,T:3,U:4,V:5,W:6,X:7,Y:8,Z:9};
+  var WEIGHTS=[8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2];
+  var sum=0;
+  for(var i=0;i<17;i++)sum+=(VALS[vin[i].toUpperCase()]||0)*WEIGHTS[i];
+  var rem=sum%11;
+  var check=rem===10?'X':String(rem);
+  return{valid:check===vin[8].toUpperCase(),expected:check,got:vin[8].toUpperCase()};
+}
+
+function decodeVin(vin){
+  vin=vin.replace(/\s/g,'').toUpperCase();
+  if(vin.length!==17)return null;
+  var wmi=vin.slice(0,3);
+  var wmi2=vin.slice(0,2);
+  var country=WMI_MAP[wmi]||WMI_MAP[wmi2]||'Unknown';
+  var flag=COUNTRY_FLAGS[country]||'🌍';
+  /* Year decode */
+  var yc=vin[9];
+  var year=VIN_YEARS[yc]||null;
+  /* If 2010+ re-cycle, check if it is 2010s or 1980s by context */
+  if(year&&year<2010&&vin[9]!=='9'){var alt=VIN_YEARS[yc+'2'];if(alt)year=alt;}
+  /* Check digit — only valid for US/Canada/Mexico */
+  var chk=vinCheckDigit(vin);
+  /* VDS (positions 4-8) */
+  var vds=vin.slice(3,8);
+  /* Plant code */
+  var plant=vin[10];
+  /* Serial */
+  var serial=vin.slice(11);
+  return{vin:vin,wmi:wmi,vds:vds,country:country,flag:flag,year:year,plant:plant,serial:serial,checkValid:chk.valid,checkNote:chk.valid?'Valid (US/CA/MX standard)':'N/A (non-North American standard)',};
+}
+
+function lookupVin(vin){
+  var decoded=decodeVin(vin);
+  if(!decoded){toast('Invalid VIN — must be exactly 17 characters','err');return;}
+  /* Show loading */
+  el('mainApp').classList.remove('hidden');
+  el('errbox').classList.add('hidden');
+  var hs=el('heroSection');if(hs)hs.classList.add('searched');
+  if(el('tabsWrap'))el('tabsWrap').classList.remove('hidden');
+
+  /* Show VIN result in overview tab */
+  switchMainTab('overview');
+
+  /* Populate vehicle header with VIN info */
+  if(el('vehReg'))el('vehReg').textContent=vin.slice(0,3)+' ··· '+vin.slice(14);
+  if(el('vehHeader'))el('vehHeader').classList.add('visible');
+  if(el('vehTaxBadge')){el('vehTaxBadge').textContent='VIN';el('vehTaxBadge').className='veh-status-badge vsb-taxed';}
+  if(el('vehChips')){
+    el('vehChips').innerHTML='<span class="veh-chip">'+decoded.flag+' '+esc(decoded.country)+'</span>'
+      +(decoded.year?'<span class="veh-chip-div">·</span><span class="veh-chip"><i class="ti ti-calendar"></i>'+decoded.year+'</span>':'');
+  }
+  if(el('vehName'))el('vehName').textContent='VIN Decoded — '+decoded.country;
+  if(el('vehMotStatus')){el('vehMotStatus').textContent='WMI: '+decoded.wmi;el('vehMotStatus').className='veh-stat-val ok';}
+  if(el('vehMotExpiry'))el('vehMotExpiry').textContent=decoded.year||'—';
+  if(el('vehTaxDue'))el('vehTaxDue').textContent=decoded.plant;
+  if(el('vehEuro'))el('vehEuro').textContent='#'+decoded.serial;
+
+  /* Build VIN decode card in overview */
+  var checkHtml=decoded.country==='United States'||decoded.country==='Canada'||decoded.country==='Mexico'
+    ?'<span class="'+(decoded.checkValid?'vin-check-ok':'vin-check-fail')+'">'+(decoded.checkValid?'✓ Valid':'✗ Invalid')+'</span>'
+    :'<span style="color:rgba(255,255,255,.4)">N/A</span>';
+
+  var vinCard='<div class="vin-card">'
+    +'<div class="vin-header"><div class="vin-flag">'+decoded.flag+'</div><div><div class="vin-title">'+esc(decoded.country)+'</div><div class="vin-country">World Manufacturer Identifier: '+esc(decoded.wmi)+'</div></div></div>'
+    +'<div class="vin-num">'+vin+'</div>'
+    +'<div class="vin-grid">'
+    +'<div class="vin-box"><div class="vin-box-lbl">Country</div><div class="vin-box-val">'+decoded.flag+' '+esc(decoded.country)+'</div></div>'
+    +'<div class="vin-box"><div class="vin-box-lbl">Model Year</div><div class="vin-box-val">'+(decoded.year||'—')+'</div></div>'
+    +'<div class="vin-box"><div class="vin-box-lbl">Check Digit</div><div class="vin-box-val">'+checkHtml+'</div></div>'
+    +'</div>'
+    +'<div class="vin-detail-row"><span class="vin-detail-lbl">WMI (Manufacturer)</span><span class="vin-detail-val">'+esc(decoded.wmi)+'</span></div>'
+    +'<div class="vin-detail-row"><span class="vin-detail-lbl">VDS (Vehicle Desc.)</span><span class="vin-detail-val">'+esc(decoded.vds)+'</span></div>'
+    +'<div class="vin-detail-row"><span class="vin-detail-lbl">Plant Code</span><span class="vin-detail-val">'+esc(decoded.plant)+'</span></div>'
+    +'<div class="vin-detail-row"><span class="vin-detail-lbl">Serial Number</span><span class="vin-detail-val">'+esc(decoded.serial)+'</span></div>'
+    +'<div class="vin-detail-row"><span class="vin-detail-lbl">Full VIN</span><span class="vin-detail-val" style="font-size:10px;letter-spacing:1px">'+vin+'</span></div>'
+    +'</div>';
+
+  /* Try NHTSA API for extra make/model data */
+  var overviewFirst=el('tab-overview');
+  if(overviewFirst){
+    /* Inject VIN card at top */
+    var existing=overviewFirst.querySelector('.vin-card');
+    if(existing)existing.parentNode.removeChild(existing);
+    overviewFirst.insertAdjacentHTML('afterbegin',vinCard);
+  }
+
+  /* NHTSA API — works globally, free */
+  fetch('https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/'+vin+'?format=json')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var vals={};
+      (d.Results||[]).forEach(function(item){vals[item.Variable]=item.Value;});
+      var make2=vals['Make']||'';
+      var model2=vals['Model']||'';
+      var trim=vals['Trim']||'';
+      var body=vals['Body Class']||'';
+      var eng=vals['Engine Number of Cylinders']||'';
+      var disp=vals['Displacement (L)']||'';
+      var fuel2=vals['Fuel Type - Primary']||'';
+      var country2=vals['Plant Country']||decoded.country;
+      var doors=vals['Number of Doors']||'';
+      if(make2||model2){
+        /* Update vehicle name */
+        if(el('vehName'))el('vehName').textContent=(make2+' '+(model2||'')).trim();
+        /* Update VIN card with extra NHTSA data */
+        var extra='';
+        if(make2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Make</span><span class="vin-detail-val">'+esc(make2)+'</span></div>';
+        if(model2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Model</span><span class="vin-detail-val">'+esc(model2)+(trim?' '+esc(trim):'')+'</span></div>';
+        if(body)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Body Style</span><span class="vin-detail-val">'+esc(body)+'</span></div>';
+        if(disp||eng)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Engine</span><span class="vin-detail-val">'+(disp?disp+'L':'')+(eng?' · '+eng+' cyl':'')+'</span></div>';
+        if(fuel2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Fuel</span><span class="vin-detail-val">'+esc(fuel2)+'</span></div>';
+        if(doors)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Doors</span><span class="vin-detail-val">'+esc(doors)+'</span></div>';
+        if(country2&&country2!==decoded.country)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Assembly Plant</span><span class="vin-detail-val">'+esc(country2)+'</span></div>';
+        /* Inject extra rows into existing card */
+        var card=overviewFirst&&overviewFirst.querySelector('.vin-card');
+        if(card&&extra){card.insertAdjacentHTML('beforeend',extra);}
+      }
+    })
+    .catch(function(){/* NHTSA failed — client-side decode still shown */});
+}
+
 'use strict';
 var VERCEL='https://garage-iq-chi.vercel.app';
 var SUPA_URL='https://hbfntnxawwavttzvxdde.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
-var sb,currentUser,currentProfile,vehicleData={},motTests=[],selectedMod,currentReg='';
+var sb,currentUser,currentProfile,vehicleData={},motTests=[],selectedMods=new Set(),currentReg='';
 var _specCache={};
 
 function el(id){return document.getElementById(id);}
@@ -1155,7 +1449,15 @@ window.addEventListener('load',function(){
   el('btnLogout').onclick=doLogout;
   if(el('btnLogoutNav'))el('btnLogoutNav').onclick=doLogout;
   el('runBtn').onclick=lookupVehicle;
-  el('regInput').onkeydown=function(e){if(e.key==='Enter')lookupVehicle();};
+  el('regInput').onkeydown=function(e){
+    if(e.key==='Enter')lookupVehicle();
+  };
+  el('regInput').oninput=function(){
+    var v=this.value.trim();
+    if(v.length===17&&/^[A-HJ-NPR-Z0-9]{17}$/i.test(v.replace(/\s/g,''))){
+      if(SEARCH_MODE!=='vin')setSearchMode('vin');
+    }
+  };
   el('analyzeBtn').onclick=analyseMod;
   el('btnPwSignup').onclick=function(){openAuth('login');};
   el('btnPay').onclick=startPayment;
@@ -1328,15 +1630,21 @@ function estVal(d){
 }
 
 function lookupVehicle(){
-  var reg=el('regInput').value.replace(/\s/g,'').toUpperCase();
-  if(!reg||reg.length<2)return;
+  var raw=el('regInput').value.trim().toUpperCase();
+  var clean=raw.replace(/\s/g,'');
+  if(!clean||clean.length<2)return;
+  /* Auto-detect VIN vs reg */
+  if(SEARCH_MODE==='vin'||detectInputType(raw)==='vin'){
+    lookupVin(clean);return;
+  }
+  var reg=clean;
   currentReg=reg;
   el('errbox').classList.add('hidden');el('mainApp').classList.remove('hidden');el('loadbox').classList.remove('hidden');
   /* Collapse hero */
   var hs=el('heroSection');if(hs)hs.classList.add('searched');
   el('tabsWrap').classList.remove('hidden');el('vinStrip').classList.add('hidden');
   el('resultSection').classList.add('hidden');
-  selectedMod=null;motTests=[];
+  selectedMods=new Set();motTests=[];
   el('analyzeBtn').disabled=true;el('analyzeBtn').innerHTML='<i class="ti ti-sparkles"></i> Select a mod to analyse';
   document.querySelectorAll('.mod-btn').forEach(function(b){b.classList.remove('selected');});
   el('intelPaywall').style.display='block';el('intelContent').style.display='none';
@@ -2005,10 +2313,26 @@ function renderAiRiskFallback(drops,passRate,annMi,majors){
 
 /* MODS */
 function selectMod(btn){
-  qsa('.mod-btn').forEach(function(b){b.classList.remove('selected');});
-  btn.classList.add('selected');selectedMod=btn.dataset.mod;
-  el('analyzeBtn').disabled=false;
-  el('analyzeBtn').innerHTML='<i class="ti ti-sparkles"></i> Analyse: '+selectedMod;
+  var mod=btn.dataset.mod;
+  if(selectedMods.has(mod)){
+    selectedMods.delete(mod);
+    btn.classList.remove('selected');
+  }else{
+    selectedMods.add(mod);
+    btn.classList.add('selected');
+  }
+  var n=selectedMods.size;
+  var ab=el('analyzeBtn');
+  if(n===0){
+    ab.disabled=true;
+    ab.innerHTML='<i class="ti ti-sparkles"></i> Select mods to analyse';
+  }else if(n===1){
+    ab.disabled=false;
+    ab.innerHTML='<i class="ti ti-sparkles"></i> Analyse: '+Array.from(selectedMods)[0];
+  }else{
+    ab.disabled=false;
+    ab.innerHTML='<i class="ti ti-sparkles"></i> Analyse '+n+' mods together';
+  }
 }
 
 /* ── MOD FALLBACK DATA — used if API unavailable ── */
@@ -2059,46 +2383,111 @@ function modFallback(modName,hp,torque,value){
 }
 
 function analyseMod(){
-  if(!selectedMod)return;
+  if(!selectedMods.size)return;
   var btn=el('analyzeBtn');
   btn.disabled=true;
-  btn.innerHTML='<div class="spin" style="margin-right:7px"></div> Analysing...';
+  var mods=Array.from(selectedMods);
+  var n=mods.length;
+  btn.innerHTML='<div class="spin" style="margin-right:7px"></div> Analysing '+n+' mod'+(n>1?'s':'')+'...';
+
   var make=vehicleData.make||'Unknown',model=vehicleData.model||'',year=vehicleData.yearOfManufacture||2018;
   var cc=parseInt(vehicleData.engineCapacity)||1600,hp=vehicleData.hp||130,torque=vehicleData.torque||200;
   var value=vehicleData.value||8000,fuel=(vehicleData.fuelType||'PETROL').toUpperCase();
 
-  function done(d){
-    var safe={
+  function resetBtn(){
+    btn.disabled=false;
+    btn.innerHTML='<i class="ti ti-sparkles"></i> Analyse '+n+' mod'+(n>1?'s':'');
+  }
+
+  function safeResult(d,modName){
+    return{
+      mod:modName,
       hpGain:parseInt(d.hpGain)||0,torqueGain:parseInt(d.torqueGain)||0,
       newHp:parseInt(d.newHp)||hp,newTorque:parseInt(d.newTorque)||torque,
       newValue:parseInt(d.newValue)||value,
       soundRating:Math.max(1,Math.min(10,parseInt(d.soundRating)||5)),
       soundDesc:d.soundDesc||'—',valueChange:d.valueChange||'—',
       valueChangeDirection:d.valueChangeDirection||'neutral',
-      installCost:d.installCost||'£300–£800',
-      insuranceImpact:d.insuranceImpact||'Declare to insurer',
-      motRisk:d.motRisk||'Medium',motNote:d.motNote||'Check with MOT tester',
+      installCost:d.installCost||'—',
+      insuranceImpact:d.insuranceImpact||'Declare all mods to insurer',
+      motRisk:d.motRisk||'Medium',motNote:d.motNote||'—',
       failureRisk:d.failureRisk||'Medium',verdict:d.verdict||'Consult a specialist.'
     };
-    renderResult(safe);
-    btn.disabled=false;
-    btn.innerHTML='<i class="ti ti-sparkles"></i> Analyse: '+selectedMod;
   }
 
-  fetch(VERCEL+'/api/mod',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({mod:selectedMod,make:make,model:model,year:year,cc:cc,hp:hp,torque:torque,value:value,fuel:fuel})
-  })
-  .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
-  .then(function(d){
-    if(d.error)throw new Error(d.error);
-    done(d);
-  })
-  .catch(function(){
-    /* API unavailable — use local fallback instantly, no error shown */
-    done(modFallback(selectedMod,hp,torque,value));
-    /* silent fallback */
+  /* Fetch all mods in parallel */
+  var promises=mods.map(function(mod){
+    return fetch(VERCEL+'/api/mod',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({mod:mod,make:make,model:model,year:year,cc:cc,hp:hp,torque:torque,value:value,fuel:fuel})
+    })
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(function(d){return safeResult(d.error?modFallback(mod,hp,torque,value):d, mod);})
+    .catch(function(){return safeResult(modFallback(mod,hp,torque,value),mod);});
   });
+
+  Promise.all(promises).then(function(results){
+    renderMultiResult(results,hp,torque,value);
+    resetBtn();
+  });
+}
+
+function renderMultiResult(results,baseHp,baseTq,baseVal){
+  if(results.length===1){renderResult(results[0]);return;}
+  /* Combine all mods */
+  var totalHpGain=results.reduce(function(s,r){return s+(parseInt(r.hpGain)||0);},0);
+  var totalTqGain=results.reduce(function(s,r){return s+(parseInt(r.torqueGain)||0);},0);
+  var totalCost=0,costStr='';
+  results.forEach(function(r){
+    var m=String(r.installCost||'').match(/[\d,]+/g);
+    if(m)totalCost+=parseInt(m[0].replace(',',''));
+  });
+  costStr=totalCost>0?'~£'+totalCost.toLocaleString()+'+':'See individual mods';
+  var highestMotRisk=results.some(function(r){return r.motRisk==='High';})?'High':results.some(function(r){return r.motRisk==='Medium';})?'Medium':'Low';
+  var highestSound=Math.max.apply(null,results.map(function(r){return parseInt(r.soundRating)||1;}));
+
+  var bars='';
+  for(var i=0;i<8;i++)bars+='<div class="sb" style="height:'+(i<highestSound?Math.round(10+Math.random()*14):3)+'px;opacity:'+(i<highestSound?1:.14)+'"></div>';
+  var mc=highestMotRisk==='High'?'red':highestMotRisk==='Medium'?'amber':'green';
+
+  var modCards=results.map(function(r){
+    var hg=parseInt(r.hpGain)||0,tg=parseInt(r.torqueGain)||0;
+    var mc2=r.motRisk==='High'?'red':r.motRisk==='Medium'?'amber':'green';
+    return'<div style="background:var(--bg);border:1px solid var(--b1);border-radius:var(--rs);padding:10px 12px;margin-bottom:7px">'
+      +'<div style="font-family:Syne,sans-serif;font-size:12px;font-weight:800;color:var(--ink);margin-bottom:7px">'+esc(r.mod)+'</div>'
+      +'<div class="drow"><span class="dlbl">HP gain</span><span class="dval">'+(hg?'+'+hg+' BHP':'None')+'</span></div>'
+      +'<div class="drow"><span class="dlbl">Torque gain</span><span class="dval">'+(tg?'+'+tg+' Nm':'None')+'</span></div>'
+      +'<div class="drow"><span class="dlbl">Install cost</span><span class="dval">'+esc(r.installCost||'—')+'</span></div>'
+      +'<div class="drow"><span class="dlbl">MOT risk</span><span class="dval sval '+mc2+'">'+esc(r.motRisk)+'</span></div>'
+      +'<div style="font-size:10.5px;color:var(--t2);line-height:1.5;margin-top:7px;padding-top:7px;border-top:1px solid var(--b1)">'+esc(r.verdict)+'</div>'
+      +'</div>';
+  }).join('');
+
+  el('resultSection').innerHTML=
+    '<div class="res-card">'
+    +'<div class="res-title"><span>'+results.length+' MODS COMBINED</span><div class="sbar">'+bars+'</div></div>'
+    /* Combined summary */
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">'
+    +'<div class="mot-sb"><div class="mot-sn" style="color:var(--green);font-size:22px">+'+(totalHpGain||0)+'</div><div class="mot-sl">Total BHP</div></div>'
+    +'<div class="mot-sb"><div class="mot-sn" style="color:var(--blue);font-size:22px">+'+(totalTqGain||0)+'</div><div class="mot-sl">Total Nm</div></div>'
+    +'<div class="mot-sb"><div class="mot-sn" style="color:var(--amber);font-size:16px">'+esc(costStr)+'</div><div class="mot-sl">Est. Cost</div></div>'
+    +'</div>'
+    +'<div class="chk '+(highestMotRisk==='High'?'bad':highestMotRisk==='Medium'?'warn':'ok')+'" style="margin-bottom:12px">'
+    +'<div class="chk-ic"><i class="ti ti-alert-circle"></i></div>'
+    +'<div><div class="chk-t">Combined MOT Risk: '+highestMotRisk+'</div><div class="chk-d">Declare ALL modifications to your insurer. Running multiple mods increases insurance impact significantly.</div></div></div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:8px">Individual Breakdown</div>'
+    +modCards
+    +'<button class="share-btn" id="shareBtn"><i class="ti ti-share" style="margin-right:5px"></i>Share This Build</button>'
+    +'</div>';
+  el('resultSection').classList.remove('hidden');
+  el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+
+  el('shareBtn').onclick=function(){
+    var mArr=Array.from(selectedMods);
+    var text='GarageIQ Build — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+' '+(vehicleData.yearOfManufacture||'')+'\nMods: '+mArr.join(', ')+'\n+'+totalHpGain+' BHP | +'+totalTqGain+' Nm\ngarage-iq-chi.vercel.app';
+    if(navigator.share)navigator.share({title:'GarageIQ Build',text:text,url:'https://garage-iq-chi.vercel.app'});
+    else navigator.clipboard.writeText(text).then(function(){toast('Build copied!','ok',2000);});
+  };
 }
 
 function renderResult(r){
@@ -2110,7 +2499,7 @@ function renderResult(r){
   var dir=r.valueChangeDirection||(String(r.valueChange||'').startsWith('-')?'down':'neutral');
   el('resultSection').innerHTML=
     '<div class="res-card">'
-    +'<div class="res-title"><span>'+esc(selectedMod.toUpperCase())+'</span><div class="sbar">'+bars+'</div></div>'
+    +'<div class="res-title"><span>'+esc((r.mod||Array.from(selectedMods)[0]||'').toUpperCase())+'</span><div class="sbar">'+bars+'</div></div>'
     +'<div class="drow"><span class="dlbl">Power</span><span class="dval">'+(hn?r.newHp+' BHP':'No change')+' <span class="chg '+(hn>0?'cup':hn<0?'cdn':'cnt')+'">'+(hn?(hn>0?'+':'')+hn+' BHP':'—')+'</span></span></div>'
     +'<div class="drow"><span class="dlbl">Torque</span><span class="dval">'+(tn?r.newTorque+' Nm':'No change')+' <span class="chg '+(tn>0?'cup':tn<0?'cdn':'cnt')+'">'+(tn?(tn>0?'+':'')+tn+' Nm':'—')+'</span></span></div>'
     +'<div class="drow"><span class="dlbl">Sound</span><span class="dval">'+rating+'/10 <span style="font-size:11px;font-weight:400;color:var(--t3)">— '+esc(r.soundDesc)+'</span></span></div>'
@@ -2125,7 +2514,8 @@ function renderResult(r){
   el('resultSection').classList.remove('hidden');
   el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
   el('shareBtn').onclick=function(){
-    var text='GarageIQ — '+(vehicleData.make||'')+(vehicleData.model?' '+vehicleData.model:'')+' '+(vehicleData.yearOfManufacture||'')+'\nMod: '+selectedMod+'\ngarage-iq-chi.vercel.app';
+    var mArr=Array.from(selectedMods);
+    var text='GarageIQ — '+(vehicleData.make||'')+(vehicleData.model?' '+vehicleData.model:'')+' '+(vehicleData.yearOfManufacture||'')+'\nMods: '+mArr.join(', ')+'\ngarage-iq-chi.vercel.app';
     if(navigator.share)navigator.share({title:'GarageIQ',text:text,url:'https://garage-iq-chi.vercel.app'});
     else navigator.clipboard.writeText(text).then(function(){toast('Copied to clipboard!','ok',2000);});
   };
