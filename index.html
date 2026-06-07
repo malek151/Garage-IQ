@@ -1376,39 +1376,134 @@ function lookupVin(vin){
     overviewFirst.insertAdjacentHTML('afterbegin',vinCard);
   }
 
+  /* Show foreign vehicle message in MOT/History sections */
+  var isUK=decoded.country==='United Kingdom';
+  if(el('motHistory')){
+    if(!isUK){
+      el('motHistory').innerHTML='<div class="info-box" style="margin:0"><i class="ti ti-info-circle"></i> <strong>No UK MOT records</strong> — MOT history is only available for UK-registered vehicles. Foreign VINs cannot be checked against DVSA records.</div>';
+    }
+  }
+  if(el('motSumWrap'))el('motSumWrap').classList.add('hidden');
+
+  /* Update dark header stats for foreign vehicle */
+  if(el('vehMotStatus')){el('vehMotStatus').textContent=decoded.country;el('vehMotStatus').className='veh-stat-val ok';}
+  if(el('vehMotExpiry'))el('vehMotExpiry').textContent=decoded.year||'—';
+  if(el('vehTaxDue'))el('vehTaxDue').textContent='Plant: '+decoded.plant;
+  if(el('vehEuro'))el('vehEuro').textContent='Serial: '+decoded.serial;
+
+  /* Helper: estimate BHP from displacement + cylinders + fuel */
+  function estBhpFromDisp(dispL, cyls, fuel){
+    var cc=Math.round((parseFloat(dispL)||1.6)*1000);
+    var f=(fuel||'').toUpperCase();
+    if(f.includes('ELECTRIC'))return{bhp:204,tq:310,z62:7.5,top:120,gearbox:'Single-speed Auto',mpg:0,co2:0,co2Label:'A'};
+    if(f.includes('HYBRID')){var hbhp=cc<=1500?122:180;return{bhp:hbhp,tq:Math.round(hbhp*1.6),z62:9.5,top:115,gearbox:'CVT Auto',mpg:55,co2:95,co2Label:'B'};}
+    var isDsl=f.includes('DIESEL');
+    var bhp,tq,z62,top,mpg,co2;
+    if(isDsl){
+      bhp=cc<=1500?115:cc<=2000?150:cc<=2500?190:250;
+      tq=Math.round(bhp*2.2);z62=cc<=1500?11:cc<=2000?9.5:7.5;top=cc<=1500?114:cc<=2000?128:148;
+      mpg=cc<=1500?60:cc<=2000?50:40;co2=Math.round(5600/mpg);
+    }else{
+      bhp=cc<=999?95:cc<=1199?110:cc<=1399?128:cc<=1599?138:cc<=1999?163:cc<=2499?228:cc<=2999?300:380;
+      tq=Math.round(bhp*1.55);z62=cc<=999?12.5:cc<=1199?11:cc<=1399?10:cc<=1599?9.2:cc<=1999?7.8:cc<=2499?6.5:5.2;
+      top=cc<=999?106:cc<=1199?115:cc<=1399?120:cc<=1599?126:cc<=1999?136:cc<=2499?148:158;
+      mpg=Math.max(22,65-Math.round(cc/80));co2=Math.round(6400/mpg*0.0454*19.6);
+    }
+    var cyln=parseInt(cyls)||Math.round(cc/400);
+    var gbox=cc<=1600?'6-speed Manual':'8-speed Auto';
+    var band=co2<=50?'A':co2<=95?'B':co2<=115?'C':co2<=135?'D':co2<=155?'E':co2<=175?'F':'G';
+    return{bhp:bhp,tq:tq,z62:z62,top:top,gearbox:gbox,mpg:mpg,co2:co2,co2Label:band,cylinders:cyln};
+  }
+
   /* NHTSA API — works globally, free */
   fetch('https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/'+vin+'?format=json')
     .then(function(r){return r.json();})
     .then(function(d){
       var vals={};
-      (d.Results||[]).forEach(function(item){vals[item.Variable]=item.Value;});
-      var make2=vals['Make']||'';
-      var model2=vals['Model']||'';
-      var trim=vals['Trim']||'';
-      var body=vals['Body Class']||'';
-      var eng=vals['Engine Number of Cylinders']||'';
-      var disp=vals['Displacement (L)']||'';
-      var fuel2=vals['Fuel Type - Primary']||'';
-      var country2=vals['Plant Country']||decoded.country;
-      var doors=vals['Number of Doors']||'';
-      if(make2||model2){
-        /* Update vehicle name */
-        if(el('vehName'))el('vehName').textContent=(make2+' '+(model2||'')).trim();
-        /* Update VIN card with extra NHTSA data */
-        var extra='';
-        if(make2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Make</span><span class="vin-detail-val">'+esc(make2)+'</span></div>';
-        if(model2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Model</span><span class="vin-detail-val">'+esc(model2)+(trim?' '+esc(trim):'')+'</span></div>';
-        if(body)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Body Style</span><span class="vin-detail-val">'+esc(body)+'</span></div>';
-        if(disp||eng)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Engine</span><span class="vin-detail-val">'+(disp?disp+'L':'')+(eng?' · '+eng+' cyl':'')+'</span></div>';
-        if(fuel2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Fuel</span><span class="vin-detail-val">'+esc(fuel2)+'</span></div>';
-        if(doors)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Doors</span><span class="vin-detail-val">'+esc(doors)+'</span></div>';
-        if(country2&&country2!==decoded.country)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Assembly Plant</span><span class="vin-detail-val">'+esc(country2)+'</span></div>';
-        /* Inject extra rows into existing card */
-        var card=overviewFirst&&overviewFirst.querySelector('.vin-card');
-        if(card&&extra){card.insertAdjacentHTML('beforeend',extra);}
+      (d.Results||[]).forEach(function(item){if(item.Value&&item.Value!=='Not Applicable')vals[item.Variable]=item.Value;});
+      var make2  = vals['Make']||'';
+      var model2 = vals['Model']||'';
+      var trim   = vals['Trim']||'';
+      var body   = vals['Body Class']||'';
+      var cyls   = vals['Engine Number of Cylinders']||'';
+      var dispL  = vals['Displacement (L)']||'';
+      var dispCC = vals['Displacement (CC)']||'';
+      var fuel2  = vals['Fuel Type - Primary']||'';
+      var country2=vals['Plant Country']||'';
+      var doors  = vals['Number of Doors']||'';
+      var drive  = vals['Drive Type']||'';
+      var trans  = vals['Transmission Style']||'';
+      var transSp= vals['Transmission Speeds']||'';
+
+      /* Update vehicle name */
+      var fullName=(make2+' '+(model2||'')).trim();
+      if(fullName){
+        if(el('vehName'))el('vehName').textContent=fullName+(trim?' '+trim:'');
+        /* Update chips */
+        if(el('vehChips')){
+          el('vehChips').innerHTML='<span class="veh-chip">'+decoded.flag+' '+esc(decoded.country)+'</span>'
+            +(decoded.year?'<span class="veh-chip-div">·</span><span class="veh-chip"><i class="ti ti-calendar"></i>'+decoded.year+'</span>':'')
+            +(fuel2?'<span class="veh-chip-div">·</span><span class="veh-chip"><i class="ti ti-gas-station"></i>'+esc(fuel2)+'</span>':'')
+            +(body?'<span class="veh-chip-div">·</span><span class="veh-chip"><i class="ti ti-car"></i>'+esc(body)+'</span>':'');
+        }
       }
+
+      /* Estimate / populate spec cards */
+      var cc=dispCC?parseInt(dispCC):dispL?Math.round(parseFloat(dispL)*1000):1600;
+      var specs=estBhpFromDisp(dispL||cc/1000,cyls,fuel2);
+
+      /* Gearbox from NHTSA if available */
+      if(trans&&transSp)specs.gearbox=transSp+'-speed '+(trans.toLowerCase().includes('auto')?'Auto':'Manual');
+      else if(trans)specs.gearbox=trans;
+
+      /* Populate the big stat cards */
+      if(el('scBhp'))el('scBhp').textContent=specs.bhp;
+      if(el('scTq'))el('scTq').textContent=specs.tq;
+      if(el('scZero'))el('scZero').textContent=specs.z62;
+      if(el('scTop'))el('scTop').textContent=specs.top;
+      if(el('scGearbox'))el('scGearbox').textContent=specs.gearbox;
+      if(el('scMpg'))el('scMpg').textContent=specs.mpg===0?'EV (N/A)':specs.mpg;
+
+      /* Populate tech details */
+      if(el('specCyl'))el('specCyl').textContent=(specs.cylinders||(cyls?parseInt(cyls):4))+' cylinders';
+      if(el('specDrive'))el('specDrive').textContent=drive||'—';
+      if(el('specsStatus')){el('specsStatus').textContent='From VIN';el('specsStatus').className='chip chip-gr';}
+
+      /* CO2 */
+      var co2v=el('specCo2'),co2b=el('specCo2Band');
+      if(co2v){
+        if(specs.co2===0)co2v.textContent='0 g/km (EV)';
+        else{var bc={'A':'#22C55E','B':'#4D9E25','C':'#7CB428','D':'#D97706','E':'#F59E0B','F':'#EF6C00','G':'#EF4444'}[specs.co2Label]||'var(--t3)';co2v.innerHTML=specs.co2+' g/km (est.) <span style="background:'+bc+';color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:3px">'+specs.co2Label+'</span>';}
+      }
+      if(co2b){co2b.textContent=specs.co2Label;var bc2={'A':'#22C55E','B':'#4D9E25','C':'#7CB428','D':'#D97706','E':'#F59E0B','F':'#EF6C00','G':'#EF4444'}[specs.co2Label];if(bc2)co2b.style.color=bc2;}
+
+      /* Add VIN card extra rows */
+      var extra='';
+      if(make2) extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Make</span><span class="vin-detail-val">'+esc(make2)+'</span></div>';
+      if(model2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Model</span><span class="vin-detail-val">'+esc(model2)+(trim?' · '+esc(trim):'')+'</span></div>';
+      if(body)  extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Body Style</span><span class="vin-detail-val">'+esc(body)+'</span></div>';
+      if(cc)    extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Engine</span><span class="vin-detail-val">'+cc+'cc'+(cyls?' · '+cyls+' cyl':'')+'</span></div>';
+      if(fuel2) extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Fuel</span><span class="vin-detail-val">'+esc(fuel2)+'</span></div>';
+      if(drive) extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Drive</span><span class="vin-detail-val">'+esc(drive)+'</span></div>';
+      if(doors) extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Doors</span><span class="vin-detail-val">'+esc(doors)+'</span></div>';
+      if(country2)extra+='<div class="vin-detail-row"><span class="vin-detail-lbl">Assembly</span><span class="vin-detail-val">'+esc(country2)+'</span></div>';
+      extra+='<div class="info-box" style="margin-top:10px"><i class="ti ti-info-circle"></i> Specs are <strong>estimated</strong> from engine displacement. For exact figures check the manufacturer spec sheet.</div>';
+
+      var card=overviewFirst&&overviewFirst.querySelector('.vin-card');
+      if(card&&extra)card.insertAdjacentHTML('beforeend',extra);
     })
-    .catch(function(){/* NHTSA failed — client-side decode still shown */});
+    .catch(function(){
+      /* NHTSA failed — still show estimated specs from VIN year */
+      var specs=estBhpFromDisp(1.6,4,'PETROL');
+      if(el('scBhp'))el('scBhp').textContent=specs.bhp;
+      if(el('scTq'))el('scTq').textContent=specs.tq;
+      if(el('scZero'))el('scZero').textContent=specs.z62;
+      if(el('scTop'))el('scTop').textContent=specs.top;
+      if(el('scGearbox'))el('scGearbox').textContent=specs.gearbox;
+      if(el('scMpg'))el('scMpg').textContent=specs.mpg;
+      if(el('specsStatus')){el('specsStatus').textContent='Estimated';el('specsStatus').className='chip chip-g';}
+      toast('NHTSA lookup failed — showing estimated specs','warn',3000);
+    });
 }
 
 'use strict';
