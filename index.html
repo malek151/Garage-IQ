@@ -442,6 +442,66 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 @media print{nav,.tab-rail,footer,.how-sec,.partner-cta,.toast-wrap{display:none!important}.app{padding:0;max-width:100%}.card{box-shadow:none;break-inside:avoid}}
+
+/* ── HERO ── */
+.hero{background:var(--ink);padding:4.5rem 1.5rem 3.5rem;text-align:center;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 75% 55% at 50% -5%,rgba(21,80,192,.45) 0%,transparent 65%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:600px;margin:0 auto}
+.hero-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(245,183,49,.12);border:1px solid rgba(245,183,49,.25);color:var(--gold2);font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem;animation:fadeUp .5s ease both}
+.hero h1{font-family:"Syne",sans-serif;font-size:clamp(42px,8vw,76px);font-weight:800;line-height:.94;letter-spacing:-2px;color:#fff;margin-bottom:1rem;animation:fadeUp .5s ease .06s both}
+.hero h1 em{color:transparent;-webkit-text-stroke:2px var(--gold2);font-style:normal}
+.hero-sub{font-size:12.5px;color:rgba(255,255,255,.42);max-width:380px;margin:0 auto 1rem;line-height:1.7;font-weight:300;animation:fadeUp .5s ease .12s both}
+.vs-row{font-size:11px;color:rgba(255,255,255,.35);margin-bottom:1.5rem;animation:fadeUp .5s ease .16s both}
+.vs-row b{color:var(--gold2)}
+/* ── REG WRAP (hero) ── */
+.reg-wrap{max-width:480px;margin:0 auto .75rem;animation:fadeUp .5s ease .2s both}
+.reg-row{display:flex;gap:0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.35)}
+.reg-uk-badge{background:var(--blue);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 13px;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;gap:2px;min-width:44px;flex-shrink:0}
+.reg-uk-badge span{font-size:13px;font-weight:900}
+.reg-plate{flex:1;font-family:"Syne",sans-serif;font-size:24px;font-weight:800;letter-spacing:5px;text-transform:uppercase;background:var(--gold2);border:none;padding:14px 16px;outline:none;color:var(--ink);transition:background .18s;min-width:0}
+.reg-plate::placeholder{color:rgba(5,14,28,.32);letter-spacing:2px;font-size:16px}
+.reg-plate:focus{background:#fff8c0}
+.reg-go{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;background:var(--ink);color:#fff;border:none;padding:0 26px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .18s;flex-shrink:0;white-space:nowrap}
+.reg-go:hover{background:#0D2444}
+.reg-go:active{transform:scale(.98)}
+.reg-note{font-size:10px;color:rgba(255,255,255,.22);letter-spacing:.3px;animation:fadeUp .5s ease .28s both}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:1.75rem;margin-top:2rem;animation:fadeUp .5s ease .32s both;flex-wrap:wrap}
+.hs-item{text-align:center}
+.hs-n{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--gold2);line-height:1}
+.hs-l{font-size:9px;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;font-weight:700}
+.hs-div{width:1px;height:28px;background:rgba(255,255,255,.1)}
+/* ── HERO HIDDEN AFTER SEARCH ── */
+.hero.searched{padding:0;overflow:hidden;max-height:0;transition:max-height .4s ease,padding .4s ease}
+@media(max-width:640px){
+  .hero{padding:3rem 1rem 2.5rem}
+  .hero h1{font-size:clamp(36px,11vw,52px);letter-spacing:-1px}
+  .reg-plate{font-size:18px;letter-spacing:2px;padding:12px}
+  .reg-go{padding:0 18px;font-size:12px}
+  .hero-stats{gap:1rem}.hs-div{display:none}
+  .reg-uk-badge{min-width:36px;padding:0 9px}
+}
+
+/* ── MOBILE FIXES ── */
+@media(max-width:640px){
+  .veh-status-grid{grid-template-columns:repeat(2,1fr)}
+  .veh-stat{padding:12px 1rem}
+  .veh-name{font-size:24px;margin-bottom:12px}
+  .stat-grid-6{grid-template-columns:repeat(2,1fr)}
+  .stat-card{padding:14px}
+  .stat-card-val{font-size:26px}
+  .tech-grid{grid-template-columns:repeat(2,1fr)}
+  .pill-tab span{display:none}
+  .pill-tab{padding:12px 14px}
+  .pill-tab i{font-size:16px}
+  nav{padding:0 1rem}
+  .nav-logo-sub{display:none}
+  .tab-rail{top:56px}
+}
+@media(min-width:768px){
+  .mods-g{grid-template-columns:repeat(4,1fr)}
+  .stat-grid-6{grid-template-columns:repeat(3,1fr)}
+}
 </style>
 </head>
 <body>
@@ -524,22 +584,37 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
 </div>
 
-<!-- DARK SEARCH HEADER -->
-<div class="dark-header" id="darkHeader">
-  <div class="dark-header-inner">
-    <div style="padding-bottom:1.75rem">
+<!-- HERO — full landing page -->
+<section class="hero" id="heroSection">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-chip"><i class="ti ti-shield-check"></i> UK Vehicle Intelligence</div>
+    <h1>Know Your<br/><em>Car.</em><br/>Build Your <em>Vision.</em></h1>
+    <p class="hero-sub">Real DVLA data · Full MOT history · Mileage fraud detection · AI risk analysis · Valuation</p>
+    <div class="vs-row"><i class="ti ti-award" style="color:var(--gold2);font-size:11px"></i> &nbsp;Better &amp; cheaper than <b>CarVertical</b> — just £1.99 per report</div>
+    <div class="reg-wrap">
       <div class="reg-row">
         <div class="reg-uk-badge">
-          <svg width="18" height="12" viewBox="0 0 60 40" style="margin-bottom:1px"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg>
+          <svg width="18" height="12" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg>
           <span>UK</span>
         </div>
         <input class="reg-plate" id="regInput" placeholder="AB12 CDE" maxlength="8"/>
         <button class="reg-go" id="runBtn"><i class="ti ti-search"></i> LOOK UP</button>
       </div>
-      <p class="reg-note">Enter any UK registration to get instant vehicle intelligence</p>
+      <p class="reg-note">Enter any UK registration · Official DVLA data · Secure · No spam</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hs-item"><div class="hs-n">200+</div><div class="hs-l">Car Models</div></div>
+      <div class="hs-div"></div>
+      <div class="hs-item"><div class="hs-n">£1.99</div><div class="hs-l">Per Report</div></div>
+      <div class="hs-div"></div>
+      <div class="hs-item"><div class="hs-n">100%</div><div class="hs-l">DVLA Data</div></div>
+      <div class="hs-div"></div>
+      <div class="hs-item"><div class="hs-n">AI</div><div class="hs-l">Risk Engine</div></div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- VEHICLE RESULT HEADER -->
 <div class="veh-header" id="vehHeader">
@@ -1257,6 +1332,8 @@ function lookupVehicle(){
   if(!reg||reg.length<2)return;
   currentReg=reg;
   el('errbox').classList.add('hidden');el('mainApp').classList.remove('hidden');el('loadbox').classList.remove('hidden');
+  /* Collapse hero */
+  var hs=el('heroSection');if(hs)hs.classList.add('searched');
   el('tabsWrap').classList.remove('hidden');el('vinStrip').classList.add('hidden');
   el('resultSection').classList.add('hidden');
   selectedMod=null;motTests=[];
@@ -1346,7 +1423,7 @@ function renderVehicle(d){
   el('statMot').innerHTML='<span class="sdot '+(mok?'sdot-gr':'sdot-r')+'"></span>'+(mok?'VALID':fmt(d.motStatus||'Unknown'));
   el('statMot').className='sval '+(mok?'green':'red');
   var vin=d.vin||d.vinLastFive||'';
-  if(vin){el('vinVal').textContent=vin;el('vinNote').textContent=d.vin?'Full VIN':'Partial (last 5)';el('vinStrip').classList.remove('hidden');}
+  if(vin&&el('vinVal')){el('vinVal').textContent=vin;if(el('vinNote'))el('vinNote').textContent=d.vin?'Full VIN':'Partial (last 5)';if(el('vinStrip'))el('vinStrip').classList.remove('hidden');}
   /* History tab */
   el('firstRegText').textContent=d.monthOfFirstRegistration||d.yearOfManufacture||'Unknown';
   /* RHD chip — assume UK spec unless reg pattern is foreign */
@@ -2020,7 +2097,7 @@ function analyseMod(){
   .catch(function(){
     /* API unavailable — use local fallback instantly, no error shown */
     done(modFallback(selectedMod,hp,torque,value));
-    toast('Using offline data — deploy api/mod.js for AI analysis','warn',4000);
+    /* silent fallback */
   });
 }
 
