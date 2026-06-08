@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>GarageIQ — UK Car Intelligence</title>
+<title>GarageIQ — Global Vehicle Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
@@ -523,6 +523,10 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 .reg-toggle-btn{font-family:"Syne",sans-serif;font-size:10px;font-weight:700;padding:6px 16px;border:none;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;transition:all .18s;letter-spacing:.3px}
 .reg-toggle-btn.active{background:var(--gold2);color:var(--ink)}
 
+
+/* ── GOOGLE ADS SLOTS ── */
+.ad-slot{background:rgba(0,0,0,.03);border:1px dashed rgba(0,0,0,.1);border-radius:var(--r);padding:1rem;text-align:center;margin-bottom:.9rem;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
+.ad-slot ins{display:block!important;width:100%}
 </style>
 </head>
 <body>
@@ -534,7 +538,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     <div class="nav-logo-icon"><i class="ti ti-car"></i></div>
     <div class="nav-logo-text">
       <div class="nav-logo-name">GarageIQ</div>
-      <div class="nav-logo-sub">UK Car Intelligence</div>
+      <div class="nav-logo-sub">Global Vehicle Intelligence</div>
     </div>
   </a>
   <div class="nav-r">
@@ -610,9 +614,9 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="hero-inner">
-    <div class="hero-chip"><i class="ti ti-shield-check"></i> UK Vehicle Intelligence</div>
-    <h1>Know Your<br/><em>Car.</em><br/>Build Your <em>Vision.</em></h1>
-    <p class="hero-sub">Real DVLA data · Full MOT history · Mileage fraud detection · AI risk analysis · Valuation</p>
+    <div class="hero-chip"><i class="ti ti-shield-check"></i> Global Vehicle Intelligence</div>
+    <h1>Know Any<br/><em>Car.</em><br/>Anywhere In The <em>World.</em></h1>
+    <p class="hero-sub">UK reg plates · International VINs · Full MOT history · AI risk analysis · Valuation worldwide</p>
     <div class="vs-row"><i class="ti ti-award" style="color:var(--gold2);font-size:11px"></i> &nbsp;Better &amp; cheaper than <b>CarVertical</b> — just £1.99 per report</div>
     <div class="reg-wrap">
       <div style="display:flex;justify-content:center;margin-bottom:10px">
@@ -791,6 +795,10 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <i class="ti ti-chevron-right partner-arr"></i>
       </a>
     </div>
+  <!-- Ad slot — activates when AdSense approved -->
+  <div class="ad-slot" id="adSlot1">
+    <!-- Paste your Google AdSense code here after approval -->
+    <span>Ad space · Activate with Google AdSense</span>
   </div>
 
   <!-- REPORT TAB — PAID -->
@@ -2183,7 +2191,25 @@ function calcAnnualMi(){
 
 /* VALUATION */
 function renderValuation(){
-  var d=vehicleData,yr=parseInt(d.yearOfManufacture)||2015,age=2026-yr,base=d.value||8000;
+  var d=vehicleData,yr=parseInt(d.yearOfManufacture)||0,age=yr?2026-yr:0;
+  /* Only show valuation if we have real UK DVLA data with MOT history */
+  var hasRealData=!!(d.make&&d.yearOfManufacture&&motTests.length>0);
+  var base=d.value||null;
+  if(!hasRealData||!base){
+    el('valPrice').textContent='Unavailable';
+    el('valPrivate').textContent='—';
+    el('valTrade').textContent='—';
+    el('valPx').textContent='—';
+    /* Show why */
+    var valHero=document.querySelector('.val-hero');
+    if(valHero){valHero.insertAdjacentHTML('beforeend','<div style="font-size:10.5px;color:rgba(255,255,255,.4);margin-top:10px;position:relative;z-index:1"><i class="ti ti-info-circle"></i> Valuation requires verified UK MOT history. International VINs or vehicles without history cannot be reliably valued.</div>');}
+    /* Still render finance calc and depreciation */
+    el('vfAge').textContent=age||'—';
+    var annMi=calcAnnualMi();el('vfMileage').textContent=annMi>0?annMi.toLocaleString():'N/A';
+    el('vfPass').textContent='N/A';
+    el('finPrice').value=15000;el('finDeposit').value=2000;calcFinance();
+    return;
+  }
   el('valPrice').textContent='£'+base.toLocaleString();
   el('valPrivate').textContent='£'+Math.round(base*.88).toLocaleString()+'–£'+Math.round(base*1.12).toLocaleString();
   el('valTrade').textContent='£'+Math.round(base*.82).toLocaleString();
@@ -2254,7 +2280,47 @@ function buildGauge(score){
     +'</svg>';
 }
 
+
+/* ── FOREIGN VIN INTELLIGENCE REPORT ── */
+function buildForeignVinReport(){
+  var ov=el('tab-report');if(!ov)return;
+  var vin=(currentReg||'').toUpperCase();
+  var decoded=decodeVin(vin)||{country:'Unknown',flag:'🌍',wmi:'—',year:null};
+  var isUS=decoded.country==='United States'||decoded.country==='Canada';
+  var isEU=['Germany','France','Italy','Spain','Sweden','Netherlands','Belgium','Austria','Czech Republic','Poland'].indexOf(decoded.country)>=0;
+
+  /* Check digit fraud indicator */
+  var chkResult=vin.length===17?vinCheckDigit(vin):{valid:null};
+  var fraudRisk=chkResult.valid===false?'High — check digit invalid, possible cloned/fake VIN':'Low — VIN format appears legitimate';
+  var fraudCls=chkResult.valid===false?'bad':'ok';
+
+  var intelHTML='<div class="intel-card"><div class="intel-bar"></div><div style="padding:1.1rem">'
+    +'<div class="card-head" style="margin-bottom:9px"><div class="card-title"><i class="ti ti-report-analytics"></i> International VIN Report</div><div class="chip chip-gr">Free</div></div>'
+    /* Fraud indicator */
+    +'<div class="chk '+fraudCls+'" style="margin-bottom:12px">'
+    +'<div class="chk-ic"><i class="ti ti-shield-check"></i></div>'
+    +'<div><div class="chk-t">VIN Authenticity Check</div><div class="chk-d">'+esc(fraudRisk)+'</div></div></div>'
+    /* Country + manufacture info */
+    +'<div class="sect-lbl">Vehicle Origin</div>'
+    +'<div class="hrow"><div class="hic hi-b"><i class="ti ti-world"></i></div><div style="flex:1"><div class="hrow-t">Country of Manufacture</div><div class="hrow-d">'+decoded.flag+' '+esc(decoded.country)+' — detected from WMI ('+esc(decoded.wmi)+')</div></div></div>'
+    +(decoded.year?'<div class="hrow"><div class="hic hi-b"><i class="ti ti-calendar"></i></div><div><div class="hrow-t">Model Year</div><div class="hrow-d">'+decoded.year+' (decoded from VIN position 10)</div></div></div>':'')
+    /* Stolen check CTAs */
+    +'<div class="sect-lbl">Stolen &amp; History Checks</div>'
+    +(isUS?'<a class="partner-cta" href="https://www.nicb.org/vincheck" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#14202E,#1550C0)"><div class="partner-ic"><i class="ti ti-shield-check"></i></div><div><div class="partner-t">NICB VINCheck — Free (USA)</div><div class="partner-d">Official US National Insurance Crime Bureau stolen vehicle check</div></div><i class="ti ti-chevron-right partner-arr"></i></a>':'')
+    +(isUS?'<a class="partner-cta" href="https://www.carfax.com" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#1A0A00,#B03A00)"><div class="partner-ic"><i class="ti ti-car"></i></div><div><div class="partner-t">Carfax History Report (USA/Canada)</div><div class="partner-d">Accident, ownership, service and title history for North American vehicles</div></div><i class="ti ti-chevron-right partner-arr"></i></a>':'')
+    +(isEU?'<a class="partner-cta" href="https://www.europol.europa.eu/useful-links/stolen-vehicles" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#003399,#0050CC)"><div class="partner-ic"><i class="ti ti-shield"></i></div><div><div class="partner-t">Europol Stolen Vehicles</div><div class="partner-d">Check if vehicle is listed as stolen across EU member states</div></div><i class="ti ti-chevron-right partner-arr"></i></a>':'')
+    +'<a class="partner-cta" href="https://www.interpol.int/en/Crimes/Vehicle-Crime" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0A1628,#2D1B69)"><div class="partner-ic"><i class="ti ti-world"></i></div><div><div class="partner-t">Interpol — Global Stolen Vehicle Check</div><div class="partner-d">International criminal police database for vehicles reported stolen worldwide</div></div><i class="ti ti-chevron-right partner-arr"></i></a>'
+    +'<div class="info-box" style="margin-top:0"><i class="ti ti-info-circle"></i> UK MOT, finance and write-off data is <strong>only available for UK-registered vehicles</strong>. For foreign VINs, use the services above for your vehicle\'s country of origin.</div>'
+    +'</div></div>';
+
+  ov.innerHTML=intelHTML;
+}
+
 function showIntelReport(){
+  /* For foreign VINs — show international report instead */
+  if(SEARCH_MODE==='vin'&&(!motTests||!motTests.length)){
+    buildForeignVinReport();return;
+  }
   if(!motTests.length)return;
   if(!currentUser){
     el('pwLoggedOut').style.display='block';el('pwLoggedIn').style.display='none';
