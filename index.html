@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>GarageIQ — Global Vehicle Intelligence</title>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7081871586174669" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
@@ -534,7 +536,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="/">
+  <a class="nav-logo" href="https://www.garageiq.org.uk">
     <div class="nav-logo-icon"><i class="ti ti-car"></i></div>
     <div class="nav-logo-text">
       <div class="nav-logo-name">GarageIQ</div>
@@ -1515,7 +1517,7 @@ function lookupVin(vin){
 }
 
 'use strict';
-var VERCEL='https://garage-iq-chi.vercel.app';
+var VERCEL='https://www.garageiq.org.uk';
 var SUPA_URL='https://hbfntnxawwavttzvxdde.supabase.co';
 var SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
 var sb,currentUser,currentProfile,vehicleData={},motTests=[],selectedMods=new Set(),currentReg='';
@@ -2645,8 +2647,8 @@ function renderMultiResult(results,baseHp,baseTq,baseVal){
 
   el('shareBtn').onclick=function(){
     var mArr=Array.from(selectedMods);
-    var text='GarageIQ Build — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+' '+(vehicleData.yearOfManufacture||'')+'\nMods: '+mArr.join(', ')+'\n+'+totalHpGain+' BHP | +'+totalTqGain+' Nm\ngarage-iq-chi.vercel.app';
-    if(navigator.share)navigator.share({title:'GarageIQ Build',text:text,url:'https://garage-iq-chi.vercel.app'});
+    var text='GarageIQ Build — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+' '+(vehicleData.yearOfManufacture||'')+'\nMods: '+mArr.join(', ')+'\n+'+totalHpGain+' BHP | +'+totalTqGain+' Nm\nwww.garageiq.org.uk';
+    if(navigator.share)navigator.share({title:'GarageIQ Build',text:text,url:'https://www.garageiq.org.uk'});
     else navigator.clipboard.writeText(text).then(function(){toast('Build copied!','ok',2000);});
   };
 }
@@ -2676,8 +2678,8 @@ function renderResult(r){
   el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
   el('shareBtn').onclick=function(){
     var mArr=Array.from(selectedMods);
-    var text='GarageIQ — '+(vehicleData.make||'')+(vehicleData.model?' '+vehicleData.model:'')+' '+(vehicleData.yearOfManufacture||'')+'\nMods: '+mArr.join(', ')+'\ngarage-iq-chi.vercel.app';
-    if(navigator.share)navigator.share({title:'GarageIQ',text:text,url:'https://garage-iq-chi.vercel.app'});
+    var text='GarageIQ — '+(vehicleData.make||'')+(vehicleData.model?' '+vehicleData.model:'')+' '+(vehicleData.yearOfManufacture||'')+'\nMods: '+mArr.join(', ')+'\nwww.garageiq.org.uk';
+    if(navigator.share)navigator.share({title:'GarageIQ',text:text,url:'https://www.garageiq.org.uk'});
     else navigator.clipboard.writeText(text).then(function(){toast('Copied to clipboard!','ok',2000);});
   };
 }
