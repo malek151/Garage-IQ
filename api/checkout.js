@@ -9,7 +9,7 @@ import Stripe from 'stripe';
 
 const PRICE_ID   = 'price_1TfluUA6aj9BlQ93zi75aK8q';
 const PRODUCT_ID = 'prod_Uf66Q3PhMUn5v6';
-const APP_URL    = process.env.APP_URL || 'https://garage-iq-chi.vercel.app';
+const APP_URL    = process.env.APP_URL || 'https://www.garageiq.org.uk';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
