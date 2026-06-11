@@ -529,10 +529,101 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 /* ── GOOGLE ADS SLOTS ── */
 .ad-slot{background:rgba(0,0,0,.03);border:1px dashed rgba(0,0,0,.1);border-radius:var(--r);padding:1rem;text-align:center;margin-bottom:.9rem;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
 .ad-slot ins{display:block!important;width:100%}
+
+/* ── DARK MODE ── */
+[data-theme="dark"]{
+  --bg:#0F172A;--card:#1E293B;--ink:#F1F5F9;--ink2:#1E293B;--ink3:#0F172A;
+  --t1:#F1F5F9;--t2:#CBD5E1;--t3:#94A3B8;--t4:#64748B;
+  --b1:rgba(255,255,255,.08);--b2:rgba(255,255,255,.14);
+  --s1:0 1px 4px rgba(0,0,0,.3),0 2px 12px rgba(0,0,0,.25);
+  --s2:0 4px 20px rgba(0,0,0,.4),0 1px 4px rgba(0,0,0,.2);
+  --sky:#1E3A5F;--sky2:#1E4080;--sky3:#3B82F6;
+  --gold3:#451A03;--amber2:#451A03;
+  --green2:#064E3B;--green3:#065F46;
+  --red2:#450A0A;--red3:#7F1D1D;
+}
+[data-theme="dark"] .card{background:#1E293B;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .sbox{background:#0F172A;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .tl-body,[data-theme="dark"] .hrow{background:#0F172A;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .mot-sb{background:#0F172A;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .tech-item{background:#1E293B;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .stat-card{background:#1E293B}
+[data-theme="dark"] .stat-card:hover{background:#243348}
+[data-theme="dark"] .inp{background:rgba(255,255,255,.07);color:#F1F5F9}
+[data-theme="dark"] .fin-inp{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:#F1F5F9}
+[data-theme="dark"] .mod-btn{background:#1E293B;border-color:rgba(255,255,255,.1)}
+[data-theme="dark"] .mod-btn:hover,[data-theme="dark"] .mod-btn.selected{background:#1E3A5F;border-color:var(--blue)}
+[data-theme="dark"] .info-box{background:#1E3A5F;border-color:#1E4080}
+[data-theme="dark"] .highlight-box.hl-blue{background:#1E3A5F;border-color:#1E4080}
+[data-theme="dark"] .vf{background:#1E293B;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] footer,[data-theme="dark"] .how-sec{background:#0A1120}
+[data-theme="dark"] .tab-rail{background:#0A1120}
+[data-theme="dark"] nav{background:rgba(10,17,32,.97)}
+[data-theme="dark"] .hero{background:#0A1120}
+[data-theme="dark"] .veh-header{background:#0A1120}
+[data-theme="dark"] .modal{background:rgba(30,41,59,.97);border-color:rgba(255,255,255,.12)}
+[data-theme="dark"] .mtab.active{background:#0F172A;color:#F1F5F9}
+[data-theme="dark"] .pc{background:#1E293B;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .ph-item{background:#1E293B;border-color:rgba(255,255,255,.08)}
+[data-theme="dark"] .partner-cta{opacity:.95}
+[data-theme="dark"] .veh-stat{border-color:rgba(255,255,255,.06)}
+[data-theme="dark"] .chk.ok{background:rgba(6,78,59,.5)}
+[data-theme="dark"] .chk.warn{background:rgba(69,26,3,.5)}
+[data-theme="dark"] .chk.bad{background:rgba(69,10,10,.5)}
+[data-theme="dark"] .ad-slot{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
+
+/* ── DARK MODE TOGGLE BUTTON ── */
+.dm-toggle{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.75);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.dm-toggle:hover{background:rgba(255,255,255,.18);color:#fff}
+
+/* ── LOADING OVERLAY (VehicleIntel style) ── */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;animation:fadeIn .2s ease}
+.loading-overlay.hidden{display:none}
+.loading-spinner{width:64px;height:64px;border-radius:50%;border:3px solid var(--b1);border-top-color:var(--blue);animation:spin .8s linear infinite}
+.loading-reg{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--t1)}
+.loading-steps{display:flex;flex-direction:column;gap:10px;min-width:260px}
+.loading-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--t3);transition:color .3s}
+.loading-step.active{color:var(--blue);font-weight:600}
+.loading-step.done{color:var(--green)}
+.loading-step-ic{width:18px;height:18px;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;transition:all .3s}
+.loading-step.active .loading-step-ic{border-color:var(--blue);color:var(--blue);animation:spin .7s linear infinite}
+.loading-step.done .loading-step-ic{border-color:var(--green);color:var(--green);background:var(--green2)}
+.loading-step:not(.active):not(.done) .loading-step-ic{border-color:var(--t4);color:var(--t4)}
+
+/* ── ULEZ / VED CARDS ── */
+.ulez-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem}
+.ulez-card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;box-shadow:var(--s1);transition:all .18s}
+.ulez-card:hover{box-shadow:var(--s2);transform:translateY(-1px)}
+.ulez-lbl{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ulez-lbl i{font-size:12px}
+.ulez-val{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;margin-bottom:3px}
+.ulez-sub{font-size:10.5px;color:var(--t3);line-height:1.4}
+.ulez-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;margin-left:6px}
+
+/* ── MILEAGE BAR CHART (VehicleIntel style) ── */
+.mi-bar-wrap{display:flex;flex-direction:column;gap:6px;margin:.75rem 0}
+.mi-bar-row{display:flex;align-items:center;gap:8px}
+.mi-bar-date{font-size:9.5px;font-weight:600;color:var(--t3);width:68px;flex-shrink:0;text-align:right}
+.mi-bar-bg{flex:1;height:20px;background:var(--bg);border-radius:6px;overflow:hidden;position:relative}
+.mi-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:9px;font-weight:700;color:#fff;white-space:nowrap;transition:width 1s cubic-bezier(.4,0,.2,1);min-width:4px}
+.mi-bar-fill.pass{background:linear-gradient(90deg,var(--blue),var(--blue3))}
+.mi-bar-fill.fail{background:linear-gradient(90deg,var(--red),#F87171)}
+.mi-bar-fill.reg{background:linear-gradient(90deg,var(--green),#22C55E)}
+.mi-bar-val{font-size:9.5px;font-weight:700;color:var(--t2);width:72px;text-align:right;flex-shrink:0}
+
 </style>
 </head>
 <body>
 <div class="toast-wrap" id="toastWrap"></div>
+<div class="loading-overlay hidden" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-reg" id="loadingReg">Searching...</div>
+  <div class="loading-steps">
+    <div class="loading-step" id="lstep1"><div class="loading-step-ic"><i class="ti ti-circle"></i></div>Querying DVLA database...</div>
+    <div class="loading-step" id="lstep2"><div class="loading-step-ic"><i class="ti ti-circle"></i></div>Fetching MOT history from DVSA...</div>
+    <div class="loading-step" id="lstep3"><div class="loading-step-ic"><i class="ti ti-circle"></i></div>Compiling vehicle intelligence...</div>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -544,6 +635,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
     </div>
   </a>
   <div class="nav-r">
+    <button class="dm-toggle" id="dmToggle" title="Toggle dark mode"><i class="ti ti-moon" id="dmIcon"></i></button>
     <div id="navGuest">
       <button class="btn-ghost" id="btnLogin">Log In</button>
       <button class="btn-gold" id="btnSignup">Sign Up</button>
@@ -730,6 +822,19 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
         <div class="sbox"><div class="slbl">MOT</div><div class="sval" id="statMot">-</div></div>
       </div>
     </div>
+    <!-- ULEZ + VED -->
+    <div class="ulez-grid hidden" id="ulezGrid">
+      <div class="ulez-card">
+        <div class="ulez-lbl"><i class="ti ti-leaf"></i> Clean Air Zone / ULEZ</div>
+        <div class="ulez-val" id="ulezVal">—</div>
+        <div class="ulez-sub" id="ulezSub">—</div>
+      </div>
+      <div class="ulez-card">
+        <div class="ulez-lbl"><i class="ti ti-receipt"></i> Annual Road Tax (VED)</div>
+        <div class="ulez-val" id="vedVal">—</div>
+        <div class="ulez-sub" id="vedSub">—</div>
+      </div>
+    </div>
     <!-- MOT SUMMARY -->
     <div class="card">
       <div class="card-head"><div class="card-title"><i class="ti ti-clipboard-check"></i> MOT Summary</div><div class="chip chip-b" id="motSumChip" style="display:none">—</div></div>
@@ -758,6 +863,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="chart-outer" id="mileChartWrap">
         <div class="loading-box" style="padding:1.75rem"><div class="spin"></div> Building chart...</div>
       </div>
+      <div id="miBarChart" class="mi-bar-wrap"></div>
       <div class="chart-legend">
         <div class="cl-i"><div class="cl-d" style="background:var(--green)"></div> Registration (0 mi)</div>
         <div class="cl-i"><div class="cl-d" style="background:var(--blue)"></div> MOT Test</div>
@@ -1516,6 +1622,147 @@ function lookupVin(vin){
     });
 }
 
+
+/* ── DARK MODE ── */
+(function(){
+  var saved=localStorage.getItem('giq_theme')||'light';
+  if(saved==='dark')document.documentElement.setAttribute('data-theme','dark');
+})();
+function toggleDark(){
+  var html=document.documentElement;
+  var isDark=html.getAttribute('data-theme')==='dark';
+  html.setAttribute('data-theme',isDark?'light':'dark');
+  localStorage.setItem('giq_theme',isDark?'light':'dark');
+  var icon=el('dmIcon');
+  if(icon)icon.className=isDark?'ti ti-moon':'ti ti-sun';
+}
+
+/* ── LOADING OVERLAY ── */
+function showLoadingOverlay(reg){
+  var ov=el('loadingOverlay');if(!ov)return;
+  ov.classList.remove('hidden');
+  var lr=el('loadingReg');if(lr)lr.textContent='Analysing '+reg.toUpperCase();
+  /* Reset steps */
+  ['lstep1','lstep2','lstep3'].forEach(function(id){
+    var s=el(id);if(!s)return;
+    s.classList.remove('active','done');
+  });
+  /* Animate steps sequentially */
+  function activate(id,delay,cb){
+    setTimeout(function(){
+      var s=el(id);if(!s)return;
+      /* Mark previous done */
+      var prev={'lstep2':'lstep1','lstep3':'lstep2'}[id];
+      if(prev){var p=el(prev);if(p){p.classList.remove('active');p.classList.add('done');}}
+      s.classList.add('active');
+      if(cb)cb();
+    },delay);
+  }
+  activate('lstep1',0);
+  activate('lstep2',900);
+  activate('lstep3',1800);
+}
+function hideLoadingOverlay(){
+  var ov=el('loadingOverlay');if(!ov)return;
+  /* Mark all done */
+  setTimeout(function(){
+    ['lstep1','lstep2','lstep3'].forEach(function(id){
+      var s=el(id);if(s){s.classList.remove('active');s.classList.add('done');}
+    });
+    setTimeout(function(){ov.classList.add('hidden');},400);
+  },200);
+}
+
+/* ── ULEZ + VED CALCULATOR ── */
+function renderUlezVed(d){
+  var grid=el('ulezGrid');if(!grid)return;
+  var year=parseInt(d.yearOfManufacture)||0;
+  var fuel=(d.fuelType||'').toUpperCase();
+  var co2=0; /* populated later from specs */
+
+  /* ULEZ compliance logic */
+  var isEV=fuel.includes('ELECTRIC');
+  var isHybrid=fuel.includes('HYBRID');
+  var isPetrol=fuel.includes('PETROL');
+  var isDiesel=fuel.includes('DIESEL');
+
+  var ulezOk,ulezText,ulezColor;
+  if(isEV){ulezOk=true;ulezText='Zero emission — exempt from all clean air charges';ulezColor='var(--green)';}
+  else if(isHybrid&&year>=2005){ulezOk=true;ulezText='Hybrid '+year+' — meets ULEZ Euro 4+ standard';ulezColor='var(--green)';}
+  else if(isPetrol&&year>=2006){ulezOk=true;ulezText='Petrol '+year+' — meets ULEZ Euro 4 standard';ulezColor='var(--green)';}
+  else if(isDiesel&&year>=2015){ulezOk=true;ulezText='Diesel '+year+' — meets ULEZ Euro 6 standard';ulezColor='var(--green)';}
+  else if(year>=2015){ulezOk=true;ulezText='Registered '+year+' — assumed compliant (post-2015)';ulezColor='var(--amber)';}
+  else{ulezOk=false;ulezText=(year?'Registered '+year+' — ':'')+(isPetrol?'Pre-Euro 4 petrol':isDiesel?'Pre-Euro 6 diesel':'Check your vehicle')+(year&&year<2015?' — likely non-compliant':'');ulezColor='var(--red)';}
+
+  var uv=el('ulezVal'),us=el('ulezSub');
+  if(uv){uv.textContent=ulezOk?'Compliant':'Non-Compliant';uv.style.color=ulezColor;}
+  if(us)us.textContent=ulezText;
+
+  /* VED (Road Tax) bands 2024 */
+  /* Based on CO2 — we estimate from fuel+year if no real data */
+  var estCo2=isEV?0:isPetrol?(year>=2020?120:year>=2015?135:155):isDiesel?(year>=2020?130:year>=2015?145:170):140;
+  var ved,vedBand,vedColor;
+  if(isEV){ved='£0';vedBand='Zero rate — EV';vedColor='var(--green)';}
+  else if(estCo2===0){ved='£0';vedBand='Zero emission';vedColor='var(--green)';}
+  else if(estCo2<=50){ved='£10';vedBand='Band A (≤50 g/km)';vedColor='var(--green)';}
+  else if(estCo2<=75){ved='£30';vedBand='Band B';vedColor='var(--green)';}
+  else if(estCo2<=90){ved='£130';vedBand='Band C';vedColor='var(--amber)';}
+  else if(estCo2<=100){ved='£160';vedBand='Band D';vedColor='var(--amber)';}
+  else if(estCo2<=110){ved='£180';vedBand='Band E';vedColor='var(--amber)';}
+  else if(estCo2<=130){ved='£195';vedBand='Band F';vedColor='var(--amber)';}
+  else if(estCo2<=150){ved='£220';vedBand='Band G';vedColor='var(--amber)';}
+  else if(estCo2<=170){ved='£265';vedBand='Band H';vedColor='var(--red)';}
+  else if(estCo2<=190){ved='£315';vedBand='Band I';vedColor='var(--red)';}
+  else if(estCo2<=225){ved='£355';vedBand='Band J';vedColor='var(--red)';}
+  else if(estCo2<=255){ved='£595';vedBand='Band K';vedColor='var(--red)';}
+  else{ved='£620';vedBand='Band L+ (high emission)';vedColor='var(--red)';}
+
+  var vv=el('vedVal'),vs=el('vedSub');
+  if(vv){vv.textContent=ved+' / yr';vv.style.color=vedColor;}
+  if(vs)vs.textContent=vedBand+' · Est. '+estCo2+' g/km CO₂';
+
+  grid.classList.remove('hidden');
+}
+
+/* ── MILEAGE BAR CHART (VehicleIntel style) ── */
+function buildMiBarChart(tests){
+  var wrap=el('miBarChart');if(!wrap)return;
+  var carYear=parseInt(vehicleData.yearOfManufacture)||2010;
+  var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
+  var pts=[{date:String(carYear),mi:0,reg:true,passed:true}];
+  sorted.forEach(function(t){
+    var mi=parseInt(t.odometerValue)||0;if(!mi)return;
+    var ds=t.completedDate||'';
+    var yr=0;try{yr=new Date(ds).getFullYear();}catch(e){}
+    if(yr>0&&yr<carYear)return;
+    pts.push({date:ds.slice(0,7)||String(yr),mi:mi,passed:(t.testResult||'').toUpperCase()==='PASSED',reg:false});
+  });
+  if(pts.length<2){wrap.innerHTML='';return;}
+  var maxMi=Math.max.apply(null,pts.map(function(p){return p.mi;}))||1;
+  var html=pts.map(function(p,i){
+    var pct=Math.round((p.mi/maxMi)*100);
+    var cls=p.reg?'reg':p.passed?'pass':'fail';
+    var fraud=!p.reg&&i>0&&p.mi<pts[i-1].mi;
+    var label=p.mi>0?p.mi.toLocaleString()+' mi':(p.reg?'Registration':'—');
+    var ds=p.reg?String(carYear):p.date.slice(0,7);
+    return'<div class="mi-bar-row">'
+      +'<div class="mi-bar-date">'+esc(ds)+'</div>'
+      +'<div class="mi-bar-bg">'
+      +'<div class="mi-bar-fill '+cls+'" style="width:0" data-w="'+pct+'%">'+(pct>18?label:'')+'</div>'
+      +(fraud?'<div style="position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;font-weight:800;color:var(--red)">⚠ DROP</div>':'')
+      +'</div>'
+      +'<div class="mi-bar-val">'+(pct<=18?label:'')+'</div>'
+      +'</div>';
+  }).join('');
+  wrap.innerHTML=html;
+  /* Animate bars */
+  setTimeout(function(){
+    wrap.querySelectorAll('.mi-bar-fill').forEach(function(bar){
+      bar.style.width=bar.getAttribute('data-w');
+    });
+  },100);
+}
+
 'use strict';
 var VERCEL='https://www.garageiq.org.uk';
 var SUPA_URL='https://hbfntnxawwavttzvxdde.supabase.co';
@@ -1554,6 +1801,9 @@ window.addEventListener('load',function(){
   el('btnLogout').onclick=doLogout;
   if(el('btnLogoutNav'))el('btnLogoutNav').onclick=doLogout;
   el('runBtn').onclick=lookupVehicle;
+  if(el('dmToggle'))el('dmToggle').onclick=toggleDark;
+  /* Set correct icon on load */
+  (function(){var icon=el('dmIcon');if(icon&&document.documentElement.getAttribute('data-theme')==='dark')icon.className='ti ti-sun';})();
   el('regInput').onkeydown=function(e){
     if(e.key==='Enter')lookupVehicle();
   };
@@ -1744,7 +1994,8 @@ function lookupVehicle(){
   }
   var reg=clean;
   currentReg=reg;
-  el('errbox').classList.add('hidden');el('mainApp').classList.remove('hidden');el('loadbox').classList.remove('hidden');
+  showLoadingOverlay(reg);
+  el('errbox').classList.add('hidden');el('mainApp').classList.remove('hidden');el('loadbox').classList.add('hidden');
   /* Collapse hero */
   var hs=el('heroSection');if(hs)hs.classList.add('searched');
   el('tabsWrap').classList.remove('hidden');el('vinStrip').classList.add('hidden');
@@ -1763,13 +2014,13 @@ function lookupVehicle(){
       var model=d.model||d.modelSeries||d.typeApproval||d.vehicleDescription||d.vehicleClass||'';
       if(model&&model.length<=2)model='';
       vehicleData=Object.assign({},d,{reg:reg,model:model,hp:estHp(d),torque:estTq(d),value:estVal(d)});
-      renderVehicle(vehicleData);saveToHistory();loadSpecs();loadMot(reg);renderValuation();hideFeatGrid();
+      renderVehicle(vehicleData);renderUlezVed(vehicleData);saveToHistory();loadSpecs();loadMot(reg);renderValuation();hideFeatGrid();hideLoadingOverlay();
       el('loadbox').classList.add('hidden');el('vcReg').textContent=reg;
       document.querySelector('.tab-rail').scrollIntoView({behavior:'smooth',block:'start'});
       showIntelReport();
     })
     .catch(function(e){
-      el('loadbox').classList.add('hidden');
+      el('loadbox').classList.add('hidden');hideLoadingOverlay();
       el('errbox').textContent=(e&&e.message&&!e.message.includes('Failed to fetch'))
         ?'Could not fetch vehicle — check the reg and try again.'
         :'Could not reach server — check your connection.';
@@ -1959,7 +2210,7 @@ function renderMot(raw){
     var mm=(raw&&raw.model)?raw.model:'';
     if(mm&&mm.length>2){vehicleData.model=mm.toUpperCase();el('statModel').textContent=vehicleData.model;}
   }
-  buildMotSummary(tests);buildMotRows(tests);buildMileageChart(tests);buildMotTimeline(tests);renderValuation();showIntelReport();
+  buildMotSummary(tests);buildMotRows(tests);buildMileageChart(tests);buildMiBarChart(tests);buildMotTimeline(tests);renderValuation();showIntelReport();
 }
 
 function renderDemoMot(){
