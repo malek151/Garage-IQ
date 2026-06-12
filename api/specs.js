@@ -85,14 +85,47 @@ const SPECS_DB = {
   'ALFA ROMEO|STELVIO|1995': { bhp:200, torqueNm:330, zeroToSixty:7.0, topSpeedMph:143, gearbox:'8-speed Auto', cylinders:4, driveType:'4WD', consumptionCombined:35, co2gkm:179, co2Label:'F' },
 };
 
-// Fuel-type-aware fallback when car not in DB
-function fallbackSpecs(cc, fuel) {
-  const f = (fuel || '').toUpperCase();
-  const isElectric = f.includes('ELECTRIC');
-  const isHybrid = f.includes('HYBRID');
-  const isDiesel = f.includes('DIESEL');
+// Build a secondary index: MAKE|MODEL -> [ {cc, specs} ... ] for "closest cc" matching
+const MODEL_INDEX = {};
+for (const key of Object.keys(SPECS_DB)) {
+  const [mk, md, ccStr] = key.split('|');
+  const mmKey = `${mk}|${md}`;
+  if (!MODEL_INDEX[mmKey]) MODEL_INDEX[mmKey] = [];
+  MODEL_INDEX[mmKey].push({ cc: parseInt(ccStr) || 0, specs: SPECS_DB[key] });
+}
 
-  if (isElectric) return { bhp: 204, torqueNm: 310, zeroToSixty: 7.2, topSpeedMph: 120, gearbox: 'Single-speed Auto', cylinders: 0, driveType: 'FWD', consumptionCombined: 0, co2gkm: 0, co2Label: 'A' };
+// Brands that are RWD-by-default unless the model name signals AWD/4WD
+const RWD_BRANDS = ['BMW', 'MERCEDES-BENZ', 'MERCEDES', 'JAGUAR', 'LEXUS', 'MASERATI', 'ASTON MARTIN', 'FERRARI', 'LAMBORGHINI'];
+// Model-name fragments that signal all-wheel-drive variants
+const AWD_HINTS = ['QUATTRO', 'XDRIVE', 'X-DRIVE', '4MATIC', '4WD', 'AWD', '4X4', '4MOTION', 'ALLGRIP', 'I-AWD'];
+
+// Validate specs look reasonable
+function isValidSpec(s) {
+  return s && s.bhp >= 40 && s.bhp <= 1500 && s.torqueNm > 0;
+}
+
+// Fuel-type-aware fallback when car not in DB — now make/model-aware
+// so cylinders & drive type vary sensibly instead of always 4/FWD.
+function fallbackSpecs(cc, fuel, make, model) {
+  const f  = (fuel || '').toUpperCase();
+  const mk = (make || '').toUpperCase().trim();
+  const md = (model || '').toUpperCase().trim();
+
+  const isElectric = f.includes('ELECTRIC');
+  const isHybrid   = f.includes('HYBRID');
+  const isDiesel   = f.includes('DIESEL');
+
+  const hasAwdHint = AWD_HINTS.some(h => md.includes(h));
+  const isRwdBrand = RWD_BRANDS.includes(mk);
+
+  if (isElectric) {
+    return {
+      bhp: 204, torqueNm: 310, zeroToSixty: 7.2, topSpeedMph: 120,
+      gearbox: 'Single-speed Auto', cylinders: 0,
+      driveType: hasAwdHint ? '4WD' : (isRwdBrand ? 'RWD' : 'FWD'),
+      consumptionCombined: 0, co2gkm: 0, co2Label: 'A'
+    };
+  }
 
   const c = parseInt(cc) || 1600;
   let bhp, tq, z62, top;
@@ -115,15 +148,24 @@ function fallbackSpecs(cc, fuel) {
     top = c <= 999 ? 106 : c <= 1199 ? 115 : c <= 1399 ? 120 : c <= 1599 ? 126 : c <= 1999 ? 136 : c <= 2499 ? 148 : c <= 2999 ? 158 : 175;
   }
 
-  const mpg = isDiesel ? 52 : isHybrid ? 58 : Math.max(22, 65 - Math.round(c/80));
-  const co2 = isElectric ? 0 : Math.round((6400 / mpg) * 0.0454 * 19.6);
+  const mpg = isDiesel ? 52 : isHybrid ? 58 : Math.max(22, 65 - Math.round(c / 80));
+  const co2 = Math.round((6400 / mpg) * 0.0454 * 19.6);
 
-  return { bhp, torqueNm: tq, zeroToSixty: z62, topSpeedMph: top, gearbox: c <= 1600 ? '6-speed Manual' : '8-speed Auto', cylinders: c <= 999 ? 3 : c <= 2999 ? 4 : 6, driveType: 'FWD', consumptionCombined: mpg, co2gkm: co2, co2Label: co2 <= 50 ? 'A' : co2 <= 95 ? 'B' : co2 <= 115 ? 'C' : co2 <= 135 ? 'D' : co2 <= 155 ? 'E' : co2 <= 175 ? 'F' : 'G' };
-}
+  // Cylinders — finer buckets than before (was always 4 for 1400-2999cc)
+  const cylinders = c <= 1000 ? 3 : c <= 2000 ? 4 : c <= 3000 ? 6 : 8;
 
-// Validate specs look reasonable
-function isValidSpec(s) {
-  return s && s.bhp >= 40 && s.bhp <= 1500 && s.torqueNm > 0;
+  // Drive type — heuristic from make/model instead of hardcoded FWD
+  let driveType = 'FWD';
+  if (hasAwdHint) driveType = '4WD';
+  else if (isRwdBrand) driveType = 'RWD';
+
+  return {
+    bhp, torqueNm: tq, zeroToSixty: z62, topSpeedMph: top,
+    gearbox: c <= 1600 ? '6-speed Manual' : '8-speed Auto',
+    cylinders, driveType,
+    consumptionCombined: mpg, co2gkm: co2,
+    co2Label: co2 <= 50 ? 'A' : co2 <= 95 ? 'B' : co2 <= 115 ? 'C' : co2 <= 135 ? 'D' : co2 <= 155 ? 'E' : co2 <= 175 ? 'F' : 'G'
+  };
 }
 
 export default async function handler(req, res) {
@@ -135,23 +177,25 @@ export default async function handler(req, res) {
 
   const { make, model, year, cc, fuel } = req.body;
 
-  // ── Step 1: Hardcoded DB lookup ──
   const makeUC  = (make  || '').toUpperCase().trim();
   const modelUC = (model || '').toUpperCase().trim();
   const ccInt   = parseInt(cc) || 0;
+  const mmKey   = `${makeUC}|${modelUC}`;
 
-  // Try exact match first, then ±50cc tolerance
-  const key = `${makeUC}|${modelUC}|${ccInt}`;
-  let specs = SPECS_DB[key];
+  // ── Step 1: Exact MAKE|MODEL|CC match ──
+  let specs = SPECS_DB[`${mmKey}|${ccInt}`];
 
-  if (!specs) {
-    // Try ±50cc
-    for (const k of Object.keys(SPECS_DB)) {
-      const parts = k.split('|');
-      if (parts[0] === makeUC && parts[1] === modelUC && Math.abs(parseInt(parts[2]) - ccInt) <= 50) {
-        specs = SPECS_DB[k];
-        break;
-      }
+  // ── Step 2: Same MAKE|MODEL, closest cc within the DB (handles trim variants) ──
+  if (!isValidSpec(specs) && MODEL_INDEX[mmKey]) {
+    const candidates = MODEL_INDEX[mmKey];
+    let best = null, bestDiff = Infinity;
+    for (const cand of candidates) {
+      const diff = Math.abs(cand.cc - ccInt);
+      if (diff < bestDiff) { bestDiff = diff; best = cand; }
+    }
+    // Accept close cc match (within 250cc) or, if only one variant exists, accept it regardless
+    if (best && (bestDiff <= 250 || candidates.length === 1)) {
+      specs = best.specs;
     }
   }
 
@@ -159,11 +203,11 @@ export default async function handler(req, res) {
     return res.status(200).json(specs);
   }
 
-  // ── Step 2: Groq AI at temperature 0 (deterministic) ──
+  // ── Step 3: Groq AI at temperature 0 (deterministic) ──
   const GROQ_KEY = process.env.GROQ_API_KEY;
   if (GROQ_KEY) {
     try {
-      const prompt = `Return ONLY a valid JSON object with exact UK-market specs for a ${year || ''} ${make || ''} ${model || ''} ${cc ? cc+'cc' : ''} ${fuel || ''}.
+      const prompt = `Return ONLY a valid JSON object with exact UK-market specs for a ${year || ''} ${make || ''} ${model || ''} ${cc ? cc + 'cc' : ''} ${fuel || ''}.
 Fields: bhp (integer), torqueNm (integer), torqueRpm (integer), zeroToSixty (decimal seconds), topSpeedMph (integer), gearbox (string), cylinders (integer), driveType (FWD/RWD/4WD), consumptionCombined (integer mpg, 0 for electric), co2gkm (integer, 0 for electric), co2Label (A-G string).
 No markdown, no commentary, no <think> tags. Pure JSON only.`;
 
@@ -188,6 +232,6 @@ No markdown, no commentary, no <think> tags. Pure JSON only.`;
     } catch (_) { /* fall through to fallback */ }
   }
 
-  // ── Step 3: Fuel-aware numeric fallback ──
-  return res.status(200).json(fallbackSpecs(cc, fuel));
+  // ── Step 4: Fuel + make/model-aware numeric fallback ──
+  return res.status(200).json(fallbackSpecs(cc, fuel, make, model));
 }
