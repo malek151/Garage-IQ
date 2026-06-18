@@ -4,419 +4,499 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>GarageIQ — Global Vehicle Intelligence</title>
-<!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7081871586174669" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F2F4F8;--card:#fff;
-  --ink:#0A1628;--ink2:#0F1E3A;--ink3:#162B52;
-  --blue:#1550C0;--blue2:#1E63D8;--blue3:#3B82F6;
-  --sky:#EAF1FF;--sky2:#C5D8FF;--sky3:#8AB3FF;
-  --gold:#E9A100;--gold2:#F5B731;--gold3:#FFF7DC;
-  --t1:#0A1628;--t2:#1A3060;--t3:#4D6A9A;--t4:#8AABCC;
-  --green:#0D9E5C;--green2:#E3F7EE;--green3:#86EFAC;
-  --red:#CF2222;--red2:#FEF0F0;--red3:#FCA5A5;
-  --amber:#C07000;--amber2:#FFF4D6;--amber3:#FCD34D;
-  --b1:rgba(0,0,0,.08);--b2:rgba(21,80,192,.16);
-  --s1:0 1px 4px rgba(0,0,0,.04),0 2px 12px rgba(0,0,0,.06);
-  --s2:0 4px 20px rgba(0,0,0,.1),0 1px 4px rgba(0,0,0,.04);
-  --s3:0 20px 60px rgba(0,0,0,.18),0 4px 12px rgba(0,0,0,.06);
-  --r:14px;--rs:10px;--rxs:8px;
+  --bg:#060A12;--bg2:#0C1220;--bg3:#111827;
+  --card:rgba(255,255,255,.04);--card2:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
+  --blue:#3B7BF6;--blue2:#5B92FF;--blue3:rgba(59,123,246,.15);
+  --gold:#F5A623;--gold2:#FFB84D;--gold3:rgba(245,166,35,.12);
+  --green:#10B981;--green2:rgba(16,185,129,.12);--green3:#34D399;
+  --red:#EF4444;--red2:rgba(239,68,68,.12);--red3:#F87171;
+  --amber:#F59E0B;--amber2:rgba(245,158,11,.12);
+  --t1:#F8FAFC;--t2:#CBD5E1;--t3:#64748B;--t4:#334155;
+  --ink:#060A12;
+  --r:16px;--rs:12px;--rxs:8px;
+  --s1:0 0 0 1px rgba(255,255,255,.06),0 4px 24px rgba(0,0,0,.4);
+  --s2:0 0 0 1px rgba(59,123,246,.2),0 8px 40px rgba(59,123,246,.15);
+  --glow:0 0 40px rgba(59,123,246,.3);
 }
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;font-size:14px}
-::selection{background:rgba(21,80,192,.18)}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;color-scheme:dark}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;font-size:14px}
+::selection{background:rgba(59,123,246,.3);color:#fff}
 :focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(21,80,192,.25);border-radius:3px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
 /* ── KEYFRAMES ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideUp{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(59,123,246,.3)}50%{box-shadow:0 0 40px rgba(59,123,246,.6)}}
 @keyframes drawLine{to{stroke-dashoffset:0}}
-@keyframes toastIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:none}}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.95)}to{opacity:1;transform:none scale(1)}}
 @keyframes toastOut{to{opacity:0;transform:translateY(8px) scale(.95)}}
-@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes borderGlow{0%,100%{border-color:rgba(59,123,246,.3)}50%{border-color:rgba(59,123,246,.8)}}
+@keyframes plateFlash{0%,100%{background:var(--gold)}50%{background:#FFD166}}
 
 /* ── NAV ── */
 nav{
-  height:58px;background:var(--ink);
+  height:62px;background:rgba(6,10,18,.85);backdrop-filter:blur(24px);
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 1.5rem;position:sticky;top:0;z-index:300;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  box-shadow:0 2px 20px rgba(0,0,0,.5);
+  padding:0 1.5rem;position:sticky;top:0;z-index:400;
+  border-bottom:1px solid var(--border);
+  box-shadow:0 1px 0 rgba(255,255,255,.04);
 }
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo-icon{width:34px;height:34px;background:var(--gold2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink);flex-shrink:0}
-.nav-logo-text{line-height:1}
-.nav-logo-name{font-family:"Syne",sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px}
-.nav-logo-sub{font-size:9.5px;color:rgba(255,255,255,.38);font-weight:500;letter-spacing:.3px}
+.nav-logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--blue2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;flex-shrink:0;box-shadow:0 2px 12px rgba(59,123,246,.4)}
+.nav-logo-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.nav-logo-sub{font-size:9px;color:var(--t3);font-weight:500;letter-spacing:.5px;text-transform:uppercase}
 .nav-r{display:flex;gap:8px;align-items:center}
-.nav-user{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.75);font-size:12.5px;font-weight:600}
-.nav-user-dot{width:7px;height:7px;background:var(--green);border-radius:50%;flex-shrink:0;animation:pulse 2s ease infinite}
-.nav-logout{background:none;border:none;color:rgba(255,255,255,.4);font-size:20px;cursor:pointer;padding:4px;transition:color .18s;display:flex}
-.nav-logout:hover{color:rgba(255,255,255,.8)}
-.btn-ghost{font-family:"Syne",sans-serif;font-size:11.5px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);border-radius:8px;padding:7px 16px;cursor:pointer;transition:all .18s}
-.btn-ghost:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25)}
-.btn-gold{font-family:"Syne",sans-serif;font-size:11.5px;font-weight:800;background:var(--gold2);color:var(--ink);border:none;border-radius:8px;padding:7px 18px;cursor:pointer;transition:all .18s;box-shadow:0 2px 8px rgba(233,161,0,.35)}
-.btn-gold:hover{background:#E9A100;transform:translateY(-1px)}
-.nav-av{width:32px;height:32px;border-radius:50%;background:var(--gold2);color:var(--ink);font-family:"Syne",sans-serif;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid transparent;transition:all .18s}
-.nav-av:hover{border-color:rgba(255,255,255,.5);transform:scale(1.06)}
+.nav-user{display:flex;align-items:center;gap:8px;color:var(--t2);font-size:12.5px;font-weight:500}
+.nav-user-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s ease infinite}
+.nav-logout{background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:6px;transition:color .18s;display:flex;border-radius:8px}
+.nav-logout:hover{color:var(--t1);background:var(--card2)}
+.btn-ghost{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;background:var(--card);border:1px solid var(--border);color:var(--t2);border-radius:10px;padding:7px 16px;cursor:pointer;transition:all .18s}
+.btn-ghost:hover{background:var(--card2);color:var(--t1);border-color:var(--border2)}
+.btn-primary{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:7px 18px;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(59,123,246,.35)}
+.btn-primary:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 4px 20px rgba(59,123,246,.5)}
+.dm-toggle{width:36px;height:36px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--t2);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.dm-toggle:hover{background:var(--card2);color:var(--t1)}
 
-/* ── DARK SEARCH HEADER ── */
-.dark-header{background:var(--ink);padding:2rem 1.5rem 0}
-.dark-header-inner{max-width:860px;margin:0 auto}
-.reg-row{display:flex;gap:0;max-width:500px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.reg-uk-badge{background:var(--blue);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;font-size:8px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;gap:1px;min-width:42px;flex-shrink:0}
-.reg-uk-badge span{font-size:14px;font-weight:900}
-.reg-plate{flex:1;font-family:"Syne",sans-serif;font-size:22px;font-weight:800;letter-spacing:4px;text-transform:uppercase;background:var(--gold2);border:none;padding:14px 16px;outline:none;color:var(--ink);transition:background .18s;min-width:0}
-.reg-plate::placeholder{color:rgba(5,14,28,.35);letter-spacing:2px;font-size:16px}
-.reg-plate:focus{background:#fff3b0}
-.reg-go{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;background:var(--ink2);color:#fff;border:none;padding:0 28px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .18s;flex-shrink:0;white-space:nowrap}
-.reg-go:hover{background:#0D2444}
-.reg-go:active{transform:scale(.98)}
-.reg-note{font-size:11px;color:rgba(255,255,255,.3);margin-top:10px;margin-bottom:0}
+/* ── HERO ── */
+.hero{position:relative;min-height:92vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:4rem 1.5rem}
+#heroCanvas{position:absolute;inset:0;pointer-events:none}
+.hero-glow-1{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(59,123,246,.18) 0%,transparent 70%);top:-100px;left:-100px;pointer-events:none;animation:float 8s ease-in-out infinite}
+.hero-glow-2{position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(245,166,35,.1) 0%,transparent 70%);bottom:0;right:0;pointer-events:none;animation:float 10s ease-in-out infinite reverse}
+.hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(59,123,246,.12);border:1px solid rgba(59,123,246,.25);color:var(--blue2);font-size:9px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;padding:5px 16px;border-radius:50px;margin-bottom:1.5rem;animation:fadeUp .6s ease both}
+.hero h1{font-family:'Syne',sans-serif;font-size:clamp(38px,7vw,72px);font-weight:800;line-height:.95;letter-spacing:-2px;color:#fff;margin-bottom:1.25rem;animation:fadeUp .6s ease .08s both}
+.hero h1 .hl{background:linear-gradient(135deg,var(--blue2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:14px;color:var(--t3);max-width:420px;margin:0 auto 1.5rem;line-height:1.75;animation:fadeUp .6s ease .16s both}
+.vs-row{font-size:11px;color:var(--t3);margin-bottom:2rem;display:flex;align-items:center;justify-content:center;gap:6px;animation:fadeUp .6s ease .2s both}
+.vs-badge{background:var(--gold3);border:1px solid rgba(245,166,35,.25);color:var(--gold);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
 
-/* ── VEHICLE RESULT HEADER (dark) ── */
-.veh-header{background:var(--ink);padding:1.5rem 1.5rem 0;display:none}
+/* ── SEARCH ── */
+.search-wrap{max-width:520px;margin:0 auto 2rem;animation:fadeUp .6s ease .24s both}
+.search-toggle{display:inline-flex;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.search-toggle-btn{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:7px 18px;border:none;background:transparent;color:var(--t3);cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.search-toggle-btn.active{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 2px 12px rgba(59,123,246,.4)}
+.search-box{display:flex;gap:0;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:all .3s;backdrop-filter:blur(8px)}
+.search-box:focus-within{border-color:rgba(59,123,246,.5);box-shadow:var(--s2);background:rgba(255,255,255,.08)}
+.reg-badge{background:var(--blue);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 14px;font-size:7.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;gap:2px;min-width:46px;flex-shrink:0}
+.reg-badge span{font-size:12px;font-weight:900}
+.reg-input{flex:1;font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:5px;text-transform:uppercase;background:transparent;border:none;padding:16px 14px;outline:none;color:var(--t1);min-width:0}
+.reg-input::placeholder{color:rgba(255,255,255,.2);letter-spacing:2px;font-size:16px}
+.reg-go{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border:none;padding:0 24px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;flex-shrink:0;white-space:nowrap}
+.reg-go:hover{background:linear-gradient(135deg,var(--blue2),#7AA5FF);box-shadow:0 0 20px rgba(59,123,246,.5)}
+.reg-go:active{transform:scale(.97)}
+.search-note{font-size:10px;color:var(--t4);margin-top:8px;text-align:center;letter-spacing:.3px}
+
+/* ── HERO STATS ── */
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:2rem;animation:fadeUp .6s ease .32s both;flex-wrap:wrap}
+.hs{text-align:center}
+.hs-n{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--gold);line-height:1;animation:countUp .8s ease both}
+.hs-l{font-size:9px;color:var(--t4);text-transform:uppercase;letter-spacing:2px;margin-top:3px}
+.hs-div{width:1px;height:32px;background:var(--border)}
+.hero.searched{padding:0;min-height:0;overflow:hidden;max-height:0;transition:max-height .5s ease,padding .5s ease}
+
+/* ── VEHICLE HEADER ── */
+.veh-header{background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);display:none;position:relative;overflow:hidden}
 .veh-header.visible{display:block;animation:fadeIn .3s ease}
-.veh-header-inner{max-width:860px;margin:0 auto}
-.veh-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.veh-reg-badge{font-family:"Syne",sans-serif;font-size:14px;font-weight:800;letter-spacing:2px;background:var(--gold2);color:var(--ink);padding:4px 14px;border-radius:6px}
-.veh-status-badge{font-family:"Syne",sans-serif;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:.3px}
-.vsb-taxed{background:rgba(13,158,92,.2);color:#5EF0A0;border:1px solid rgba(13,158,92,.3)}
-.vsb-not-taxed{background:rgba(207,34,34,.2);color:#F87171;border:1px solid rgba(207,34,34,.3)}
-.vsb-sorn{background:rgba(192,112,0,.2);color:#FCD34D;border:1px solid rgba(192,112,0,.3)}
-.veh-chips{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.veh-chip{display:flex;align-items:center;gap:5px;font-size:11.5px;color:rgba(255,255,255,.55);font-weight:500}
-.veh-chip i{font-size:13px;color:rgba(255,255,255,.3)}
-.veh-chip-div{color:rgba(255,255,255,.15);font-size:14px}
-.veh-name{font-family:"Syne",sans-serif;font-size:clamp(28px,5vw,42px);font-weight:800;color:#fff;letter-spacing:-1px;margin:10px 0 16px;line-height:1}
-.veh-status-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.08);margin:0 -1.5rem}
-.veh-stat{padding:14px 1.5rem;border-right:1px solid rgba(255,255,255,.06)}
+.veh-header-bg{position:absolute;inset:0;opacity:.06;background-size:cover;background-position:center;filter:blur(20px) saturate(2)}
+.veh-header-inner{max-width:900px;margin:0 auto;padding:1.5rem 1.5rem 0;position:relative;z-index:1}
+.veh-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.veh-reg-badge{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;letter-spacing:3px;background:var(--gold);color:#060A12;padding:5px 16px;border-radius:8px}
+.veh-status-badge{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:.5px}
+.vsb-taxed{background:rgba(16,185,129,.15);color:var(--green3);border:1px solid rgba(16,185,129,.25)}
+.vsb-not-taxed{background:rgba(239,68,68,.15);color:var(--red3);border:1px solid rgba(239,68,68,.25)}
+.vsb-sorn{background:rgba(245,159,11,.15);color:var(--amber);border:1px solid rgba(245,159,11,.25)}
+.veh-top{display:flex;align-items:flex-start;gap:16px;margin-bottom:14px}
+.veh-logo{width:52px;height:52px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;overflow:hidden}
+.veh-logo img{width:100%;height:100%;object-fit:contain;padding:6px;filter:brightness(0) invert(1)}
+.veh-name{font-family:'Syne',sans-serif;font-size:clamp(26px,4vw,40px);font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.05}
+.veh-chips{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px}
+.veh-chip{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t3);font-weight:500}
+.veh-chip i{font-size:12px;color:var(--t4)}
+.veh-chip-div{color:var(--border2)}
+.veh-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);margin:0 -1.5rem}
+.veh-stat{padding:14px 1.5rem;border-right:1px solid var(--border)}
 .veh-stat:last-child{border-right:none}
-.veh-stat-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);margin-bottom:5px}
-.veh-stat-val{font-family:"Syne",sans-serif;font-size:14.5px;font-weight:700;color:#fff}
-.veh-stat-val.ok{color:#5EF0A0}.veh-stat-val.warn{color:var(--gold2)}.veh-stat-val.bad{color:#F87171}
+.veh-stat-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t4);margin-bottom:4px}
+.veh-stat-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#fff}
+.veh-stat-val.ok{color:var(--green3)}.veh-stat-val.bad{color:var(--red3)}.veh-stat-val.warn{color:var(--gold)}
 
-/* ── TABS — underline style like screenshot ── */
-.tab-rail{background:var(--ink);border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:58px;z-index:200}
+/* ── TABS ── */
+.tab-rail{background:rgba(6,10,18,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:62px;z-index:300}
 .tab-rail.hidden{display:none}
-.tab-pill-track{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tab-pill-track::-webkit-scrollbar{display:none}
-.tab-pill-inner{display:flex;max-width:860px;margin:0 auto;padding:0 1.5rem}
-.pill-tab{font-family:"Syne",sans-serif;font-size:12px;font-weight:700;letter-spacing:.2px;display:flex;align-items:center;gap:6px;padding:14px 16px;border:none;background:none;color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .18s;-webkit-tap-highlight-color:transparent;position:relative;margin-bottom:-1px}
+.tab-track{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-track::-webkit-scrollbar{display:none}
+.tab-inner{display:flex;max-width:900px;margin:0 auto;padding:0 1.5rem}
+.pill-tab{font-family:'Syne',sans-serif;font-size:11.5px;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:6px;padding:14px 18px;border:none;background:none;color:var(--t4);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s;-webkit-tap-highlight-color:transparent;margin-bottom:-1px;position:relative}
 .pill-tab i{font-size:14px}
-.pill-tab:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.04)}
-.pill-tab.active{color:#fff;border-bottom-color:var(--gold2)}
+.pill-tab:hover{color:var(--t2);background:rgba(255,255,255,.03)}
+.pill-tab.active{color:#fff;border-bottom-color:var(--blue)}
+.pill-tab.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:40px;height:2px;background:linear-gradient(90deg,transparent,var(--blue2),transparent);filter:blur(4px)}
 
-/* ── APP WRAPPER ── */
-.app{max-width:860px;margin:0 auto;padding:1.25rem 1.25rem 5rem}
-.tab-panel{display:none;animation:fadeUp .25s ease both}
+/* ── APP ── */
+.app{max-width:900px;margin:0 auto;padding:1.25rem 1.25rem 6rem}
+.tab-panel{display:none;animation:fadeUp .2s ease both}
 .tab-panel.active{display:block}
 .hidden{display:none!important}
 
-/* ── STAT CARDS — big number style like screenshot ── */
-.stat-grid-6{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--b1);border-radius:var(--r);overflow:hidden;margin-bottom:.9rem;box-shadow:var(--s1)}
-.stat-card{background:var(--card);padding:18px 20px;transition:background .18s}
-.stat-card:hover{background:#FAFBFF}
-.stat-card-lbl{display:flex;align-items:center;gap:6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:10px}
-.stat-card-lbl i{font-size:15px;color:var(--blue)}
-.stat-card-val{font-family:"Syne",sans-serif;font-size:32px;font-weight:800;color:var(--ink);line-height:1;display:flex;align-items:baseline;gap:5px}
-.stat-card-unit{font-size:14px;font-weight:600;color:var(--t3)}
-
-/* ── TECH DETAILS CARD ── */
-.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:.9rem}
-.tech-item{background:var(--card);border:1px solid var(--b1);padding:14px;margin:-1px 0 0 -1px}
-.tech-item:first-child{border-top-left-radius:var(--r)}
-.tech-item:nth-child(4){border-top-right-radius:var(--r)}
-.tech-item:nth-last-child(-n+4):first-of-type,.tech-item:last-child{border-bottom-right-radius:var(--r)}
-.tech-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:6px}
-.tech-val{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;color:var(--ink)}
-
 /* ── CARDS ── */
-.card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:1.1rem;margin-bottom:.9rem;box-shadow:var(--s1);transition:box-shadow .18s}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;margin-bottom:.85rem;box-shadow:var(--s1);transition:all .2s;backdrop-filter:blur(8px)}
+.card:hover{border-color:var(--border2)}
 .card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.card-title{font-family:"Syne",sans-serif;font-size:9.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2);display:flex;align-items:center;gap:6px}
+.card-title{font-family:'Syne',sans-serif;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--t3);display:flex;align-items:center;gap:6px}
 .card-title i{font-size:14px;color:var(--blue)}
 
 /* ── CHIPS ── */
-.chip{font-family:"Syne",sans-serif;font-size:8.5px;font-weight:700;letter-spacing:.4px;padding:3px 9px;border-radius:30px;border:1px solid;display:inline-block;white-space:nowrap}
-.chip-b{background:var(--sky);color:var(--blue);border-color:var(--sky2)}
-.chip-g{background:var(--gold3);color:var(--amber);border-color:var(--amber3)}
-.chip-gr{background:var(--green2);color:var(--green);border-color:var(--green3)}
-.chip-r{background:var(--red2);color:var(--red);border-color:var(--red3)}
+.chip{font-family:'Syne',sans-serif;font-size:8.5px;font-weight:700;letter-spacing:.5px;padding:3px 9px;border-radius:20px;border:1px solid;display:inline-block;white-space:nowrap}
+.chip-b{background:rgba(59,123,246,.12);color:var(--blue2);border-color:rgba(59,123,246,.25)}
+.chip-g{background:var(--amber2);color:var(--amber);border-color:rgba(245,158,11,.25)}
+.chip-gr{background:var(--green2);color:var(--green3);border-color:rgba(16,185,129,.25)}
+.chip-r{background:var(--red2);color:var(--red3);border-color:rgba(239,68,68,.25)}
 
-/* ── STAT BOX (small) ── */
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:7px}
-.sbox{background:var(--bg);border:1px solid var(--b1);border-radius:var(--rs);padding:11px;transition:all .18s;cursor:default}
-.sbox:hover{border-color:var(--sky2);background:var(--card);transform:translateY(-1px);box-shadow:var(--s1)}
-.slbl{font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.9px;margin-bottom:4px;font-weight:700}
-.sval{font-family:"Syne",sans-serif;font-size:15px;font-weight:700;color:var(--t1);line-height:1.1;word-break:break-word}
-.sval.green{color:var(--green)}.sval.red{color:var(--red)}.sval.amber{color:var(--amber)}.sval.blue{color:var(--blue)}
-.sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px;vertical-align:middle}
+/* ── STAT GRID ── */
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.85rem;border:1px solid var(--border)}
+.stat-card{background:var(--bg2);padding:18px 20px;transition:background .2s}
+.stat-card:hover{background:var(--bg3)}
+.stat-card-lbl{display:flex;align-items:center;gap:6px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t4);margin-bottom:10px}
+.stat-card-lbl i{font-size:14px;color:var(--blue)}
+.stat-card-val{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--t1);line-height:1;display:flex;align-items:baseline;gap:5px}
+.stat-card-unit{font-size:13px;font-weight:600;color:var(--t3)}
+
+/* ── TECH GRID ── */
+.tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.85rem;border:1px solid var(--border)}
+.tech-item{background:var(--bg2);padding:14px;transition:background .2s}
+.tech-item:hover{background:var(--bg3)}
+.tech-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t4);margin-bottom:6px}
+.tech-val{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--t1)}
+
+/* ── SBOX ── */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px}
+.sbox{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:11px;transition:all .2s}
+.sbox:hover{border-color:var(--border2);background:rgba(255,255,255,.05)}
+.slbl{font-size:8px;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700}
+.sval{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--t1);line-height:1.2}
+.sval.green{color:var(--green3)}.sval.red{color:var(--red3)}.sval.amber{color:var(--amber)}
+.sdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;vertical-align:middle}
 .sdot-gr{background:var(--green)}.sdot-r{background:var(--red)}.sdot-a{background:var(--amber)}
 
-/* ── MOT STYLES ── */
-.mot-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px}
-.mot-sb{background:var(--bg);border:1px solid var(--b1);border-radius:var(--rs);padding:12px 8px;text-align:center;transition:all .18s}
-.mot-sb:hover{box-shadow:var(--s1);transform:translateY(-1px)}
-.mot-sn{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;line-height:1}
-.mot-sl{font-size:8px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-top:3px;font-weight:700}
-.pbar-bg{background:rgba(0,0,0,.07);border-radius:20px;height:7px;overflow:hidden;margin-bottom:3px}
-.pbar-fill{height:100%;border-radius:20px;transition:width .9s cubic-bezier(.4,0,.2,1)}
-.badge{font-size:8.5px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:"Syne",sans-serif;border:1px solid}
-.b-pass{background:var(--green2);color:var(--green);border-color:var(--green3)}
-.b-fail{background:var(--red2);color:var(--red);border-color:var(--red3)}
-.b-adv{background:var(--amber2);color:var(--amber);border-color:var(--amber3)}
-.b-warn{background:#FFF7ED;color:#C2410C;border-color:#FED7AA}
-.mot-row-x{cursor:pointer;border-radius:var(--rxs);transition:background .15s;border-bottom:1px solid var(--b1)}
-.mot-row-x:last-child{border-bottom:none}
-.mot-row-x:hover{background:var(--bg)}
+/* ── MOT ── */
+.mot-sum{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.mot-sb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:14px 8px;text-align:center;transition:all .2s}
+.mot-sb:hover{border-color:var(--border2)}
+.mot-sn{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1}
+.mot-sl{font-size:8px;color:var(--t4);text-transform:uppercase;letter-spacing:.8px;margin-top:4px;font-weight:700}
+.pbar-bg{background:rgba(255,255,255,.06);border-radius:20px;height:6px;overflow:hidden;margin-bottom:3px}
+.badge{font-size:8px;font-weight:700;padding:2px 8px;border-radius:20px;font-family:'Syne',sans-serif;border:1px solid}
+.b-pass{background:rgba(16,185,129,.12);color:var(--green3);border-color:rgba(16,185,129,.25)}
+.b-fail{background:rgba(239,68,68,.12);color:var(--red3);border-color:rgba(239,68,68,.25)}
+.b-adv{background:rgba(245,158,11,.12);color:var(--amber);border-color:rgba(245,158,11,.25)}
+.b-warn{background:rgba(249,115,22,.12);color:#FB923C;border-color:rgba(249,115,22,.25)}
+.mot-row{cursor:pointer;border-radius:var(--rxs);transition:background .15s;border-bottom:1px solid var(--border)}
+.mot-row:last-child{border-bottom:none}
+.mot-row:hover{background:var(--bg3)}
 .mot-det{display:none;padding:4px 8px 10px}
-.mot-row-x.open .mot-det{display:block}
-.mot-di{display:flex;align-items:flex-start;gap:6px;padding:5px 0;border-top:1px solid var(--b1);font-size:11px;line-height:1.5;color:var(--t2)}
+.mot-row.open .mot-det{display:block}
+.mot-di{display:flex;align-items:flex-start;gap:6px;padding:5px 0;border-top:1px solid var(--border);font-size:10.5px;line-height:1.5;color:var(--t2)}
 .mot-di:first-child{border-top:none}
 .def-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.d-dang{background:#EF4444}.d-maj{background:#F97316}.d-min{background:#22C55E}.d-adv{background:var(--gold2)}
-
-/* ── CHART ── */
-.chart-outer{padding:.5rem 0 .25rem;overflow:hidden}
-.chart-legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
-.cl-i{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);font-weight:600}
-.cl-d{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.d-dang{background:#EF4444}.d-maj{background:#F97316}.d-min{background:#22C55E}.d-adv{background:var(--amber)}
 
 /* ── TIMELINE ── */
-.mot-tl{position:relative;padding-left:26px}
-.mot-tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--blue),var(--sky2))}
-.tl-item{position:relative;margin-bottom:10px;animation:fadeUp .3s ease both}
-.tl-dot{position:absolute;left:-26px;top:8px;width:18px;height:18px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:8px;background:var(--card);z-index:1}
-.tl-dot.pass{border-color:var(--green);color:var(--green)}.tl-dot.fail{border-color:var(--red);color:var(--red)}
-.tl-body{background:var(--bg);border:1px solid var(--b1);border-radius:var(--rs);padding:9px 11px;cursor:pointer;transition:all .18s}
-.tl-body:hover{border-color:var(--sky2);background:var(--card);box-shadow:var(--s1)}
+.mot-tl{position:relative;padding-left:28px}
+.mot-tl::before{content:'';position:absolute;left:10px;top:6px;bottom:6px;width:1.5px;background:linear-gradient(180deg,var(--blue),transparent)}
+.tl-item{position:relative;margin-bottom:10px}
+.tl-dot{position:absolute;left:-28px;top:8px;width:20px;height:20px;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:8px;background:var(--bg2);z-index:1}
+.tl-dot.pass{border-color:var(--green);color:var(--green3)}.tl-dot.fail{border-color:var(--red);color:var(--red3)}
+.tl-body{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;cursor:pointer;transition:all .2s}
+.tl-body:hover{border-color:var(--border2)}
 .tl-row{display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap}
-.tl-date{font-size:10.5px;font-weight:600;color:var(--t3)}
-.tl-mi{font-family:"Syne",sans-serif;font-size:13px;font-weight:700;color:var(--t1)}
-.tl-badges{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-.tl-defs{display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--b1)}
+.tl-date{font-size:10px;font-weight:600;color:var(--t3)}
+.tl-mi{font-family:'Syne',sans-serif;font-size:12.5px;font-weight:700;color:var(--t1)}
+.tl-defs{display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--border)}
 .tl-item.open .tl-defs{display:block}
-.tl-def{display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid var(--b1);font-size:10.5px;line-height:1.5;color:var(--t2)}
+.tl-def{display:flex;align-items:flex-start;gap:6px;padding:4px 0;border-bottom:1px solid var(--border);font-size:10px;line-height:1.5;color:var(--t2)}
 .tl-def:last-child{border-bottom:none}
 
+/* ── ULEZ / VED ── */
+.ulez-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.85rem}
+.ulez-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem;transition:all .2s}
+.ulez-card:hover{border-color:var(--border2)}
+.ulez-lbl{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t4);margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ulez-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:3px}
+.ulez-sub{font-size:10px;color:var(--t3);line-height:1.4}
+
+/* ── MI BAR ── */
+.mi-bar-wrap{display:flex;flex-direction:column;gap:5px;margin:.75rem 0}
+.mi-bar-row{display:flex;align-items:center;gap:8px}
+.mi-bar-date{font-size:9px;font-weight:600;color:var(--t4);width:64px;flex-shrink:0;text-align:right}
+.mi-bar-bg{flex:1;height:18px;background:rgba(255,255,255,.04);border-radius:5px;overflow:hidden;position:relative}
+.mi-bar-fill{height:100%;border-radius:5px;display:flex;align-items:center;padding-left:8px;font-size:9px;font-weight:700;color:#fff;white-space:nowrap;transition:width 1s cubic-bezier(.4,0,.2,1);min-width:4px}
+.mi-bar-fill.pass{background:linear-gradient(90deg,var(--blue),var(--blue2))}
+.mi-bar-fill.fail{background:linear-gradient(90deg,var(--red),var(--red3))}
+.mi-bar-fill.reg{background:linear-gradient(90deg,var(--green),var(--green3))}
+.mi-bar-val{font-size:9px;font-weight:700;color:var(--t3);width:70px;text-align:right;flex-shrink:0}
+
 /* ── INTEL / PAYWALL ── */
-.intel-card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;margin-bottom:.9rem;box-shadow:var(--s1)}
-.intel-bar{height:3px;background:linear-gradient(90deg,var(--blue3),var(--blue),var(--gold2))}
-.paywall{text-align:center;padding:2.5rem 1rem}
-.pw-lock{width:54px;height:54px;border-radius:50%;background:var(--sky);border:1.5px solid var(--sky2);display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--blue);margin-bottom:12px}
-.pw-title{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--ink);margin-bottom:5px}
-.pw-sub{font-size:11.5px;color:var(--t3);line-height:1.65;max-width:300px;margin:0 auto 16px}
-.pw-list{display:flex;flex-direction:column;gap:7px;margin-bottom:20px;text-align:left;max-width:260px;margin-left:auto;margin-right:auto}
-.pwi{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--t2);font-weight:500}
-.pwi i{color:var(--green);font-size:13px;flex-shrink:0}
-.pay-btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:#fff;font-family:"Syne",sans-serif;font-size:13px;font-weight:800;border:none;border-radius:50px;padding:13px 32px;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.25)}
-.pay-btn:hover{background:var(--blue);transform:translateY(-1px);box-shadow:0 6px 22px rgba(21,80,192,.4)}
-.pay-btn:disabled{background:var(--t3);cursor:default;transform:none;box-shadow:none}
+.intel-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:.85rem}
+.intel-bar{height:2px;background:linear-gradient(90deg,var(--blue),var(--blue2),var(--gold))}
+.paywall{text-align:center;padding:3rem 1rem}
+.pw-lock{width:56px;height:56px;border-radius:16px;background:rgba(59,123,246,.1);border:1px solid rgba(59,123,246,.2);display:inline-flex;align-items:center;justify-content:center;font-size:22px;color:var(--blue);margin-bottom:14px;animation:glow 3s ease infinite}
+.pw-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:6px}
+.pw-sub{font-size:12px;color:var(--t3);line-height:1.65;max-width:300px;margin:0 auto 18px}
+.pw-list{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;text-align:left;max-width:260px;margin-left:auto;margin-right:auto}
+.pwi{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--t2);font-weight:500}
+.pwi i{color:var(--green3);font-size:13px;flex-shrink:0}
+.pay-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;border:none;border-radius:50px;padding:14px 36px;cursor:pointer;transition:all .2s;box-shadow:0 4px 24px rgba(59,123,246,.4)}
+.pay-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(59,123,246,.6)}
+.pay-btn:disabled{background:var(--t4);cursor:default;transform:none;box-shadow:none}
 .pay-note{font-size:9.5px;color:var(--t4);margin-top:8px}
-.login-lnk{color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline}
+.login-lnk{color:var(--blue2);font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline}
 
 /* ── GAUGE ── */
-.gauge-row{display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--bg);border:1px solid var(--b1);border-radius:var(--rs);margin-bottom:14px}
+.gauge-row{display:flex;align-items:center;gap:18px;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);margin-bottom:14px}
 .gauge-svg-wrap{flex:0 0 140px}
-.gauge-lbl{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;color:var(--ink);line-height:1.2}
-.gauge-sub{font-size:10.5px;color:var(--t3);margin-top:4px;line-height:1.5}
+.gauge-lbl{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;line-height:1.3}
+.gauge-sub{font-size:10px;color:var(--t3);margin-top:5px;line-height:1.5}
 
 /* ── CHECKS ── */
-.checks{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.chk{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:var(--rs);border-left:3px solid}
-.chk.ok{background:var(--green2);border-color:var(--green)}.chk.warn{background:var(--amber2);border-color:var(--amber)}.chk.bad{background:var(--red2);border-color:var(--red)}
-.chk-ic{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px;background:rgba(255,255,255,.7)}
-.chk.ok .chk-ic{color:var(--green)}.chk.warn .chk-ic{color:var(--amber)}.chk.bad .chk-ic{color:var(--red)}
-.chk-t{font-size:11.5px;font-weight:700;color:var(--ink);margin-bottom:2px}.chk-d{font-size:10.5px;color:var(--t2);line-height:1.5}
+.checks{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.chk{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:var(--rs);border-left:2.5px solid}
+.chk.ok{background:rgba(16,185,129,.06);border-color:var(--green)}.chk.warn{background:rgba(245,158,11,.06);border-color:var(--amber)}.chk.bad{background:rgba(239,68,68,.06);border-color:var(--red)}
+.chk-ic{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px}
+.chk.ok .chk-ic{background:rgba(16,185,129,.15);color:var(--green3)}.chk.warn .chk-ic{background:rgba(245,158,11,.15);color:var(--amber)}.chk.bad .chk-ic{background:rgba(239,68,68,.15);color:var(--red3)}
+.chk-t{font-size:11.5px;font-weight:700;color:#fff;margin-bottom:2px}.chk-d{font-size:10px;color:var(--t3);line-height:1.5}
 
 /* ── DAMAGE MAP ── */
 .dmg-wrap{display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start}
 .dmg-car-w{flex:0 0 170px}
 .dmg-zone{fill:transparent;cursor:pointer;transition:fill .2s}
-.dmg-zone:hover{fill:rgba(233,161,0,.15)}.dmg-zone.hit{fill:rgba(207,34,34,.2)}.dmg-zone.minor-hit{fill:rgba(233,161,0,.15)}
+.dmg-zone:hover{fill:rgba(59,123,246,.1)}.dmg-zone.hit{fill:rgba(239,68,68,.2)}.dmg-zone.minor-hit{fill:rgba(245,158,11,.15)}
 .dmg-list{flex:1;min-width:150px;display:flex;flex-direction:column;gap:5px}
 .dmg-item{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;border-radius:var(--rxs);font-size:10.5px}
-.dmg-item.damage{background:var(--red2);border:1px solid var(--red3)}.dmg-item.advisory{background:var(--amber2);border:1px solid var(--amber3)}
+.dmg-item.damage{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2)}.dmg-item.advisory{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2)}
 .dmg-item i{font-size:12px;flex-shrink:0;margin-top:1px}
-.dmg-item.damage i{color:var(--red)}.dmg-item.advisory i{color:var(--amber)}
-.dmg-it{font-weight:700;color:var(--ink);font-size:10.5px;margin-bottom:1px}.dmg-id{color:var(--t2);line-height:1.4}
+.dmg-item.damage i{color:var(--red3)}.dmg-item.advisory i{color:var(--amber)}
+.dmg-it{font-weight:700;color:#fff;font-size:10px;margin-bottom:1px}.dmg-id{color:var(--t3);line-height:1.4}
 
-/* ── HROW / INFO ── */
-.hrow{display:flex;align-items:flex-start;gap:10px;padding:10px;border:1px solid var(--b1);border-radius:var(--rs);margin-bottom:7px;background:var(--bg);transition:all .18s}
-.hrow:hover{border-color:var(--sky2);background:var(--card);box-shadow:var(--s1)}
-.hic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-.hi-b{background:var(--sky);color:var(--blue)}.hi-g{background:var(--gold3);color:var(--amber)}.hi-gr{background:var(--green2);color:var(--green)}.hi-r{background:var(--red2);color:var(--red)}
-.hrow-t{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px}.hrow-d{font-size:10.5px;color:var(--t3);line-height:1.5}
-.sect-lbl{font-family:"Syne",sans-serif;font-size:8.5px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);margin:14px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--b1)}
-.info-box{background:var(--sky);border:1px solid var(--sky2);border-radius:var(--rs);padding:9px 13px;font-size:10.5px;color:var(--t2);line-height:1.6;margin-top:8px}
-.info-box strong{color:var(--blue)}.info-box a{color:var(--blue)}
-.ai-box{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:.9rem;margin-bottom:.9rem;box-shadow:var(--s1)}
+/* ── HROW ── */
+.hrow{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);margin-bottom:6px;background:var(--bg3);transition:all .2s}
+.hrow:hover{border-color:var(--border2);background:rgba(255,255,255,.04)}
+.hic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.hi-b{background:rgba(59,123,246,.12);color:var(--blue2)}.hi-g{background:var(--amber2);color:var(--amber)}.hi-gr{background:var(--green2);color:var(--green3)}.hi-r{background:var(--red2);color:var(--red3)}
+.hrow-t{font-size:12px;font-weight:600;color:#fff;margin-bottom:2px}.hrow-d{font-size:10px;color:var(--t3);line-height:1.5}
+.sect-lbl{font-family:'Syne',sans-serif;font-size:8px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--t4);margin:14px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.info-box{background:rgba(59,123,246,.07);border:1px solid rgba(59,123,246,.15);border-radius:var(--rs);padding:9px 13px;font-size:10px;color:var(--t2);line-height:1.6;margin-top:8px}
+.ai-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:.9rem;margin-bottom:.85rem}
 .ai-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.ai-title{font-size:9.5px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);display:flex;align-items:center;gap:5px}
+.ai-title{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);display:flex;align-items:center;gap:5px}
 
 /* ── VALUATION ── */
-.val-hero{background:linear-gradient(140deg,var(--ink) 0%,var(--ink3) 55%,#163D86 100%);border-radius:var(--r);padding:1.4rem;color:#fff;margin-bottom:.9rem;position:relative;overflow:hidden}
-.val-hero::before{content:"";position:absolute;right:-20px;top:-20px;width:180px;height:180px;background:rgba(233,161,0,.07);border-radius:50%}
-.val-price{font-family:"Syne",sans-serif;font-size:48px;font-weight:800;color:var(--gold2);line-height:1;margin-bottom:3px;position:relative;z-index:1}
-.val-lbl{font-size:9px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:700;position:relative;z-index:1}
-.val-range{display:flex;gap:14px;font-size:11.5px;color:rgba(255,255,255,.5);flex-wrap:wrap;z-index:1;position:relative}
-.val-range span{display:flex;align-items:center;gap:4px}.val-range b{color:#fff}
-.val-facs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:.9rem}
-.vf{background:var(--card);border:1px solid var(--b1);border-radius:var(--rs);padding:11px;text-align:center;transition:all .18s}
-.vf:hover{box-shadow:var(--s1);transform:translateY(-1px)}
-.vf-n{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--blue);line-height:1;margin-bottom:3px}
-.vf-l{font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.9px;font-weight:700}
-.dep-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.dep-yr{font-size:9px;font-weight:700;color:var(--t3);width:54px;flex-shrink:0}
-.dep-bg{flex:1;height:12px;background:rgba(0,0,0,.06);border-radius:8px;overflow:hidden}
-.dep-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--blue),var(--blue3));width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.val-hero{background:linear-gradient(135deg,var(--bg2) 0%,rgba(59,123,246,.08) 100%);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;color:#fff;margin-bottom:.85rem;position:relative;overflow:hidden}
+.val-hero::before{content:'';position:absolute;right:-30px;top:-30px;width:200px;height:200px;background:radial-gradient(circle,rgba(59,123,246,.15) 0%,transparent 70%)}
+.val-price{font-family:'Syne',sans-serif;font-size:46px;font-weight:800;color:var(--gold);line-height:1;margin-bottom:3px;position:relative;z-index:1}
+.val-lbl{font-size:8.5px;color:var(--t4);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;font-weight:700;position:relative;z-index:1}
+.val-range{display:flex;gap:14px;font-size:11px;color:var(--t3);flex-wrap:wrap;z-index:1;position:relative}
+.val-range span{display:flex;align-items:center;gap:4px}.val-range b{color:var(--t1)}
+.val-facs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:.85rem}
+.vf{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center;transition:all .2s}
+.vf:hover{border-color:var(--border2)}
+.vf-n{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue2);line-height:1;margin-bottom:3px}
+.vf-l{font-size:8px;color:var(--t4);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.dep-row{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.dep-yr{font-size:9px;font-weight:700;color:var(--t4);width:52px;flex-shrink:0}
+.dep-bg{flex:1;height:10px;background:rgba(255,255,255,.05);border-radius:6px;overflow:hidden}
+.dep-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--blue2));width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
 .dep-val{font-size:11px;font-weight:700;color:var(--t2);width:62px;text-align:right;flex-shrink:0}
-.fin-g{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}
-.fin-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:5px}
-.fin-inp{width:100%;background:var(--bg);border:1.5px solid var(--b1);border-radius:var(--rs);padding:10px 12px;font-family:"Syne",sans-serif;font-size:14px;font-weight:700;color:var(--ink);outline:none;transition:all .18s}
-.fin-inp:focus{border-color:var(--blue);background:var(--card);box-shadow:0 0 0 3px rgba(21,80,192,.1)}
-.fin-result{background:linear-gradient(135deg,var(--ink),var(--blue));border-radius:var(--rs);padding:14px;color:#fff}
-.fin-monthly{font-family:"Syne",sans-serif;font-size:38px;font-weight:800;color:var(--gold2);line-height:1}
+.fin-g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.fin-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t4);margin-bottom:5px}
+.fin-inp{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--t1);outline:none;transition:all .2s}
+.fin-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,123,246,.1)}
+.fin-result{background:linear-gradient(135deg,var(--bg2),rgba(59,123,246,.12));border:1px solid rgba(59,123,246,.15);border-radius:var(--rs);padding:16px;color:#fff}
+.fin-monthly{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--gold);line-height:1}
 .fin-bd{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
-.fin-bd-v{font-family:"Syne",sans-serif;font-size:15px;font-weight:800;text-align:center}
-.fin-bd-l{font-size:8.5px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;text-align:center}
-.fin-disc{font-size:9.5px;color:var(--t3);margin-top:9px;line-height:1.6;padding:8px 12px;background:var(--sky);border-radius:var(--rxs)}
+.fin-bd-v{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;text-align:center}
+.fin-bd-l{font-size:8px;color:var(--t4);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;text-align:center}
+.fin-disc{font-size:9.5px;color:var(--t4);margin-top:8px;line-height:1.6;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:var(--rxs);border:1px solid var(--border)}
 
 /* ── MODS ── */
-.mods-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.mod-btn{background:var(--card);border:1.5px solid var(--b1);border-radius:var(--r);padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
-.mod-btn:hover{border-color:var(--blue);background:var(--sky);transform:translateY(-2px);box-shadow:0 4px 16px rgba(21,80,192,.15)}
-.mod-btn:active{transform:scale(.97)}
-.mod-btn.selected{border:2px solid var(--blue);background:var(--sky);box-shadow:0 0 0 4px rgba(21,80,192,.12)}
-.mod-ic{font-size:22px;margin-bottom:6px;color:var(--gold2)}
-.mod-nm{font-size:10.5px;font-weight:700;color:var(--ink);line-height:1.3}.mod-tg{font-size:8.5px;color:var(--t3);margin-top:2px}
-.anlz-btn{width:100%;background:var(--blue);color:#fff;font-family:"Syne",sans-serif;font-size:14px;font-weight:800;border:none;border-radius:50px;padding:14px;cursor:pointer;margin-top:10px;transition:all .2s;box-shadow:0 4px 14px rgba(21,80,192,.3);display:flex;align-items:center;justify-content:center;gap:7px}
-.anlz-btn:hover:not(:disabled){background:var(--blue2);box-shadow:0 6px 20px rgba(21,80,192,.4);transform:translateY(-1px)}
-.anlz-btn:active:not(:disabled){transform:scale(.98)}
-.anlz-btn:disabled{background:rgba(0,0,0,.1);color:rgba(0,0,0,.35);cursor:default;box-shadow:none}
-.res-card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:1.1rem;margin-bottom:.9rem;box-shadow:var(--s1);position:relative;overflow:hidden;animation:fadeUp .3s ease both}
-.res-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--gold2))}
-.res-title{font-family:"Syne",sans-serif;font-size:16px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;color:var(--ink)}
-.drow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b1);flex-wrap:wrap;gap:4px}
+.mods-g{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.mod-btn{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.mod-btn:hover{border-color:rgba(59,123,246,.3);background:rgba(59,123,246,.06);transform:translateY(-2px)}
+.mod-btn.selected{border-color:var(--blue);background:rgba(59,123,246,.1);box-shadow:0 0 0 3px rgba(59,123,246,.15)}
+.mod-ic{font-size:20px;margin-bottom:6px;color:var(--gold)}
+.mod-nm{font-size:10px;font-weight:700;color:var(--t1);line-height:1.3}.mod-tg{font-size:8px;color:var(--t4);margin-top:2px}
+.anlz-btn{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-family:'Syne',sans-serif;font-size:13.5px;font-weight:800;border:none;border-radius:50px;padding:14px;cursor:pointer;margin-top:10px;transition:all .2s;box-shadow:0 4px 20px rgba(59,123,246,.3);display:flex;align-items:center;justify-content:center;gap:7px}
+.anlz-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 32px rgba(59,123,246,.5)}
+.anlz-btn:disabled{background:var(--bg3);color:var(--t4);cursor:default;box-shadow:none}
+.res-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;margin-bottom:.85rem;box-shadow:var(--s1);position:relative;overflow:hidden;animation:fadeUp .3s ease both}
+.res-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--blue2),var(--gold))}
+.res-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;color:#fff}
+.drow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:4px}
 .drow:last-of-type{border-bottom:none}
-.dlbl{color:var(--t3);font-size:9px;text-transform:uppercase;letter-spacing:.9px;font-weight:700}
-.dval{font-weight:600;font-size:12.5px;color:var(--ink)}
+.dlbl{color:var(--t4);font-size:8.5px;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.dval{font-weight:600;font-size:12px;color:var(--t1)}
 .chg{font-size:10px;padding:2px 7px;border-radius:10px;margin-left:5px;font-weight:700}
-.cup{background:var(--green2);color:var(--green)}.cdn{background:var(--red2);color:var(--red)}.cnt{background:var(--sky);color:var(--blue)}
-.verdict{background:var(--sky);border-left:3px solid var(--blue);border-radius:0 var(--rxs) var(--rxs) 0;padding:11px 13px;margin-top:12px;font-size:11.5px;color:var(--t2);line-height:1.55}
-.verdict strong{color:var(--ink)}
-.share-btn{width:100%;background:transparent;border:1.5px solid var(--green);color:var(--green);font-family:"Syne",sans-serif;font-size:13px;font-weight:700;border-radius:50px;padding:10px;cursor:pointer;margin-top:10px;transition:all .18s}
-.share-btn:hover{background:var(--green2);transform:translateY(-1px)}
-.sbar{display:flex;gap:2px;align-items:flex-end;height:22px}
+.cup{background:rgba(16,185,129,.12);color:var(--green3)}.cdn{background:rgba(239,68,68,.12);color:var(--red3)}.cnt{background:rgba(59,123,246,.12);color:var(--blue2)}
+.verdict{background:rgba(59,123,246,.06);border-left:2px solid var(--blue);border-radius:0 var(--rxs) var(--rxs) 0;padding:11px 13px;margin-top:12px;font-size:11px;color:var(--t2);line-height:1.55}
+.share-btn{width:100%;background:transparent;border:1px solid var(--green);color:var(--green3);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;border-radius:50px;padding:10px;cursor:pointer;margin-top:10px;transition:all .2s}
+.share-btn:hover{background:rgba(16,185,129,.08)}
+.sbar{display:flex;gap:2px;align-items:flex-end;height:20px}
 .sb{width:3px;border-radius:2px;background:var(--blue)}
 
 /* ── PARTNER CTAs ── */
-.partner-cta{display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,var(--ink2) 0%,#1E3A6E 100%);border-radius:var(--r);padding:1rem;color:#fff;cursor:pointer;text-decoration:none;transition:all .2s;margin-bottom:.9rem;box-shadow:var(--s2)}
-.partner-cta:hover{transform:translateY(-2px);box-shadow:var(--s3)}
-.partner-ic{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
-.partner-t{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;margin-bottom:2px}
-.partner-d{font-size:10.5px;color:rgba(255,255,255,.58);line-height:1.4}
-.partner-arr{margin-left:auto;color:rgba(255,255,255,.4);font-size:17px;flex-shrink:0;transition:transform .2s}
-.partner-cta:hover .partner-arr{transform:translateX(4px)}
+.partner-cta{display:flex;align-items:center;gap:13px;background:linear-gradient(135deg,var(--bg2) 0%,rgba(59,123,246,.08) 100%);border:1px solid var(--border);border-radius:var(--r);padding:1rem;color:#fff;cursor:pointer;text-decoration:none;transition:all .2s;margin-bottom:.85rem}
+.partner-cta:hover{border-color:rgba(59,123,246,.3);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.partner-ic{width:44px;height:44px;border-radius:12px;background:rgba(59,123,246,.1);border:1px solid rgba(59,123,246,.2);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;color:var(--blue2)}
+.partner-t{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;margin-bottom:2px}
+.partner-d{font-size:10px;color:var(--t3);line-height:1.4}
+.partner-arr{margin-left:auto;color:var(--t4);font-size:16px;flex-shrink:0;transition:transform .2s}
+.partner-cta:hover .partner-arr{transform:translateX(4px);color:var(--blue2)}
 
 /* ── PRICE COMPARISON ── */
-.pc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.9rem}
-.pc{background:var(--card);border:1.5px solid var(--b1);border-radius:var(--r);padding:14px;text-align:center;position:relative;transition:all .2s}
-.pc:hover{box-shadow:var(--s2);transform:translateY(-2px)}
-.pc.best{border-color:var(--blue);background:linear-gradient(180deg,var(--sky) 0%,var(--card) 100%)}
-.pc-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--blue);color:#fff;font-family:"Syne",sans-serif;font-size:8px;font-weight:800;padding:2px 10px;border-radius:20px;letter-spacing:.5px;white-space:nowrap}
-.pc-name{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px}
-.pc-price{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:4px}
-.pc-sub{font-size:9.5px;color:var(--t3);line-height:1.4}
-.highlight-box{border-radius:var(--r);padding:.95rem;margin-bottom:.9rem;display:flex;align-items:flex-start;gap:12px;border:1px solid}
+.pc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.85rem}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center;position:relative;transition:all .2s}
+.pc.best{border-color:rgba(59,123,246,.4);background:rgba(59,123,246,.06)}
+.pc-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-family:'Syne',sans-serif;font-size:8px;font-weight:800;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.pc-name{font-size:9px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.pc-price{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1;margin-bottom:4px}
+.pc-sub{font-size:9.5px;color:var(--t4);line-height:1.4}
+.highlight-box{border-radius:var(--r);padding:.9rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:12px;border:1px solid}
 .hl-ic{font-size:22px;flex-shrink:0;margin-top:1px}
-.hl-t{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:3px}
-.hl-d{font-size:11px;color:var(--t2);line-height:1.55}
+.hl-t{font-size:12.5px;font-weight:700;color:#fff;margin-bottom:3px}
+.hl-d{font-size:10.5px;color:var(--t2);line-height:1.55}
 
 /* ── UTILITIES ── */
-.errbox{background:var(--red2);color:var(--red);border:1px solid var(--red3);border-radius:var(--rs);padding:11px 14px;font-size:12.5px;margin-bottom:.9rem;font-weight:500}
-.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(0,0,0,.1);border-top-color:var(--blue);animation:spin .7s linear infinite;flex-shrink:0;display:inline-block}
-.loading-box{display:flex;align-items:center;justify-content:center;gap:9px;padding:2.25rem;color:var(--t3);font-size:12px;animation:fadeIn .3s ease}
+.errbox{background:rgba(239,68,68,.08);color:var(--red3);border:1px solid rgba(239,68,68,.2);border-radius:var(--rs);padding:11px 14px;font-size:12.5px;margin-bottom:.85rem;font-weight:500}
+.spin{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.1);border-top-color:var(--blue);animation:spin .7s linear infinite;flex-shrink:0;display:inline-block}
+.loading-box{display:flex;align-items:center;justify-content:center;gap:9px;padding:2.5rem;color:var(--t4);font-size:12px}
 .toast-wrap{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:min(360px,90vw)}
-.toast{background:rgba(5,14,28,.95);backdrop-filter:blur(20px);color:#fff;border-radius:50px;padding:11px 20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:9px;box-shadow:0 8px 32px rgba(0,0,0,.28);animation:toastIn .3s cubic-bezier(.4,0,.2,1) both;pointer-events:auto;border:1px solid rgba(255,255,255,.08)}
-.toast.ok{background:rgba(13,158,92,.95)}.toast.err{background:rgba(207,34,34,.95)}.toast.warn{background:rgba(192,112,0,.95)}
-.reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+.toast{background:rgba(6,10,18,.98);backdrop-filter:blur(24px);color:#fff;border-radius:50px;padding:11px 20px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:9px;box-shadow:0 8px 40px rgba(0,0,0,.5);animation:toastIn .3s ease both;border:1px solid var(--border2)}
+.toast.ok{border-color:rgba(16,185,129,.3)}.toast.err{border-color:rgba(239,68,68,.3)}.toast.warn{border-color:rgba(245,158,11,.3)}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
 .reveal.in{opacity:1;transform:none}
 
 /* ── HOW / FOOTER ── */
-.how-sec{background:var(--ink);padding:3.5rem 1.5rem}
-.how-inner{max-width:860px;margin:0 auto;text-align:center}
-.how-title{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;color:#fff;margin-bottom:.4rem;letter-spacing:-.5px}
-.how-title em{color:var(--gold2);font-style:normal}
-.how-sub{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:2rem}
+.how-sec{background:var(--bg2);border-top:1px solid var(--border);padding:4rem 1.5rem}
+.how-inner{max-width:900px;margin:0 auto;text-align:center}
+.how-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff;margin-bottom:.5rem;letter-spacing:-.5px}
+.how-title em{color:var(--blue2);font-style:normal}
+.how-sub{font-size:12px;color:var(--t4);margin-bottom:2.5rem}
 .how-g{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.how-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:1.35rem;text-align:center;transition:all .2s}
-.how-card:hover{background:rgba(255,255,255,.08);transform:translateY(-3px)}
-.how-n{font-family:"Syne",sans-serif;font-size:38px;font-weight:800;color:var(--gold2);line-height:1}
-.how-t{font-weight:700;font-size:13px;color:#fff;margin:8px 0 4px}.how-d{font-size:10.5px;color:rgba(255,255,255,.38);line-height:1.55}
-.how-feats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:2rem}
-.how-feat{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:50px;padding:6px 14px;font-size:11px;color:rgba(255,255,255,.7);font-weight:500}
-.how-feat i{color:var(--gold2);font-size:12px}
-footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:1.5rem;text-align:center}
-.footer-links{display:flex;align-items:center;justify-content:center;gap:1.25rem;flex-wrap:wrap;margin-bottom:.75rem}
-.footer-link{font-size:11px;color:rgba(255,255,255,.4);text-decoration:none;transition:color .18s}
-.footer-link:hover{color:rgba(255,255,255,.7)}
-.footer-copy{font-size:10.5px;color:rgba(255,255,255,.22);line-height:1.6}
+.how-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;text-align:center;transition:all .2s;position:relative;overflow:hidden}
+.how-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity .3s}
+.how-card:hover{border-color:rgba(59,123,246,.3);transform:translateY(-3px)}.how-card:hover::before{opacity:1}
+.how-n{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;color:var(--gold);line-height:1;margin-bottom:8px}
+.how-t{font-weight:700;font-size:14px;color:#fff;margin-bottom:5px}.how-d{font-size:10.5px;color:var(--t4);line-height:1.6}
+.how-feats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:2.5rem}
+.how-feat{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:50px;padding:6px 14px;font-size:11px;color:var(--t3);font-weight:500;transition:all .2s}
+.how-feat:hover{border-color:var(--border2);color:var(--t2)}
+.how-feat i{color:var(--blue2);font-size:12px}
+footer{background:var(--bg);border-top:1px solid var(--border);padding:1.5rem;text-align:center}
+.footer-links{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:.75rem}
+.footer-link{font-size:11px;color:var(--t4);text-decoration:none;transition:color .18s}
+.footer-link:hover{color:var(--t2)}
+.footer-copy{font-size:10px;color:var(--t4);line-height:1.7}
 
 /* ── MODALS ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(16px);animation:fadeIn .15s ease}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(12px);animation:fadeIn .15s ease}
 .overlay.hidden{display:none}
-.modal{background:rgba(255,255,255,.96);backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,.8);border-radius:20px;padding:1.75rem;width:100%;max-width:400px;position:relative;max-height:92vh;overflow-y:auto;animation:slideUp .22s cubic-bezier(.4,0,.2,1);box-shadow:var(--s3)}
-.modal-x{position:absolute;top:14px;right:16px;background:rgba(0,0,0,.08);border:none;color:var(--t3);font-size:18px;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .18s}
-.modal-x:hover{background:rgba(0,0,0,.14);color:var(--ink)}
-.mh{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.modal{background:rgba(12,18,32,.97);backdrop-filter:blur(40px);border:1px solid var(--border2);border-radius:20px;padding:1.75rem;width:100%;max-width:400px;position:relative;max-height:92vh;overflow-y:auto;animation:slideUp .22s ease;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.modal-x{position:absolute;top:14px;right:16px;background:var(--card2);border:none;color:var(--t3);font-size:18px;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.modal-x:hover{background:var(--bg3);color:#fff}
+.mh{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:3px}
 .msub{font-size:12px;color:var(--t3);margin-bottom:1.1rem;line-height:1.4}
-.mtabs{display:flex;background:rgba(0,0,0,.06);border-radius:10px;overflow:hidden;padding:3px;gap:3px;margin-bottom:16px}
-.mtab{flex:1;background:transparent;border:none;font-family:"Syne",sans-serif;font-size:12px;font-weight:700;color:var(--t3);padding:8px;cursor:pointer;border-radius:8px;transition:all .18s}
-.mtab.active{background:var(--card);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.inp{width:100%;background:rgba(0,0,0,.04);border:1.5px solid transparent;border-radius:10px;padding:11px 14px;color:var(--ink);font-size:13px;font-family:"DM Sans",sans-serif;outline:none;margin-bottom:9px;transition:all .18s;font-weight:500}
-.inp:focus{border-color:var(--blue);background:var(--card);box-shadow:0 0 0 3px rgba(21,80,192,.12)}
-.mbtn{width:100%;background:var(--blue);color:#fff;font-family:"Syne",sans-serif;font-size:14px;font-weight:800;border:none;border-radius:50px;padding:13px;cursor:pointer;transition:all .2s;margin-top:4px;box-shadow:0 4px 14px rgba(21,80,192,.3)}
-.mbtn:hover:not(:disabled){background:var(--blue2);transform:translateY(-1px)}
-.mbtn:disabled{background:rgba(0,0,0,.12);color:rgba(0,0,0,.35);cursor:default;box-shadow:none;transform:none}
-.mbtn-ghost{width:100%;background:transparent;border:1.5px solid var(--red3);color:var(--red);font-family:"Syne",sans-serif;font-size:13px;font-weight:700;border-radius:50px;padding:11px;cursor:pointer;transition:all .18s;margin-top:8px}
-.mbtn-ghost:hover{background:var(--red2)}
-.merr{background:var(--red2);color:var(--red);border:1px solid var(--red3);border-radius:var(--rs);padding:8px 12px;font-size:11.5px;margin-bottom:10px;display:none;line-height:1.4;font-weight:500}
-.mok{background:var(--green2);color:var(--green);border:1px solid var(--green3);border-radius:var(--rs);padding:8px 12px;font-size:11.5px;margin-bottom:10px;display:none;font-weight:500}
-.prof-top{text-align:center;margin-bottom:1.25rem;padding-bottom:1.1rem;border-bottom:1px solid var(--b1)}
-.prof-av{width:66px;height:66px;border-radius:50%;background:var(--ink);border:3px solid var(--sky2);display:inline-flex;align-items:center;justify-content:center;font-family:"Syne",sans-serif;font-size:27px;font-weight:800;color:var(--gold2);margin-bottom:9px}
-.prof-name{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:var(--ink)}
-.prof-email{font-size:10.5px;color:var(--t3);margin-top:2px}
+.mtabs{display:flex;background:rgba(255,255,255,.04);border-radius:10px;overflow:hidden;padding:3px;gap:3px;margin-bottom:16px;border:1px solid var(--border)}
+.mtab{flex:1;background:transparent;border:none;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--t3);padding:8px;cursor:pointer;border-radius:8px;transition:all .18s}
+.mtab.active{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff}
+.inp{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;margin-bottom:9px;transition:all .2s;font-weight:500}
+.inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,123,246,.12)}
+.mbtn{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;border:none;border-radius:50px;padding:13px;cursor:pointer;transition:all .2s;margin-top:4px;box-shadow:0 4px 20px rgba(59,123,246,.3)}
+.mbtn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 32px rgba(59,123,246,.5)}
+.mbtn:disabled{background:var(--t4);cursor:default;box-shadow:none;transform:none}
+.mbtn-ghost{width:100%;background:transparent;border:1px solid rgba(239,68,68,.3);color:var(--red3);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;border-radius:50px;padding:11px;cursor:pointer;transition:all .18s;margin-top:8px}
+.mbtn-ghost:hover{background:rgba(239,68,68,.08)}
+.merr{background:rgba(239,68,68,.08);color:var(--red3);border:1px solid rgba(239,68,68,.2);border-radius:var(--rs);padding:8px 12px;font-size:11px;margin-bottom:10px;display:none;line-height:1.4}
+.mok{background:var(--green2);color:var(--green3);border:1px solid rgba(16,185,129,.25);border-radius:var(--rs);padding:8px 12px;font-size:11px;margin-bottom:10px;display:none}
+.prof-top{text-align:center;margin-bottom:1.25rem;padding-bottom:1.1rem;border-bottom:1px solid var(--border)}
+.prof-av{width:66px;height:66px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue2));display:inline-flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:27px;font-weight:800;color:#fff;margin-bottom:9px;box-shadow:0 4px 20px rgba(59,123,246,.4)}
+.prof-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.prof-email{font-size:10.5px;color:var(--t4);margin-top:2px}
 .pstats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
-.pstat{background:rgba(0,0,0,.04);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;text-align:center}
-.pstat-n{font-family:"Syne",sans-serif;font-size:28px;font-weight:800;color:var(--blue);line-height:1}
-.pstat-l{font-size:8.5px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
-.s-lbl{font-family:"Syne",sans-serif;font-size:8.5px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);margin-bottom:9px;margin-top:4px}
+.pstat{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:12px;text-align:center}
+.pstat-n{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--blue2);line-height:1}
+.pstat-l{font-size:8px;color:var(--t4);text-transform:uppercase;letter-spacing:1px;margin-top:3px;font-weight:700}
+.s-lbl{font-family:'Syne',sans-serif;font-size:8px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--t4);margin-bottom:9px;margin-top:4px}
 .edit-row{display:flex;gap:7px;margin-bottom:14px;align-items:center}
 .edit-row .inp{margin-bottom:0;flex:1}
-.edit-save{background:var(--blue);color:#fff;border:none;border-radius:50px;padding:11px 16px;font-family:"Syne",sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:all .18s;flex-shrink:0;box-shadow:0 2px 8px rgba(21,80,192,.3)}
-.edit-save:hover{background:var(--blue2)}.edit-save:disabled{background:rgba(0,0,0,.12);color:rgba(0,0,0,.3);cursor:default;box-shadow:none}
-.ph-item{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--b1);border-radius:var(--rs);margin-bottom:6px;cursor:pointer;transition:all .18s}
-.ph-item:hover{border-color:var(--blue);background:var(--sky);transform:translateY(-1px)}
-.ph-reg{font-family:"Syne",sans-serif;font-size:11px;font-weight:800;letter-spacing:1.5px;background:var(--gold2);color:var(--ink);padding:3px 8px;border-radius:5px;flex-shrink:0}
-.ph-car{font-size:11.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ph-meta{font-size:9.5px;color:var(--t3);margin-top:1px}
-.ph-empty{text-align:center;padding:1.25rem;color:var(--t3);font-size:12px}
+.edit-save{background:var(--blue);color:#fff;border:none;border-radius:50px;padding:11px 16px;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;cursor:pointer;transition:all .18s;flex-shrink:0}
+.edit-save:hover{background:var(--blue2)}.edit-save:disabled{background:var(--t4);cursor:default}
+.ph-item{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--border);border-radius:var(--rs);margin-bottom:6px;cursor:pointer;transition:all .2s}
+.ph-item:hover{border-color:rgba(59,123,246,.3);background:rgba(59,123,246,.06)}
+.ph-reg{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;letter-spacing:1.5px;background:var(--gold);color:#060A12;padding:3px 8px;border-radius:5px;flex-shrink:0}
+.ph-car{font-size:11.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-meta{font-size:9.5px;color:var(--t4);margin-top:1px}
+.ph-empty{text-align:center;padding:1.25rem;color:var(--t4);font-size:12px}
+
+/* ── VIN ── */
+.vin-card{background:linear-gradient(135deg,var(--bg2),rgba(59,123,246,.06));border:1px solid var(--border);border-radius:var(--r);padding:1.1rem;margin-bottom:.85rem;animation:fadeUp .3s ease both}
+.vin-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.vin-flag{font-size:28px;flex-shrink:0}
+.vin-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff;line-height:1.2}
+.vin-country{font-size:11px;color:var(--t4);margin-top:2px}
+.vin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.vin-box{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--rs);padding:10px}
+.vin-box-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t4);margin-bottom:4px}
+.vin-box-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff;word-break:break-all}
+.vin-num{font-family:'Syne',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:3px;color:var(--gold);background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.15);border-radius:8px;padding:8px 12px;text-align:center;margin-bottom:12px;word-break:break-all}
+.vin-check-ok{color:var(--green3)}.vin-check-fail{color:var(--red3)}
+.vin-detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px}
+.vin-detail-row:last-child{border-bottom:none}
+.vin-detail-lbl{color:var(--t4);font-size:8.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+.vin-detail-val{color:var(--t1);font-weight:600}
+.reg-toggle{display:inline-flex;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:12px}
+.reg-toggle-btn{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;padding:6px 16px;border:none;background:transparent;color:var(--t4);cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.reg-toggle-btn.active{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff}
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay{position:fixed;inset:0;background:rgba(6,10,18,.97);z-index:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;backdrop-filter:blur(20px)}
+.loading-overlay.hidden{display:none}
+.loading-logo{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;animation:pulse 2s ease infinite}
+.loading-logo span{background:linear-gradient(135deg,var(--blue2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.loading-ring{width:64px;height:64px;border-radius:50%;border:2px solid var(--border2);border-top-color:var(--blue);animation:spin .8s linear infinite;box-shadow:0 0 20px rgba(59,123,246,.3)}
+.loading-reg{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t2);letter-spacing:3px}
+.loading-steps{display:flex;flex-direction:column;gap:10px;min-width:260px}
+.loading-step{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--t4);transition:color .3s}
+.loading-step.active{color:var(--blue2);font-weight:600}
+.loading-step.done{color:var(--green3)}
+.loading-step-ic{width:18px;height:18px;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;transition:all .3s}
+.loading-step.active .loading-step-ic{border-color:var(--blue);color:var(--blue2);animation:spin .7s linear infinite}
+.loading-step.done .loading-step-ic{border-color:var(--green);color:var(--green3);background:rgba(16,185,129,.12)}
+.loading-step:not(.active):not(.done) .loading-step-ic{border-color:var(--t4);color:var(--t4)}
+
+/* ── VIN STRIP ── */
+.vin-strip{background:rgba(59,123,246,.06);border-bottom:1px solid rgba(59,123,246,.12);padding:7px 1.5rem;font-size:11px;color:var(--t3);display:none;align-items:center;gap:8px}
+
+/* ── ADS ── */
+.ad-slot{background:rgba(255,255,255,.02);border:1px dashed var(--border);border-radius:var(--r);padding:1rem;text-align:center;margin-bottom:.85rem;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
 
 /* ── RESPONSIVE ── */
 @media(max-width:640px){
-  .veh-status-grid{grid-template-columns:repeat(2,1fr)}
-  .stat-grid-6{grid-template-columns:repeat(2,1fr)}
+  .veh-stats{grid-template-columns:repeat(2,1fr)}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
   .tech-grid{grid-template-columns:repeat(2,1fr)}
   .g4{grid-template-columns:repeat(2,1fr)}
   .mods-g{grid-template-columns:repeat(2,1fr)}
@@ -426,198 +506,37 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   .fin-g{grid-template-columns:1fr}
   .fin-bd{grid-template-columns:1fr}
   .pc-g{grid-template-columns:1fr}
+  .ulez-grid{grid-template-columns:1fr}
   nav{padding:0 1rem}
-  .dark-header{padding:1.25rem 1rem 0}
-  .veh-header{padding:1.25rem 1rem 0}
-  .veh-name{font-size:26px}
-  .app{padding:1rem 1rem 5rem}
+  .hero{padding:3rem 1rem 2rem;min-height:80vh}
+  .hero h1{font-size:clamp(30px,9vw,44px);letter-spacing:-1px}
+  .pill-tab span{display:none}
+  .pill-tab{padding:12px 14px}
+  .app{padding:1rem 1rem 6rem}
   .val-price{font-size:36px}
   .fin-monthly{font-size:28px}
-  .modal{border-radius:14px;padding:1.25rem}
+  .modal{border-radius:16px;padding:1.25rem}
   .gauge-row{flex-direction:column;text-align:center}
   .dmg-wrap{flex-direction:column}
   .dmg-car-w{max-width:170px;margin:0 auto}
+  .nav-logo-sub{display:none}
+  .tab-rail{top:62px}
+  .hs-div{display:none}
 }
 @media(min-width:768px){
   .mods-g{grid-template-columns:repeat(4,1fr)}
-  .stat-grid-6{grid-template-columns:repeat(3,1fr)}
+  .stat-grid{grid-template-columns:repeat(3,1fr)}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
-@media print{nav,.tab-rail,footer,.how-sec,.partner-cta,.toast-wrap{display:none!important}.app{padding:0;max-width:100%}.card{box-shadow:none;break-inside:avoid}}
-
-/* ── HERO ── */
-.hero{background:var(--ink);padding:4.5rem 1.5rem 3.5rem;text-align:center;position:relative;overflow:hidden}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
-.hero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 75% 55% at 50% -5%,rgba(21,80,192,.45) 0%,transparent 65%);pointer-events:none}
-.hero-inner{position:relative;z-index:1;max-width:600px;margin:0 auto}
-.hero-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(245,183,49,.12);border:1px solid rgba(245,183,49,.25);color:var(--gold2);font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.5rem;animation:fadeUp .5s ease both}
-.hero h1{font-family:"Syne",sans-serif;font-size:clamp(42px,8vw,76px);font-weight:800;line-height:.94;letter-spacing:-2px;color:#fff;margin-bottom:1rem;animation:fadeUp .5s ease .06s both}
-.hero h1 em{color:transparent;-webkit-text-stroke:2px var(--gold2);font-style:normal}
-.hero-sub{font-size:12.5px;color:rgba(255,255,255,.42);max-width:380px;margin:0 auto 1rem;line-height:1.7;font-weight:300;animation:fadeUp .5s ease .12s both}
-.vs-row{font-size:11px;color:rgba(255,255,255,.35);margin-bottom:1.5rem;animation:fadeUp .5s ease .16s both}
-.vs-row b{color:var(--gold2)}
-/* ── REG WRAP (hero) ── */
-.reg-wrap{max-width:480px;margin:0 auto .75rem;animation:fadeUp .5s ease .2s both}
-.reg-row{display:flex;gap:0;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.35)}
-.reg-uk-badge{background:var(--blue);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 13px;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;gap:2px;min-width:44px;flex-shrink:0}
-.reg-uk-badge span{font-size:13px;font-weight:900}
-.reg-plate{flex:1;font-family:"Syne",sans-serif;font-size:24px;font-weight:800;letter-spacing:5px;text-transform:uppercase;background:var(--gold2);border:none;padding:14px 16px;outline:none;color:var(--ink);transition:background .18s;min-width:0}
-.reg-plate::placeholder{color:rgba(5,14,28,.32);letter-spacing:2px;font-size:16px}
-.reg-plate:focus{background:#fff8c0}
-.reg-go{font-family:"Syne",sans-serif;font-size:13px;font-weight:800;background:var(--ink);color:#fff;border:none;padding:0 26px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .18s;flex-shrink:0;white-space:nowrap}
-.reg-go:hover{background:#0D2444}
-.reg-go:active{transform:scale(.98)}
-.reg-note{font-size:10px;color:rgba(255,255,255,.22);letter-spacing:.3px;animation:fadeUp .5s ease .28s both}
-.hero-stats{display:flex;align-items:center;justify-content:center;gap:1.75rem;margin-top:2rem;animation:fadeUp .5s ease .32s both;flex-wrap:wrap}
-.hs-item{text-align:center}
-.hs-n{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--gold2);line-height:1}
-.hs-l{font-size:9px;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px;font-weight:700}
-.hs-div{width:1px;height:28px;background:rgba(255,255,255,.1)}
-/* ── HERO HIDDEN AFTER SEARCH ── */
-.hero.searched{padding:0;overflow:hidden;max-height:0;transition:max-height .4s ease,padding .4s ease}
-@media(max-width:640px){
-  .hero{padding:3rem 1rem 2.5rem}
-  .hero h1{font-size:clamp(36px,11vw,52px);letter-spacing:-1px}
-  .reg-plate{font-size:18px;letter-spacing:2px;padding:12px}
-  .reg-go{padding:0 18px;font-size:12px}
-  .hero-stats{gap:1rem}.hs-div{display:none}
-  .reg-uk-badge{min-width:36px;padding:0 9px}
-}
-
-/* ── MOBILE FIXES ── */
-@media(max-width:640px){
-  .veh-status-grid{grid-template-columns:repeat(2,1fr)}
-  .veh-stat{padding:12px 1rem}
-  .veh-name{font-size:24px;margin-bottom:12px}
-  .stat-grid-6{grid-template-columns:repeat(2,1fr)}
-  .stat-card{padding:14px}
-  .stat-card-val{font-size:26px}
-  .tech-grid{grid-template-columns:repeat(2,1fr)}
-  .pill-tab span{display:none}
-  .pill-tab{padding:12px 14px}
-  .pill-tab i{font-size:16px}
-  nav{padding:0 1rem}
-  .nav-logo-sub{display:none}
-  .tab-rail{top:56px}
-}
-@media(min-width:768px){
-  .mods-g{grid-template-columns:repeat(4,1fr)}
-  .stat-grid-6{grid-template-columns:repeat(3,1fr)}
-}
-
-/* ── VIN DECODE CARD ── */
-.vin-card{background:linear-gradient(135deg,var(--ink2) 0%,#1E3A6E 100%);border-radius:var(--r);padding:1.1rem;margin-bottom:.9rem;color:#fff;box-shadow:var(--s2);animation:fadeUp .3s ease both}
-.vin-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.vin-flag{font-size:28px;flex-shrink:0}
-.vin-title{font-family:"Syne",sans-serif;font-size:18px;font-weight:800;color:#fff;line-height:1.2}
-.vin-country{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
-.vin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-.vin-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:var(--rs);padding:10px}
-.vin-box-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:rgba(255,255,255,.4);margin-bottom:4px}
-.vin-box-val{font-family:"Syne",sans-serif;font-size:14px;font-weight:800;color:#fff;word-break:break-all}
-.vin-num{font-family:"Syne",sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--gold2);background:rgba(245,183,49,.1);border:1px solid rgba(245,183,49,.2);border-radius:6px;padding:8px 12px;text-align:center;margin-bottom:12px;word-break:break-all}
-.vin-check-ok{color:#5EF0A0}.vin-check-fail{color:#F87171}
-.vin-detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:11.5px}
-.vin-detail-row:last-child{border-bottom:none}
-.vin-detail-lbl{color:rgba(255,255,255,.4);font-size:9px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
-.vin-detail-val{color:#fff;font-weight:600}
-.reg-toggle{display:flex;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;margin-bottom:12px;width:fit-content}
-.reg-toggle-btn{font-family:"Syne",sans-serif;font-size:10px;font-weight:700;padding:6px 16px;border:none;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;transition:all .18s;letter-spacing:.3px}
-.reg-toggle-btn.active{background:var(--gold2);color:var(--ink)}
-
-
-/* ── GOOGLE ADS SLOTS ── */
-.ad-slot{background:rgba(0,0,0,.03);border:1px dashed rgba(0,0,0,.1);border-radius:var(--r);padding:1rem;text-align:center;margin-bottom:.9rem;min-height:90px;display:flex;align-items:center;justify-content:center;color:var(--t4);font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
-.ad-slot ins{display:block!important;width:100%}
-
-/* ── DARK MODE ── */
-[data-theme="dark"]{
-  --bg:#0F172A;--card:#1E293B;--ink:#F1F5F9;--ink2:#1E293B;--ink3:#0F172A;
-  --t1:#F1F5F9;--t2:#CBD5E1;--t3:#94A3B8;--t4:#64748B;
-  --b1:rgba(255,255,255,.08);--b2:rgba(255,255,255,.14);
-  --s1:0 1px 4px rgba(0,0,0,.3),0 2px 12px rgba(0,0,0,.25);
-  --s2:0 4px 20px rgba(0,0,0,.4),0 1px 4px rgba(0,0,0,.2);
-  --sky:#1E3A5F;--sky2:#1E4080;--sky3:#3B82F6;
-  --gold3:#451A03;--amber2:#451A03;
-  --green2:#064E3B;--green3:#065F46;
-  --red2:#450A0A;--red3:#7F1D1D;
-}
-[data-theme="dark"] .card{background:#1E293B;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .sbox{background:#0F172A;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .tl-body,[data-theme="dark"] .hrow{background:#0F172A;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .mot-sb{background:#0F172A;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .tech-item{background:#1E293B;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .stat-card{background:#1E293B}
-[data-theme="dark"] .stat-card:hover{background:#243348}
-[data-theme="dark"] .inp{background:rgba(255,255,255,.07);color:#F1F5F9}
-[data-theme="dark"] .fin-inp{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1);color:#F1F5F9}
-[data-theme="dark"] .mod-btn{background:#1E293B;border-color:rgba(255,255,255,.1)}
-[data-theme="dark"] .mod-btn:hover,[data-theme="dark"] .mod-btn.selected{background:#1E3A5F;border-color:var(--blue)}
-[data-theme="dark"] .info-box{background:#1E3A5F;border-color:#1E4080}
-[data-theme="dark"] .highlight-box.hl-blue{background:#1E3A5F;border-color:#1E4080}
-[data-theme="dark"] .vf{background:#1E293B;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] footer,[data-theme="dark"] .how-sec{background:#0A1120}
-[data-theme="dark"] .tab-rail{background:#0A1120}
-[data-theme="dark"] nav{background:rgba(10,17,32,.97)}
-[data-theme="dark"] .hero{background:#0A1120}
-[data-theme="dark"] .veh-header{background:#0A1120}
-[data-theme="dark"] .dark-header{background:#0A1120}
-[data-theme="dark"] .modal{background:rgba(30,41,59,.97);border-color:rgba(255,255,255,.12)}
-[data-theme="dark"] .mtab.active{background:#0F172A;color:#F1F5F9}
-[data-theme="dark"] .pc{background:#1E293B;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .ph-item{background:#1E293B;border-color:rgba(255,255,255,.08)}
-[data-theme="dark"] .partner-cta{opacity:.95}
-[data-theme="dark"] .veh-stat{border-color:rgba(255,255,255,.06)}
-[data-theme="dark"] .chk.ok{background:rgba(6,78,59,.5)}
-[data-theme="dark"] .chk.warn{background:rgba(69,26,3,.5)}
-[data-theme="dark"] .chk.bad{background:rgba(69,10,10,.5)}
-[data-theme="dark"] .ad-slot{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08)}
-
-/* ── DARK MODE TOGGLE BUTTON ── */
-.dm-toggle{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.75);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
-.dm-toggle:hover{background:rgba(255,255,255,.18);color:#fff}
-
-/* ── LOADING OVERLAY (VehicleIntel style) ── */
-.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;animation:fadeIn .2s ease}
-.loading-overlay.hidden{display:none}
-.loading-spinner{width:64px;height:64px;border-radius:50%;border:3px solid var(--b1);border-top-color:var(--blue);animation:spin .8s linear infinite}
-.loading-reg{font-family:"Syne",sans-serif;font-size:22px;font-weight:800;color:var(--t1)}
-.loading-steps{display:flex;flex-direction:column;gap:10px;min-width:260px}
-.loading-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--t3);transition:color .3s}
-.loading-step.active{color:var(--blue);font-weight:600}
-.loading-step.done{color:var(--green)}
-.loading-step-ic{width:18px;height:18px;border-radius:50%;border:1.5px solid;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;transition:all .3s}
-.loading-step.active .loading-step-ic{border-color:var(--blue);color:var(--blue);animation:spin .7s linear infinite}
-.loading-step.done .loading-step-ic{border-color:var(--green);color:var(--green);background:var(--green2)}
-.loading-step:not(.active):not(.done) .loading-step-ic{border-color:var(--t4);color:var(--t4)}
-
-/* ── ULEZ / VED CARDS ── */
-.ulez-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.9rem}
-.ulez-card{background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:1rem;box-shadow:var(--s1);transition:all .18s}
-.ulez-card:hover{box-shadow:var(--s2);transform:translateY(-1px)}
-.ulez-lbl{font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:8px;display:flex;align-items:center;gap:5px}
-.ulez-lbl i{font-size:12px}
-.ulez-val{font-family:"Syne",sans-serif;font-size:20px;font-weight:800;margin-bottom:3px}
-.ulez-sub{font-size:10.5px;color:var(--t3);line-height:1.4}
-.ulez-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;margin-left:6px}
-
-/* ── MILEAGE BAR CHART (VehicleIntel style) ── */
-.mi-bar-wrap{display:flex;flex-direction:column;gap:6px;margin:.75rem 0}
-.mi-bar-row{display:flex;align-items:center;gap:8px}
-.mi-bar-date{font-size:9.5px;font-weight:600;color:var(--t3);width:68px;flex-shrink:0;text-align:right}
-.mi-bar-bg{flex:1;height:20px;background:var(--bg);border-radius:6px;overflow:hidden;position:relative}
-.mi-bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:8px;font-size:9px;font-weight:700;color:#fff;white-space:nowrap;transition:width 1s cubic-bezier(.4,0,.2,1);min-width:4px}
-.mi-bar-fill.pass{background:linear-gradient(90deg,var(--blue),var(--blue3))}
-.mi-bar-fill.fail{background:linear-gradient(90deg,var(--red),#F87171)}
-.mi-bar-fill.reg{background:linear-gradient(90deg,var(--green),#22C55E)}
-.mi-bar-val{font-size:9.5px;font-weight:700;color:var(--t2);width:72px;text-align:right;flex-shrink:0}
-
 </style>
 </head>
 <body>
 <div class="toast-wrap" id="toastWrap"></div>
+
+<!-- LOADING OVERLAY -->
 <div class="loading-overlay hidden" id="loadingOverlay">
-  <div class="loading-spinner"></div>
+  <div class="loading-logo">🔍 <span>GarageIQ</span></div>
+  <div class="loading-ring"></div>
   <div class="loading-reg" id="loadingReg">Searching...</div>
   <div class="loading-steps">
     <div class="loading-step" id="lstep1"><div class="loading-step-ic"><i class="ti ti-circle"></i></div>Querying DVLA database...</div>
@@ -626,23 +545,24 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   </div>
 </div>
 
+<!-- NAV -->
 <nav>
   <a class="nav-logo" href="https://www.garageiq.org.uk">
     <div class="nav-logo-icon"><i class="ti ti-car"></i></div>
     <div class="nav-logo-text">
       <div class="nav-logo-name">GarageIQ</div>
-      <div class="nav-logo-sub">Global Vehicle Intelligence</div>
+      <div class="nav-logo-sub">Vehicle Intelligence</div>
     </div>
   </a>
   <div class="nav-r">
-    <button class="dm-toggle" id="dmToggle" title="Toggle dark mode"><i class="ti ti-moon" id="dmIcon"></i></button>
-    <div id="navGuest">
+    <button class="dm-toggle" id="dmToggle" title="Toggle theme"><i class="ti ti-sun" id="dmIcon"></i></button>
+    <div id="navGuest" style="display:flex;gap:8px">
       <button class="btn-ghost" id="btnLogin">Log In</button>
-      <button class="btn-gold" id="btnSignup">Sign Up</button>
+      <button class="btn-primary" id="btnSignup">Sign Up</button>
     </div>
     <div id="navLoggedIn" class="hidden" style="display:flex;align-items:center;gap:10px">
       <div class="nav-user"><div class="nav-user-dot"></div><span id="navUsername">—</span></div>
-      <button class="nav-logout" id="btnAvatar" title="Profile &amp; History"><i class="ti ti-user-circle"></i></button>
+      <button class="nav-logout" id="btnAvatar" title="Profile"><i class="ti ti-user-circle"></i></button>
       <button class="nav-logout" id="btnLogoutNav" title="Log out"><i class="ti ti-logout"></i></button>
     </div>
   </div>
@@ -653,7 +573,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div class="modal">
     <button class="modal-x" id="authClose">&times;</button>
     <div class="mh">Welcome to GarageIQ</div>
-    <div class="msub">Free account · Reports · No card needed.</div>
+    <div class="msub">Free account · Instant reports · No card needed.</div>
     <div class="mtabs">
       <button class="mtab active" id="tabLogin">Log In</button>
       <button class="mtab" id="tabSignup">Sign Up</button>
@@ -702,71 +622,76 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 
 <!-- HERO -->
 <section class="hero" id="heroSection">
-  <div class="hero-grid"></div>
-  <div class="hero-glow"></div>
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-glow-1"></div>
+  <div class="hero-glow-2"></div>
   <div class="hero-inner">
-    <div class="hero-chip"><i class="ti ti-shield-check"></i> Global Vehicle Intelligence</div>
-    <h1>Know Any<br/><em>Car.</em><br/>Anywhere In The <em>World.</em></h1>
-    <p class="hero-sub">UK reg plates · International VINs · Full MOT history · AI risk analysis · Valuation worldwide</p>
-    <div class="vs-row"><i class="ti ti-award" style="color:var(--gold2);font-size:11px"></i> &nbsp;Better &amp; cheaper than <b>CarVertical</b> — just £1.99 per report</div>
-    <div class="reg-wrap">
+    <div class="hero-eyebrow"><i class="ti ti-shield-check"></i> Trusted Vehicle Intelligence</div>
+    <h1>Know Any Car.<br/><span class="hl">Anywhere.</span></h1>
+    <p class="hero-sub">UK reg plates · International VINs · Full MOT history · AI risk analysis · Real valuations</p>
+    <div class="vs-row">
+      <span class="vs-badge">vs CarVertical</span>
+      Same DVLA data · Better design · <strong style="color:var(--gold)">£1.99 vs £16+</strong>
+    </div>
+    <div class="search-wrap">
       <div style="display:flex;justify-content:center;margin-bottom:10px">
         <div class="reg-toggle">
-          <button class="reg-toggle-btn active" id="modeReg" onclick="setSearchMode('reg')">UK Reg</button>
-          <button class="reg-toggle-btn" id="modeVin" onclick="setSearchMode('vin')">VIN (Any Country)</button>
+          <button class="reg-toggle-btn active" id="modeReg" onclick="setSearchMode('reg')">🇬🇧 UK Reg</button>
+          <button class="reg-toggle-btn" id="modeVin" onclick="setSearchMode('vin')">🌍 VIN</button>
         </div>
       </div>
-      <div class="reg-row">
-        <div class="reg-uk-badge" id="regBadge">
+      <div class="search-box">
+        <div class="reg-badge" id="regBadge">
           <svg width="18" height="12" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg>
           <span id="regBadgeTxt">UK</span>
         </div>
-        <input class="reg-plate" id="regInput" placeholder="AB12 CDE" maxlength="20" style="letter-spacing:2px"/>
-        <button class="reg-go" id="runBtn"><i class="ti ti-search"></i> LOOK UP</button>
+        <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="20"/>
+        <button class="reg-go" id="runBtn"><i class="ti ti-search"></i> SEARCH</button>
       </div>
-      <p class="reg-note" id="searchNote">UK reg plate · DVLA data · Secure · No spam</p>
+      <p class="search-note" id="searchNote">UK reg plate · DVLA data · Instant · Secure</p>
     </div>
     <div class="hero-stats">
-      <div class="hs-item"><div class="hs-n">200+</div><div class="hs-l">Car Models</div></div>
+      <div class="hs"><div class="hs-n" id="hsStat1">60+</div><div class="hs-l">Countries</div></div>
       <div class="hs-div"></div>
-      <div class="hs-item"><div class="hs-n">£1.99</div><div class="hs-l">Per Report</div></div>
+      <div class="hs"><div class="hs-n">£1.99</div><div class="hs-l">Per Report</div></div>
       <div class="hs-div"></div>
-      <div class="hs-item"><div class="hs-n">100%</div><div class="hs-l">DVLA Data</div></div>
+      <div class="hs"><div class="hs-n">100%</div><div class="hs-l">DVLA Data</div></div>
       <div class="hs-div"></div>
-      <div class="hs-item"><div class="hs-n">AI</div><div class="hs-l">Risk Engine</div></div>
+      <div class="hs"><div class="hs-n">AI</div><div class="hs-l">Risk Engine</div></div>
     </div>
   </div>
 </section>
 
-<!-- VEHICLE RESULT HEADER -->
+<!-- VEHICLE HEADER -->
 <div class="veh-header" id="vehHeader">
+  <div id="vehHeaderBg" class="veh-header-bg"></div>
   <div class="veh-header-inner">
     <div class="veh-badges">
       <div class="veh-reg-badge" id="vehReg">—</div>
       <div class="veh-status-badge" id="vehTaxBadge">—</div>
     </div>
-    <div class="veh-chips" id="vehChips"></div>
-    <div class="veh-name" id="vehName">—</div>
-    <div class="veh-status-grid">
+    <div class="veh-top">
+      <div class="veh-logo" id="vehLogo">🚗</div>
+      <div>
+        <div class="veh-name" id="vehName">—</div>
+        <div class="veh-chips" id="vehChips"></div>
+      </div>
+    </div>
+    <div class="veh-stats">
       <div class="veh-stat"><div class="veh-stat-lbl">MOT Status</div><div class="veh-stat-val" id="vehMotStatus">—</div></div>
       <div class="veh-stat"><div class="veh-stat-lbl">MOT Expires</div><div class="veh-stat-val" id="vehMotExpiry">—</div></div>
       <div class="veh-stat"><div class="veh-stat-lbl">Tax Due</div><div class="veh-stat-val" id="vehTaxDue">—</div></div>
-      <div class="veh-stat"><div class="veh-stat-lbl">Euro Status</div><div class="veh-stat-val" id="vehEuro">—</div></div>
+      <div class="veh-stat"><div class="veh-stat-lbl">Euro Standard</div><div class="veh-stat-val" id="vehEuro">—</div></div>
     </div>
   </div>
 </div>
 
-<div class="vin-strip hidden" id="vinStrip" style="background:var(--ink);padding:8px 1.5rem;font-size:11px;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:8px">
-  <i class="ti ti-barcode" style="font-size:12px"></i>
-  VIN: <strong id="vinVal">—</strong>
-  <span style="color:rgba(255,255,255,.2)">·</span>
-  <span id="vinNote" style="font-size:10px;color:rgba(255,255,255,.28)">DVLA records</span>
-</div>
+<div class="vin-strip" id="vinStrip"><i class="ti ti-barcode"></i> VIN: <strong id="vinVal">—</strong> <span style="color:var(--t4)">·</span> <span id="vinNote" style="font-size:10px;color:var(--t4)">DVLA records</span></div>
 
 <!-- TABS -->
 <div class="tab-rail hidden" id="tabsWrap">
-  <div class="tab-pill-track">
-    <div class="tab-pill-inner">
+  <div class="tab-track">
+    <div class="tab-inner">
       <button class="pill-tab active" data-tab="overview"><i class="ti ti-car"></i><span>Overview</span></button>
       <button class="pill-tab" data-tab="history"><i class="ti ti-chart-line"></i><span>History</span></button>
       <button class="pill-tab" data-tab="report"><i class="ti ti-report-analytics"></i><span>Report</span></button>
@@ -781,14 +706,14 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
   <div id="errbox" class="errbox hidden"></div>
   <div id="loadbox" class="loading-box hidden"><div class="spin"></div> Fetching vehicle data...</div>
 
-  <!-- OVERVIEW TAB -->
+  <!-- OVERVIEW -->
   <div id="tab-overview" class="tab-panel active">
-    <div class="stat-grid-6" id="specCards">
+    <div class="stat-grid" id="specCards">
       <div class="stat-card"><div class="stat-card-lbl"><i class="ti ti-dashboard"></i> BHP</div><div class="stat-card-val"><span id="scBhp">—</span><span class="stat-card-unit">bhp</span></div></div>
       <div class="stat-card"><div class="stat-card-lbl"><i class="ti ti-bolt"></i> Torque</div><div class="stat-card-val"><span id="scTq">—</span><span class="stat-card-unit">Nm</span></div></div>
       <div class="stat-card"><div class="stat-card-lbl"><i class="ti ti-arrow-right"></i> 0–62 MPH</div><div class="stat-card-val"><span id="scZero">—</span><span class="stat-card-unit">sec</span></div></div>
       <div class="stat-card"><div class="stat-card-lbl"><i class="ti ti-gauge"></i> Top Speed</div><div class="stat-card-val"><span id="scTop">—</span><span class="stat-card-unit">mph</span></div></div>
-      <div class="stat-card"><div class="stat-card-lbl"><i class="ti ti-settings-2"></i> Gearbox</div><div class="stat-card-val" style="font-size:22px"><span id="scGearbox">—</span></div></div>
+      <div class="stat-card"><div class="stat-card-lbl"><i class="ti ti-settings-2"></i> Gearbox</div><div class="stat-card-val" style="font-size:18px"><span id="scGearbox">—</span></div></div>
       <div class="stat-card"><div class="stat-card-lbl"><i class="ti ti-droplet"></i> MPG</div><div class="stat-card-val"><span id="scMpg">—</span><span class="stat-card-unit">mpg</span></div></div>
     </div>
     <div class="card">
@@ -816,102 +741,89 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       </div>
     </div>
     <div class="ulez-grid hidden" id="ulezGrid">
-      <div class="ulez-card">
-        <div class="ulez-lbl"><i class="ti ti-leaf"></i> Clean Air Zone / ULEZ</div>
-        <div class="ulez-val" id="ulezVal">—</div>
-        <div class="ulez-sub" id="ulezSub">—</div>
-      </div>
-      <div class="ulez-card">
-        <div class="ulez-lbl"><i class="ti ti-receipt"></i> Annual Road Tax (VED)</div>
-        <div class="ulez-val" id="vedVal">—</div>
-        <div class="ulez-sub" id="vedSub">—</div>
-      </div>
+      <div class="ulez-card"><div class="ulez-lbl"><i class="ti ti-leaf"></i> ULEZ / Clean Air</div><div class="ulez-val" id="ulezVal">—</div><div class="ulez-sub" id="ulezSub">—</div></div>
+      <div class="ulez-card"><div class="ulez-lbl"><i class="ti ti-receipt"></i> Annual Road Tax</div><div class="ulez-val" id="vedVal">—</div><div class="ulez-sub" id="vedSub">—</div></div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title"><i class="ti ti-clipboard-check"></i> MOT Summary</div><div class="chip chip-b" id="motSumChip" style="display:none">—</div></div>
       <div id="motSumWrap" class="hidden">
         <div class="mot-sum">
-          <div class="mot-sb"><div class="mot-sn" style="color:var(--green)" id="sumPass">-</div><div class="mot-sl">Passed</div></div>
-          <div class="mot-sb"><div class="mot-sn" style="color:var(--red)" id="sumFail">-</div><div class="mot-sl">Failed</div></div>
+          <div class="mot-sb"><div class="mot-sn" style="color:var(--green3)" id="sumPass">-</div><div class="mot-sl">Passed</div></div>
+          <div class="mot-sb"><div class="mot-sn" style="color:var(--red3)" id="sumFail">-</div><div class="mot-sl">Failed</div></div>
           <div class="mot-sb"><div class="mot-sn" style="color:var(--amber)" id="sumAdv">-</div><div class="mot-sl">Advisories</div></div>
-          <div class="mot-sb"><div class="mot-sn" style="color:var(--blue)" id="sumTotal">-</div><div class="mot-sl">Tests</div></div>
+          <div class="mot-sb"><div class="mot-sn" style="color:var(--blue2)" id="sumTotal">-</div><div class="mot-sl">Tests</div></div>
         </div>
         <div style="margin-bottom:4px">
-          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px"><span>Pass Rate</span><span id="passRatePct">—</span></div>
-          <div class="pbar-bg"><div id="passBarFill" style="height:100%;border-radius:20px;width:0;transition:width .9s cubic-bezier(.4,0,.2,1)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:8.5px;color:var(--t4);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.5px"><span>Pass Rate</span><span id="passRatePct">—</span></div>
+          <div class="pbar-bg"><div id="passBarFill" style="height:100%;border-radius:20px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)"></div></div>
         </div>
       </div>
       <div id="motHistory"><div class="loading-box"><div class="spin"></div> Loading MOT data...</div></div>
     </div>
   </div>
 
-  <!-- HISTORY TAB -->
+  <!-- HISTORY -->
   <div id="tab-history" class="tab-panel">
     <div class="card">
       <div class="card-head"><div class="card-title"><i class="ti ti-chart-line"></i> Mileage Progression</div><div class="chip chip-gr">Free</div></div>
-      <div class="chart-outer" id="mileChartWrap"><div class="loading-box" style="padding:1.75rem"><div class="spin"></div> Building chart...</div></div>
+      <div id="mileChartWrap" style="padding:.5rem 0"><div class="loading-box" style="padding:1.75rem"><div class="spin"></div></div></div>
       <div id="miBarChart" class="mi-bar-wrap"></div>
-      <div class="chart-legend">
-        <div class="cl-i"><div class="cl-d" style="background:var(--green)"></div> Registration (0 mi)</div>
-        <div class="cl-i"><div class="cl-d" style="background:var(--blue)"></div> MOT Test</div>
-        <div class="cl-i"><div class="cl-d" style="background:var(--red)"></div> Mileage Drop ⚠</div>
-        <div class="cl-i"><div class="cl-d" style="background:#F97316"></div> Failed Test</div>
+      <div style="display:flex;gap:14px;margin-top:10px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t4);font-weight:600"><div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>Registration (0 mi)</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t4);font-weight:600"><div style="width:8px;height:8px;border-radius:50%;background:var(--blue)"></div>MOT Test</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t4);font-weight:600"><div style="width:8px;height:8px;border-radius:50%;background:var(--red)"></div>Mileage Drop ⚠</div>
       </div>
     </div>
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="ti ti-timeline"></i> MOT Test Timeline</div><div class="chip chip-gr">Free</div></div>
-      <div id="motTimeline"><div class="loading-box"><div class="spin"></div> Loading...</div></div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-timeline"></i> MOT Timeline</div><div class="chip chip-gr">Free</div></div>
+      <div id="motTimeline"><div class="loading-box"><div class="spin"></div></div></div>
     </div>
     <div class="card reveal">
-      <div class="card-head"><div class="card-title"><i class="ti ti-activity"></i> MOT Reliability Score</div><div class="chip chip-b" id="reliabilityChip">Calculating...</div></div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-activity"></i> Reliability Score</div><div class="chip chip-b" id="reliabilityChip">Calculating...</div></div>
       <div id="reliabilityContent"><div class="loading-box" style="padding:1rem"><div class="spin"></div></div></div>
     </div>
     <div class="card reveal">
-      <div class="card-head"><div class="card-title"><i class="ti ti-users"></i> Keeper &amp; Ownership</div><div class="chip chip-b">DVLA Records</div></div>
-      <div class="hrow"><div class="hic hi-b"><i class="ti ti-user-check"></i></div><div style="flex:1"><div class="hrow-t">Number of Previous Keepers</div><div class="hrow-d">Not available in DVLA public data. Run an HPI check (from £9.99) for a definitive keeper count.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g" style="cursor:pointer;white-space:nowrap">HPI →</div></a></div></div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-users"></i> Keeper & Ownership</div><div class="chip chip-b">DVLA Records</div></div>
+      <div class="hrow"><div class="hic hi-b"><i class="ti ti-user-check"></i></div><div style="flex:1"><div class="hrow-t">Previous Keepers</div><div class="hrow-d">Not in DVLA public data. Run an HPI check (from £9.99) for a definitive keeper count.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g">HPI →</div></a></div></div>
       <div class="hrow"><div class="hic hi-gr"><i class="ti ti-file-certificate"></i></div><div style="flex:1"><div class="hrow-t">V5C Logbook</div><div class="hrow-d">Always check the V5C document number matches DVLA records before purchasing.</div></div></div>
-      <div class="hrow"><div class="hic hi-a" style="background:var(--gold3);color:var(--amber)"><i class="ti ti-calendar-event"></i></div><div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText">—</div></div></div>
-      <div class="hrow"><div class="hic hi-b"><i class="ti ti-world"></i></div><div style="flex:1"><div class="hrow-t">Right-Hand Drive Confirmation</div><div class="hrow-d">UK-registered vehicles should be RHD. Verify with V5C if imported.</div></div><div><div class="chip chip-gr" id="rhdChip">UK Spec</div></div></div>
+      <div class="hrow"><div class="hic hi-b"><i class="ti ti-calendar-event"></i></div><div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText">—</div></div></div>
+      <div class="hrow"><div class="hic hi-b"><i class="ti ti-world"></i></div><div style="flex:1"><div class="hrow-t">Right-Hand Drive</div><div class="hrow-d">UK-registered vehicles should be RHD. Verify with V5C if imported.</div></div><div><div class="chip chip-gr" id="rhdChip">UK Spec</div></div></div>
     </div>
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="ti ti-id"></i> Registration &amp; Tax</div></div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-id"></i> Registration & Tax</div></div>
       <div class="hrow"><div class="hic hi-b"><i class="ti ti-car-garage"></i></div><div><div class="hrow-t">First Registered</div><div class="hrow-d" id="firstRegText2">—</div></div></div>
       <div class="hrow"><div class="hic hi-gr"><i class="ti ti-check"></i></div><div style="flex:1"><div class="hrow-t">Tax Status</div><div class="hrow-d" id="taxStatusText">—</div></div><div><div class="chip" id="taxChip">—</div></div></div>
-      <div class="hrow"><div class="hic hi-b"><i class="ti ti-users"></i></div><div><div class="hrow-t">Keeper History</div><div class="hrow-d">Exact keeper count not in DVLA public data. Run an HPI check to get the full picture.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g" style="cursor:pointer">HPI →</div></a></div></div>
+      <div class="hrow"><div class="hic hi-b"><i class="ti ti-users"></i></div><div><div class="hrow-t">Keeper History</div><div class="hrow-d">Exact keeper count not in DVLA public data. Run an HPI check for the full picture.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g">HPI →</div></a></div></div>
     </div>
-    <a class="partner-cta reveal" href="https://www.hpicheck.com" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#14202E 0%,#2563EB 100%)">
+    <a class="partner-cta reveal" href="https://www.hpicheck.com" target="_blank" rel="noopener">
       <div class="partner-ic"><i class="ti ti-lock-open"></i></div>
-      <div><div class="partner-t">Get a Full HPI Check</div><div class="partner-d">Stolen, finance, write-off &amp; keeper count — from £9.99</div></div>
+      <div><div class="partner-t">Full HPI Check — From £9.99</div><div class="partner-d">Stolen, finance, write-off & keeper count verified</div></div>
       <i class="ti ti-chevron-right partner-arr"></i>
     </a>
   </div>
+  <div class="ad-slot" id="adSlot1"><span>Ad space · Google AdSense</span></div>
 
-  <div class="ad-slot" id="adSlot1"><span>Ad space · Activate with Google AdSense</span></div>
-
-  <!-- REPORT TAB -->
+  <!-- REPORT -->
   <div id="tab-report" class="tab-panel">
     <div class="intel-card">
       <div class="intel-bar"></div>
       <div style="padding:1.1rem">
-        <div class="card-head" style="margin-bottom:9px">
-          <div class="card-title"><i class="ti ti-report-analytics"></i> Intelligence Report</div>
-          <div class="chip chip-b" id="intelBadge">£1.99 per report</div>
-        </div>
+        <div class="card-head" style="margin-bottom:9px"><div class="card-title"><i class="ti ti-report-analytics"></i> Intelligence Report</div><div class="chip chip-b" id="intelBadge">£1.99 per report</div></div>
         <div id="intelPaywall" class="paywall">
           <div class="pw-lock"><i class="ti ti-lock"></i></div>
           <div class="pw-title">Intelligence Report</div>
-          <div class="pw-sub">One-time £1.99 per vehicle. Instant unlock. No subscription.</div>
+          <div class="pw-sub">One-time £1.99 per vehicle. Instant unlock. No subscription ever.</div>
           <div class="pw-list">
-            <div class="pwi"><i class="ti ti-check"></i> Mileage fraud &amp; rollback detection</div>
-            <div class="pwi"><i class="ti ti-check"></i> AI risk score &amp; verdict</div>
-            <div class="pwi"><i class="ti ti-check"></i> Damage zone analysis from MOT data</div>
-            <div class="pwi"><i class="ti ti-check"></i> Commercial use &amp; fleet detection</div>
-            <div class="pwi"><i class="ti ti-check"></i> Insurance group estimate</div>
-            <div class="pwi"><i class="ti ti-check"></i> AI stolen / clone / finance risk</div>
+            <div class="pwi"><i class="ti ti-check"></i> Mileage fraud & rollback detection</div>
+            <div class="pwi"><i class="ti ti-check"></i> AI risk score & buyer verdict</div>
+            <div class="pwi"><i class="ti ti-check"></i> Damage zone map from MOT data</div>
+            <div class="pwi"><i class="ti ti-check"></i> Commercial use & fleet detection</div>
+            <div class="pwi"><i class="ti ti-check"></i> ABI insurance group (1–50)</div>
+            <div class="pwi"><i class="ti ti-check"></i> Stolen / clone / finance risk</div>
           </div>
           <div id="pwLoggedOut">
-            <button class="pay-btn" id="btnPwSignup" style="margin-bottom:7px"><i class="ti ti-lock-open"></i> Log In to Pay £1.99</button>
-            <div style="font-size:10.5px;color:var(--t3)">No account? <span class="login-lnk" id="btnPwLogin">Create one free</span> then unlock for £1.99</div>
+            <button class="pay-btn" id="btnPwSignup" style="margin-bottom:8px"><i class="ti ti-lock-open"></i> Log In to Unlock £1.99</button>
+            <div style="font-size:10.5px;color:var(--t4)">No account? <span class="login-lnk" id="btnPwLogin">Create one free</span></div>
           </div>
           <div id="pwLoggedIn" style="display:none">
             <button class="pay-btn" id="btnPay"><i class="ti ti-lock-open"></i> Unlock for £1.99</button>
@@ -919,212 +831,155 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
           </div>
         </div>
         <div id="intelContent" style="display:none">
-          <div style="background:linear-gradient(90deg,var(--red2),var(--amber2));border:1px solid var(--red3);border-radius:var(--rs);padding:10px 13px;margin-bottom:14px;display:flex;align-items:flex-start;gap:9px" id="fraudAlert" class="hidden">
-            <i class="ti ti-alert-triangle" style="color:var(--red);font-size:16px;flex-shrink:0;margin-top:1px"></i>
-            <div><div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:2px">Mileage Rollback Detected</div><div style="font-size:10.5px;color:var(--t2);line-height:1.5" id="fraudAlertText">—</div></div>
+          <div id="fraudAlert" class="hidden" style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--rs);padding:10px 13px;margin-bottom:14px;display:flex;align-items:flex-start;gap:9px">
+            <i class="ti ti-alert-triangle" style="color:var(--red3);font-size:16px;flex-shrink:0;margin-top:1px"></i>
+            <div><div style="font-size:12px;font-weight:700;color:var(--red3);margin-bottom:2px">Mileage Rollback Detected</div><div style="font-size:10px;color:var(--t2);line-height:1.5" id="fraudAlertText">—</div></div>
           </div>
-          <div class="gauge-row">
-            <div class="gauge-svg-wrap" id="riskGaugeSvg"></div>
-            <div class="gauge-info"><div class="gauge-lbl" id="riskLbl">—</div><div class="gauge-sub" id="riskSub">—</div></div>
-          </div>
+          <div class="gauge-row"><div class="gauge-svg-wrap" id="riskGaugeSvg"></div><div><div class="gauge-lbl" id="riskLbl">—</div><div class="gauge-sub" id="riskSub">—</div></div></div>
           <div class="checks" id="intelChecks"></div>
           <div class="ai-box">
-            <div class="ai-head">
-              <div class="ai-title"><i class="ti ti-brain" style="color:var(--blue);font-size:13px"></i> AI Vehicle Assessment</div>
-              <div class="chip chip-b" id="aiRiskChip">Analysing...</div>
-            </div>
+            <div class="ai-head"><div class="ai-title"><i class="ti ti-brain" style="color:var(--blue2);font-size:13px"></i> AI Assessment</div><div class="chip chip-b" id="aiRiskChip">Analysing...</div></div>
             <div id="aiRiskContent"><div class="loading-box" style="padding:.85rem"><div class="spin"></div></div></div>
           </div>
-          <div class="sect-lbl">Damage &amp; Defect Zones</div>
-          <div style="background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:.9rem;margin-bottom:.85rem">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-              <span style="font-size:9.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--t2)">MOT Damage Zones</span>
-              <div class="chip chip-b" id="dmgChip">From MOT records</div>
-            </div>
+          <div class="sect-lbl">Damage & Defect Zones</div>
+          <div class="card" style="margin-bottom:.85rem">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)">MOT Damage Map</span><div class="chip chip-b" id="dmgChip">From MOT records</div></div>
             <div class="dmg-wrap">
               <div class="dmg-car-w">
                 <svg viewBox="0 0 200 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-                  <rect x="30" y="60" width="140" height="240" rx="20" fill="#EEF5FD" stroke="#BBDEFB" stroke-width="2"/>
-                  <rect x="45" y="110" width="110" height="120" rx="8" fill="#DBEAFE" stroke="#93C5FD" stroke-width="1.5"/>
-                  <rect x="52" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,.4)" stroke="#93C5FD" stroke-width="1"/>
-                  <rect x="106" y="118" width="42" height="48" rx="4" fill="rgba(147,197,253,.4)" stroke="#93C5FD" stroke-width="1"/>
-                  <circle cx="55" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-                  <circle cx="145" cy="95" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-                  <circle cx="55" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
-                  <circle cx="145" cy="265" r="18" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+                  <rect x="30" y="60" width="140" height="240" rx="20" fill="rgba(59,123,246,.06)" stroke="rgba(59,123,246,.2)" stroke-width="2"/>
+                  <rect x="45" y="110" width="110" height="120" rx="8" fill="rgba(59,123,246,.08)" stroke="rgba(59,123,246,.15)" stroke-width="1.5"/>
+                  <rect x="52" y="118" width="42" height="48" rx="4" fill="rgba(59,123,246,.12)" stroke="rgba(59,123,246,.2)" stroke-width="1"/>
+                  <rect x="106" y="118" width="42" height="48" rx="4" fill="rgba(59,123,246,.12)" stroke="rgba(59,123,246,.2)" stroke-width="1"/>
+                  <circle cx="55" cy="95" r="18" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="2.5"/>
+                  <circle cx="145" cy="95" r="18" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="2.5"/>
+                  <circle cx="55" cy="265" r="18" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="2.5"/>
+                  <circle cx="145" cy="265" r="18" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="2.5"/>
                   <rect id="zone-front" class="dmg-zone" x="30" y="40" width="140" height="50" rx="10" data-label="Front — bumper, headlights, bonnet"/>
                   <rect id="zone-rear" class="dmg-zone" x="30" y="270" width="140" height="50" rx="10" data-label="Rear — bumper, boot, tail lights"/>
                   <rect id="zone-left" class="dmg-zone" x="10" y="80" width="45" height="200" rx="8" data-label="Nearside/Left (driver side)"/>
                   <rect id="zone-right" class="dmg-zone" x="145" y="80" width="45" height="200" rx="8" data-label="Offside/Right (passenger side)"/>
                   <rect id="zone-roof" class="dmg-zone" x="45" y="95" width="110" height="130" rx="8" data-label="Roof / cabin / windscreen"/>
                   <rect id="zone-under" class="dmg-zone" x="55" y="155" width="90" height="50" rx="5" data-label="Underbody / mechanical"/>
-                  <text x="100" y="58" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">FRONT</text>
-                  <text x="100" y="312" text-anchor="middle" fill="#64748B" font-size="9" font-family="sans-serif">REAR</text>
+                  <text x="100" y="58" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8" font-family="sans-serif">FRONT</text>
+                  <text x="100" y="312" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8" font-family="sans-serif">REAR</text>
                 </svg>
               </div>
-              <div class="dmg-list" id="dmgList"><div style="font-size:11px;color:var(--t3);padding:.9rem;text-align:center">Loading...</div></div>
+              <div class="dmg-list" id="dmgList"><div style="font-size:11px;color:var(--t4);padding:.9rem;text-align:center">Loading...</div></div>
             </div>
             <div class="info-box" style="margin-top:7px"><i class="ti ti-info-circle"></i> Zones from MOT data only. <strong>Full accident history</strong> requires an HPI check.</div>
           </div>
-          <div class="sect-lbl">Stolen, Clone &amp; Plate Risk</div>
-          <div style="background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:.9rem;margin-bottom:.85rem;box-shadow:var(--s1)">
-            <div class="hrow"><div class="hic hi-r"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Stolen Vehicle Check</div><div class="hrow-d">DVLA/DVSA records do not include stolen vehicle status. A full HPI check is the only way to verify this definitively.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g" style="cursor:pointer">Check HPI →</div></a></div></div>
-            <div class="hrow"><div class="hic hi-a" style="background:var(--gold3);color:var(--amber)"><i class="ti ti-license-plate"></i></div><div style="flex:1"><div class="hrow-t">Cloned Plate Detection</div><div class="hrow-d" id="cloneText">Analysing registration patterns...</div></div><div><div class="chip" id="cloneChip">Checking...</div></div></div>
-            <div class="hrow"><div class="hic hi-b"><i class="ti ti-writing"></i></div><div style="flex:1"><div class="hrow-t">Write-Off Category</div><div class="hrow-d">Write-off status (Cat A/B/S/N) is not recorded in DVLA public data. Requires HPI check.</div></div><div><div class="chip chip-b">HPI Only</div></div></div>
+          <div class="sect-lbl">Stolen, Clone & Plate Risk</div>
+          <div class="card" style="margin-bottom:.85rem">
+            <div class="hrow"><div class="hic hi-r"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Stolen Vehicle Check</div><div class="hrow-d">DVLA/DVSA records do not include stolen status. A full HPI check is the only way to verify.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g">HPI →</div></a></div></div>
+            <div class="hrow"><div class="hic hi-g"><i class="ti ti-license-plate"></i></div><div style="flex:1"><div class="hrow-t">Cloned Plate Detection</div><div class="hrow-d" id="cloneText">Analysing registration patterns...</div></div><div><div class="chip" id="cloneChip">Checking...</div></div></div>
+            <div class="hrow"><div class="hic hi-b"><i class="ti ti-writing"></i></div><div style="flex:1"><div class="hrow-t">Write-Off Category</div><div class="hrow-d">Cat A/B/S/N not in DVLA public data. Requires HPI check.</div></div><div><div class="chip chip-b">HPI Only</div></div></div>
             <div class="hrow"><div class="hic hi-gr"><i class="ti ti-world"></i></div><div style="flex:1"><div class="hrow-t">Imported Vehicle Check</div><div class="hrow-d" id="importText">Checking registration pattern...</div></div><div><div class="chip" id="importChip">Checking...</div></div></div>
           </div>
-          <div class="sect-lbl">Ownership &amp; Use</div>
-          <div style="background:var(--card);border:1px solid var(--b1);border-radius:var(--r);padding:.9rem;margin-bottom:.85rem">
+          <div class="sect-lbl">Ownership & Insurance</div>
+          <div class="card" style="margin-bottom:.85rem">
             <div class="hrow"><div class="hic hi-b"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing...</div></div><div><div class="chip chip-b" id="commUseChip">—</div></div></div>
-            <div class="hrow"><div class="hic hi-b"><i class="ti ti-shield"></i></div><div style="flex:1"><div class="hrow-t">Estimated Insurance Group</div><div class="hrow-d" id="insuranceGroupText">—</div></div><div><div class="chip chip-b" id="insuranceGroupChip">—</div></div></div>
+            <div class="hrow"><div class="hic hi-b"><i class="ti ti-shield"></i></div><div style="flex:1"><div class="hrow-t">ABI Insurance Group</div><div class="hrow-d" id="insuranceGroupText">—</div></div><div><div class="chip chip-b" id="insuranceGroupChip">—</div></div></div>
             <div class="hrow"><div class="hic hi-g"><i class="ti ti-currency-pound"></i></div><div style="flex:1"><div class="hrow-t">Estimated Annual Premium</div><div class="hrow-d" id="insuranceCostText">—</div></div><div><div class="chip chip-g" id="insuranceCostChip">—</div></div></div>
-            <div class="hrow"><div class="hic hi-r"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. Run an HPI check — if finance is outstanding the lender can repossess even after you've paid.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g" style="cursor:pointer;white-space:nowrap">HPI →</div></a></div></div>
+            <div class="hrow"><div class="hic hi-r"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Outstanding Finance</div><div class="hrow-d">Not in DVLA/DVSA data. Run an HPI check — the lender can repossess even after you've paid.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g">HPI →</div></a></div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- VALUATION TAB -->
+  <!-- VALUATION -->
   <div id="tab-valuation" class="tab-panel">
     <div class="pc-g reveal">
-      <div class="pc"><div class="pc-name">CarVertical</div><div class="pc-price">£16+</div><div class="pc-sub">Per report · Subscription model</div></div>
+      <div class="pc"><div class="pc-name">CarVertical</div><div class="pc-price">£16+</div><div class="pc-sub">Per report · Subscription</div></div>
       <div class="pc best"><div class="pc-badge">Best Value</div><div class="pc-name">GarageIQ</div><div class="pc-price">£1.99</div><div class="pc-sub">Per vehicle · No subscription</div></div>
-      <div class="pc"><div class="pc-name">HPI Check</div><div class="pc-price">£9.99</div><div class="pc-sub">Finance &amp; theft only</div></div>
+      <div class="pc"><div class="pc-name">HPI Check</div><div class="pc-price">£9.99</div><div class="pc-sub">Finance & theft only</div></div>
     </div>
-    <div class="val-hero">
-      <div style="position:relative;z-index:1">
-        <div class="val-lbl">Current Market Value</div>
-        <div class="val-price" id="valPrice">£—</div>
-        <div class="val-range">
-          <span><i class="ti ti-trending-down" style="font-size:11px"></i> Private: <b id="valPrivate">—</b></span>
-          <span><i class="ti ti-building-store" style="font-size:11px"></i> Trade: <b id="valTrade">—</b></span>
-          <span><i class="ti ti-tag" style="font-size:11px"></i> Part-ex: <b id="valPx">—</b></span>
-        </div>
-      </div>
-    </div>
+    <div class="val-hero"><div style="position:relative;z-index:1"><div class="val-lbl">Current Market Value</div><div class="val-price" id="valPrice">£—</div><div class="val-range"><span><i class="ti ti-trending-down" style="font-size:11px"></i> Private: <b id="valPrivate">—</b></span><span><i class="ti ti-building-store" style="font-size:11px"></i> Trade: <b id="valTrade">—</b></span><span><i class="ti ti-tag" style="font-size:11px"></i> Part-ex: <b id="valPx">—</b></span></div></div></div>
     <div class="card">
       <div class="card-head"><div class="card-title"><i class="ti ti-chart-bar"></i> Value Factors</div><div class="chip chip-b">Estimated</div></div>
-      <div class="val-facs">
-        <div class="vf"><div class="vf-n" id="vfAge">—</div><div class="vf-l">Age (yrs)</div></div>
-        <div class="vf"><div class="vf-n" id="vfMileage">—</div><div class="vf-l">Miles/yr</div></div>
-        <div class="vf"><div class="vf-n" id="vfPass">—</div><div class="vf-l">MOT Pass %</div></div>
-      </div>
+      <div class="val-facs"><div class="vf"><div class="vf-n" id="vfAge">—</div><div class="vf-l">Age (yrs)</div></div><div class="vf"><div class="vf-n" id="vfMileage">—</div><div class="vf-l">Miles/yr</div></div><div class="vf"><div class="vf-n" id="vfPass">—</div><div class="vf-l">MOT Pass %</div></div></div>
       <div class="sect-lbl">Depreciation Forecast</div>
       <div id="depRows"></div>
     </div>
     <div class="card reveal">
-      <div class="card-head"><div class="card-title"><i class="ti ti-map-pin"></i> Market Demand Factors</div><div class="chip chip-b">Estimate</div></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-        <div class="sbox"><div class="slbl">Fuel Type Demand</div><div class="sval blue" id="demandFuel">—</div></div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-map-pin"></i> Market Demand</div><div class="chip chip-b">Estimate</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px">
+        <div class="sbox"><div class="slbl">Fuel Demand</div><div class="sval" id="demandFuel">—</div></div>
         <div class="sbox"><div class="slbl">Age Demand</div><div class="sval" id="demandAge">—</div></div>
         <div class="sbox"><div class="slbl">Resale Trend</div><div class="sval" id="demandTrend">—</div></div>
-        <div class="sbox"><div class="slbl">Time to Sell (est.)</div><div class="sval" id="demandTime">—</div></div>
+        <div class="sbox"><div class="slbl">Time to Sell</div><div class="sval" id="demandTime">—</div></div>
       </div>
-      <div class="info-box"><i class="ti ti-info-circle"></i> Market demand estimates based on UK used car trends. Always check Auto Trader for live comps.</div>
     </div>
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="ti ti-calculator"></i> Finance Calculator</div><div class="chip chip-b">Indicative Only</div></div>
-      <div class="fin-g">
-        <div><div class="fin-lbl">Car Price (£)</div><input class="fin-inp" id="finPrice" type="number" value="8000" min="500"/></div>
-        <div><div class="fin-lbl">Deposit (£)</div><input class="fin-inp" id="finDeposit" type="number" value="1500" min="0"/></div>
-        <div><div class="fin-lbl">Term (months)</div><input class="fin-inp" id="finTerm" type="number" value="36" min="12" max="60"/></div>
-        <div><div class="fin-lbl">APR (%)</div><input class="fin-inp" id="finApr" type="number" value="9.9" step="0.1" min="1" max="30"/></div>
-      </div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-calculator"></i> Finance Calculator</div><div class="chip chip-b">Indicative</div></div>
+      <div class="fin-g"><div><div class="fin-lbl">Car Price (£)</div><input class="fin-inp" id="finPrice" type="number" value="8000" min="500"/></div><div><div class="fin-lbl">Deposit (£)</div><input class="fin-inp" id="finDeposit" type="number" value="1500" min="0"/></div><div><div class="fin-lbl">Term (months)</div><input class="fin-inp" id="finTerm" type="number" value="36" min="12" max="60"/></div><div><div class="fin-lbl">APR (%)</div><input class="fin-inp" id="finApr" type="number" value="9.9" step="0.1" min="1" max="30"/></div></div>
       <div class="fin-result">
-        <div style="font-size:9px;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-weight:700">Monthly Payment</div>
+        <div style="font-size:8.5px;color:var(--t4);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;font-weight:700">Monthly Payment</div>
         <div class="fin-monthly" id="finMonthly">£—</div>
-        <div class="fin-bd">
-          <div><div class="fin-bd-v" id="finTotal">—</div><div class="fin-bd-l">Total Repayable</div></div>
-          <div><div class="fin-bd-v" id="finInterest">—</div><div class="fin-bd-l">Total Interest</div></div>
-          <div><div class="fin-bd-v" id="finLoan">—</div><div class="fin-bd-l">Loan Amount</div></div>
-        </div>
+        <div class="fin-bd"><div><div class="fin-bd-v" id="finTotal">—</div><div class="fin-bd-l">Total Repayable</div></div><div><div class="fin-bd-v" id="finInterest">—</div><div class="fin-bd-l">Total Interest</div></div><div><div class="fin-bd-v" id="finLoan">—</div><div class="fin-bd-l">Loan Amount</div></div></div>
       </div>
       <div class="fin-disc"><i class="ti ti-info-circle" style="margin-right:3px"></i>Indicative only. Not financial advice.</div>
     </div>
-    <a class="partner-cta reveal" href="https://www.confused.com" target="_blank" rel="noopener">
-      <div class="partner-ic"><i class="ti ti-shield"></i></div>
-      <div><div class="partner-t">Compare Car Insurance</div><div class="partner-d">Get quotes from 100+ insurers. UK's #1 comparison site.</div></div>
-      <i class="ti ti-chevron-right partner-arr"></i>
-    </a>
-    <a class="partner-cta reveal" href="https://www.hpicheck.com" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#0F2A1A 0%,#0D6B3A 100%)">
-      <div class="partner-ic"><i class="ti ti-search"></i></div>
-      <div><div class="partner-t">Full HPI Check — From £9.99</div><div class="partner-d">Finance, stolen, write-off &amp; keeper history verified.</div></div>
-      <i class="ti ti-chevron-right partner-arr"></i>
-    </a>
-    <div class="card">
-      <div class="card-head"><div class="card-title"><i class="ti ti-file-text"></i> Finance Terms</div></div>
-      <div class="hrow"><div class="hic hi-b"><i class="ti ti-percentage"></i></div><div><div class="hrow-t">APR</div><div class="hrow-d">Yearly cost of borrowing. PCP typically 6–12% with good credit.</div></div></div>
-      <div class="hrow"><div class="hic hi-g"><i class="ti ti-coins"></i></div><div><div class="hrow-t">PCP — Personal Contract Purchase</div><div class="hrow-d">Deposit + monthly payments + optional balloon to own. Most popular UK type.</div></div></div>
-      <div class="hrow"><div class="hic hi-b"><i class="ti ti-credit-card"></i></div><div><div class="hrow-t">HP — Hire Purchase</div><div class="hrow-d">Higher monthly payments but you own outright once done. No balloon.</div></div></div>
-      <div class="hrow"><div class="hic hi-gr"><i class="ti ti-shield-check"></i></div><div><div class="hrow-t">Section 75 Protection</div><div class="hrow-d">Pay any part of £100–£30,000 by credit card and the card provider is jointly liable for issues.</div></div></div>
-      <div class="hrow"><div class="hic hi-r"><i class="ti ti-alert-triangle"></i></div><div><div class="hrow-t">Outstanding Finance Risk</div><div class="hrow-d">If finance is owed the lender can repossess even after you've paid. Always run an HPI check.</div></div></div>
-      <div class="hrow"><div class="hic hi-b"><i class="ti ti-percent"></i></div><div><div class="hrow-t">What is Representative APR?</div><div class="hrow-d">Must be offered to at least 51% of successful applicants. Your actual rate depends on credit score, income and existing debts.</div></div></div>
-      <div class="hrow"><div class="hic hi-gr"><i class="ti ti-calendar"></i></div><div><div class="hrow-t">Early Repayment</div><div class="hrow-d">Under Consumer Credit Act you can settle early. Lenders can charge up to 58 days interest as an early repayment charge.</div></div></div>
-      <div class="hrow"><div class="hic hi-g" style="background:var(--gold3);color:var(--amber)"><i class="ti ti-receipt"></i></div><div><div class="hrow-t">Balloon Payment (PCP)</div><div class="hrow-d">On PCP the balloon is set at the start. If the car is worth less at the end you hand it back. Never miss a payment — the lender owns the car.</div></div></div>
-      <div class="hrow"><div class="hic hi-r"><i class="ti ti-car-crash"></i></div><div><div class="hrow-t">GAP Insurance</div><div class="hrow-d">If written off your insurer pays current market value — not what you owe. GAP insurance covers the shortfall.</div></div></div>
-    </div>
+    <a class="partner-cta reveal" href="https://www.confused.com" target="_blank" rel="noopener"><div class="partner-ic"><i class="ti ti-shield"></i></div><div><div class="partner-t">Compare Car Insurance</div><div class="partner-d">Get quotes from 100+ UK insurers instantly</div></div><i class="ti ti-chevron-right partner-arr"></i></a>
+    <a class="partner-cta reveal" href="https://www.hpicheck.com" target="_blank" rel="noopener" style="border-color:rgba(16,185,129,.2)"><div class="partner-ic" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.2);color:var(--green3)"><i class="ti ti-search"></i></div><div><div class="partner-t">Full HPI Check — From £9.99</div><div class="partner-d">Finance, stolen, write-off & keeper history</div></div><i class="ti ti-chevron-right partner-arr"></i></a>
   </div>
 
-  <!-- MODS TAB -->
+  <!-- MODS -->
   <div id="tab-mods" class="tab-panel">
-    <div class="highlight-box hl-blue reveal" style="background:var(--sky);border:1px solid var(--sky2)">
-      <div class="hl-ic"><i class="ti ti-sparkles" style="color:var(--blue)"></i></div>
-      <div><div class="hl-t">AI Mod Analyser — Free</div><div class="hl-d">Select any modification below and get an instant AI-powered report: HP/torque gains, sound rating, value impact, MOT risk, insurance impact and a UK buyer verdict.</div></div>
+    <div class="highlight-box reveal" style="background:rgba(59,123,246,.06);border-color:rgba(59,123,246,.2)">
+      <div class="hl-ic"><i class="ti ti-sparkles" style="color:var(--blue2)"></i></div>
+      <div><div class="hl-t">AI Mod Analyser — Free</div><div class="hl-d">Select any modification and get an instant AI report: power gains, sound rating, value impact, MOT risk, insurance impact and UK buyer verdict.</div></div>
     </div>
     <div class="card">
       <div class="card-head"><div class="card-title"><i class="ti ti-settings-2"></i> Mod Analyser</div><div class="chip chip-b">AI · Free</div></div>
-      <div class="sect-lbl" style="margin-top:4px">Engine &amp; Power</div>
+      <div class="sect-lbl" style="margin-top:4px">Engine & Power</div>
       <div class="mods-g">
         <div class="mod-btn" data-mod="ECU remap"><div class="mod-ic"><i class="ti ti-cpu"></i></div><div class="mod-nm">ECU Remap</div><div class="mod-tg">HP · Torque · Economy</div></div>
-        <div class="mod-btn" data-mod="Performance exhaust"><div class="mod-ic"><i class="ti ti-flame"></i></div><div class="mod-nm">Performance Exhaust</div><div class="mod-tg">Sound · HP · Value</div></div>
+        <div class="mod-btn" data-mod="Performance exhaust"><div class="mod-ic"><i class="ti ti-flame"></i></div><div class="mod-nm">Exhaust</div><div class="mod-tg">Sound · HP · Value</div></div>
         <div class="mod-btn" data-mod="Cold air intake"><div class="mod-ic"><i class="ti ti-wind"></i></div><div class="mod-nm">Cold Air Intake</div><div class="mod-tg">HP · Sound · Throttle</div></div>
         <div class="mod-btn" data-mod="Turbo upgrade"><div class="mod-ic"><i class="ti ti-bolt"></i></div><div class="mod-nm">Turbo Upgrade</div><div class="mod-tg">Big HP gains</div></div>
-        <div class="mod-btn" data-mod="Supercharger kit"><div class="mod-ic"><i class="ti ti-rocket"></i></div><div class="mod-nm">Supercharger Kit</div><div class="mod-tg">Instant power boost</div></div>
-        <div class="mod-btn" data-mod="Intercooler upgrade"><div class="mod-ic"><i class="ti ti-gauge"></i></div><div class="mod-nm">Intercooler Upgrade</div><div class="mod-tg">Power · Heat · Reliability</div></div>
-        <div class="mod-btn" data-mod="Exhaust decat pipe"><div class="mod-ic"><i class="ti ti-arrow-right-circle"></i></div><div class="mod-nm">Decat Pipe</div><div class="mod-tg">Sound · Flow · MOT risk</div></div>
-        <div class="mod-btn" data-mod="Forged engine internals"><div class="mod-ic"><i class="ti ti-tool"></i></div><div class="mod-nm">Forged Internals</div><div class="mod-tg">Reliability · Power limit</div></div>
-        <div class="mod-btn" data-mod="Sports air filter"><div class="mod-ic"><i class="ti ti-filter"></i></div><div class="mod-nm">Sports Air Filter</div><div class="mod-tg">HP · Throttle response</div></div>
+        <div class="mod-btn" data-mod="Supercharger kit"><div class="mod-ic"><i class="ti ti-rocket"></i></div><div class="mod-nm">Supercharger</div><div class="mod-tg">Instant power</div></div>
+        <div class="mod-btn" data-mod="Intercooler upgrade"><div class="mod-ic"><i class="ti ti-gauge"></i></div><div class="mod-nm">Intercooler</div><div class="mod-tg">Power · Heat</div></div>
+        <div class="mod-btn" data-mod="Exhaust decat pipe"><div class="mod-ic"><i class="ti ti-arrow-right-circle"></i></div><div class="mod-nm">Decat Pipe</div><div class="mod-tg">Sound · MOT risk</div></div>
+        <div class="mod-btn" data-mod="Forged engine internals"><div class="mod-ic"><i class="ti ti-tool"></i></div><div class="mod-nm">Forged Internals</div><div class="mod-tg">Reliability</div></div>
+        <div class="mod-btn" data-mod="Sports air filter"><div class="mod-ic"><i class="ti ti-filter"></i></div><div class="mod-nm">Sports Filter</div><div class="mod-tg">HP · Throttle</div></div>
       </div>
-      <div class="sect-lbl" style="margin-top:14px">Suspension &amp; Handling</div>
+      <div class="sect-lbl" style="margin-top:14px">Suspension & Handling</div>
       <div class="mods-g">
-        <div class="mod-btn" data-mod="Coilover kit"><div class="mod-ic"><i class="ti ti-settings-2"></i></div><div class="mod-nm">Coilover Kit</div><div class="mod-tg">Ride · Stance · Feel</div></div>
+        <div class="mod-btn" data-mod="Coilover kit"><div class="mod-ic"><i class="ti ti-settings-2"></i></div><div class="mod-nm">Coilovers</div><div class="mod-tg">Ride · Stance</div></div>
         <div class="mod-btn" data-mod="Lowering springs"><div class="mod-ic"><i class="ti ti-adjustments"></i></div><div class="mod-nm">Lowering Springs</div><div class="mod-tg">Stance · Handling</div></div>
-        <div class="mod-btn" data-mod="Big brake kit"><div class="mod-ic"><i class="ti ti-disc"></i></div><div class="mod-nm">Big Brake Kit</div><div class="mod-tg">Safety · Looks · Feel</div></div>
-        <div class="mod-btn" data-mod="Anti-roll bar upgrade"><div class="mod-ic"><i class="ti ti-minus"></i></div><div class="mod-nm">Anti-Roll Bar</div><div class="mod-tg">Cornering · Stability</div></div>
-        <div class="mod-btn" data-mod="Limited slip differential"><div class="mod-ic"><i class="ti ti-arrows-split-2"></i></div><div class="mod-nm">LSD</div><div class="mod-tg">Traction · Cornering</div></div>
-        <div class="mod-btn" data-mod="Uprated suspension bushes"><div class="mod-ic"><i class="ti ti-circle-filled"></i></div><div class="mod-nm">Poly Bushes</div><div class="mod-tg">Precision · Feel · Wear</div></div>
+        <div class="mod-btn" data-mod="Big brake kit"><div class="mod-ic"><i class="ti ti-disc"></i></div><div class="mod-nm">Big Brake Kit</div><div class="mod-tg">Safety · Feel</div></div>
+        <div class="mod-btn" data-mod="Anti-roll bar upgrade"><div class="mod-ic"><i class="ti ti-minus"></i></div><div class="mod-nm">Anti-Roll Bar</div><div class="mod-tg">Cornering</div></div>
+        <div class="mod-btn" data-mod="Limited slip differential"><div class="mod-ic"><i class="ti ti-arrows-split-2"></i></div><div class="mod-nm">LSD</div><div class="mod-tg">Traction</div></div>
+        <div class="mod-btn" data-mod="Uprated suspension bushes"><div class="mod-ic"><i class="ti ti-circle-filled"></i></div><div class="mod-nm">Poly Bushes</div><div class="mod-tg">Precision</div></div>
       </div>
-      <div class="sect-lbl" style="margin-top:14px">Wheels &amp; Exterior</div>
+      <div class="sect-lbl" style="margin-top:14px">Wheels & Exterior</div>
       <div class="mods-g">
-        <div class="mod-btn" data-mod="Alloy wheels upgrade"><div class="mod-ic"><i class="ti ti-circle"></i></div><div class="mod-nm">Alloy Wheels</div><div class="mod-tg">Looks · Handling · Value</div></div>
-        <div class="mod-btn" data-mod="Body kit aerodynamics"><div class="mod-ic"><i class="ti ti-car"></i></div><div class="mod-nm">Body Kit</div><div class="mod-tg">Looks · Aero · Value</div></div>
-        <div class="mod-btn" data-mod="Window tint"><div class="mod-ic"><i class="ti ti-sun-off"></i></div><div class="mod-nm">Window Tint</div><div class="mod-tg">Privacy · Heat · MOT</div></div>
-        <div class="mod-btn" data-mod="Tow bar fitting"><div class="mod-ic"><i class="ti ti-plug"></i></div><div class="mod-nm">Tow Bar</div><div class="mod-tg">Towing · Value impact</div></div>
-        <div class="mod-btn" data-mod="Wrap or respray"><div class="mod-ic"><i class="ti ti-palette"></i></div><div class="mod-nm">Wrap / Respray</div><div class="mod-tg">Looks · Value · Insurance</div></div>
-        <div class="mod-btn" data-mod="Carbon fibre bonnet"><div class="mod-ic"><i class="ti ti-layout-top"></i></div><div class="mod-nm">Carbon Bonnet</div><div class="mod-tg">Weight · Looks · Value</div></div>
+        <div class="mod-btn" data-mod="Alloy wheels upgrade"><div class="mod-ic"><i class="ti ti-circle"></i></div><div class="mod-nm">Alloy Wheels</div><div class="mod-tg">Looks · Value</div></div>
+        <div class="mod-btn" data-mod="Body kit aerodynamics"><div class="mod-ic"><i class="ti ti-car"></i></div><div class="mod-nm">Body Kit</div><div class="mod-tg">Looks · Aero</div></div>
+        <div class="mod-btn" data-mod="Window tint"><div class="mod-ic"><i class="ti ti-sun-off"></i></div><div class="mod-nm">Window Tint</div><div class="mod-tg">Privacy · MOT</div></div>
+        <div class="mod-btn" data-mod="Tow bar fitting"><div class="mod-ic"><i class="ti ti-plug"></i></div><div class="mod-nm">Tow Bar</div><div class="mod-tg">Utility</div></div>
+        <div class="mod-btn" data-mod="Wrap or respray"><div class="mod-ic"><i class="ti ti-palette"></i></div><div class="mod-nm">Wrap / Respray</div><div class="mod-tg">Looks</div></div>
+        <div class="mod-btn" data-mod="Carbon fibre bonnet"><div class="mod-ic"><i class="ti ti-layout-top"></i></div><div class="mod-nm">Carbon Bonnet</div><div class="mod-tg">Weight · Looks</div></div>
       </div>
-      <div class="sect-lbl" style="margin-top:14px">Transmission &amp; Drivetrain</div>
+      <div class="sect-lbl" style="margin-top:14px">Drivetrain & Track</div>
       <div class="mods-g">
-        <div class="mod-btn" data-mod="Sports clutch upgrade"><div class="mod-ic"><i class="ti ti-rotate-clockwise"></i></div><div class="mod-nm">Sports Clutch</div><div class="mod-tg">Feel · Reliability · HP</div></div>
-        <div class="mod-btn" data-mod="Short shifter kit"><div class="mod-ic"><i class="ti ti-direction"></i></div><div class="mod-nm">Short Shifter</div><div class="mod-tg">Gear feel · Response</div></div>
-        <div class="mod-btn" data-mod="Gearbox rebuild or upgrade"><div class="mod-ic"><i class="ti ti-components"></i></div><div class="mod-nm">Gearbox Upgrade</div><div class="mod-tg">Power handling · Reliability</div></div>
-      </div>
-      <div class="sect-lbl" style="margin-top:14px">Safety &amp; Track</div>
-      <div class="mods-g">
-        <div class="mod-btn" data-mod="Roll cage installation"><div class="mod-ic"><i class="ti ti-layout-grid"></i></div><div class="mod-nm">Roll Cage</div><div class="mod-tg">Safety · Track · MOT</div></div>
-        <div class="mod-btn" data-mod="Bucket seat and harness"><div class="mod-ic"><i class="ti ti-armchair"></i></div><div class="mod-nm">Bucket Seat</div><div class="mod-tg">Safety · Feel · Weight</div></div>
-        <div class="mod-btn" data-mod="Nitrous oxide system"><div class="mod-ic"><i class="ti ti-droplet"></i></div><div class="mod-nm">Nitrous Oxide</div><div class="mod-tg">Power burst · Risk</div></div>
+        <div class="mod-btn" data-mod="Sports clutch upgrade"><div class="mod-ic"><i class="ti ti-rotate-clockwise"></i></div><div class="mod-nm">Sports Clutch</div><div class="mod-tg">Feel · HP</div></div>
+        <div class="mod-btn" data-mod="Short shifter kit"><div class="mod-ic"><i class="ti ti-direction"></i></div><div class="mod-nm">Short Shifter</div><div class="mod-tg">Response</div></div>
+        <div class="mod-btn" data-mod="Gearbox rebuild or upgrade"><div class="mod-ic"><i class="ti ti-components"></i></div><div class="mod-nm">Gearbox</div><div class="mod-tg">Reliability</div></div>
+        <div class="mod-btn" data-mod="Roll cage installation"><div class="mod-ic"><i class="ti ti-layout-grid"></i></div><div class="mod-nm">Roll Cage</div><div class="mod-tg">Safety · Track</div></div>
+        <div class="mod-btn" data-mod="Bucket seat and harness"><div class="mod-ic"><i class="ti ti-armchair"></i></div><div class="mod-nm">Bucket Seat</div><div class="mod-tg">Safety · Feel</div></div>
+        <div class="mod-btn" data-mod="Nitrous oxide system"><div class="mod-ic"><i class="ti ti-droplet"></i></div><div class="mod-nm">Nitrous</div><div class="mod-tg">Power burst</div></div>
       </div>
       <button class="anlz-btn" id="analyzeBtn" disabled><i class="ti ti-sparkles"></i> Select a mod to analyse</button>
     </div>
     <div id="resultSection" class="hidden"></div>
     <div class="card reveal">
-      <div class="card-head"><div class="card-title"><i class="ti ti-gavel"></i> UK Mod Legality Guide</div><div class="chip chip-b">Quick Reference</div></div>
-      <div class="hrow"><div class="hic hi-gr"><i class="ti ti-check"></i></div><div><div class="hrow-t">Generally Legal &amp; Insurable</div><div class="hrow-d">Alloy wheels, lowering springs, performance exhaust (if not decat), cold air intake, sports air filter, window tint (front ≥70%), tow bar, short shifter, bucket seats.</div></div></div>
-      <div class="hrow"><div class="hic hi-a" style="background:var(--gold3);color:var(--amber)"><i class="ti ti-alert-circle"></i></div><div><div class="hrow-t">Declare to Insurer — Policy May Change</div><div class="hrow-d">ECU remap, coilovers, big brake kit, LSD, intercooler, turbo upgrade, supercharger, anti-roll bar, sports clutch, carbon bonnet, body kit, wrap/respray.</div></div></div>
-      <div class="hrow"><div class="hic hi-r"><i class="ti ti-x"></i></div><div><div class="hrow-t">Illegal on Public Roads</div><div class="hrow-d">Decat pipe (fails MOT emissions), nitrous oxide on the road, roll cage without FIA certification, window tint under 70% (front).</div></div></div>
-      <div class="info-box"><i class="ti ti-info-circle"></i> Always declare mods to your insurer — failing to do so can void your policy.</div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-gavel"></i> UK Mod Legality</div><div class="chip chip-b">Quick Reference</div></div>
+      <div class="hrow"><div class="hic hi-gr"><i class="ti ti-check"></i></div><div><div class="hrow-t">Generally Legal</div><div class="hrow-d">Alloy wheels, lowering springs, performance exhaust (if not decat), cold air intake, sports filter, window tint (front ≥70%), tow bar, short shifter, bucket seats.</div></div></div>
+      <div class="hrow"><div class="hic hi-g"><i class="ti ti-alert-circle"></i></div><div><div class="hrow-t">Declare to Insurer</div><div class="hrow-d">ECU remap, coilovers, big brakes, LSD, intercooler, turbo, supercharger, anti-roll bar, sports clutch, carbon bonnet, body kit, wrap.</div></div></div>
+      <div class="hrow"><div class="hic hi-r"><i class="ti ti-x"></i></div><div><div class="hrow-t">Illegal on Public Roads</div><div class="hrow-d">Decat pipe (fails MOT emissions), nitrous oxide, roll cage without FIA cert, window tint under 70% front.</div></div></div>
     </div>
   </div>
 </div>
@@ -1133,11 +988,11 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
 <div class="how-sec">
   <div class="how-inner">
     <div class="how-title">Why <em>GarageIQ</em>?</div>
-    <div class="how-sub">Better data · Better design · £1.99 for a full report · No subscription ever</div>
+    <div class="how-sub">Better data · Better design · £1.99 per report · No subscription ever</div>
     <div class="how-g">
-      <div class="how-card"><div class="how-n">01</div><div class="how-t">Enter Your Reg</div><div class="how-d">Instant DVLA lookup. VIN, specs, tax status and full MOT history in seconds — completely free.</div></div>
-      <div class="how-card"><div class="how-n">02</div><div class="how-t">£1.99 Intelligence</div><div class="how-d">One-time per vehicle. Mileage fraud detection, AI risk score, damage zones, financial risks and more.</div></div>
-      <div class="how-card"><div class="how-n">03</div><div class="how-t">Value &amp; Mods</div><div class="how-d">Live finance calculator, depreciation forecast, and AI mod analysis for 27 modifications — all free.</div></div>
+      <div class="how-card"><div class="how-n">01</div><div class="how-t">Enter Your Reg</div><div class="how-d">Instant DVLA lookup. VIN, specs, tax and full MOT history in seconds — completely free.</div></div>
+      <div class="how-card"><div class="how-n">02</div><div class="how-t">£1.99 Intelligence</div><div class="how-d">One-time per vehicle. Fraud detection, AI risk score, damage zones, financial risks and more.</div></div>
+      <div class="how-card"><div class="how-n">03</div><div class="how-t">Value & Mods</div><div class="how-d">Live finance calculator, depreciation forecast, AI mod analysis for 27 modifications — all free.</div></div>
     </div>
     <div class="how-feats">
       <div class="how-feat"><i class="ti ti-shield-check"></i> Official DVLA Data</div>
@@ -1145,35 +1000,29 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.06);padding:
       <div class="how-feat"><i class="ti ti-chart-line"></i> Mileage Chart</div>
       <div class="how-feat"><i class="ti ti-brain"></i> AI Risk Analysis</div>
       <div class="how-feat"><i class="ti ti-settings-2"></i> 27 Mod Analyses</div>
-      <div class="how-feat"><i class="ti ti-calculator"></i> Finance Calculator</div>
+      <div class="how-feat"><i class="ti ti-calculator"></i> Finance Calc</div>
       <div class="how-feat"><i class="ti ti-currency-pound"></i> Valuation</div>
       <div class="how-feat"><i class="ti ti-lock"></i> No Subscription</div>
     </div>
   </div>
 </div>
-
 <footer>
   <div class="footer-links">
     <a href="#" class="footer-link">About</a>
-    <a href="#" class="footer-link">Privacy Policy</a>
-    <a href="#" class="footer-link">Terms of Service</a>
+    <a href="#" class="footer-link">Privacy</a>
+    <a href="#" class="footer-link">Terms</a>
     <a href="mailto:support@garageiq.co.uk" class="footer-link">Support</a>
-    <a href="#" class="footer-link">API Access</a>
+    <a href="#" class="footer-link">API</a>
   </div>
-  <div class="footer-copy">
-    © 2026 GarageIQ. All rights reserved.<br/>
-    Not financial or legal advice. Data sourced from DVLA &amp; DVSA official records. Always verify with a full HPI check before purchasing any vehicle.<br/>
-    <span style="color:rgba(255,255,255,.12);font-size:9.5px">GarageIQ is not affiliated with DVLA, DVSA, CarVertical or any third party data provider.</span>
-  </div>
+  <div class="footer-copy">© 2026 GarageIQ. All rights reserved.<br/>
+  Not financial or legal advice. Data from DVLA & DVSA. Always verify with a full HPI check before purchase.<br/>
+  <span style="color:var(--t4);font-size:9px">GarageIQ is not affiliated with DVLA, DVSA, CarVertical or any third party.</span></div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js" defer></script>
-
-<!-- Hidden stubs for legacy JS refs -->
 <div style="display:none">
-  <div id="featGrid"></div>
-  <div id="specHighlights"></div>
+  <div id="featGrid"></div><div id="specHighlights"></div>
   <div id="co2BandWrap"><div id="co2BandMarker"></div></div>
   <div id="specGearbox"></div><div id="specMpg"></div>
   <div id="pbBhpVal"></div><div id="pbBhp"></div>
