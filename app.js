@@ -20,6 +20,19 @@ var BRAND_COLORS={'BMW':'#1c69d4','MERCEDES-BENZ':'#333','AUDI':'#bb0a14','VOLKS
 function getBrandLogo(make){return BRAND_LOGOS[(make||'').toUpperCase().trim()]||'🚗';}
 function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()]||null;}
 
+function fetchVehiclePhoto(make,model,year){
+  var wrap=el('vehPhotoWrap'),img=el('vehPhotoImg');
+  if(!wrap||!img||!make)return;
+  var mk=make.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-');
+  var mo=(model||'').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').split('-').slice(0,2).join('-');
+  var yr=year||2018;
+  var src='https://cdn.imagin.studio/getimage?customer=img&make='+mk+(mo?'&modelFamily='+mo:'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23';
+  img.onload=function(){wrap.classList.add('loaded');var bg=el('vehHeaderBg');if(bg)bg.style.backgroundImage='url('+src+')';};
+  img.onerror=function(){wrap.style.display='none';};
+  img.src=src;
+}
+
+
 (function(){
   var canvas=document.getElementById('heroCanvas');if(!canvas)return;
   var ctx=canvas.getContext('2d'),particles=[];
@@ -53,9 +66,7 @@ function toggleDark(){
     +'[data-theme="light"] .tab-rail{background:rgba(241,245,249,.95)}'
     +'[data-theme="light"] .hero{background:#F1F5F9}'
     +'[data-theme="light"] .hero h1{color:#0F172A}'
-    +'[data-theme="light"] .stat-card,.dark .tech-item{background:#fff}'
     +'[data-theme="light"] .sbox,[data-theme="light"] .mot-sb,[data-theme="light"] .tl-body,[data-theme="light"] .hrow{background:#fff}'
-    +'[data-theme="light"] .veh-name{color:#0F172A}'
     +'[data-theme="light"] .modal{background:rgba(255,255,255,.98)}'
     +'[data-theme="light"] .how-sec{background:#F8FAFC}'
     +'[data-theme="light"] .how-card{background:#fff}'
@@ -346,6 +357,7 @@ function renderVehicle(d){
   if(el('vehHeader'))el('vehHeader').classList.add('visible');
   var logo=el('vehLogo');
   if(logo){logo.textContent=getBrandLogo(d.make);var bc=getBrandColor(d.make);if(bc)logo.style.background='linear-gradient(135deg,'+bc+'22,'+bc+'11)';}
+  fetchVehiclePhoto(d.make,d.model||d.modelSeries||'',d.yearOfManufacture);
   var taxOk=(d.taxStatus||'').toLowerCase().indexOf('taxed')>=0,taxSorn=(d.taxStatus||'').toLowerCase().indexOf('sorn')>=0;
   if(el('vehTaxBadge')){el('vehTaxBadge').textContent=taxOk?'Taxed':taxSorn?'SORN':'Untaxed';el('vehTaxBadge').className='veh-status-badge '+(taxOk?'vsb-taxed':taxSorn?'vsb-sorn':'vsb-not-taxed');}
   var chips=[{ic:'ti-calendar',v:d.yearOfManufacture||'—'},{ic:'ti-gas-station',v:fmt(d.fuelType)},{ic:'ti-palette',v:fmt(d.colour||d.primaryColour)},{ic:'ti-engine',v:(d.engineCapacity||d.engineSize)?((d.engineCapacity||d.engineSize)+'cc'):'—'}];
