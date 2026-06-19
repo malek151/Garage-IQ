@@ -785,6 +785,18 @@ html[data-theme="light"] #heroCanvas{opacity:.3}
 /* shimmer on skeleton */
 .spin::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);background-size:200% 100%;animation:shimmerSweep 1.5s linear infinite}
 
+
+/* ── INTEL REPORT SECTIONS ── */
+.report-section{margin-bottom:18px}
+.report-sec-hd{font-family:'Syne',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--blue2);display:flex;align-items:center;gap:7px;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.chk-v{font-family:'Syne',sans-serif;font-size:11.5px;font-weight:700;color:var(--t1);margin:.15rem 0 .25rem}
+.chk.info .chk-ic{background:rgba(59,123,246,.15)}
+.chk.info .chk-ic i{color:var(--blue2)}
+.chk.info .chk-t{color:var(--blue2)}
+html[data-theme="light"] .report-sec-hd{color:#1e3a8a;border-bottom-color:rgba(30,58,138,.1)}
+html[data-theme="light"] .chk-v{color:#0a1a40}
+html[data-theme="light"] .chk.info{background:rgba(59,123,246,.05);border-color:rgba(59,123,246,.15)}
+html[data-theme="light"] .chk.info .chk-t{color:#1e40af}
 </style>
 </head>
 <body>
