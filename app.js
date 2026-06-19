@@ -23,27 +23,27 @@ function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()
 function fetchVehiclePhoto(make,model,year){
   var wrap=el('vehPhotoWrap'),img=el('vehPhotoImg');
   if(!wrap||!img||!make)return;
-  var mk=make.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-');
-  var mo=(model||'').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').split('-').slice(0,2).join('-')||'';
+  var mk=encodeURIComponent(make.toLowerCase().trim());
+  var mo=encodeURIComponent((model||'').toLowerCase().replace(/[^a-z0-9 ]/gi,' ').trim().split(' ')[0]);
   var yr=parseInt(year)||2018;
-  var attempts=[
-    'https://cdn.imagin.studio/getimage?customer=img&make='+mk+(mo?'&modelFamily='+mo:'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23',
-    'https://cdn.imagin.studio/getimage?customer=img&make='+mk+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23',
-    'https://cdn.imagin.studio/getimage?customer=img&make='+mk+'&countryCode=gb&zoomType=fullscreen&angle=23'
-  ];
-  var i=0;
-  function tryNext(){
-    if(i>=attempts.length){wrap.style.display='none';return;}
-    var src=attempts[i++];
-    img.onload=function(){
-      if(img.naturalWidth<10){tryNext();return;}
-      wrap.classList.add('loaded');
-      var bg=el('vehHeaderBg');if(bg){bg.style.backgroundImage='url('+src+')';bg.style.opacity='.09';}
-    };
-    img.onerror=function(){tryNext();};
-    img.src=src;
+  function show(src){
+    wrap.classList.add('loaded');
+    var bg=el('vehHeaderBg');
+    if(bg){bg.style.backgroundImage='url('+src+')';bg.style.opacity='.09';}
   }
-  tryNext();
+  /* Try 1: imagin.studio with model */
+  var src1='https://cdn.imagin.studio/getimage?customer=img&make='+mk+(mo?'&modelFamily='+mo:'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23';
+  var t1=new Image();
+  t1.onload=function(){if(t1.naturalWidth>80){img.src=src1;show(src1);}else{tryUnsplash();}};
+  t1.onerror=function(){tryUnsplash();};
+  t1.src=src1;
+  function tryUnsplash(){
+    var q=encodeURIComponent(make+' '+(model||'')+' car');
+    var src2='https://source.unsplash.com/900x400/?'+q;
+    img.onload=function(){show(src2);};
+    img.onerror=function(){wrap.style.display='none';};
+    img.src=src2;
+  }
 }
 
 
