@@ -21,24 +21,26 @@ function getBrandLogo(make){return BRAND_LOGOS[(make||'').toUpperCase().trim()]|
 function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()]||null;}
 
 function fetchVehiclePhoto(make,model,year){
-  var wrap=el('vehPhotoWrap'),img=el('vehPhotoImg');
-  if(!wrap||!img||!make)return;
-  var mk=make.toLowerCase().replace(/[^a-z0-9]/g,'').trim();
-  var mo=(model||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').trim().split(' ')[0]||'';
+  var wrap=el('vehPhotoWrap');
+  if(!wrap||!make)return;
+  var bc=getBrandColor(make)||'#3B7BF6';
+  var logo=getBrandLogo(make);
+  var carName=esc((make+' '+(model||'')).trim().toUpperCase());
+  /* Step 1: always show gradient placeholder immediately */
+  wrap.innerHTML='<div id="vehPhotoBg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'40 0%,'+bc+'10 60%,rgba(6,10,18,.6) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;position:relative;overflow:hidden"><div style="font-size:58px;filter:drop-shadow(0 0 24px '+bc+'99)">'+logo+'</div><div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.2)">'+carName+'</div></div>';
+  wrap.classList.add('loaded');
+  /* Step 2: try imagin.studio in background — swap in if real photo loads */
+  var mk=make.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  var mo=(model||'').toLowerCase().replace(/[^a-z0-9]/g,'').split('').slice(0,8).join('')||'';
   var yr=parseInt(year)||2019;
-  /* imagin.studio free tier */
-  var src='https://cdn.imagin.studio/getimage?customer=img&make='+encodeURIComponent(mk)+(mo?'&modelFamily='+encodeURIComponent(mo):'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23';
-  img.onload=function(){
-    wrap.classList.add('loaded');
-    var bg=el('vehHeaderBg');if(bg){bg.style.backgroundImage='url('+src+')';bg.style.opacity='.09';}
+  var src='https://cdn.imagin.studio/getimage?customer=img&make='+mk+(mo?'&modelFamily='+mo:'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23';
+  var probe=new Image();
+  probe.onload=function(){
+    if(probe.naturalWidth>100&&probe.naturalHeight>60){
+      wrap.innerHTML='<img src="'+src+'" style="width:100%;height:170px;object-fit:cover;object-position:center 30%;display:block;filter:brightness(.88)" alt="'+carName+'"><div style="position:absolute;bottom:5px;right:8px;font-size:8px;color:rgba(255,255,255,.3)">imagin.studio</div>';
+    }
   };
-  img.onerror=function(){
-    /* fallback: branded gradient placeholder */
-    var bc=getBrandColor(make)||'#3B7BF6';
-    wrap.innerHTML='<div style="width:100%;height:160px;background:linear-gradient(135deg,'+bc+'22,'+bc+'08);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px"><div style="font-size:52px">'+getBrandLogo(make)+'</div><div style="font-family:Syne,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)">'+esc((make+' '+(model||'')).trim())+'</div></div>';
-    wrap.classList.add('loaded');
-  };
-  img.src=src;
+  probe.src=src;
 }
 
 
@@ -596,7 +598,7 @@ function showIntelReport(){
   if(vip||paid){
     el('intelPaywall').style.display='none';el('intelContent').style.display='block';
     el('intelBadge').textContent=vip?'VIP Access':'UNLOCKED';el('intelBadge').className=vip?'chip chip-g':'chip chip-gr';
-    buildIntelReport(motTests);buildDamageMap(motTests);buildOwnership();runAiRisk(motTests);
+    try{buildIntelReport(motTests);}catch(e){el("intelChecks").innerHTML='<div class="info-box"><i class="ti ti-alert-circle"></i> Report generation error: '+esc(e.message)+'</div>';}buildDamageMap(motTests);buildOwnership();runAiRisk(motTests);
   }else{
     el('pwLoggedOut').style.display='none';el('pwLoggedIn').style.display='block';
     el('intelPaywall').style.display='block';el('intelContent').style.display='none';
