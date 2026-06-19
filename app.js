@@ -24,12 +24,26 @@ function fetchVehiclePhoto(make,model,year){
   var wrap=el('vehPhotoWrap'),img=el('vehPhotoImg');
   if(!wrap||!img||!make)return;
   var mk=make.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-');
-  var mo=(model||'').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').split('-').slice(0,2).join('-');
-  var yr=year||2018;
-  var src='https://cdn.imagin.studio/getimage?customer=img&make='+mk+(mo?'&modelFamily='+mo:'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23';
-  img.onload=function(){wrap.classList.add('loaded');var bg=el('vehHeaderBg');if(bg)bg.style.backgroundImage='url('+src+')';};
-  img.onerror=function(){wrap.style.display='none';};
-  img.src=src;
+  var mo=(model||'').toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').split('-').slice(0,2).join('-')||'';
+  var yr=parseInt(year)||2018;
+  var attempts=[
+    'https://cdn.imagin.studio/getimage?customer=img&make='+mk+(mo?'&modelFamily='+mo:'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23',
+    'https://cdn.imagin.studio/getimage?customer=img&make='+mk+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23',
+    'https://cdn.imagin.studio/getimage?customer=img&make='+mk+'&countryCode=gb&zoomType=fullscreen&angle=23'
+  ];
+  var i=0;
+  function tryNext(){
+    if(i>=attempts.length){wrap.style.display='none';return;}
+    var src=attempts[i++];
+    img.onload=function(){
+      if(img.naturalWidth<10){tryNext();return;}
+      wrap.classList.add('loaded');
+      var bg=el('vehHeaderBg');if(bg){bg.style.backgroundImage='url('+src+')';bg.style.opacity='.09';}
+    };
+    img.onerror=function(){tryNext();};
+    img.src=src;
+  }
+  tryNext();
 }
 
 
@@ -59,20 +73,7 @@ function toggleDark(){
   html.setAttribute('data-theme',next);localStorage.setItem('giq_theme',next);
   var icon=el('dmIcon');if(icon)icon.className=next==='dark'?'ti ti-sun':'ti ti-moon';
 }
-(function(){
-  var s=document.createElement('style');
-  s.textContent='[data-theme="light"]{--bg:#F1F5F9;--bg2:#fff;--bg3:#F8FAFC;--card:rgba(0,0,0,.03);--card2:rgba(0,0,0,.06);--border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.18);--t1:#0F172A;--t2:#1E293B;--t3:#475569;--t4:#94A3B8}'
-    +'[data-theme="light"] nav{background:rgba(241,245,249,.92)}'
-    +'[data-theme="light"] .tab-rail{background:rgba(241,245,249,.95)}'
-    +'[data-theme="light"] .hero{background:#F1F5F9}'
-    +'[data-theme="light"] .hero h1{color:#0F172A}'
-    +'[data-theme="light"] .sbox,[data-theme="light"] .mot-sb,[data-theme="light"] .tl-body,[data-theme="light"] .hrow{background:#fff}'
-    +'[data-theme="light"] .modal{background:rgba(255,255,255,.98)}'
-    +'[data-theme="light"] .how-sec{background:#F8FAFC}'
-    +'[data-theme="light"] .how-card{background:#fff}'
-    +'[data-theme="light"] footer{background:#0C1220}';
-  document.head.appendChild(s);
-})();
+/* light mode handled in CSS */
 
 function setSearchMode(m){
   SEARCH_MODE=m;
