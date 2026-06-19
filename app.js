@@ -23,27 +23,22 @@ function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()
 function fetchVehiclePhoto(make,model,year){
   var wrap=el('vehPhotoWrap'),img=el('vehPhotoImg');
   if(!wrap||!img||!make)return;
-  var mk=encodeURIComponent(make.toLowerCase().trim());
-  var mo=encodeURIComponent((model||'').toLowerCase().replace(/[^a-z0-9 ]/gi,' ').trim().split(' ')[0]);
-  var yr=parseInt(year)||2018;
-  function show(src){
+  var mk=make.toLowerCase().replace(/[^a-z0-9]/g,'').trim();
+  var mo=(model||'').toLowerCase().replace(/[^a-z0-9 ]/g,'').trim().split(' ')[0]||'';
+  var yr=parseInt(year)||2019;
+  /* imagin.studio free tier */
+  var src='https://cdn.imagin.studio/getimage?customer=img&make='+encodeURIComponent(mk)+(mo?'&modelFamily='+encodeURIComponent(mo):'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23';
+  img.onload=function(){
     wrap.classList.add('loaded');
-    var bg=el('vehHeaderBg');
-    if(bg){bg.style.backgroundImage='url('+src+')';bg.style.opacity='.09';}
-  }
-  /* Try 1: imagin.studio with model */
-  var src1='https://cdn.imagin.studio/getimage?customer=img&make='+mk+(mo?'&modelFamily='+mo:'')+'&countryCode=gb&modelYear='+yr+'&zoomType=fullscreen&angle=23';
-  var t1=new Image();
-  t1.onload=function(){if(t1.naturalWidth>80){img.src=src1;show(src1);}else{tryUnsplash();}};
-  t1.onerror=function(){tryUnsplash();};
-  t1.src=src1;
-  function tryUnsplash(){
-    var q=encodeURIComponent(make+' '+(model||'')+' car');
-    var src2='https://source.unsplash.com/900x400/?'+q;
-    img.onload=function(){show(src2);};
-    img.onerror=function(){wrap.style.display='none';};
-    img.src=src2;
-  }
+    var bg=el('vehHeaderBg');if(bg){bg.style.backgroundImage='url('+src+')';bg.style.opacity='.09';}
+  };
+  img.onerror=function(){
+    /* fallback: branded gradient placeholder */
+    var bc=getBrandColor(make)||'#3B7BF6';
+    wrap.innerHTML='<div style="width:100%;height:160px;background:linear-gradient(135deg,'+bc+'22,'+bc+'08);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px"><div style="font-size:52px">'+getBrandLogo(make)+'</div><div style="font-family:Syne,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3)">'+esc((make+' '+(model||'')).trim())+'</div></div>';
+    wrap.classList.add('loaded');
+  };
+  img.src=src;
 }
 
 
@@ -626,32 +621,105 @@ function buildOwnership(){
 function buildIntelReport(tests){
   var carYear=parseInt(vehicleData.yearOfManufacture)||0;
   var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
-  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0};}).filter(function(r){if(!r.mi)return false;if(carYear){var yr=new Date(r.date).getFullYear();if(yr>0&&yr<carYear)return false;}return true;});
-  var fraud=[];for(var i=1;i<readings.length;i++){if(readings[i].mi<readings[i-1].mi)fraud.push({from:readings[i-1].mi,to:readings[i].mi,drop:readings[i-1].mi-readings[i].mi,date:readings[i].date});}
-  var annualMi=0;if(readings.length>=2){var f=readings[0],l=readings[readings.length-1],yrs=(new Date(l.date)-new Date(f.date))/(1000*60*60*24*365.25);annualMi=yrs>0.1?Math.round((l.mi-f.mi)/yrs):0;}
-  var miStatus=annualMi>0?(annualMi>20000?'high':annualMi<3000?'low':'normal'):'unknown';
-  var pass=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length,passRate=Math.round(pass/tests.length*100);
-  var rH=sorted.slice(Math.floor(sorted.length/2)),oH=sorted.slice(0,Math.floor(sorted.length/2));
-  var rAdv=rH.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
-  var oAdv=oH.reduce(function(s,t){return s+(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).length;},0);
-  var score=Math.min(100,fraud.length*35+(passRate<60?25:passRate<80?10:0)+(miStatus==='high'?10:0)+(rAdv>oAdv&&rAdv>2?10:0));
-  var lv=score>=50?'high':score>=20?'med':'low';
+  var allDef=[];tests.forEach(function(t){(t.defects||[]).forEach(function(d){allDef.push({txt:(d.text||'').toLowerCase(),text:d.text||'',type:d.type||'',date:t.completedDate||'',mi:parseInt(t.odometerValue)||0});});});
+
+  /* mileage readings */
+  var readings=sorted.map(function(t){return{date:t.completedDate||'',mi:parseInt(t.odometerValue)||0,passed:(t.testResult||'').toUpperCase()==='PASSED'};}).filter(function(r){if(!r.mi)return false;if(carYear){var yr=new Date(r.date).getFullYear();if(yr>0&&yr<carYear)return false;}return true;});
+  var fraud=[];for(var i=1;i<readings.length;i++){if(readings[i].mi<readings[i-1].mi)fraud.push({from:readings[i-1].mi,to:readings[i].mi,drop:readings[i-1].mi-readings[i].mi,pct:Math.round((readings[i-1].mi-readings[i].mi)/readings[i-1].mi*100),date:readings[i].date});}
+  var yearMiles=[];if(readings.length>=2){for(var j=1;j<readings.length;j++){var dy=(new Date(readings[j].date)-new Date(readings[j-1].date))/(1000*60*60*24*365.25);if(dy>0.1)yearMiles.push(Math.round((readings[j].mi-readings[j-1].mi)/dy));}}
+  var annualMi=yearMiles.length?Math.round(yearMiles.reduce(function(s,v){return s+v;},0)/yearMiles.length):0;
+  var lastMi=readings.length?readings[readings.length-1].mi:0;
+  var miTrend='stable';if(yearMiles.length>=3){var half=Math.floor(yearMiles.length/2),ea=yearMiles.slice(0,half).reduce(function(s,v){return s+v;},0)/half,la=yearMiles.slice(half).reduce(function(s,v){return s+v;},0)/(yearMiles.length-half);if(la>ea*1.3)miTrend='increasing';else if(la<ea*.7)miTrend='decreasing';}
+  var projMi5=lastMi+(annualMi*5);
+
+  /* gaps */
+  var gaps=[];for(var g=1;g<sorted.length;g++){var gd=(new Date(sorted[g].completedDate||0)-new Date(sorted[g-1].completedDate||0))/(1000*60*60*24*365.25);if(gd>1.65)gaps.push({months:Math.round(gd*12),from:(sorted[g-1].completedDate||'').slice(0,7),to:(sorted[g].completedDate||'').slice(0,7)});}
+
+  /* pass rate */
+  var passCount=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
+  var passRate=Math.round(passCount/tests.length*100);
+
+  /* defect categories */
+  var KW={brake:['brake','calliper','disc','drum','pad','servo','master cyl'],tyre:['tyre','tire','wheel bearing','rim','bead'],steering:['steering','tracking','toe ','camber','rack','column'],susp:['suspension','spring','shock','absorber','damper','wishbone','arm','bush','joint','strut'],lights:['lamp','light','headlight','fog','tail','indicator','reflector','beam','aim'],emissions:['emission','exhaust','catalyst','smoke','lambda','dpf'],structural:['chassis','subframe','structural','floor','crossmember','sill','repair plate','welded','body structure'],accident:['airbag','srs','restraint','deployed','crumple','impact'],body:['inadequate repair','filler','panel','alignment','ripple','closure'],corrosion:['rust','corrosi','perforate','sill','arch','underbody']};
+  var cats={};Object.keys(KW).forEach(function(k){cats[k]=[];});
+  allDef.forEach(function(d){Object.keys(KW).forEach(function(k){if(KW[k].some(function(kw){return d.txt.indexOf(kw)>=0;}))cats[k].push(d);});});
+  var majOf=function(c){return cats[c].filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).length;};
+  var advOf=function(c){return cats[c].filter(function(d){return d.type==='ADVISORY';}).length;};
+
+  /* accident score */
+  var accScore=Math.min(100,(majOf('structural')*30)+(cats['accident'].length*35)+(cats['body'].length*15)+(cats['corrosion'].filter(function(d){return parseInt(vehicleData.yearOfManufacture||0)>2010&&d.type==='MAJOR';}).length*20));
+  var accRisk=accScore>=50?'HIGH':accScore>=20?'MEDIUM':'LOW';
+
+  /* recurring faults */
+  var fmap={};allDef.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).forEach(function(d){var k=d.txt.slice(0,35);fmap[k]=(fmap[k]||0)+1;});
+  var recurring=Object.keys(fmap).filter(function(k){return fmap[k]>=2;});
+
+  /* advisory escalation */
+  var advSet=new Set(),escalated=0;
+  sorted.forEach(function(t){var tm=(t.defects||[]).filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';});tm.forEach(function(d){if(advSet.has(d.txt.toLowerCase().slice(0,35)))escalated++;});(t.defects||[]).filter(function(d){return d.type==='ADVISORY';}).forEach(function(d){advSet.add(d.txt.toLowerCase().slice(0,35));});});
+
+  /* overall risk */
+  var score=Math.min(100,Math.round((fraud.length*28)+(accScore*.4)+(recurring.length*8)+(escalated*10)+(gaps.length*5)+((passRate<60?20:passRate<80?8:0))+(cats.corrosion.filter(function(d){return d.type==='MAJOR';}).length*6)));
+  var lv=score>=55?'high':score>=22?'med':'low';
+
+  /* fraud banner */
   var fa=el('fraudAlert'),fat=el('fraudAlertText');
-  if(fa&&fat&&fraud.length){fa.classList.remove('hidden');fat.textContent='Odometer dropped '+fraud.map(function(ev){return ev.drop.toLocaleString()+' miles around '+ev.date;}).join('; ');}else if(fa)fa.classList.add('hidden');
+  if(fa&&fraud.length){fa.classList.remove('hidden');fat.textContent='Odometer dropped on '+fraud.length+' occasion(s): '+fraud.map(function(e){return e.drop.toLocaleString()+' mi rolled back ('+e.pct+'%) on '+e.date.slice(0,7);}).join(' | ');}else if(fa)fa.classList.add('hidden');
+
   el('riskGaugeSvg').innerHTML=buildGauge(score);
-  el('riskLbl').textContent=lv==='low'?'LOW RISK — Clean History':lv==='med'?'MODERATE RISK':'HIGH RISK — Review Carefully';
-  el('riskSub').textContent=lv==='low'?'No major concerns from available DVLA/DVSA data.':lv==='med'?'Some concerns. Review checks below before purchasing.':'Significant issues detected. HPI check strongly recommended.';
-  var checks=[];
-  if(!fraud.length)checks.push({s:'ok',ic:'ti-check',t:'Mileage Consistent — '+readings.length+' Tests',d:'No odometer drops detected.'});
-  else fraud.forEach(function(ev){checks.push({s:'bad',ic:'ti-alert-triangle',t:'Mileage Rollback — RED FLAG',d:'Odometer dropped '+ev.drop.toLocaleString()+' miles around '+ev.date});});
-  if(annualMi>0){if(miStatus==='normal')checks.push({s:'ok',ic:'ti-check',t:'Normal Annual Mileage (~'+annualMi.toLocaleString()+' mi/yr)',d:'Within normal private use range.'});else if(miStatus==='high')checks.push({s:'warn',ic:'ti-alert-circle',t:'High Mileage (~'+annualMi.toLocaleString()+' mi/yr)',d:'Above UK average — higher wear expected.'});else checks.push({s:'warn',ic:'ti-alert-circle',t:'Very Low Mileage (~'+annualMi.toLocaleString()+' mi/yr)',d:'Can cause seal and brake deterioration.'});}
-  if(passRate>=80)checks.push({s:'ok',ic:'ti-check',t:'Strong MOT History — '+passRate+'% Pass Rate',d:pass+'/'+tests.length+' tests passed.'});
-  else if(passRate>=60)checks.push({s:'warn',ic:'ti-alert-circle',t:'Average Pass Rate — '+passRate+'%',d:'Check for repeated failures on same component.'});
-  else checks.push({s:'bad',ic:'ti-x',t:'Poor MOT History — '+passRate+'%',d:'Only '+pass+'/'+tests.length+' passed. Indicates neglect.'});
-  if(rAdv>oAdv&&rAdv>=3)checks.push({s:'warn',ic:'ti-trending-up',t:'Advisories Increasing',d:rAdv+' recent vs '+oAdv+' older — components ageing.'});
-  else checks.push({s:'ok',ic:'ti-trending-down',t:'Advisory Trend Stable',d:'No significant increase in advisories.'});
-  checks.push({s:'warn',ic:'ti-info-circle',t:'Finance, Theft & Write-off Not in DVLA Data',d:'Use HPI or MyCarCheck for definitive verification.'});
-  el('intelChecks').innerHTML=checks.map(function(c){return'<div class="chk '+c.s+'"><div class="chk-ic"><i class="ti '+c.ic+'"></i></div><div><div class="chk-t">'+esc(c.t)+'</div><div class="chk-d">'+esc(c.d)+'</div></div></div>';}).join('');
+  el('riskLbl').textContent=lv==='low'?'LOW RISK — No Major Concerns':lv==='med'?'MODERATE RISK — Review Before Buying':'HIGH RISK — Serious Issues Detected';
+  el('riskSub').textContent=lv==='low'?'No major red flags from DVLA/DVSA data.':lv==='med'?'Some concerns detected. Independent inspection recommended.':'Multiple risk factors. HPI check and physical inspection essential before purchase.';
+
+  function row(s,t,v,d){var ic=s==='bad'?'ti-alert-triangle':s==='warn'?'ti-alert-circle':s==='info'?'ti-info-circle':'ti-check';return'<div class="chk '+s+'"><div class="chk-ic"><i class="ti '+ic+'"></i></div><div style="flex:1;min-width:0"><div class="chk-t">'+esc(t)+'</div><div class="chk-v">'+esc(v)+'</div><div class="chk-d">'+esc(d)+'</div></div></div>';}
+  function sec(icon,title,rows){return'<div class="report-section"><div class="report-sec-hd"><i class="ti '+icon+'"></i> '+title+'</div>'+rows.join('')+'</div>';}
+
+  var html='';
+
+  html+=sec('ti-shield-search','MILEAGE FRAUD ANALYSIS',[
+    row(fraud.length?'bad':'ok','Odometer Integrity',fraud.length?fraud.length+' ROLLBACK(S) DETECTED':'Clean — '+readings.length+' consistent readings',fraud.length?fraud.map(function(e){return e.drop.toLocaleString()+' miles removed on '+e.date.slice(0,7)+' ('+e.pct+'%)';}).join(' | '):'Mileage increased consistently through every MOT. No manipulation detected.'),
+    row(annualMi>25000?'warn':annualMi<2000&&annualMi>0?'warn':'ok','Annual Mileage',annualMi>0?annualMi.toLocaleString()+' miles/year average':'Insufficient MOT readings',annualMi>25000?'Well above UK average (8–10k/yr). Fleet, taxi or high-intensity commercial use likely. Higher wear expected.':annualMi<2000&&annualMi>0?'Unusually low. Sitting cars develop seal, brake and fuel system issues. Request full service history.':'Within typical UK private use range.'),
+    row(miTrend==='increasing'?'warn':'ok','Mileage Trend',miTrend==='increasing'?'Increasing in recent years':miTrend==='decreasing'?'Reducing over time':'Stable year-on-year',miTrend==='increasing'?'Usage has grown significantly in recent years - could indicate change of keeper or use.':'Mileage is consistent and stable. Good sign of single-owner private use.'),
+    row(gaps.length?'warn':'ok','MOT History Gaps',gaps.length?gaps.length+' gap(s): '+gaps.map(function(g){return g.months+'mo ('+g.from+' to '+g.to+')';}).join(', '):'No unexplained gaps in annual MOT history',gaps.length?'Gaps longer than ~16 months suggest the car was SORN, in storage, exported or used off-road. Verify with V5C.':'Car has been continuously taxed and tested every year. Positive sign.'),
+    row(lastMi>150000?'warn':lastMi>100000?'info':'ok','Total Recorded Mileage',lastMi>0?lastMi.toLocaleString()+' miles on record':'No mileage data',lastMi>150000?'Very high mileage. Budget for timing chain/belt, gearbox oil, suspension bushes and clutch replacement.':lastMi>100000?'High mileage but manageable with full service history.':'Mileage is within a comfortable range for the vehicle age.'),
+    row('info','Projected Future Mileage',annualMi>0?'~'+projMi5.toLocaleString()+' miles in 5 years at current rate':'Unavailable',annualMi>0?'Factor this into your offer — higher projected mileage = lower residual value and more maintenance costs.':'Not enough readings to extrapolate.'),
+  ]);
+
+  html+=sec('ti-car-crash','ACCIDENT & STRUCTURAL INDICATORS',[
+    row(accRisk==='LOW'?'ok':accRisk==='MEDIUM'?'warn':'bad','Accident Damage Probability',accRisk+' ('+accScore+'/100 risk score)',accRisk==='LOW'?'No structural, body or restraint-system failures in MOT history. Does NOT rule out previous accident — always run HPI.':accRisk==='MEDIUM'?'Some MOT items may indicate prior repair work. Have the car physically inspected by a mechanic.':'Multiple MOT failures consistent with accident damage. Structural inspection essential. Do not buy without HPI.'),
+    row(majOf('structural')>0?'bad':'ok','Structural / Chassis Failures',majOf('structural')>0?majOf('structural')+' structural failure(s) on record':'No structural failures recorded',majOf('structural')>0?'Chassis, subframe, sill or floor failures detected. These strongly indicate serious collision or corrosion damage that may not be visible.':'No structural failures — positive indicator, but physical inspection of sills and underside still recommended.'),
+    row(cats['accident'].length>0?'bad':'ok','Airbag / SRS Restraint System',cats['accident'].length>0?cats['accident'].length+' airbag/SRS item(s) in MOT history':'No airbag or SRS issues detected',cats['accident'].length>0?'Airbag warning lights or SRS failures mean the vehicle may have been in a significant collision where airbags deployed. Non-functional airbags are a serious safety risk.':'No restraint system issues. Likely not involved in a collision serious enough to deploy airbags.'),
+    row(cats['body'].length>0?'warn':'ok','Body Repair Indicators',cats['body'].length>0?cats['body'].length+' body/panel repair flag(s)':'No body repair indicators',cats['body'].length>0?'MOT notes suggest panel misalignment, filler work or inadequate repair. Check door/bonnet gaps and look for paint overspray.':'No body repair indicators in MOT records.'),
+    row(cats['corrosion'].filter(function(d){return d.type==='MAJOR';}).length>2?'bad':cats['corrosion'].length>1?'warn':'ok','Corrosion Level',cats['corrosion'].length===0?'No corrosion recorded':cats['corrosion'].filter(function(d){return d.type==='MAJOR';}).length>0?cats['corrosion'].filter(function(d){return d.type==='MAJOR';}).length+' major corrosion failure(s)':cats['corrosion'].length+' corrosion advisory/minor item(s)',cats['corrosion'].filter(function(d){return d.type==='MAJOR';}).length>2?'Significant structural corrosion. This is a serious safety concern and potential MOT failure going forward.':cats['corrosion'].length>0?'Some corrosion noted. Physically inspect sills, wheel arches and underbody before purchase.':'No corrosion in MOT history.'),
+    row('warn','Insurance Write-Off (Cat A/B/S/N)','Cannot verify — HPI check required','Write-off category is NOT in DVLA/DVSA records. Cat A/B must be scrapped. Cat S/N can be sold but carries hidden risks and significantly lower resale value. HPI Check or CarVertical will confirm.'),
+  ]);
+
+  html+=sec('ti-engine','MECHANICAL HEALTH BREAKDOWN',[
+    row(majOf('brake')>=3?'bad':majOf('brake')>=1?'warn':'ok','Brake System',majOf('brake')>0?majOf('brake')+' major failure(s), '+advOf('brake')+' advisory/minor':'Clean brake history',majOf('brake')>=3?'Repeated brake failures suggest ongoing neglect or a systemic problem. Full brake inspection essential.':majOf('brake')>0?'Brake failures recorded. Ask for repair receipts and check current brake condition.':'Brakes have passed consistently — well maintained.'),
+    row(majOf('tyre')>=3?'bad':majOf('tyre')>=1?'warn':'ok','Tyres & Wheels',majOf('tyre')>0?majOf('tyre')+' major tyre failure(s), '+advOf('tyre')+' advisories':'No tyre major failures',majOf('tyre')>=2?'Frequent tyre failures may indicate alignment, tracking or suspension geometry problems — not just tyre wear.':majOf('tyre')>0?'Tyre failures on record. Check current tyre depth and alignment.':'Tyres consistently within legal limits.'),
+    row(majOf('susp')>=2?'bad':majOf('susp')>=1?'warn':'ok','Suspension',majOf('susp')>0?majOf('susp')+' major suspension failure(s), '+advOf('susp')+' advisories':'Suspension passing consistently',majOf('susp')>=2?'Multiple suspension failures. Could indicate impact damage, aggressive driving or deferred maintenance. Full inspection essential.':majOf('susp')>0?'Suspension failures recorded. Check dampers, wishbones and bushes.':'No major suspension concerns from MOT history.'),
+    row(majOf('steering')>=2?'bad':majOf('steering')>=1?'warn':'ok','Steering',majOf('steering')>0?majOf('steering')+' major steering failure(s)':'No steering failures',majOf('steering')>=2?'Repeated steering failures are serious — may indicate rack, column or power steering issues.':majOf('steering')>0?'Steering failure recorded — verify it has been repaired.':'No steering failures. Positive sign.'),
+    row(majOf('emissions')>=2?'bad':majOf('emissions')>=1?'warn':'ok','Emissions & Engine',majOf('emissions')>0?majOf('emissions')+' emissions failure(s), '+advOf('emissions')+' advisories':'Emissions clean throughout',majOf('emissions')>=2?'Repeated emissions failures suggest engine, DPF, CAT or lambda sensor issues — can be expensive.':majOf('emissions')>0?'Emissions failure recorded. Check if DPF, cat or engine work has since been completed.':'Emissions within legal limits on all tests — good engine health sign.'),
+    row(majOf('lights')>=3?'warn':majOf('lights')>=1?'info':'ok','Lighting System',majOf('lights')>0?majOf('lights')+' light failure(s) on record':'Lighting consistently passing',majOf('lights')>=3?'Frequent lighting failures may indicate wiring or electrical issues beyond simple bulb replacements.':'Lighting history is clean or shows only minor replacements.'),
+    row(recurring.length>0?'bad':'ok','Recurring Faults',recurring.length>0?recurring.length+' component(s) failed multiple times':'No component has failed more than once',recurring.length>0?'Components failing repeatedly: "'+recurring.slice(0,2).map(function(k){return k.slice(0,50);}).join('"; "')+'". This indicates repairs were either not done or done incorrectly.':'Every repair appears to have resolved the issue — no repeat failures.'),
+    row(escalated>0?'warn':'ok','Advisory → Major Escalation',escalated>0?escalated+' advisory/minor left until it became a major failure':'No escalations — issues addressed promptly',escalated>0?'At least '+escalated+' item was flagged as an advisory and left until it became a dangerous/major failure. Owner defers maintenance.':'Issues flagged in advisory have been dealt with before becoming failures. Well-maintained pattern.'),
+  ]);
+
+  html+=sec('ti-user-search','OWNERSHIP & USAGE PROFILE',[
+    row(annualMi>18000?'warn':'ok','Fleet / Commercial Use',annualMi>18000?'HIGH probability — '+annualMi.toLocaleString()+' mi/yr':'Low probability — private use indicators',annualMi>18000?'Mileage consistent with fleet, taxi, courier or sales rep use. Significantly higher wear on clutch, brakes, interior and transmission.':'No commercial use indicators from mileage data.'),
+    row(gaps.length?'warn':'ok','SORN or Storage Periods',gaps.length?gaps.length+' possible off-road period(s)':'No SORN/storage gaps detected',gaps.length?'Gaps of '+gaps.map(function(g){return g.months+' months';}).join(', ')+' detected. Ask seller for explanation. Could be restoration, storage or undisclosed export.':'Continuous on-road use with no unexplained breaks.'),
+    row('info','Keeper Continuity Estimate','Requires V5C verification',annualMi>0&&gaps.length===0?'Single test location and no gaps suggests potentially one keeper. Verify V5C for number of registered keepers.':'Multiple test locations or gaps suggest possible keeper changes. V5C will confirm.'),
+    row('info','Ideal Buyer Profile',annualMi>20000?'High-mileage buyer / mechanic recommended':annualMi>12000?'Confident used car buyer':annualMi<3000&&annualMi>0?'Buyer who will use it regularly':'Standard private buyer',annualMi>20000?'This vehicle has high mileage and likely needs mechanical attention. Best suited to someone who knows cars or has a trusted mechanic.':'Mileage and usage pattern are suitable for a standard private buyer.'),
+  ]);
+
+  html+=sec('ti-scale','LEGAL & FINANCIAL RISK',[
+    row('warn','Outstanding Finance (HP/PCP)','NOT verifiable from DVLA/DVSA — HPI required','If a finance agreement exists and you purchase the car, the lender can legally repossess it even from an innocent buyer. HPI, CarVertical or MyCarCheck will confirm.'),
+    row('warn','Stolen Vehicle Status','NOT verifiable from public records — HPI required','Police national computer (PNC) checks are only available via HPI/CarVertical. A stolen car must be returned regardless of purchase price. Always check before paying.'),
+    row(accRisk!=='LOW'?'warn':'ok','Insurer Notification Required',accRisk!=='LOW'?'Structural/accident flags — disclose to insurer':'No structural concerns — standard declaration','Structural MOT failures must be disclosed to your insurer. Failing to do so may void your policy in an accident.'),
+    row('info','DVSA Safety Recalls','Check DVSA database with your VIN','UK manufacturers register safety recalls with DVSA. Visit check-mot.service.gov.uk and search the DVSA recall checker with the vehicle VIN to confirm no outstanding safety recall.'),
+    row('info','Number Plate Legitimacy','Check V5C registration date matches plate year code','A mismatch between the plate year code and manufacture year may mean a cherished plate transfer (legal) or a cloned/changed plate (illegal). Verify V5C document.'),
+  ]);
+
+  el('intelChecks').innerHTML=html;
 }
 
 function runAiRisk(tests){
