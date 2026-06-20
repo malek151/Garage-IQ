@@ -797,6 +797,59 @@ html[data-theme="light"] .report-sec-hd{color:#1e3a8a;border-bottom-color:rgba(3
 html[data-theme="light"] .chk-v{color:#0a1a40}
 html[data-theme="light"] .chk.info{background:rgba(59,123,246,.05);border-color:rgba(59,123,246,.15)}
 html[data-theme="light"] .chk.info .chk-t{color:#1e40af}
+
+/* ── CARVERTICAL-STYLE REPORT ── */
+.vr-report{display:flex;flex-direction:column;gap:0}
+.vr-report-header{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.vr-rh-left{flex:1;min-width:0}
+.vr-rh-reg{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--t1);letter-spacing:2px;background:#1a2744;border-radius:6px;padding:2px 12px;display:inline-block;margin-bottom:6px}
+.vr-rh-name{font-size:13px;font-weight:700;color:var(--t2);margin-bottom:4px}
+.vr-rh-meta{font-size:10px;color:var(--t4);font-weight:600;letter-spacing:.5px}
+.vr-score-ring{position:relative;width:80px;height:80px;flex-shrink:0}
+.vr-score-ring svg{transform:rotate(-90deg)}
+.vr-score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800}
+.vr-score-lbl{text-align:center;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t4);margin-top:3px}
+
+.vr-card{display:flex;align-items:flex-start;gap:14px;padding:16px;border:1px solid var(--border);border-radius:12px;margin-bottom:8px;position:relative;overflow:hidden;transition:transform .15s}
+.vr-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.vr-card.vc-clean::before{background:var(--green)}
+.vr-card.vc-risk::before{background:var(--red)}
+.vr-card.vc-warn::before{background:var(--amber)}
+.vr-card.vc-unknown::before{background:var(--t4)}
+.vr-card.vc-info::before{background:var(--blue)}
+.vr-card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.vc-clean .vr-card-icon{background:var(--green2)}
+.vc-risk .vr-card-icon{background:var(--red2)}
+.vc-warn .vr-card-icon{background:rgba(245,158,11,.12)}
+.vc-unknown .vr-card-icon{background:rgba(100,116,139,.1)}
+.vc-info .vr-card-icon{background:var(--blue3)}
+.vr-card-body{flex:1;min-width:0}
+.vr-card-title{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--t4);margin-bottom:3px}
+.vr-card-verdict{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;margin-bottom:5px;line-height:1.2}
+.vc-clean .vr-card-verdict{color:var(--green3)}
+.vc-risk .vr-card-verdict{color:var(--red3)}
+.vc-warn .vr-card-verdict{color:var(--amber)}
+.vc-unknown .vr-card-verdict{color:var(--t3)}
+.vc-info .vr-card-verdict{color:var(--blue2)}
+.vr-card-detail{font-size:11px;color:var(--t3);line-height:1.55}
+.vr-card-badge{flex-shrink:0;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;align-self:flex-start;margin-top:2px}
+.vc-clean .vr-card-badge{background:var(--green2);color:var(--green3)}
+.vc-risk .vr-card-badge{background:var(--red2);color:var(--red3)}
+.vc-warn .vr-card-badge{background:rgba(245,158,11,.12);color:var(--amber)}
+.vc-unknown .vr-card-badge{background:rgba(100,116,139,.1);color:var(--t4)}
+.vc-info .vr-card-badge{background:var(--blue3);color:var(--blue2)}
+.vr-section-title{font-size:8.5px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--t4);padding:14px 0 8px;border-bottom:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.vr-action-box{background:linear-gradient(135deg,var(--blue3),rgba(59,123,246,.05));border:1px solid rgba(59,123,246,.2);border-radius:12px;padding:16px;margin-top:14px}
+.vr-action-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--t1);margin-bottom:6px}
+.vr-action-list{list-style:none;padding:0;margin:0}
+.vr-action-list li{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--t3);padding:4px 0;line-height:1.4}
+.vr-action-list li::before{content:'→';color:var(--blue);font-weight:800;flex-shrink:0;margin-top:1px}
+/* light mode */
+html[data-theme="light"] .vr-rh-reg{background:#1a2744;color:#fff}
+html[data-theme="light"] .vr-card{background:#fff;border-color:rgba(30,58,138,.1)}
+html[data-theme="light"] .vr-card-detail{color:#475569}
+html[data-theme="light"] .vr-action-box{background:rgba(59,123,246,.04);border-color:rgba(59,123,246,.15)}
+
 </style>
 </head>
 <body>
