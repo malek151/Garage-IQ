@@ -25,53 +25,84 @@ function fetchVehiclePhoto(make,model,year){
   if(!wrap||!make)return;
   var bc=getBrandColor(make)||'#3B7BF6';
   var logo=getBrandLogo(make);
-  var carLabel=[(make||'').toUpperCase(),(model||'').toUpperCase(),(year||'')].filter(Boolean).join(' ');
+  var mk=(make||'').trim();
+  var mo=(model||'').trim().split(' ')[0].toUpperCase();
+  var carLabel=esc([mk.toUpperCase(),mo,year||''].filter(Boolean).join(' '));
 
-  function showPlaceholder(){
-    wrap.innerHTML='<div style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'55 0%,'+bc+'15 55%,rgba(6,10,18,.85) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;position:relative">'
-      +'<div style="font-size:62px;filter:drop-shadow(0 0 30px '+bc+'cc);line-height:1">'+logo+'</div>'
-      +'<div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.22)">'+esc(carLabel)+'</div>'
-      +'<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 35% 55%,'+bc+'25 0%,transparent 65%)"></div>'
-      +'</div>';
-    wrap.classList.add('loaded');
+  /* Always show gradient placeholder first */
+  wrap.innerHTML='<div style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'55 0%,'+bc+'15 55%,rgba(6,10,18,.85) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;position:relative">'
+    +'<div style="font-size:62px;filter:drop-shadow(0 0 30px '+bc+'cc);line-height:1">'+logo+'</div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.22)">'+carLabel+'</div>'
+    +'<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 35% 55%,'+bc+'25 0%,transparent 65%)"></div>'
+    +'</div>';
+  wrap.classList.add('loaded');
+
+  /* Normalise model name for Wikipedia (BMW 218D → BMW 2 Series) */
+  function wikiModel(mk2,mo2){
+    var u=mk2.toUpperCase(),m=mo2.toUpperCase();
+    if(u==='BMW'&&/^\d{3}/.test(m)){var s=m.charAt(0);return mk2+' '+s+' Series';}
+    if(u==='MERCEDES-BENZ'||u==='MERCEDES'){
+      if(/^[A-Z]\d/.test(m))return'Mercedes-Benz '+m.charAt(0)+'-Class';
+      if(m.indexOf('GLC')===0)return'Mercedes-Benz GLC';
+      if(m.indexOf('GLE')===0)return'Mercedes-Benz GLE';
+      if(m.indexOf('GLA')===0)return'Mercedes-Benz GLA';
+    }
+    if(u==='VOLKSWAGEN'){
+      if(m==='GOLF'||m.indexOf('GOLF')===0)return'Volkswagen Golf';
+      if(m.indexOf('POLO')===0)return'Volkswagen Polo';
+      if(m.indexOf('PASSAT')===0)return'Volkswagen Passat';
+      if(m.indexOf('TIGUAN')===0)return'Volkswagen Tiguan';
+    }
+    if(u==='VAUXHALL'){
+      if(m.indexOf('ASTRA')===0)return'Vauxhall Astra';
+      if(m.indexOf('CORSA')===0)return'Vauxhall Corsa';
+      if(m.indexOf('INSIGNIA')===0)return'Vauxhall Insignia';
+    }
+    if(u==='LAND ROVER'){
+      if(m.indexOf('DISCOVERY')===0)return'Land Rover Discovery';
+      if(m.indexOf('DEFENDER')===0)return'Land Rover Defender';
+      if(m.indexOf('FREELANDER')===0)return'Land Rover Freelander';
+    }
+    return mk2+' '+mo2;
   }
 
-  showPlaceholder();
-
-  var mo=(model||'').split(' ')[0];
-  var queries=[
-    make.toLowerCase().replace(/\s+/g,'_')+'_'+mo.toLowerCase().replace(/\s+/g,'_'),
-    make.toLowerCase()+'_'+mo.toLowerCase(),
-    make.toLowerCase().replace(/\s+/g,'_')
-  ];
+  var q1=wikiModel(mk,mo);
+  var q2=mk+' '+mo.split(' ')[0];
+  var q3=mk;
+  var queries=[q1,q2,q3];
   var qi=0;
 
   function tryWiki(){
     if(qi>=queries.length)return;
-    var q=queries[qi++].replace(/_+$/,'');
-    var url='https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(q.replace(/_/g,' '))+'&prop=pageimages&format=json&pithumbsize=900&pilicense=any&origin=*';
-    fetch(url).then(function(r){return r.json();}).then(function(d){
-      var pages=d&&d.query&&d.query.pages?d.query.pages:{};
-      var p=Object.values(pages)[0];
-      if(p&&p.thumbnail&&p.thumbnail.source&&p.pageid&&p.pageid>0){
-        var src=p.thumbnail.source;
-        /* only swap in if bigger than a logo */
-        var probe=new Image();
-        probe.onload=function(){
-          if(probe.naturalWidth>=300&&probe.naturalHeight>=150){
-            var img=document.createElement('img');
-            img.src=src;img.style.cssText='width:100%;height:170px;object-fit:cover;object-position:center 30%;display:block;filter:brightness(.88)';
-            img.alt=esc(carLabel);
-            wrap.innerHTML='';wrap.appendChild(img);
-            var credit=document.createElement('div');
-            credit.style.cssText='position:absolute;bottom:5px;right:8px;font-size:7px;color:rgba(255,255,255,.25);font-weight:600';
-            credit.textContent='Wikipedia CC';wrap.appendChild(credit);
-          }else{tryWiki();}
-        };
-        probe.onerror=function(){tryWiki();};
-        probe.src=src;
-      }else{tryWiki();}
-    }).catch(function(){tryWiki();});
+    var q=queries[qi++];
+    fetch('https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(q)+'&prop=pageimages&format=json&pithumbsize=900&pilicense=any&origin=*')
+      .then(function(r){return r.json();})
+      .then(function(d){
+        var pages=d&&d.query&&d.query.pages?d.query.pages:{};
+        var p=Object.values(pages)[0];
+        if(p&&p.thumbnail&&p.thumbnail.source&&p.pageid>0){
+          var src=p.thumbnail.source;
+          var probe=new Image();
+          probe.onload=function(){
+            if(probe.naturalWidth>=280&&probe.naturalHeight>=130){
+              var img=document.createElement('img');
+              img.style.cssText='width:100%;height:170px;object-fit:cover;object-position:center 30%;display:block;filter:brightness(.88)';
+              img.alt=carLabel;
+              img.onload=function(){
+                var credit=document.createElement('div');
+                credit.style.cssText='position:absolute;bottom:5px;right:8px;font-size:7px;color:rgba(255,255,255,.3);font-weight:600;pointer-events:none';
+                credit.textContent='Wiki CC';
+                wrap.innerHTML='';wrap.style.position='relative';
+                wrap.appendChild(img);wrap.appendChild(credit);
+              };
+              img.onerror=function(){tryWiki();};
+              img.src=src;
+            }else{tryWiki();}
+          };
+          probe.onerror=function(){tryWiki();};
+          probe.src=src;
+        }else{tryWiki();}
+      }).catch(function(){tryWiki();});
   }
   tryWiki();
 }
@@ -507,7 +538,7 @@ function buildMotSummary(tests){
   }
 }
 function buildMotRows(tests){
-  el('motHistory').innerHTML=tests.slice(0,10).map(function(t){
+  el('motHistory').innerHTML=tests.map(function(t){
     var passed=(t.testResult||'').toUpperCase()==='PASSED',def=t.defects||[];
     var dang=def.filter(function(d){return d.type==='DANGEROUS';}),maj=def.filter(function(d){return d.type==='MAJOR';}),min=def.filter(function(d){return d.type==='MINOR';}),adv=def.filter(function(d){return d.type==='ADVISORY';});
     var ds=t.completedDate||'—';try{if(ds.indexOf('T')>=0)ds=new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){}
@@ -542,7 +573,7 @@ function buildMileageChart(tests){
 
 function buildMotTimeline(tests){
   var sorted=tests.slice().sort(function(a,b){return new Date(b.completedDate||0)-new Date(a.completedDate||0);});
-  el('motTimeline').innerHTML='<div class="mot-tl">'+sorted.slice(0,12).map(function(t,idx){
+  el('motTimeline').innerHTML='<div class="mot-tl">'+sorted.map(function(t,idx){
     var passed=(t.testResult||'').toUpperCase()==='PASSED',def=t.defects||[];
     var maj=def.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}),adv=def.filter(function(d){return d.type==='ADVISORY';});
     var ds=t.completedDate||'—';try{if(ds.indexOf('T')>=0)ds=new Date(ds).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}catch(e){}
