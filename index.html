@@ -851,6 +851,20 @@ html[data-theme="light"] .vr-card-detail{color:#475569}
 html[data-theme="light"] .vr-action-box{background:rgba(59,123,246,.04);border-color:rgba(59,123,246,.15)}
 
 .vr-ext-btn{display:inline-flex;align-items:center;gap:5px;margin-top:9px;background:rgba(59,123,246,.12);border:1px solid rgba(59,123,246,.25);border-radius:7px;padding:6px 12px;font-size:9.5px;font-weight:800;color:var(--blue2);text-decoration:none;letter-spacing:.8px;transition:background .15s}.vr-ext-btn:hover{background:rgba(59,123,246,.22)}
+
+.pw-price-tag{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--gold);margin:6px 0 10px}
+.pw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 16px;text-align:left}
+.pw-item{display:flex;align-items:flex-start;gap:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:9px 10px}
+.pw-item i{font-size:16px;flex-shrink:0;margin-top:2px}
+.pw-item strong{display:block;font-size:10.5px;font-weight:700;color:var(--t1);margin-bottom:1px}
+.pw-item span{font-size:9.5px;color:var(--t3);line-height:1.4;display:block}
+.pw-compare{font-size:10px;color:var(--t4);margin-bottom:16px;padding:8px 12px;background:rgba(245,166,35,.06);border-radius:6px;border:1px solid rgba(245,166,35,.15)}
+@media(max-width:480px){.pw-grid{grid-template-columns:1fr}}
+html[data-theme="light"] .pw-item{background:#fff;border-color:rgba(30,58,138,.1)}
+html[data-theme="light"] .pw-item strong{color:#0a1a40}
+html[data-theme="light"] .pw-item span{color:#475569}
+html[data-theme="light"] .pw-compare{background:rgba(245,166,35,.06);color:#64748B}
+
 </style>
 </head>
 <body>
@@ -1133,25 +1147,29 @@ html[data-theme="light"] .vr-action-box{background:rgba(59,123,246,.04);border-c
       <div class="intel-bar"></div>
       <div style="padding:1.1rem">
         <div class="card-head" style="margin-bottom:9px"><div class="card-title"><i class="ti ti-report-analytics"></i> Intelligence Report</div><div class="chip chip-b" id="intelBadge">£1.99 per report</div></div>
-        <div id="intelPaywall" class="paywall">
+                <div id="intelPaywall" class="paywall">
           <div class="pw-lock"><i class="ti ti-lock"></i></div>
-          <div class="pw-title">Intelligence Report</div>
-          <div class="pw-sub">One-time £1.99 per vehicle. Instant unlock. No subscription ever.</div>
-          <div class="pw-list">
-            <div class="pwi"><i class="ti ti-check"></i> Mileage fraud & rollback detection</div>
-            <div class="pwi"><i class="ti ti-check"></i> AI risk score & buyer verdict</div>
-            <div class="pwi"><i class="ti ti-check"></i> Damage zone map from MOT data</div>
-            <div class="pwi"><i class="ti ti-check"></i> Commercial use & fleet detection</div>
-            <div class="pwi"><i class="ti ti-check"></i> ABI insurance group (1–50)</div>
-            <div class="pwi"><i class="ti ti-check"></i> Stolen / clone / finance risk</div>
+          <div class="pw-title">Full Buyer Protection Report</div>
+          <div class="pw-price-tag">£1.99 <span style="font-size:12px;font-weight:500;opacity:.6">one-time · this reg only</span></div>
+          <div class="pw-sub">The complete picture before you hand over money. Everything the seller doesn't want you to know.</div>
+          <div class="pw-grid">
+            <div class="pw-item"><i class="ti ti-search" style="color:var(--red3)"></i><div><strong>Stolen Check</strong><span>Cross-referenced against UK police records via isitnicked.com</span></div></div>
+            <div class="pw-item"><i class="ti ti-coin" style="color:var(--amber)"></i><div><strong>Finance Outstanding</strong><span>HP &amp; PCP — if there's finance, the lender owns it not you</span></div></div>
+            <div class="pw-item"><i class="ti ti-file-x" style="color:var(--red3)"></i><div><strong>Write-Off Category</strong><span>Cat A, B, S or N — DVLA doesn't show this, we check it</span></div></div>
+            <div class="pw-item"><i class="ti ti-car-crash" style="color:var(--amber)"></i><div><strong>Crash Damage Analysis</strong><span>Structural failures, airbag history &amp; body repair indicators from every MOT</span></div></div>
+            <div class="pw-item"><i class="ti ti-shield-search" style="color:var(--blue2)"></i><div><strong>DVLA Live Flags</strong><span>Export markers, V5C issue date, plate year mismatch check</span></div></div>
+            <div class="pw-item"><i class="ti ti-trending-up" style="color:var(--green3)"></i><div><strong>Mechanical Red Flags</strong><span>Recurring failures, deferred maintenance, brake &amp; emissions history</span></div></div>
+            <div class="pw-item"><i class="ti ti-gauge" style="color:var(--blue2)"></i><div><strong>AI Risk Score 0–100</strong><span>Computed from all available DVLA, DVSA &amp; check data combined</span></div></div>
+            <div class="pw-item"><i class="ti ti-list-check" style="color:var(--green3)"></i><div><strong>Pre-Purchase Checklist</strong><span>Dynamic action list based on what we found — personalised to this car</span></div></div>
           </div>
+          <div class="pw-compare">HPI costs <strong>£16.99</strong> · CarVertical costs <strong>€19.99</strong> · We charge <strong style="color:var(--gold)">£1.99</strong></div>
           <div id="pwLoggedOut">
-            <button class="pay-btn" id="btnPwSignup" style="margin-bottom:8px"><i class="ti ti-lock-open"></i> Log In to Unlock £1.99</button>
-            <div style="font-size:10.5px;color:var(--t4)">No account? <span class="login-lnk" id="btnPwLogin">Create one free</span></div>
+            <button class="pay-btn" id="btnPwSignup" style="margin-bottom:8px"><i class="ti ti-lock-open"></i> Log In to Unlock — £1.99</button>
+            <div style="font-size:10.5px;color:var(--t4)">No account? <span class="login-lnk" id="btnPwLogin">Create one free in 10 seconds</span></div>
           </div>
           <div id="pwLoggedIn" style="display:none">
-            <button class="pay-btn" id="btnPay"><i class="ti ti-lock-open"></i> Unlock for £1.99</button>
-            <div class="pay-note">Secure · Stripe · Instant · One reg per payment</div>
+            <button class="pay-btn" id="btnPay"><i class="ti ti-lock-open"></i> Unlock Full Report — £1.99</button>
+            <div class="pay-note">Stripe · 256-bit encrypted · Instant unlock · One-time per reg</div>
           </div>
         </div>
         <div id="intelContent" style="display:none">
