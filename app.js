@@ -28,62 +28,61 @@ function fetchVehiclePhoto(make,model,year){
   var mk=(make||'').trim();
   var mo=(model||'').trim().split(' ')[0].toUpperCase();
   var label=esc([mk.toUpperCase(),mo,(year||'')].filter(Boolean).join(' '));
-
   wrap.style.position='relative';
-  wrap.innerHTML=
-    '<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'60 0%,'+bc+'20 50%,rgba(6,10,18,.9) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;position:relative;overflow:hidden">'
-    +'<div style="font-size:64px;filter:drop-shadow(0 0 28px '+bc+'dd);line-height:1">'+logo+'</div>'
-    +'<div style="font-family:Syne,sans-serif;font-size:9.5px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.25)">'+label+'</div>'
-    +'<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,'+bc+'30 0%,transparent 70%)"></div>'
+  wrap.innerHTML='<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'55 0%,'+bc+'18 55%,rgba(6,10,18,.9) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;overflow:hidden">'
+    +'<div style="font-size:64px;filter:drop-shadow(0 0 28px '+bc+'cc);line-height:1">'+logo+'</div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.2)">'+label+'</div>'
     +'</div>'
-    +'<img id="vehPhotoReal" style="display:none;width:100%;height:170px;object-fit:cover;object-position:center 25%;filter:brightness(.88)" alt="'+label+'">';
+    +'<img id="vehPhotoReal" style="display:none;width:100%;height:170px;object-fit:cover;object-position:center 25%;filter:brightness(.85)" alt="'+label+'">';
   wrap.classList.add('loaded');
 
-  /* Model-specific Wikipedia query — NO fallback to bare make (avoids logos) */
-  var u=mk.toUpperCase();
-  var wq=null;
-  if(u==='BMW'&&/^\d{3}/.test(mo)){wq='BMW '+mo.charAt(0)+' Series';}
-  else if(u==='MINI')wq='Mini (marque)';
+  /* model→Wikipedia title map */
+  var u=mk.toUpperCase(), wq=null;
+  if(u==='BMW'&&/^\d{3}/.test(mo))wq='BMW '+mo.charAt(0)+' Series';
+  else if(u==='MINI')wq='Mini Hatch';
   else if((u==='MERCEDES-BENZ'||u==='MERCEDES')&&/^[A-Z]\d/.test(mo))wq='Mercedes-Benz '+mo.charAt(0)+'-Class';
   else if((u==='MERCEDES-BENZ'||u==='MERCEDES')&&/^GL[A-Z]/.test(mo))wq='Mercedes-Benz '+mo.slice(0,3);
-  else if(u==='VOLKSWAGEN'){if(/GOLF/.test(mo))wq='Volkswagen Golf';else if(/POLO/.test(mo))wq='Volkswagen Polo';else if(/PASSAT/.test(mo))wq='Volkswagen Passat';else if(/TIGUAN/.test(mo))wq='Volkswagen Tiguan';else if(/CADDY/.test(mo))wq='Volkswagen Caddy';else if(/TOUAREG/.test(mo))wq='Volkswagen Touareg';else wq='Volkswagen '+mo.split(' ')[0];}
-  else if(u==='VAUXHALL'){if(/ASTRA/.test(mo))wq='Vauxhall Astra';else if(/CORSA/.test(mo))wq='Vauxhall Corsa';else if(/INSIGNIA/.test(mo))wq='Vauxhall Insignia';else if(/MOKKA/.test(mo))wq='Vauxhall Mokka';else wq='Vauxhall '+mo.split(' ')[0];}
-  else if(u==='FORD'){if(/FOCUS/.test(mo))wq='Ford Focus';else if(/FIESTA/.test(mo))wq='Ford Fiesta';else if(/KUGA/.test(mo))wq='Ford Kuga';else if(/PUMA/.test(mo))wq='Ford Puma';else if(/MUSTANG/.test(mo))wq='Ford Mustang';else if(/RANGER/.test(mo))wq='Ford Ranger';else if(/TRANSIT/.test(mo))wq='Ford Transit';else wq='Ford '+mo.split(' ')[0];}
-  else if(u==='TOYOTA'){if(/YARIS/.test(mo))wq='Toyota Yaris';else if(/COROLLA/.test(mo))wq='Toyota Corolla';else if(/RAV/.test(mo))wq='Toyota RAV4';else if(/CAMRY/.test(mo))wq='Toyota Camry';else if(/PRIUS/.test(mo))wq='Toyota Prius';else wq='Toyota '+mo.split(' ')[0];}
-  else if(u==='HONDA'){if(/CIVIC/.test(mo))wq='Honda Civic';else if(/CR.V/.test(mo))wq='Honda CR-V';else if(/JAZZ/.test(mo))wq='Honda Jazz';else wq='Honda '+mo.split(' ')[0];}
-  else if(u==='AUDI'){if(/^A\d/.test(mo))wq='Audi '+mo.slice(0,2);else if(/^Q\d/.test(mo))wq='Audi '+mo.slice(0,2);else if(/^TT/.test(mo))wq='Audi TT';else if(/^R8/.test(mo))wq='Audi R8';else wq='Audi '+mo.split(' ')[0];}
-  else if(u==='LAND ROVER'){if(/DISCOV/.test(mo))wq='Land Rover Discovery';else if(/DEFEND/.test(mo))wq='Land Rover Defender';else if(/FREELA/.test(mo))wq='Land Rover Freelander';else wq='Land Rover '+mo.split(' ')[0];}
+  else if(u==='VOLKSWAGEN'){if(/GOLF/.test(mo))wq='Volkswagen Golf';else if(/POLO/.test(mo))wq='Volkswagen Polo';else if(/PASSAT/.test(mo))wq='Volkswagen Passat';else if(/TIGUAN/.test(mo))wq='Volkswagen Tiguan';else if(/TOUAREG/.test(mo))wq='Volkswagen Touareg';}
+  else if(u==='VAUXHALL'){if(/ASTRA/.test(mo))wq='Vauxhall Astra';else if(/CORSA/.test(mo))wq='Vauxhall Corsa';else if(/INSIGNIA/.test(mo))wq='Vauxhall Insignia';else if(/MOKKA/.test(mo))wq='Vauxhall Mokka';}
+  else if(u==='FORD'){if(/FOCUS/.test(mo))wq='Ford Focus';else if(/FIESTA/.test(mo))wq='Ford Fiesta';else if(/KUGA/.test(mo))wq='Ford Kuga';else if(/MUSTANG/.test(mo))wq='Ford Mustang';else if(/TRANSIT/.test(mo))wq='Ford Transit';else if(/RANGER/.test(mo))wq='Ford Ranger';else if(/PUMA/.test(mo))wq='Ford Puma';}
+  else if(u==='TOYOTA'){if(/YARIS/.test(mo))wq='Toyota Yaris';else if(/COROLLA/.test(mo))wq='Toyota Corolla';else if(/RAV/.test(mo))wq='Toyota RAV4';else if(/PRIUS/.test(mo))wq='Toyota Prius';else if(/CAMRY/.test(mo))wq='Toyota Camry';}
+  else if(u==='HONDA'){if(/CIVIC/.test(mo))wq='Honda Civic';else if(/CR.V/.test(mo))wq='Honda CR-V';else if(/JAZZ/.test(mo))wq='Honda Jazz';}
+  else if(u==='AUDI'){if(/^A\d/.test(mo))wq='Audi '+mo.slice(0,2);else if(/^Q\d/.test(mo))wq='Audi '+mo.slice(0,2);else if(/^TT/.test(mo))wq='Audi TT';else if(/^R8/.test(mo))wq='Audi R8';}
+  else if(u==='LAND ROVER'){if(/DISCOV/.test(mo))wq='Land Rover Discovery';else if(/DEFEND/.test(mo))wq='Land Rover Defender';else if(/FREELA/.test(mo))wq='Land Rover Freelander';}
   else if(u==='RANGE ROVER'){if(/SPORT/.test(mo))wq='Range Rover Sport';else if(/EVOQUE/.test(mo))wq='Range Rover Evoque';else if(/VELAR/.test(mo))wq='Range Rover Velar';else wq='Range Rover';}
-  else if(u==='TESLA'){if(/MODEL S/.test(mo)||mo==='S')wq='Tesla Model S';else if(/MODEL 3/.test(mo)||mo==='3')wq='Tesla Model 3';else if(/MODEL X/.test(mo)||mo==='X')wq='Tesla Model X';else if(/MODEL Y/.test(mo)||mo==='Y')wq='Tesla Model Y';else wq='Tesla Model 3';}
-  else if(u==='NISSAN'){if(/QASHQAI/.test(mo))wq='Nissan Qashqai';else if(/JUKE/.test(mo))wq='Nissan Juke';else if(/LEAF/.test(mo))wq='Nissan Leaf';else wq='Nissan '+mo.split(' ')[0];}
-  else if(u==='KIA'){if(/SPORTAGE/.test(mo))wq='Kia Sportage';else if(/CEED/.test(mo))wq='Kia Ceed';else wq='Kia '+mo.split(' ')[0];}
-  else if(u==='HYUNDAI'){if(/TUCSON/.test(mo))wq='Hyundai Tucson';else if(/I30/.test(mo))wq='Hyundai i30';else wq='Hyundai '+mo.split(' ')[0];}
-  else if(u==='PORSCHE'){if(/911/.test(mo))wq='Porsche 911';else if(/CAYENNE/.test(mo))wq='Porsche Cayenne';else if(/MACAN/.test(mo))wq='Porsche Macan';else if(/PANAMERA/.test(mo))wq='Porsche Panamera';else wq='Porsche '+mo.split(' ')[0];}
-  else if(u==='JAGUAR'){if(/F.PACE/.test(mo))wq='Jaguar F-Pace';else if(/XE/.test(mo))wq='Jaguar XE';else if(/XF/.test(mo))wq='Jaguar XF';else if(/F.TYPE/.test(mo))wq='Jaguar F-Type';else wq='Jaguar '+mo.split(' ')[0];}
-  else if(u==='VOLVO'){if(/XC60/.test(mo))wq='Volvo XC60';else if(/XC90/.test(mo))wq='Volvo XC90';else if(/XC40/.test(mo))wq='Volvo XC40';else if(/V60/.test(mo))wq='Volvo V60';else wq='Volvo '+mo.split(' ')[0];}
-  else if(u==='PEUGEOT'){if(/208/.test(mo))wq='Peugeot 208';else if(/308/.test(mo))wq='Peugeot 308';else if(/3008/.test(mo))wq='Peugeot 3008';else wq='Peugeot '+mo.split(' ')[0];}
-  else if(u==='RENAULT'){if(/CLIO/.test(mo))wq='Renault Clio';else if(/MEGANE/.test(mo))wq='Renault Mégane';else if(/CAPTUR/.test(mo))wq='Renault Captur';else wq='Renault '+mo.split(' ')[0];}
-  else if(mo&&mo.length>1){wq=mk+' '+mo.split(' ')[0];}
-  /* if no specific match found, stay on gradient — no bare make fallback */
-  if(!wq)return;
+  else if(u==='TESLA'){if(mo==='3'||/MODEL.?3/.test(mo))wq='Tesla Model 3';else if(mo==='S'||/MODEL.?S/.test(mo))wq='Tesla Model S';else if(mo==='Y'||/MODEL.?Y/.test(mo))wq='Tesla Model Y';else if(mo==='X'||/MODEL.?X/.test(mo))wq='Tesla Model X';}
+  else if(u==='NISSAN'){if(/QASHQAI/.test(mo))wq='Nissan Qashqai';else if(/JUKE/.test(mo))wq='Nissan Juke';else if(/LEAF/.test(mo))wq='Nissan Leaf';else if(/MICRA/.test(mo))wq='Nissan Micra';}
+  else if(u==='KIA'){if(/SPORTAGE/.test(mo))wq='Kia Sportage';else if(/CEED/.test(mo))wq='Kia Ceed';else if(/STINGER/.test(mo))wq='Kia Stinger';}
+  else if(u==='HYUNDAI'){if(/TUCSON/.test(mo))wq='Hyundai Tucson';else if(/I30/.test(mo)||/i30/.test(mo))wq='Hyundai i30';else if(/IONIQ/.test(mo))wq='Hyundai Ioniq';}
+  else if(u==='PORSCHE'){if(/911/.test(mo))wq='Porsche 911';else if(/CAYENNE/.test(mo))wq='Porsche Cayenne';else if(/MACAN/.test(mo))wq='Porsche Macan';else if(/PANAMERA/.test(mo))wq='Porsche Panamera';}
+  else if(u==='JAGUAR'){if(/F.PACE/.test(mo))wq='Jaguar F-Pace';else if(/XE/.test(mo))wq='Jaguar XE';else if(/XF/.test(mo))wq='Jaguar XF';else if(/F.TYPE/.test(mo))wq='Jaguar F-Type';}
+  else if(u==='VOLVO'){if(/XC60/.test(mo))wq='Volvo XC60';else if(/XC90/.test(mo))wq='Volvo XC90';else if(/XC40/.test(mo))wq='Volvo XC40';else if(/V60/.test(mo))wq='Volvo V60';else if(/V90/.test(mo))wq='Volvo V90';}
+  else if(u==='PEUGEOT'){if(/208/.test(mo))wq='Peugeot 208';else if(/308/.test(mo))wq='Peugeot 308';else if(/3008/.test(mo))wq='Peugeot 3008';else if(/2008/.test(mo))wq='Peugeot 2008';}
+  else if(u==='RENAULT'){if(/CLIO/.test(mo))wq='Renault Clio';else if(/MEGANE/.test(mo))wq='Renault Mégane';else if(/CAPTUR/.test(mo))wq='Renault Captur';else if(/KADJAR/.test(mo))wq='Renault Kadjar';}
+  else if(u==='SKODA'){if(/OCTAVIA/.test(mo))wq='Škoda Octavia';else if(/FABIA/.test(mo))wq='Škoda Fabia';else if(/KODIAQ/.test(mo))wq='Škoda Kodiaq';else if(/SUPERB/.test(mo))wq='Škoda Superb';}
+  else if(u==='SEAT'){if(/IBIZA/.test(mo))wq='SEAT Ibiza';else if(/LEON/.test(mo))wq='SEAT León';else if(/ATECA/.test(mo))wq='SEAT Ateca';}
+  else if(u==='MAZDA'){if(/CX/.test(mo))wq='Mazda CX-5';else if(/MX/.test(mo))wq='Mazda MX-5';else wq='Mazda '+mo.split(' ')[0];}
+  else if(mo&&mo.length>1&&mo!==mk.toUpperCase())wq=mk+' '+mo.split(' ')[0];
+  
+  if(!wq)return; /* no match — keep gradient, no bare-make fallback */
 
   fetch('https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(wq)+'&prop=pageimages&format=json&pithumbsize=900&origin=*')
     .then(function(r){return r.json();})
     .then(function(d){
       var pages=d&&d.query&&d.query.pages?d.query.pages:{};
       var p=Object.values(pages)[0];
-      if(p&&p.thumbnail&&p.thumbnail.source&&p.pageid&&p.pageid>0){
-        var real=el('vehPhotoReal');
-        if(!real)return;
-        real.onload=function(){
-          if(real.naturalWidth>=120){
-            var bg=wrap.querySelector('.veh-photo-bg');
-            if(bg)bg.style.display='none';
-            real.style.display='block';
-          }
-        };
-        real.src=p.thumbnail.source;
-      }
+      if(!p||!p.thumbnail||!p.pageid||p.pageid<=0)return;
+      var real=el('vehPhotoReal');
+      if(!real)return;
+      real.onload=function(){
+        /* MUST be landscape — filters out circular logos and square images */
+        if(real.naturalWidth>=200&&real.naturalWidth>real.naturalHeight*1.2){
+          var bg=wrap.querySelector('.veh-photo-bg');
+          if(bg)bg.style.display='none';
+          real.style.display='block';
+        }
+      };
+      real.src=p.thumbnail.source;
     }).catch(function(){});
 }
 
@@ -901,12 +900,20 @@ function buildIntelReport(tests){
   fetch(VERCEL+'/api/carcheck',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reg:reg})})
     .then(function(r){return r.json();})
     .then(function(d){
-      function upd(id,badgeId,descId,ok,warn,title,okDesc,warnDesc,badDesc){
-        var card=el(id);if(!card)return;
-        var b=el(badgeId),desc=el(descId);
-        if(ok===true){if(b)b.innerHTML='<div class="cv-badge cv-ok"><i class="ti ti-circle-check"></i>No issues found</div>';if(desc)desc.textContent=okDesc;}
-        else if(ok===false){if(b)b.innerHTML='<div class="cv-badge cv-bad"><i class="ti ti-alert-triangle"></i>'+title+'</div>';if(desc)desc.textContent=badDesc;}
-        else{if(b)b.innerHTML='<div class="cv-badge cv-info"><i class="ti ti-info-circle"></i>Verify manually</div>';if(desc)desc.textContent=warnDesc;}
+      function upd(id,badgeId,descId,isOk,isBad,title,okDesc,unknownDesc,badDesc){
+        var crd=el(id);if(!crd)return;
+        var b=crd.querySelector('[id$="-badge"]')||document.getElementById(badgeId);
+        var desc=crd.querySelector('[id$="-d"]')||document.getElementById(descId);
+        if(isOk){
+          if(b)b.innerHTML='<div class="cv-badge cv-ok"><i class="ti ti-circle-check"></i>No issues found</div>';
+          if(desc)desc.textContent=okDesc;
+        }else if(isBad){
+          if(b)b.innerHTML='<div class="cv-badge cv-bad"><i class="ti ti-alert-triangle"></i>'+title+'</div>';
+          if(desc)desc.textContent=badDesc;
+        }else{
+          if(b)b.innerHTML='<div class="cv-badge cv-info"><i class="ti ti-info-circle"></i>Verify manually — free check</div>';
+          if(desc)desc.textContent=unknownDesc;
+        }
       }
       upd('cc-stolen','cc-stolen-badge','cc-stolen-d',
         d.stolen===false,d.stolen===true,'Theft recorded',
