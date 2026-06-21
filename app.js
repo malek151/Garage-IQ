@@ -27,13 +27,11 @@ function fetchVehiclePhoto(make,model,year){
   var logo=getBrandLogo(make);
   var mk=(make||'').trim();
   var mo=(model||'').trim().split(' ')[0].toUpperCase();
-  var yr=(year||'');
-  var label=esc([mk.toUpperCase(),mo,yr].filter(Boolean).join(' '));
+  var label=esc([mk.toUpperCase(),mo,(year||'')].filter(Boolean).join(' '));
 
-  /* 1. show branded gradient immediately */
   wrap.style.position='relative';
-  wrap.innerHTML=''
-    +'<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'60 0%,'+bc+'20 50%,rgba(6,10,18,.9) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;position:relative;overflow:hidden">'
+  wrap.innerHTML=
+    '<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'60 0%,'+bc+'20 50%,rgba(6,10,18,.9) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;position:relative;overflow:hidden">'
     +'<div style="font-size:64px;filter:drop-shadow(0 0 28px '+bc+'dd);line-height:1">'+logo+'</div>'
     +'<div style="font-family:Syne,sans-serif;font-size:9.5px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.25)">'+label+'</div>'
     +'<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 60%,'+bc+'30 0%,transparent 70%)"></div>'
@@ -41,47 +39,52 @@ function fetchVehiclePhoto(make,model,year){
     +'<img id="vehPhotoReal" style="display:none;width:100%;height:170px;object-fit:cover;object-position:center 25%;filter:brightness(.88)" alt="'+label+'">';
   wrap.classList.add('loaded');
 
-  /* 2. build Wikipedia queries with model normalisation */
+  /* Model-specific Wikipedia query — NO fallback to bare make (avoids logos) */
   var u=mk.toUpperCase();
-  var wq=mk+' '+mo;
-  if(u==='BMW'&&/^\d{3}/.test(mo))wq=mk+' '+mo.charAt(0)+' Series';
+  var wq=null;
+  if(u==='BMW'&&/^\d{3}/.test(mo)){wq='BMW '+mo.charAt(0)+' Series';}
+  else if(u==='MINI')wq='Mini (marque)';
   else if((u==='MERCEDES-BENZ'||u==='MERCEDES')&&/^[A-Z]\d/.test(mo))wq='Mercedes-Benz '+mo.charAt(0)+'-Class';
-  else if(u==='VOLKSWAGEN'){if(/GOLF/.test(mo))wq='Volkswagen Golf';else if(/POLO/.test(mo))wq='Volkswagen Polo';else if(/PASSAT/.test(mo))wq='Volkswagen Passat';else if(/TIGUAN/.test(mo))wq='Volkswagen Tiguan';}
-  else if(u==='VAUXHALL'){if(/ASTRA/.test(mo))wq='Vauxhall Astra';else if(/CORSA/.test(mo))wq='Vauxhall Corsa';}
-  else if(u==='LAND ROVER'){if(/DISCOV/.test(mo))wq='Land Rover Discovery';else if(/DEFEND/.test(mo))wq='Land Rover Defender';}
-  else if(u==='FORD'){if(/FOCUS/.test(mo))wq='Ford Focus';else if(/FIESTA/.test(mo))wq='Ford Fiesta';else if(/KUGA/.test(mo))wq='Ford Kuga';else if(/PUMA/.test(mo))wq='Ford Puma';}
-  else if(u==='TOYOTA'){if(/YARIS/.test(mo))wq='Toyota Yaris';else if(/COROLLA/.test(mo))wq='Toyota Corolla';else if(/RAV/.test(mo))wq='Toyota RAV4';}
-  else if(u==='AUDI'){if(/^A\d/.test(mo)||/^Q\d/.test(mo))wq='Audi '+mo.slice(0,2);}
+  else if((u==='MERCEDES-BENZ'||u==='MERCEDES')&&/^GL[A-Z]/.test(mo))wq='Mercedes-Benz '+mo.slice(0,3);
+  else if(u==='VOLKSWAGEN'){if(/GOLF/.test(mo))wq='Volkswagen Golf';else if(/POLO/.test(mo))wq='Volkswagen Polo';else if(/PASSAT/.test(mo))wq='Volkswagen Passat';else if(/TIGUAN/.test(mo))wq='Volkswagen Tiguan';else if(/CADDY/.test(mo))wq='Volkswagen Caddy';else if(/TOUAREG/.test(mo))wq='Volkswagen Touareg';else wq='Volkswagen '+mo.split(' ')[0];}
+  else if(u==='VAUXHALL'){if(/ASTRA/.test(mo))wq='Vauxhall Astra';else if(/CORSA/.test(mo))wq='Vauxhall Corsa';else if(/INSIGNIA/.test(mo))wq='Vauxhall Insignia';else if(/MOKKA/.test(mo))wq='Vauxhall Mokka';else wq='Vauxhall '+mo.split(' ')[0];}
+  else if(u==='FORD'){if(/FOCUS/.test(mo))wq='Ford Focus';else if(/FIESTA/.test(mo))wq='Ford Fiesta';else if(/KUGA/.test(mo))wq='Ford Kuga';else if(/PUMA/.test(mo))wq='Ford Puma';else if(/MUSTANG/.test(mo))wq='Ford Mustang';else if(/RANGER/.test(mo))wq='Ford Ranger';else if(/TRANSIT/.test(mo))wq='Ford Transit';else wq='Ford '+mo.split(' ')[0];}
+  else if(u==='TOYOTA'){if(/YARIS/.test(mo))wq='Toyota Yaris';else if(/COROLLA/.test(mo))wq='Toyota Corolla';else if(/RAV/.test(mo))wq='Toyota RAV4';else if(/CAMRY/.test(mo))wq='Toyota Camry';else if(/PRIUS/.test(mo))wq='Toyota Prius';else wq='Toyota '+mo.split(' ')[0];}
+  else if(u==='HONDA'){if(/CIVIC/.test(mo))wq='Honda Civic';else if(/CR.V/.test(mo))wq='Honda CR-V';else if(/JAZZ/.test(mo))wq='Honda Jazz';else wq='Honda '+mo.split(' ')[0];}
+  else if(u==='AUDI'){if(/^A\d/.test(mo))wq='Audi '+mo.slice(0,2);else if(/^Q\d/.test(mo))wq='Audi '+mo.slice(0,2);else if(/^TT/.test(mo))wq='Audi TT';else if(/^R8/.test(mo))wq='Audi R8';else wq='Audi '+mo.split(' ')[0];}
+  else if(u==='LAND ROVER'){if(/DISCOV/.test(mo))wq='Land Rover Discovery';else if(/DEFEND/.test(mo))wq='Land Rover Defender';else if(/FREELA/.test(mo))wq='Land Rover Freelander';else wq='Land Rover '+mo.split(' ')[0];}
+  else if(u==='RANGE ROVER'){if(/SPORT/.test(mo))wq='Range Rover Sport';else if(/EVOQUE/.test(mo))wq='Range Rover Evoque';else if(/VELAR/.test(mo))wq='Range Rover Velar';else wq='Range Rover';}
+  else if(u==='TESLA'){if(/MODEL S/.test(mo)||mo==='S')wq='Tesla Model S';else if(/MODEL 3/.test(mo)||mo==='3')wq='Tesla Model 3';else if(/MODEL X/.test(mo)||mo==='X')wq='Tesla Model X';else if(/MODEL Y/.test(mo)||mo==='Y')wq='Tesla Model Y';else wq='Tesla Model 3';}
+  else if(u==='NISSAN'){if(/QASHQAI/.test(mo))wq='Nissan Qashqai';else if(/JUKE/.test(mo))wq='Nissan Juke';else if(/LEAF/.test(mo))wq='Nissan Leaf';else wq='Nissan '+mo.split(' ')[0];}
+  else if(u==='KIA'){if(/SPORTAGE/.test(mo))wq='Kia Sportage';else if(/CEED/.test(mo))wq='Kia Ceed';else wq='Kia '+mo.split(' ')[0];}
+  else if(u==='HYUNDAI'){if(/TUCSON/.test(mo))wq='Hyundai Tucson';else if(/I30/.test(mo))wq='Hyundai i30';else wq='Hyundai '+mo.split(' ')[0];}
+  else if(u==='PORSCHE'){if(/911/.test(mo))wq='Porsche 911';else if(/CAYENNE/.test(mo))wq='Porsche Cayenne';else if(/MACAN/.test(mo))wq='Porsche Macan';else if(/PANAMERA/.test(mo))wq='Porsche Panamera';else wq='Porsche '+mo.split(' ')[0];}
+  else if(u==='JAGUAR'){if(/F.PACE/.test(mo))wq='Jaguar F-Pace';else if(/XE/.test(mo))wq='Jaguar XE';else if(/XF/.test(mo))wq='Jaguar XF';else if(/F.TYPE/.test(mo))wq='Jaguar F-Type';else wq='Jaguar '+mo.split(' ')[0];}
+  else if(u==='VOLVO'){if(/XC60/.test(mo))wq='Volvo XC60';else if(/XC90/.test(mo))wq='Volvo XC90';else if(/XC40/.test(mo))wq='Volvo XC40';else if(/V60/.test(mo))wq='Volvo V60';else wq='Volvo '+mo.split(' ')[0];}
+  else if(u==='PEUGEOT'){if(/208/.test(mo))wq='Peugeot 208';else if(/308/.test(mo))wq='Peugeot 308';else if(/3008/.test(mo))wq='Peugeot 3008';else wq='Peugeot '+mo.split(' ')[0];}
+  else if(u==='RENAULT'){if(/CLIO/.test(mo))wq='Renault Clio';else if(/MEGANE/.test(mo))wq='Renault Mégane';else if(/CAPTUR/.test(mo))wq='Renault Captur';else wq='Renault '+mo.split(' ')[0];}
+  else if(mo&&mo.length>1){wq=mk+' '+mo.split(' ')[0];}
+  /* if no specific match found, stay on gradient — no bare make fallback */
+  if(!wq)return;
 
-  var queries=[wq,mk+' '+mo.split(' ')[0],mk];
-  var qi=0;
-
-  function tryWiki(){
-    if(qi>=queries.length)return;
-    var q=queries[qi++];
-    if(!q||!q.trim())return tryWiki();
-    fetch('https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(q.trim())+'&prop=pageimages&format=json&pithumbsize=900&origin=*')
-      .then(function(r){return r.json();})
-      .then(function(d){
-        var pages=d&&d.query&&d.query.pages?d.query.pages:{};
-        var p=Object.values(pages)[0];
-        if(p&&p.thumbnail&&p.thumbnail.source&&p.pageid&&p.pageid>0){
-          var real=el('vehPhotoReal');
-          if(!real)return;
-          real.onload=function(){
-            if(real.naturalWidth>=200){
-              /* swap: hide gradient, show real photo */
-              var bg=wrap.querySelector('.veh-photo-bg');
-              if(bg)bg.style.display='none';
-              real.style.display='block';
-            }else{tryWiki();}
-          };
-          real.onerror=function(){tryWiki();};
-          real.src=p.thumbnail.source;
-        }else{tryWiki();}
-      }).catch(function(){tryWiki();});
-  }
-  tryWiki();
+  fetch('https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(wq)+'&prop=pageimages&format=json&pithumbsize=900&origin=*')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var pages=d&&d.query&&d.query.pages?d.query.pages:{};
+      var p=Object.values(pages)[0];
+      if(p&&p.thumbnail&&p.thumbnail.source&&p.pageid&&p.pageid>0){
+        var real=el('vehPhotoReal');
+        if(!real)return;
+        real.onload=function(){
+          if(real.naturalWidth>=120){
+            var bg=wrap.querySelector('.veh-photo-bg');
+            if(bg)bg.style.display='none';
+            real.style.display='block';
+          }
+        };
+        real.src=p.thumbnail.source;
+      }
+    }).catch(function(){});
 }
 
 
@@ -662,297 +665,270 @@ function buildOwnership(){
 }
 
 function buildIntelReport(tests){
-  /* build defect list */
   var allDef=[];
-  tests.forEach(function(t){
-    (t.defects||[]).forEach(function(d){
-      if(d)allDef.push({txt:(d.text||'').toLowerCase(),text:d.text||'',type:d.type||'',date:t.completedDate||''});
-    });
-  });
+  tests.forEach(function(t){(t.defects||[]).forEach(function(d){if(d)allDef.push({txt:(d.text||'').toLowerCase(),text:d.text||'',type:d.type||'',date:t.completedDate||'',mi:parseInt(t.odometerValue)||0});});});
 
-  /* expanded keyword matcher */
   var hit=function(kws){return allDef.filter(function(d){return kws.some(function(k){return d.txt.indexOf(k)>=0;});});};
   var majHit=function(kws){return hit(kws).filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';});};
 
-  /* ── STRUCTURAL DAMAGE — broad ── */
-  var structItems=majHit(['chassis','subframe','structural','floor pan','crossmember','sill section',
-    'body structure','repair plate','welded section','welded repair','previous repair',
-    'inadequate repair','repair method','non-standard','filler','underseal covering',
-    'bent','deformed','distorted','crushed','buckled','misaligned']);
-
-  /* ── AIRBAG / SRS — catch ALL warning light language ── */
-  var airbagItems=hit(['airbag','air bag','srs','restraint system','pretensioner','deployed',
-    'warning light illuminated','warning light on','dashboard warning','mil illuminated',
-    'malfunction indicator','supplemental restraint']);
-
-  /* ── BODY DAMAGE — catch actual damage language ── */
-  var bodyItems=hit(['damaged','sharp edge','sharp projection','bodywork','panel gap',
-    'closure not','door not','bonnet not','boot not','inadequate repair',
-    'filler','paint over','overspray','ripple','dent','crease']);
-  /* filter out tyre/lamp damage which are normal */
-  bodyItems=bodyItems.filter(function(d){
-    return !/(tyre|lamp|light|lens|glass|windscreen|wiper|mirror)\s*(damaged|cracked)/i.test(d.text);
-  });
-
-  /* ── CORROSION ── */
+  var structItems=majHit(['chassis','subframe','structural','floor','crossmember','sill section','repair plate','body structure','welded section','inadequate repair','bent','deformed','distorted','buckled']);
+  var airbagItems=hit(['airbag','air bag','srs','restraint','pretensioner','deployed','warning light illuminated','warning light on','dashboard warning','mil illuminated','malfunction indicator']);
+  var bodyItems=hit(['damaged','inadequate repair','filler','panel','closure not','bonnet not','door not','boot not','ripple','dent','crease','overspray']).filter(function(d){return!/(tyre|lamp|light|lens|glass|windscreen|wiper)\s*(damaged|cracked)/i.test(d.text);});
   var corrItems=hit(['rust','corrosi','perforate','structurally weak','arch corrosi','sill corrosi','floor corrosi']);
-  var corrMajor=majHit(['rust','corrosi','perforate','structurally weak','arch corrosi','sill corrosi','floor corrosi']).length;
-
-  /* ── MECHANICAL ── */
+  var corrMajor=majHit(['rust','corrosi','perforate','structurally weak']).length;
   var brakeFails=majHit(['brake','calliper','disc','drum','pad','servo','master cyl']).length;
   var steerFails=majHit(['steering','rack','column','track rod','power steer']).length;
   var emissFails=majHit(['emission','exhaust','catalyst','smoke','lambda','dpf','particulate']).length;
-  var suspenFails=majHit(['suspension','spring','shock','absorber','damper','wishbone','ball joint','strut']).length;
+  var suspenFails=majHit(['suspension','spring','shock','absorber','damper','wishbone','ball joint']).length;
 
-  /* ── RECURRING ── */
   var fmap={};
-  allDef.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';})
-        .forEach(function(d){var k=(d.text||'').toLowerCase().slice(0,35);fmap[k]=(fmap[k]||0)+1;});
+  allDef.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).forEach(function(d){var k=(d.text||'').toLowerCase().slice(0,35);fmap[k]=(fmap[k]||0)+1;});
   var recurring=Object.keys(fmap).filter(function(k){return fmap[k]>=2;});
 
-  /* ── ADVISORY ESCALATION ── */
   var sorted=tests.slice().sort(function(a,b){return new Date(a.completedDate||0)-new Date(b.completedDate||0);});
   var advSet=new Set(),escalated=0;
   sorted.forEach(function(t){
-    (t.defects||[]).filter(function(d){return d&&(d.type==='MAJOR'||d.type==='DANGEROUS');})
-      .forEach(function(d){var k=(d.text||'').toLowerCase().slice(0,35);if(advSet.has(k))escalated++;});
-    (t.defects||[]).filter(function(d){return d&&d.type==='ADVISORY';})
-      .forEach(function(d){advSet.add((d.text||'').toLowerCase().slice(0,35));});
+    (t.defects||[]).filter(function(d){return d&&(d.type==='MAJOR'||d.type==='DANGEROUS');}).forEach(function(d){var k=(d.text||'').toLowerCase().slice(0,35);if(advSet.has(k))escalated++;});
+    (t.defects||[]).filter(function(d){return d&&d.type==='ADVISORY';}).forEach(function(d){advSet.add((d.text||'').toLowerCase().slice(0,35));});
   });
 
-  /* ── GAPS ── */
   var gaps=[];
-  for(var g=1;g<sorted.length;g++){
-    var gd=(new Date(sorted[g].completedDate||0)-new Date(sorted[g-1].completedDate||0))/(1000*60*60*24*365.25);
-    if(gd>1.65)gaps.push({months:Math.round(gd*12),from:(sorted[g-1].completedDate||'').slice(0,7),to:(sorted[g].completedDate||'').slice(0,7)});
-  }
+  for(var g=1;g<sorted.length;g++){var gd=(new Date(sorted[g].completedDate||0)-new Date(sorted[g-1].completedDate||0))/(1000*60*60*24*365.25);if(gd>1.65)gaps.push({months:Math.round(gd*12),from:(sorted[g-1].completedDate||'').slice(0,7),to:(sorted[g].completedDate||'').slice(0,7)});}
 
   var passCount=tests.filter(function(t){return(t.testResult||'').toUpperCase()==='PASSED';}).length;
   var passRate=Math.round(passCount/tests.length*100);
-
   var reg=(currentReg||'').replace(/\s/g,'').toUpperCase();
   var carYear=parseInt(vehicleData.yearOfManufacture)||0;
+  var markedExport=vehicleData.markedForExport===true||vehicleData.markedForExport==='true';
+  var v5cDate=vehicleData.dateOfLastV5CIssued||'';
+  var v5cAge=v5cDate?Math.round((Date.now()-new Date(v5cDate).getTime())/(1000*60*60*24*30)):null;
   var isModernUK=/^[A-Z]{2}[0-9]{2}[A-Z]{3}$/.test(reg);
   var regYearCode=isModernUK?parseInt(reg.slice(2,4)):0;
   var regYear2=regYearCode>=51?2000+regYearCode-51+1:regYearCode>0?2000+regYearCode:0;
   var plateMismatch=regYear2>0&&carYear>0&&Math.abs(regYear2-carYear)>2;
-  var markedExport=vehicleData.markedForExport===true||vehicleData.markedForExport==='true';
-  var v5cDate=vehicleData.dateOfLastV5CIssued||'';
-  var v5cAge=v5cDate?Math.round((Date.now()-new Date(v5cDate).getTime())/(1000*60*60*24*30)):null;
 
-  /* ACCIDENT SCORE — weight based on severity */
-  var accScore=Math.min(100,
-    (structItems.length*28)+
-    (airbagItems.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).length*35)+
-    (airbagItems.filter(function(d){return d.type==='ADVISORY';}).length*15)+
-    (bodyItems.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).length*20)+
-    (bodyItems.filter(function(d){return d.type==='ADVISORY';}).length*8)+
-    (corrMajor*10)
-  );
-  var accRisk=accScore>=45?'HIGH':accScore>=15?'MEDIUM':'LOW';
-
-  var score=Math.min(100,Math.round(
-    (accScore*.5)+(recurring.length*10)+(escalated*8)+(gaps.length*5)+
-    (passRate<60?20:passRate<75?8:0)+(plateMismatch?12:0)+(markedExport?25:0)
-  ));
+  var accScore=Math.min(100,(structItems.length*28)+(airbagItems.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).length*35)+(airbagItems.filter(function(d){return d.type==='ADVISORY';}).length*15)+(bodyItems.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).length*20)+(bodyItems.filter(function(d){return d.type==='ADVISORY';}).length*8)+(corrMajor*10));
+  var score=Math.min(100,Math.round((accScore*.5)+(recurring.length*10)+(escalated*8)+(gaps.length*5)+(passRate<60?20:passRate<75?8:0)+(plateMismatch?12:0)+(markedExport?25:0)));
   var lv=score>=55?'high':score>=20?'med':'low';
 
-  /* fraud banner */
   var fa=el('fraudAlert'),fat=el('fraudAlertText');
-  if(fa&&(markedExport||accScore>=20||recurring.length>1)){
-    fa.classList.remove('hidden');
-    fat.textContent=markedExport?'DVLA: This vehicle is MARKED FOR EXPORT — do not purchase without full verification.':accScore>=45?'Crash indicators found in MOT history — do not buy without independent inspection.':'Concerns detected — get a mechanical inspection before purchase.';
-  }else if(fa)fa.classList.add('hidden');
+  if(fa&&(markedExport||accScore>=20||recurring.length>1)){fa.classList.remove('hidden');fat.textContent=markedExport?'DVLA: Marked for export — verify before purchase.':accScore>=45?'Crash indicators in MOT history — inspection essential.':'Concerns detected — arrange inspection before purchase.';}else if(fa)fa.classList.add('hidden');
 
   el('riskGaugeSvg').innerHTML=buildGauge(score);
   el('riskLbl').textContent=lv==='low'?'LOW RISK':lv==='med'?'MODERATE RISK':'HIGH RISK';
-  el('riskSub').textContent=lv==='low'?'No major red flags in DVLA/DVSA data. Complete the external checks below.':lv==='med'?'Some concerns. Use the free checks below and arrange an inspection.':'Multiple serious concerns. Do not buy without completing every check below first.';
+  el('riskSub').textContent=lv==='low'?'No major red flags in DVLA/DVSA data.':lv==='med'?'Some concerns detected. Run checks below.':'Multiple serious concerns. Do not buy without all checks.';
 
   /* ── CARD BUILDER ── */
-  function card(cls,icon,title,verdict,detail,badge,link,linkTxt){
-    var btn=link
-      ?'<a href="'+link+'" target="_blank" rel="noopener" class="vr-ext-btn"><i class="ti ti-external-link"></i>'+(linkTxt||'CHECK FREE')+'</a>'
-      :'';
-    return'<div class="vr-card '+cls+'"><div class="vr-card-icon"><i class="ti '+icon+'"></i></div>'
-      +'<div class="vr-card-body"><div class="vr-card-title">'+title+'</div>'
-      +'<div class="vr-card-verdict">'+verdict+'</div>'
-      +'<div class="vr-card-detail">'+detail+'</div>'
-      +btn+'</div>'
-      +'<div class="vr-card-badge">'+badge+'</div></div>';
+  function badge(cls,icon,txt){return'<div class="cv-badge cv-'+cls+'"><i class="ti ti-'+icon+'"></i>'+txt+'</div>';}
+  function card(title,badgeHtml,desc,detail,link,linkTxt){
+    return'<div class="cv-card">'
+      +'<div class="cv-card-title">'+title+'</div>'
+      +badgeHtml
+      +'<div class="cv-card-desc">'+desc+'</div>'
+      +(detail?'<div class="cv-card-detail">'+detail+'</div>':'')
+      +(link?'<a href="'+link+'" target="_blank" rel="noopener" class="cv-ext-link"><i class="ti ti-external-link" style="font-size:11px"></i>'+linkTxt+'</a>':'')
+      +'</div>';
   }
-  function sec(t){return'<div class="vr-section-title">'+t+'</div>';}
+  function sep(t){return'<div class="cv-section-sep">'+t+'</div>';}
 
   var make=esc((vehicleData.make||'').toUpperCase());
   var model=esc((vehicleData.model||vehicleData.modelSeries||'').toUpperCase());
   var yr=vehicleData.yearOfManufacture||'';
-  var fuelType=esc((vehicleData.fuelType||'').toUpperCase());
+  var fuel=esc((vehicleData.fuelType||'').toUpperCase());
+  var colour=esc((vehicleData.colour||vehicleData.primaryColour||'').toUpperCase());
   var regEnc=encodeURIComponent(reg);
+  var now=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
   var scoreCol=score<=30?'#10B981':score<=60?'#F59E0B':'#EF4444';
-  var circ=(2*Math.PI*30).toFixed(1);
-  var dash=(2*Math.PI*30*(1-score/100)).toFixed(1);
+  var circ=(2*Math.PI*28).toFixed(1);
+  var dash=(2*Math.PI*28*(1-score/100)).toFixed(1);
 
-  var html='<div class="vr-report">';
+  var html='<div class="cv-report">';
 
-  /* HEADER */
-  html+='<div class="vr-report-header">'
-    +'<div class="vr-rh-left">'
-    +'<div class="vr-rh-reg">'+esc(reg)+'</div>'
-    +'<div class="vr-rh-name">'+make+(model?' '+model:'')+(yr?' '+yr:'')+'</div>'
-    +'<div class="vr-rh-meta">'+fuelType+(fuelType?' · ':'')+(carYear?carYear+' · ':'')+tests.length+' MOT RECORD'+(tests.length!==1?'S':'')+'</div>'
-    +'</div><div>'
-    +'<div class="vr-score-ring"><svg viewBox="0 0 80 80" width="80" height="80">'
-    +'<circle cx="40" cy="40" r="30" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="7"/>'
-    +'<circle cx="40" cy="40" r="30" fill="none" stroke="'+scoreCol+'" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+dash+'" style="transition:stroke-dashoffset 1.2s ease"/>'
-    +'</svg><div class="vr-score-num" style="color:'+scoreCol+'">'+score+'</div></div>'
-    +'<div class="vr-score-lbl">RISK SCORE</div>'
-    +'</div></div>';
+  /* HEADER — matches CarVertical layout */
+  html+='<div class="cv-header">'
+    +'<div class="cv-header-top">'
+    +'<div class="cv-car-thumb">'+getBrandLogo(vehicleData.make||'')+'</div>'
+    +'<div class="cv-header-info">'
+    +'<div class="cv-generated">Generated '+now+'</div>'
+    +'<div class="cv-chips">'
+    +(reg?'<span class="cv-chip">Plate: '+esc(reg)+'</span>':'')
+    +(fuel?'<span class="cv-chip">'+fuel+'</span>':'')
+    +(yr?'<span class="cv-chip">'+yr+'</span>':'')
+    +(colour?'<span class="cv-chip">'+colour+'</span>':'')
+    +'</div></div></div>'
+    /* Score */
+    +'<div class="cv-score-row">'
+    +'<div class="cv-score-ring"><svg viewBox="0 0 64 64" width="72" height="72">'
+    +'<circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="6"/>'
+    +'<circle cx="32" cy="32" r="28" fill="none" stroke="'+scoreCol+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+dash+'" style="transition:stroke-dashoffset 1.2s ease"/>'
+    +'</svg><div class="cv-score-num"><div class="cv-score-big" style="color:'+scoreCol+'">'+score+'</div><div class="cv-score-denom">/100</div></div></div>'
+    +'<div class="cv-score-text">'
+    +'<div class="cv-score-title">GarageIQ Risk Score</div>'
+    +'<div class="cv-score-desc">'+(lv==='low'?'This vehicle shows no major risk indicators from '+tests.length+' MOT records and DVLA data.':lv==='med'?'This vehicle shows some concerns. Review each check carefully before purchasing.':'Multiple risk factors detected. Do not purchase without completing all checks below.')+'</div>'
+    +'</div></div>'
+    +'</div>'; /* end cv-header */
 
-  /* SECTION 1 — live external checks with loading state */
-  html+=sec('<i class="ti ti-lock-search"></i> LIVE EXTERNAL CHECKS');
+  /* SECTION: LEGAL & FINANCE */
+  html+=sep('Legal &amp; Financial Status');
 
-  /* Stolen — starts as loading, updated by carcheck API */
-  html+='<div class="vr-card vc-unknown" id="cc-stolen"><div class="vr-card-icon"><i class="ti ti-search"></i></div>'
-    +'<div class="vr-card-body"><div class="vr-card-title">STOLEN VEHICLE CHECK</div>'
-    +'<div class="vr-card-verdict" id="cc-stolen-v">Checking nicked.co.uk...</div>'
-    +'<div class="vr-card-detail" id="cc-stolen-d"><div class="spin" style="display:inline-block;width:14px;height:14px;margin-right:6px"></div>Querying police database records...</div>'
-    +'<a href="https://www.nicked.co.uk/results/?vrm='+regEnc+'" target="_blank" rel="noopener" class="vr-ext-btn"><i class="ti ti-external-link"></i>OPEN ON NICKED.CO.UK</a>'
-    +'</div><div class="vr-card-badge" id="cc-stolen-b">CHECKING</div></div>';
+  /* Stolen — loading, updated by API */
+  html+='<div class="cv-card" id="cc-stolen">'
+    +'<div class="cv-card-title">Theft check</div>'
+    +'<div id="cc-stolen-badge"><div class="cv-badge cv-pend"><div class="spin" style="width:10px;height:10px;flex-shrink:0"></div>Checking...</div></div>'
+    +'<div class="cv-card-desc" id="cc-stolen-d">Querying UK police and database records via carcheck.co.uk</div>'
+    +'<a href="https://www.carcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="cv-ext-link"><i class="ti ti-external-link" style="font-size:11px"></i>Open on carcheck.co.uk</a>'
+    +'</div>';
 
-  /* Finance */
-  html+='<div class="vr-card vc-unknown" id="cc-finance"><div class="vr-card-icon"><i class="ti ti-coin"></i></div>'
-    +'<div class="vr-card-body"><div class="vr-card-title">OUTSTANDING FINANCE (HP/PCP)</div>'
-    +'<div class="vr-card-verdict" id="cc-finance-v">Checking finance records...</div>'
-    +'<div class="vr-card-detail" id="cc-finance-d"><div class="spin" style="display:inline-block;width:14px;height:14px;margin-right:6px"></div>Querying finance database...</div>'
-    +'<a href="https://www.totalcarcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="vr-ext-btn"><i class="ti ti-external-link"></i>OPEN ON TOTALCARCHECK</a>'
-    +'</div><div class="vr-card-badge" id="cc-finance-b">CHECKING</div></div>';
+  /* Finance — loading */
+  html+='<div class="cv-card" id="cc-finance">'
+    +'<div class="cv-card-title">Financial and legal status check</div>'
+    +'<div id="cc-finance-badge"><div class="cv-badge cv-pend"><div class="spin" style="width:10px;height:10px;flex-shrink:0"></div>Checking...</div></div>'
+    +'<div class="cv-card-desc" id="cc-finance-d">Checking finance, HPI and legal status records</div>'
+    +'<a href="https://www.carcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="cv-ext-link"><i class="ti ti-external-link" style="font-size:11px"></i>Open on carcheck.co.uk</a>'
+    +'</div>';
 
-  /* Write-off */
-  html+='<div class="vr-card vc-unknown" id="cc-writeoff"><div class="vr-card-icon"><i class="ti ti-file-x"></i></div>'
-    +'<div class="vr-card-body"><div class="vr-card-title">INSURANCE WRITE-OFF (CAT A/B/S/N)</div>'
-    +'<div class="vr-card-verdict" id="cc-writeoff-v">Checking write-off register...</div>'
-    +'<div class="vr-card-detail" id="cc-writeoff-d"><div class="spin" style="display:inline-block;width:14px;height:14px;margin-right:6px"></div>Querying insurance loss register...</div>'
-    +'<a href="https://www.totalcarcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="vr-ext-btn"><i class="ti ti-external-link"></i>OPEN ON TOTALCARCHECK</a>'
-    +'</div><div class="vr-card-badge" id="cc-writeoff-b">CHECKING</div></div>';
+  /* Write-off — loading */
+  html+='<div class="cv-card" id="cc-writeoff">'
+    +'<div class="cv-card-title">Insurance write-off status</div>'
+    +'<div id="cc-writeoff-badge"><div class="cv-badge cv-pend"><div class="spin" style="width:10px;height:10px;flex-shrink:0"></div>Checking...</div></div>'
+    +'<div class="cv-card-desc" id="cc-writeoff-d">Checking Cat A, B, S and N insurance records</div>'
+    +'<a href="https://www.carcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="cv-ext-link"><i class="ti ti-external-link" style="font-size:11px"></i>Open on carcheck.co.uk</a>'
+    +'</div>';
 
-  /* Export flag from DVLA */
-  html+=card(markedExport?'vc-risk':'vc-clean','ti-plane-departure',
-    'MARKED FOR EXPORT (DVLA LIVE)',
-    markedExport?'DVLA records this vehicle as marked for export':'Not marked for export',
-    markedExport?'Serious red flag — this vehicle is flagged for export in the live DVLA database. It should not be re-registered in the UK without DVLA notification. Walk away unless seller has a clear explanation.':'DVLA live check confirms this vehicle is not marked for export.',
-    markedExport?'RED FLAG':'CLEAN');
+  /* DVLA export flag */
+  html+=card('Export / DVLA status',
+    badge(markedExport?'bad':'ok',markedExport?'alert-triangle':'circle-check',markedExport?'Marked for export':'No issues found'),
+    markedExport?'This vehicle is marked for export in the DVLA database. It cannot legally be re-used on UK roads without DVLA notification.':'No DVLA flags. Vehicle is not marked for export.',
+    null,null,null);
 
-  /* V5C date */
-  if(v5cDate){
-    var v5cCls=v5cAge!==null&&v5cAge<4?'vc-warn':'vc-clean';
-    html+=card(v5cCls,'ti-file-description',
-      'V5C LAST ISSUED (DVLA LIVE)',
-      'V5C issued '+v5cDate.slice(0,10)+(v5cAge!==null?' — '+v5cAge+' months ago':''),
-      v5cAge!==null&&v5cAge<4?'V5C was issued very recently. This could mean the car was just bought (and is now being sold again quickly — a red flag) or a keeper change. Ask the seller when and why they bought it.':'Always check the physical V5C matches the seller name and address. Never buy without the original — never accept a copy.',
-      v5cAge!==null&&v5cAge<4?'RECENT':'CHECK');
-  }
+  /* V5C */
+  if(v5cDate){html+=card('V5C logbook date',
+    badge(v5cAge!==null&&v5cAge<4?'warn':'ok',v5cAge!==null&&v5cAge<4?'alert-circle':'circle-check',v5cAge!==null&&v5cAge<4?'Recently issued — verify':'No issues found'),
+    'V5C last issued '+v5cDate.slice(0,10)+(v5cAge!==null?' ('+v5cAge+' months ago).':'.')+(v5cAge!==null&&v5cAge<4?' A recently reissued V5C may indicate a recent keeper change — ask the seller why they are selling so soon.':' Always verify the physical V5C matches the seller\'s name and address.'),
+    null,null,null);}
 
-  /* SECTION 2 — crash from MOT */
-  html+=sec('<i class="ti ti-car-crash"></i> CRASH & STRUCTURAL DAMAGE — DVSA MOT ANALYSIS');
+  /* SECTION: DAMAGE */
+  html+=sep('Damage');
 
-  html+=card(accRisk==='LOW'?'vc-clean':accRisk==='MEDIUM'?'vc-warn':'vc-risk','ti-shield-search',
-    'ACCIDENT DAMAGE INDICATORS',
-    accRisk==='LOW'?'No crash indicators found in '+allDef.length+' MOT defect records':accRisk==='MEDIUM'?'Possible damage or repair work detected — '+accScore+'/100 risk score':'CRASH INDICATORS FOUND — '+accScore+'/100 risk score',
-    accRisk==='LOW'?'No structural failures, airbag warnings, body repair language or damage indicators found in the complete MOT defect history. NOTE: A well-repaired car can still pass MOT clean — always run a write-off check above.':accRisk==='MEDIUM'?'Some defect language suggests possible prior repair or damage. Have a mechanic inspect the sill seams, boot floor and spare wheel well.':'Multiple MOT failures consistent with a previous accident. Do not purchase without an independent structural inspection on a ramp.',
-    accRisk==='LOW'?'CLEAN':accRisk==='MEDIUM'?'CAUTION':'RISK');
+  html+=card('Damage',
+    badge(accScore>=45?'bad':accScore>=15?'warn':'ok',accScore>=45?'alert-triangle':accScore>=15?'alert-circle':'circle-check',accScore>=45?'Issues found':accScore>=15?'Attention':'No issues found'),
+    accScore>=45?'Crash damage indicators detected in MOT records. Structural failures, airbag/SRS items or body repair language found. Do not purchase without an independent inspection on a vehicle ramp.':accScore>=15?'Some MOT items suggest possible prior repair work. Have a mechanic check panel gaps, sill seams and the boot floor.':'No damage or assessment records found. No structural failures, airbag warnings or body repair language in the complete MOT defect history.',
+    structItems.length>0?'Structural items: '+structItems.slice(0,2).map(function(d){return'"'+d.text.slice(0,55)+'"';}).join(', '):(airbagItems.length>0?'SRS items: '+airbagItems.slice(0,1).map(function(d){return'"'+d.text.slice(0,55)+'"';}).join(', '):null),
+    null,null);
 
-  html+=card(structItems.length>0?'vc-risk':'vc-clean','ti-building-bridge',
-    'STRUCTURAL & CHASSIS INTEGRITY',
-    structItems.length>0?structItems.length+' structural/body failure(s): "'+structItems.slice(0,1).map(function(d){return d.text.slice(0,60);}).join('...')+'"':'No structural failures recorded',
-    structItems.length>0?'Structural failures in the MOT records are the clearest accident indicator in public data. The parts that failed — '+structItems.map(function(d){return d.text.slice(0,45);}).join('; ')+' — are consistent with impact or poor repair.':'No chassis, subframe, sill or floor failures across all MOT history.',
-    structItems.length>0?'FLAGGED':'CLEAN');
+  html+=card('Corrosion and rust',
+    badge(corrMajor>1?'bad':corrItems.length>0?'warn':'ok',corrMajor>1?'alert-triangle':corrItems.length>0?'alert-circle':'circle-check',corrMajor>1?'Issues found':corrItems.length>0?'Attention':'No issues found'),
+    corrMajor>1?'Significant structural corrosion failures recorded. Proper repair is expensive. Price should reflect this or walk away.':corrItems.length>0?'Corrosion noted in MOT records. Inspect sills, wheel arches and floor pan physically before purchase.':'No corrosion or rust records found.',
+    null,null,null);
 
-  html+=card(airbagItems.length>0?'vc-risk':'vc-clean','ti-air-balloon',
-    'AIRBAG / SRS / WARNING LIGHTS',
-    airbagItems.length>0?airbagItems.length+' SRS or warning light item(s): "'+airbagItems.slice(0,1).map(function(d){return d.text.slice(0,60);}).join('...')+'"':'No airbag or SRS issues found',
-    airbagItems.length>0?'Warning lights, SRS or airbag items in MOT records. A warning light that keeps returning may indicate an underlying electrical or safety system fault from a past incident.':'No airbag warnings or SRS failures. The vehicle has likely not been in a collision serious enough to trigger restraints.',
-    airbagItems.length>0?'FLAGGED':'CLEAN');
+  /* SECTION: THEFT */
+  html+=sep('Theft');
 
-  html+=card(bodyItems.length>0?'vc-warn':'vc-clean','ti-layers-subtract',
-    'BODY DAMAGE & REPAIR INDICATORS',
-    bodyItems.length>0?bodyItems.length+' damage/repair item(s) in MOT notes':'No body damage language in MOT records',
-    bodyItems.length>0?'MOT items containing damage or repair language: "'+bodyItems.slice(0,2).map(function(d){return d.text.slice(0,55);}).join('" | "')+'"':'No damage, inadequate repair or body panel language found in MOT defects.',
-    bodyItems.length>0?'REVIEW':'CLEAN');
+  html+=card('Theft records',
+    badge('pend','clock','Checking...'),
+    'Theft and police records are checked via isitnicked.com and carcheck.co.uk. Results will appear in the Financial status card above once loaded.',
+    'If the automated check cannot confirm status, use the carcheck.co.uk link to verify manually — this is a free check.',
+    'https://www.carcheck.co.uk/'+regEnc,'Verify on carcheck.co.uk');
 
-  html+=card(corrMajor>1?'vc-risk':corrItems.length>0?'vc-warn':'vc-clean','ti-droplet-off',
-    'CORROSION & RUST',
-    corrMajor>0?corrMajor+' major corrosion failure(s) on record':corrItems.length>0?corrItems.length+' corrosion item(s) noted':'No corrosion in MOT history',
-    corrMajor>1?'Significant structural corrosion. Proper repair is expensive and often skipped. Price should reflect this.':corrItems.length>0?'Corrosion noted. Physically check sills, arches and boot floor. Surface rust is manageable; perforation is not.':'No corrosion failures.',
-    corrMajor>1?'SERIOUS':corrItems.length>0?'MONITOR':'CLEAN');
+  /* SECTION: NATURAL DISASTER / FLOOD */
+  html+=sep('Environmental Exposure');
 
-  /* SECTION 3 — mechanical */
-  html+=sec('<i class="ti ti-engine"></i> MECHANICAL CONDITION');
+  var age=carYear?2026-carYear:0;
+  var floodRisk=corrMajor>0&&age<8?'warn':'ok';
+  html+=card('Flood and water damage exposure',
+    badge(floodRisk==='warn'?'warn':'ok',floodRisk==='warn'?'alert-circle':'circle-check',floodRisk==='warn'?'Attention — possible water exposure':'No records found'),
+    floodRisk==='warn'?'Corrosion in a relatively new vehicle may indicate flood or water damage exposure. Check under carpets and in the boot for waterline marks and unusual rust.':'No records of flood, water or environmental damage found. Check under carpets and seat mounts for hidden waterline marks on older vehicles regardless.',
+    null,null,null);
 
-  html+=card(recurring.length>0?'vc-risk':'vc-clean','ti-refresh',
-    'RECURRING FAILURES',
-    recurring.length>0?recurring.length+' component(s) failed more than once':'No recurring failures — repairs held first time',
-    recurring.length>0?'"'+recurring.slice(0,2).map(function(k){return k.trim().slice(0,45);}).join('" & "')+'" — failed more than once. Either not repaired or repair failed. Use as negotiation lever.':'Every repair has resolved the issue permanently.',
-    recurring.length>0?'RECURRING':'CLEAN');
+  /* SECTION: MECHANICAL */
+  html+=sep('Mechanical Condition');
 
-  html+=card(escalated>0?'vc-warn':'vc-clean','ti-trending-up',
-    'DEFERRED MAINTENANCE',
-    escalated>0?escalated+' advisory ignored until it became a major failure':'No advisories left unattended',
-    escalated>0?'Owner defers maintenance. Ask what is currently on advisory right now and budget accordingly.':'Advisories addressed before becoming failures. Well-maintained pattern.',
-    escalated>0?'DEFERRED':'CLEAN');
+  html+=card('Recurring failures',
+    badge(recurring.length>0?'warn':'ok',recurring.length>0?'alert-circle':'circle-check',recurring.length>0?'Attention':'No issues found'),
+    recurring.length>0?'The same component failed the MOT more than once: "'+recurring.slice(0,2).map(function(k){return k.trim().slice(0,45);}).join('", "')+'". This indicates the repair was not carried out or failed. Negotiate on price.':'No recurring failures. Every repaired component has stayed fixed.',
+    null,null,null);
 
-  html+=card(brakeFails>=2?'vc-risk':brakeFails>=1?'vc-warn':'vc-clean','ti-brake',
-    'BRAKES',brakeFails>0?brakeFails+' major brake failure(s)':'Brakes passing consistently',
-    brakeFails>=2?'Repeated brake failures = chronic neglect. Full brake inspection essential.':brakeFails>0?'Brake failure on record. Ask for repair receipts.':'Brakes have consistently passed.',
-    brakeFails>=2?'CONCERN':brakeFails>0?'MONITOR':'CLEAN');
+  html+=card('Deferred maintenance',
+    badge(escalated>0?'warn':'ok',escalated>0?'alert-circle':'circle-check',escalated>0?'Attention':'No issues found'),
+    escalated>0?escalated+' advisory item(s) were left unrepaired until they became major or dangerous failures. The previous owner defers maintenance. Ask what advisories are currently outstanding.':'No advisories were left to escalate. Issues have been addressed proactively.',
+    null,null,null);
 
-  html+=card(emissFails>=2?'vc-risk':emissFails>=1?'vc-warn':'vc-clean','ti-cloud',
-    'ENGINE & EMISSIONS',emissFails>0?emissFails+' emissions failure(s)':'Emissions clean throughout',
-    emissFails>=2?'Repeated emissions failures suggest DPF, CAT or engine issue — can cost £500–£2,500.':emissFails>0?'Emissions failure found. Check if repair has been done.':'Emissions have consistently passed.',
-    emissFails>=2?'CONCERN':emissFails>0?'MONITOR':'CLEAN');
+  html+=card('Brake system',
+    badge(brakeFails>=2?'bad':brakeFails>=1?'warn':'ok',brakeFails>=2?'alert-triangle':brakeFails>=1?'alert-circle':'circle-check',brakeFails>=2?'Issues found':brakeFails>=1?'Attention':'No issues found'),
+    brakeFails>=2?'Repeated brake failures indicate ongoing neglect. Full brake inspection essential before purchase.':brakeFails>=1?'Brake failure recorded. Verify the repair was carried out and check current brake condition.':'No brake system failures recorded.',
+    null,null,null);
 
-  /* action checklist */
-  var actions=['Complete the stolen, finance and write-off checks using the buttons above — free, 2 minutes'];
-  if(accScore>=15)actions.push('Get an independent pre-purchase inspection (~£100–150) from an RAC/AA inspector or trusted mechanic');
-  if(structItems.length>0||airbagItems.length>0)actions.push('Ask for the car to go on a ramp — check sills, floor pan, subframe and spare wheel well visually');
-  actions.push('Verify the physical V5C logbook is in the seller\'s name — never accept a photocopy');
-  actions.push('Check free DVSA safety recalls at gov.uk/check-vehicle-recall using the VIN number');
-  if(recurring.length>0)actions.push('Get repair quotes for recurring faults and deduct from asking price');
-  actions.push('Test drive cold — knocks, pulls and engine issues hide when the engine is warm');
-  actions.push('Check ALL dashboard warning lights extinguish after starting — airbag, ABS, engine management');
+  html+=card('Engine and emissions',
+    badge(emissFails>=2?'bad':emissFails>=1?'warn':'ok',emissFails>=2?'alert-triangle':emissFails>=1?'alert-circle':'circle-check',emissFails>=2?'Issues found':emissFails>=1?'Attention':'No issues found'),
+    emissFails>=2?'Repeated emissions failures suggest a DPF, catalytic converter or engine issue. Can cost £500–£2,500 to properly fix.':emissFails>=1?'Emissions failure recorded. Check if DPF or catalytic converter work has been completed since.':'No emission or engine failures recorded.',
+    null,null,null);
 
-  html+='<div class="vr-action-box"><div class="vr-action-title">Before You Buy — Action Checklist</div>'
-    +'<ul class="vr-action-list">'+actions.map(function(a){return'<li>'+esc(a)+'</li>';}).join('')+'</ul></div>';
+  html+=card('MOT pass rate',
+    badge(passRate>=80?'ok':passRate>=60?'warn':'bad',passRate>=80?'circle-check':passRate>=60?'alert-circle':'alert-triangle',passRate>=80?'No issues found':passRate>=60?'Attention':'Issues found'),
+    passRate>=80?passCount+' of '+tests.length+' MOT tests passed ('+passRate+'%). Consistent and well-maintained.':passRate>=60?passCount+' of '+tests.length+' tests passed ('+passRate+'%). Below average. Check what failed and confirm it was repaired properly.':'Only '+passCount+' of '+tests.length+' tests passed ('+passRate+'%). The vehicle regularly fails its MOT. This indicates systematic neglect.',
+    null,null,null);
 
-  html+='</div>';
+  /* SECTION: IDENTITY */
+  html+=sep('Vehicle Identity');
+
+  html+=card('SORN and off-road periods',
+    badge(gaps.length>0?'warn':'ok',gaps.length>0?'alert-circle':'circle-check',gaps.length>0?'Attention':'No issues found'),
+    gaps.length>0?gaps.length+' unexplained gap(s) in MOT history: '+gaps.map(function(g){return g.months+' months ('+g.from+' to '+g.to+')';}).join(', ')+'. The vehicle may have been SORN, in storage or used off-road. Ask the seller to account for these periods.':'No SORN or off-road gaps. The vehicle has been in continuous annual use.',
+    null,null,null);
+
+  html+=card('Registration plate check',
+    badge(plateMismatch?'warn':'ok',plateMismatch?'alert-circle':'circle-check',plateMismatch?'Attention':'No issues found'),
+    plateMismatch?'The plate year code suggests '+regYear2+' but the DVLA manufacture year is '+carYear+'. This is often a legal cherished plate transfer but always verify via the physical V5C document.':'No plate anomaly. The registration year code is consistent with the DVLA manufacture year.',
+    null,null,null);
+
+  /* CHECKLIST */
+  html+=sep('Pre-Purchase Checklist');
+  var actions=['Run the carcheck.co.uk free check for stolen, finance and write-off confirmation'];
+  if(accScore>=15)actions.push('Book a pre-purchase inspection — RAC/AA inspector or independent mechanic (~£100–150)');
+  if(structItems.length>0||airbagItems.length>0)actions.push('Ask for the car to go on a ramp — check sills, floor pan and subframe');
+  actions.push('Verify the physical V5C is in the seller\'s name — never accept a photocopy');
+  actions.push('Check DVSA safety recalls free at gov.uk/check-vehicle-recall');
+  if(recurring.length>0)actions.push('Get repair quotes for recurring faults and negotiate price down');
+  actions.push('Test drive cold — knocks, warning lights and engine issues hide when warm');
+
+  html+='<div class="cv-card"><div class="cv-card-title">Before you buy</div>'
+    +'<ul style="margin:0;padding:0;list-style:none">'+actions.map(function(a){return'<li style="display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--t3)"><i class="ti ti-arrow-right" style="color:var(--blue2);flex-shrink:0;margin-top:2px;font-size:12px"></i>'+esc(a)+'</li>';}).join('')+'</ul></div>';
+
+  html+='</div>'; /* end cv-report */
   el('intelChecks').innerHTML=html;
 
-  /* ── FIRE carcheck API to get live stolen/finance/writeoff ── */
+  /* ── Fire carcheck API ── */
   fetch(VERCEL+'/api/carcheck',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reg:reg})})
     .then(function(r){return r.json();})
     .then(function(d){
-      /* stolen */
-      var sc=el('cc-stolen'),sv=el('cc-stolen-v'),sd=el('cc-stolen-d'),sb=el('cc-stolen-b');
-      if(sc&&d.stolen===false){sc.className='vr-card vc-clean';sv.textContent='Not reported stolen';sd.textContent='No stolen marker found in UK police records.';sb.textContent='CLEAN';}
-      else if(sc&&d.stolen===true){sc.className='vr-card vc-risk';sv.textContent='REPORTED STOLEN — DO NOT BUY';sd.textContent='This vehicle appears on a stolen vehicle database. Do not purchase — contact police.';sb.textContent='STOLEN';}
-      else if(sc){sc.className='vr-card vc-unknown';sv.textContent='Could not verify — check manually';sd.textContent='Our automated check could not get a result. Click the button below to check on nicked.co.uk directly.';sb.textContent='VERIFY';}
-      /* finance */
-      var fc=el('cc-finance'),fv=el('cc-finance-v'),fd=el('cc-finance-d'),fb=el('cc-finance-b');
-      if(fc&&d.finance===false){fc.className='vr-card vc-clean';fv.textContent='No outstanding finance found';fd.textContent='No HP or PCP finance agreement detected on this registration.';fb.textContent='CLEAR';}
-      else if(fc&&d.finance===true){fc.className='vr-card vc-risk';fv.textContent='OUTSTANDING FINANCE — DO NOT BUY';fd.textContent='Active finance detected. The finance company legally owns this vehicle. Buying it means they can repossess it from you.';fb.textContent='FINANCE';}
-      else if(fc){fc.className='vr-card vc-unknown';fv.textContent='Could not verify — check manually';fd.textContent='Automated finance check inconclusive. Click the button below to check on TotalCarCheck.';fb.textContent='VERIFY';}
-      /* write-off */
-      var wc=el('cc-writeoff'),wv=el('cc-writeoff-v'),wd=el('cc-writeoff-d'),wb=el('cc-writeoff-b');
-      if(wc&&d.writeOff==='NONE'){wc.className='vr-card vc-clean';wv.textContent='No write-off record found';wd.textContent='No insurance write-off category recorded for this vehicle.';wb.textContent='CLEAN';}
-      else if(wc&&d.writeOff&&d.writeOff!=='NONE'){wc.className='vr-card vc-risk';wv.textContent='WRITE-OFF: '+d.writeOff+' RECORDED';wd.textContent=d.writeOff.indexOf('A')>=0||d.writeOff.indexOf('B')>=0?'Category A/B must be scrapped — this vehicle cannot legally be on the road.':'Category S/N write-off. Can be re-sold but carries lower value and potential hidden damage. Get full repair history.';wb.textContent=d.writeOff;}
-      else if(wc){wc.className='vr-card vc-unknown';wv.textContent='Could not verify — check manually';wd.textContent='Automated write-off check inconclusive. Click below to check on TotalCarCheck directly.';wb.textContent='VERIFY';}
+      function upd(id,badgeId,descId,ok,warn,title,okDesc,warnDesc,badDesc){
+        var card=el(id);if(!card)return;
+        var b=el(badgeId),desc=el(descId);
+        if(ok===true){if(b)b.innerHTML='<div class="cv-badge cv-ok"><i class="ti ti-circle-check"></i>No issues found</div>';if(desc)desc.textContent=okDesc;}
+        else if(ok===false){if(b)b.innerHTML='<div class="cv-badge cv-bad"><i class="ti ti-alert-triangle"></i>'+title+'</div>';if(desc)desc.textContent=badDesc;}
+        else{if(b)b.innerHTML='<div class="cv-badge cv-info"><i class="ti ti-info-circle"></i>Verify manually</div>';if(desc)desc.textContent=warnDesc;}
+      }
+      upd('cc-stolen','cc-stolen-badge','cc-stolen-d',
+        d.stolen===false,d.stolen===true,'Theft recorded',
+        'No theft records found. No stolen marker found in database records.',
+        'Automated check inconclusive. Click the link below to verify on carcheck.co.uk — free check.',
+        'STOLEN MARKER FOUND — Do not purchase. Contact the police immediately.');
+      upd('cc-finance','cc-finance-badge','cc-finance-d',
+        d.finance===false,d.finance===true,'Finance outstanding',
+        'No financial or legal risk records found. No outstanding finance detected.',
+        'Automated check inconclusive. Verify on carcheck.co.uk to confirm no finance is outstanding.',
+        'OUTSTANDING FINANCE DETECTED — The finance company legally owns this car. Do not purchase.');
+      upd('cc-writeoff','cc-writeoff-badge','cc-writeoff-d',
+        d.writeOff==='NONE',d.writeOff&&d.writeOff!=='NONE',d.writeOff||'Write-off recorded',
+        'No write-off records found. No insurance loss record for this vehicle.',
+        'Automated check inconclusive. Verify write-off status on carcheck.co.uk.',
+        'WRITE-OFF RECORDED: '+(d.writeOff||'')+(d.writeOff&&(d.writeOff.indexOf('A')>=0||d.writeOff.indexOf('B')>=0)?' — Cat A/B must be scrapped. This car cannot legally drive.':(d.writeOff?' — Cat S/N can be re-sold but has structural or cosmetic damage history. Get full repair records.':'')));
     })
     .catch(function(){
       ['cc-stolen','cc-finance','cc-writeoff'].forEach(function(id){
-        var card=el(id);if(!card)return;
-        card.className='vr-card vc-unknown';
-        var v=card.querySelector('[id$="-v"]'),d=card.querySelector('[id$="-d"]'),b=card.querySelector('[id$="-b"]');
-        if(v)v.textContent='Check manually using the button below';
-        if(d)d.textContent='Automated check unavailable. Click the external link below.';
-        if(b)b.textContent='VERIFY';
+        var b=el(id+'_badge')||el(id)&&el(id).querySelector('[id$="-badge"]');
+        var crd=el(id);
+        if(crd){var badge2=crd.querySelector('[id$="-badge"]');if(badge2)badge2.innerHTML='<div class="cv-badge cv-info"><i class="ti ti-info-circle"></i>Verify manually</div>';var desc2=crd.querySelector('[id$="-d"]');if(desc2)desc2.textContent='Automated check unavailable. Use the carcheck.co.uk link below to check manually.';}
       });
     });
 }
