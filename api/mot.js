@@ -14,6 +14,15 @@ async function getDvsaToken() {
   return d.access_token;
 }
 
+function normaliseType(r) {
+  if (r.dangerous) return 'DANGEROUS';
+  const t = (r.type || '').toUpperCase();
+  if (t === 'MAJOR') return 'MAJOR';
+  if (t === 'MINOR') return 'MINOR';
+  if (t === 'ADVISORY') return 'ADVISORY';
+  return t;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -34,11 +43,28 @@ export default async function handler(req, res) {
         },
       }
     );
+
     if (!r.ok) {
       const txt = await r.text();
       return res.status(r.status).json({ error: txt || 'DVSA error' });
     }
-    const data = await r.json();
+
+    let data = await r.json();
+
+    // Normalise DVSA API v6 rfrAndComments → defects so frontend gets expected field
+    if (Array.isArray(data)) {
+      data = data.map(vehicle => ({
+        ...vehicle,
+        motTests: (vehicle.motTests || []).map(test => ({
+          ...test,
+          defects: (test.rfrAndComments || test.defects || []).map(item => ({
+            type: normaliseType(item),
+            text: item.text || '',
+          })),
+        })),
+      }));
+    }
+
     return res.status(200).json(data);
   } catch (err) {
     return res.status(500).json({ error: err.message });
