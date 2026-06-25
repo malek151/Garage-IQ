@@ -76,7 +76,7 @@ function fetchVehiclePhoto(make,model,year){
       if(!real)return;
       real.onload=function(){
         /* MUST be landscape — filters out circular logos and square images */
-        if(real.naturalWidth>=200&&real.naturalWidth>real.naturalHeight*1.2){
+        if(real.naturalWidth>=200&&real.naturalWidth>=real.naturalHeight*0.9){
           var bg=wrap.querySelector('.veh-photo-bg');
           if(bg)bg.style.display='none';
           real.style.display='block';
