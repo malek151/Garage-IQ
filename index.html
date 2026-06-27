@@ -385,8 +385,73 @@ input[type=range]{accent-color:var(--lime);width:100%}
 #profileModal.open{display:flex}
 /* HIDDEN HELPERS */
 #featGrid,#specHighlights,#co2BandWrap{margin-top:12px}
-/* RESPONSIVE */
-@media(max-width:640px){.nav-tabs{display:none}.hi{padding:0 14px}main{padding:20px 14px}}
+/* CRITICAL — app.js uses classList.add/remove('hidden') */
+.hidden{display:none!important}
+@keyframes toastOut{to{opacity:0;transform:translateX(120px)}}
+/* Dynamic classes assigned by app.js renderVehicle() */
+.veh-status-badge{font-size:9.5px;font-weight:800;font-family:monospace;padding:3px 9px;border-radius:50px;letter-spacing:.5px}
+.vsb-taxed{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.25)}
+.vsb-sorn{background:rgba(245,158,11,.12);color:#fbbf24;border:1px solid rgba(245,158,11,.25)}
+.vsb-not-taxed{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.25)}
+.veh-stat-val{font-size:11px;font-weight:700;font-family:monospace}
+.veh-stat-val.ok{color:#4ade80}.veh-stat-val.bad{color:#f87171}
+.veh-chip-div{color:var(--t4);margin:0 2px;font-size:10px}
+.veh-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:var(--t3)}
+.veh-chip i{font-size:11px;color:var(--lime)}
+/* app.js adds 'visible' to vehHeader */
+#vehHeader.visible{display:block}
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.reveal.in{opacity:1;transform:none}
+/* ── MOBILE FIRST — full phone optimisation ── */
+@media(max-width:480px){
+  header{height:60px}
+  .logo-text .sub{display:none}
+  .logo-icon{width:34px;height:34px}
+  .logo-text .name{font-size:18px}
+  .hdr-right{gap:6px}
+  .btn-ghost{padding:6px 10px;font-size:11px}
+  .btn-primary-sm{padding:6px 10px;font-size:11px}
+  .theme-btn{width:30px;height:30px}
+  main{padding:14px 12px}
+  #heroSection{padding:24px 0 20px}
+  .hero-h1{font-size:28px;letter-spacing:-1px}
+  .hero-sub{font-size:13px}
+  .search-box{padding:16px 14px;border-radius:18px}
+  .mode-toggle{max-width:100%}
+  #regBadge{min-height:70px;border-width:3px;border-radius:12px;padding:10px 12px}
+  #regInput{font-size:22px;letter-spacing:5px}
+  #runBtn{font-size:14px;padding:13px}
+  .presets-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .trust-wrap{margin-top:24px;padding-top:20px;gap:10px}
+  #specCards{grid-template-columns:repeat(2,1fr);gap:7px}
+  .spec-val{font-size:18px}
+  #tabsWrap{gap:2px;padding:3px}
+  .pill-tab{padding:8px 8px;font-size:10.5px;gap:3px;min-width:56px}
+  .pill-tab i{font-size:12px}
+  .pill-tab span{display:none}
+  .val-grid{grid-template-columns:repeat(2,1fr)}
+  .fin-inputs{grid-template-columns:1fr}
+  .fin-bd{grid-template-columns:repeat(3,1fr)}
+  .ulez-grid{grid-template-columns:1fr 1fr}
+  .mod-grid{grid-template-columns:repeat(3,1fr)}
+  .card{padding:14px}
+  .veh-info-bar{padding:10px 12px;gap:8px}
+  .veh-reg-chip{font-size:16px;padding:3px 9px;letter-spacing:2px}
+  #vehName{font-size:16px}
+  .paywall{padding:18px}
+  .paywall-title{font-size:15px}
+  .ld-steps{width:calc(100vw - 48px)}
+  #toastWrap{right:10px;left:10px;max-width:none}
+  .toast{font-size:11px;padding:10px 12px}
+  .modal-box{margin:12px;padding:20px}
+  .auth-tab{padding:7px;font-size:11px}
+}
+@media(max-width:360px){
+  #regInput{font-size:18px;letter-spacing:4px}
+  .hero-h1{font-size:24px}
+  .pill-tab{min-width:44px;padding:8px 5px}
+}
 </style>
 </head>
 <body>
@@ -557,8 +622,8 @@ input[type=range]{accent-color:var(--lime);width:100%}
 
 <!-- MAIN -->
 <main>
-  <div id="errbox"></div>
-  <div id="loadbox"></div>
+  <div id="errbox" class="hidden"></div>
+  <div id="loadbox" class="hidden"></div>
 
   <!-- HERO SECTION -->
   <div id="heroSection"><canvas id="heroCanvas" style="position:absolute;inset:0;pointer-events:none;opacity:.35;z-index:0;display:none"></canvas>
@@ -656,7 +721,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
   </div><!-- /heroSection -->
 
   <!-- VEHICLE REPORT -->
-  <div id="mainApp">
+  <div id="mainApp" class="hidden">
 
     <!-- VEHICLE HEADER -->
     <div id="vehHeader">
@@ -1007,6 +1072,6 @@ function runPreset(reg){
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="app.js" type="module"></script>
+<script src="app.js"></script>
 </body>
 </html>
