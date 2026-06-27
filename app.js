@@ -23,7 +23,7 @@ function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()
 function fetchVehiclePhoto(make,model,year){
   var wrap=el('vehPhotoWrap');
   if(!wrap||!make)return;
-  var bc=getBrandColor(make)||'#a3f32c';
+  var bc=getBrandColor(make)||'#3B7BF6';
   var logo=getBrandLogo(make);
   var mk=(make||'').trim();
   var mo=(model||'').trim().split(' ')[0].toUpperCase();
@@ -64,21 +64,25 @@ function fetchVehiclePhoto(make,model,year){
   else if(u==='MAZDA'){if(/CX/.test(mo))wq='Mazda CX-5';else if(/MX/.test(mo))wq='Mazda MX-5';else wq='Mazda '+mo.split(' ')[0];}
   else if(mo&&mo.length>1&&mo!==mk.toUpperCase())wq=mk+' '+mo.split(' ')[0];
   
-  /* Use /api/photo for reliable Unsplash car photos */
-  fetch(VERCEL+'/api/photo?make='+encodeURIComponent(mk)+'&model='+encodeURIComponent(mo))
+  if(!wq)return; /* no match — keep gradient, no bare-make fallback */
+
+  fetch('https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(wq)+'&prop=pageimages&format=json&pithumbsize=900&origin=*')
     .then(function(r){return r.json();})
     .then(function(d){
-      if(!d||!d.url)return;
+      var pages=d&&d.query&&d.query.pages?d.query.pages:{};
+      var p=Object.values(pages)[0];
+      if(!p||!p.thumbnail||!p.pageid||p.pageid<=0)return;
       var real=el('vehPhotoReal');
       if(!real)return;
       real.onload=function(){
-        if(real.naturalWidth>=200){
+        /* MUST be landscape — filters out circular logos and square images */
+        if(real.naturalWidth>=200&&real.naturalWidth>real.naturalHeight*1.2){
           var bg=wrap.querySelector('.veh-photo-bg');
           if(bg)bg.style.display='none';
           real.style.display='block';
         }
       };
-      real.src=d.url;
+      real.src=p.thumbnail.source;
     }).catch(function(){});
 }
 
@@ -542,7 +546,7 @@ function buildMileageChart(tests){
   var xGrid='',step=Math.max(1,Math.ceil(yrSpan/7));for(var y=minYr;y<=maxYr;y+=step)xGrid+='<text x="'+px(y)+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.25)" font-family="Inter,sans-serif">'+y+'</text>';
   var areaD='M'+px(pts[0].yr)+','+py(0)+' ';pts.forEach(function(p){areaD+='L'+px(p.yr)+','+py(p.mi)+' ';});areaD+='L'+px(pts[pts.length-1].yr)+','+py(0)+'Z';
   var lineD='M';pts.forEach(function(p,i){lineD+=(i>0?' L':'')+px(p.yr)+','+py(p.mi);});
-  var dotsHtml=pts.map(function(p,idx){var fraud=!p.reg&&idx>0&&p.mi<pts[idx-1].mi,col=p.reg?'#10B981':fraud?'#EF4444':p.passed===false?'#F97316':'#a3f32c',cx=px(p.yr),cy=py(p.mi),lbl=p.reg?'REG: 0 miles':(p.mi.toLocaleString()+' mi');return'<circle cx="'+cx+'" cy="'+cy+'" r="'+(p.reg?6:4.5)+'" fill="'+col+'" stroke="rgba(6,10,18,1)" stroke-width="2"><title>'+esc(lbl)+'</title></circle>'+(p.reg?'<text x="'+cx+'" y="'+(cy-11)+'" text-anchor="middle" font-size="8.5" font-weight="800" fill="#10B981" font-family="Syne,sans-serif">REG</text>':'')+(fraud?'<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="none" stroke="#EF4444" stroke-width="1.5" opacity=".5"/>':'');}).join('');
+  var dotsHtml=pts.map(function(p,idx){var fraud=!p.reg&&idx>0&&p.mi<pts[idx-1].mi,col=p.reg?'#10B981':fraud?'#EF4444':p.passed===false?'#F97316':'#3B7BF6',cx=px(p.yr),cy=py(p.mi),lbl=p.reg?'REG: 0 miles':(p.mi.toLocaleString()+' mi');return'<circle cx="'+cx+'" cy="'+cy+'" r="'+(p.reg?6:4.5)+'" fill="'+col+'" stroke="rgba(6,10,18,1)" stroke-width="2"><title>'+esc(lbl)+'</title></circle>'+(p.reg?'<text x="'+cx+'" y="'+(cy-11)+'" text-anchor="middle" font-size="8.5" font-weight="800" fill="#10B981" font-family="Syne,sans-serif">REG</text>':'')+(fraud?'<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="none" stroke="#EF4444" stroke-width="1.5" opacity=".5"/>':'');}).join('');
   el('mileChartWrap').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;overflow:visible;display:block" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B7BF6" stop-opacity="0.15"/><stop offset="100%" stop-color="#3B7BF6" stop-opacity="0.01"/></linearGradient></defs><line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,.08)" stroke-width="1"/><line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,.08)" stroke-width="1"/>'+yGrid+xGrid+'<path d="'+areaD+'" fill="url(#gfill)"/><path d="'+lineD+'" fill="none" stroke="#3B7BF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+dotsHtml+'</svg>';
 }
 
@@ -608,52 +612,9 @@ function calcFinance(){
   var loan=Math.max(0,price-dep),mr=apr/100/12;
   var monthly=mr>0?Math.round(loan*(mr*Math.pow(1+mr,term))/(Math.pow(1+mr,term)-1)*100)/100:Math.round(loan/term*100)/100;
   if(el('finMonthly'))el('finMonthly').textContent='£'+monthly.toFixed(2);
-  var totalRepay=Math.round(monthly*term+dep),totalInterest=Math.max(0,Math.round(monthly*term-loan));
-  if(el('finTotal'))el('finTotal').textContent='£'+totalRepay.toLocaleString();
-  if(el('finInterest'))el('finInterest').textContent='£'+totalInterest.toLocaleString();
+  if(el('finTotal'))el('finTotal').textContent='£'+Math.round(monthly*term+dep).toLocaleString();
+  if(el('finInterest'))el('finInterest').textContent='£'+Math.max(0,Math.round(monthly*term-loan)).toLocaleString();
   if(el('finLoan'))el('finLoan').textContent='£'+loan.toLocaleString();
-  // ── Donut chart: vehicle cost vs interest ──────────────────────────────
-  var fg=el('finGraph');
-  if(fg&&price>0){
-    var circ=213.6,totalCost=price+totalInterest;
-    var vPct=totalCost>0?price/totalCost:1,iPct=1-vPct;
-    var vDash=Math.round(circ*vPct),iDash=Math.round(circ*iPct);
-    fg.innerHTML='<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:14px">'+
-      '<div style="position:relative;width:82px;height:82px;flex-shrink:0">'+
-      '<svg viewBox="0 0 88 88" style="width:82px;height:82px;transform:rotate(-90deg)">'+
-      '<circle cx="44" cy="44" r="34" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/>'+
-      '<circle cx="44" cy="44" r="34" fill="none" stroke="#a3f32c" stroke-width="10" stroke-dasharray="'+vDash+' '+circ+'" stroke-linecap="round"/>'+
-      (totalInterest>0?'<circle cx="44" cy="44" r="34" fill="none" stroke="#EF4444" stroke-width="10" stroke-dasharray="'+iDash+' '+circ+'" stroke-dashoffset="-'+vDash+'" stroke-linecap="round"/>':'')+
-      '</svg>'+
-      '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">'+
-      '<div style="font-size:12px;font-weight:800;color:var(--t1)">'+Math.round(vPct*100)+'%</div>'+
-      '<div style="font-size:7px;color:var(--t4)">Car</div></div></div>'+
-      '<div style="flex:1;min-width:110px">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
-      '<div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:#a3f32c"></div><span style="font-size:10px;color:var(--t3)">Vehicle price</span></div>'+
-      '<span style="font-size:10px;font-weight:700;color:var(--t1)">£'+price.toLocaleString()+'</span></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
-      '<div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:#EF4444"></div><span style="font-size:10px;color:var(--t3)">Total interest</span></div>'+
-      '<span style="font-size:10px;font-weight:700;color:#EF4444">£'+totalInterest.toLocaleString()+'</span></div>'+
-      '<div style="height:1px;background:rgba(255,255,255,.06);margin:7px 0"></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:center">'+
-      '<span style="font-size:9px;color:var(--t4)">Total cost of ownership</span>'+
-      '<span style="font-size:11px;font-weight:800;color:var(--t1)">£'+totalRepay.toLocaleString()+'</span></div>'+
-      '</div></div>';
-  }
-  // ── Balance bar chart over loan term ───────────────────────────────────
-  var bc=el('finBalChart');
-  if(bc&&loan>0&&monthly>0){
-    var W=260,H=48,bal=loan,bars='',n=Math.min(term,40),step=term/n;
-    for(var m=0;m<n;m++){
-      for(var s=0;s<step;s++){var im=bal*mr;bal=Math.max(0,bal-(monthly-im));}
-      var bh=Math.max(1,Math.round((bal/loan)*H)),bw=Math.max(2,Math.floor((W-n)/n));
-      bars+='<rect x="'+(m*(bw+1))+'" y="'+(H-bh)+'" width="'+bw+'" height="'+bh+'" fill="#a3f32c" opacity="'+(0.25+0.75*(1-m/n)).toFixed(2)+'" rx="1"/>';
-    }
-    bc.innerHTML='<div style="font-size:8px;color:var(--t4);margin:12px 0 4px;text-transform:uppercase;letter-spacing:.5px">Loan balance — '+term+' month payoff</div>'+
-      '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:'+H+'px;display:block">'+bars+'</svg>'+
-      '<div style="display:flex;justify-content:space-between;font-size:8px;color:var(--t4);margin-top:3px"><span>£'+loan.toLocaleString()+' now</span><span>£0 at month '+term+'</span></div>';
-  }
 }
 
 var VIP=['bravemalek2020@gmail.com','waelmoh1983@gmail.com'];
