@@ -1069,7 +1069,10 @@ function runPreset(reg){document.getElementById('regInput').value=reg;document.g
   bc.innerHTML=widths.map(function(w){return'<span style="width:'+w+'px"></span>'}).join('');
 })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+if(!window.supabase){var _nr=function(){var o={then:function(f){try{f&&f({data:{session:null,user:null}});}catch(e){}return o;},catch:function(){return o;},maybeSingle:function(){return o;},eq:function(){return o;},select:function(){return o;},upsert:function(){return o;},update:function(){return o;},insert:function(){return o;}};return o;};window.supabase={createClient:function(){return{auth:{onAuthStateChange:function(){},signInWithPassword:function(){return _nr();},signUp:function(){return _nr();},signOut:function(){return _nr();}},from:function(){return _nr();}};};}
+</script>
 <script src="app.js"></script>
 </body>
 </html>
