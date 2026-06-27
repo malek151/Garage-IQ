@@ -453,6 +453,35 @@ input[type=range]{accent-color:var(--lime);width:100%}
   .hero-h1{font-size:24px}
   .pill-tab{min-width:44px;padding:8px 5px}
 }
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:300;display:flex;align-items:center;justify-content:center}.overlay.hidden{display:none!important}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:24px;width:100%;max-width:380px;margin:16px;position:relative}
+.modal-x{position:absolute;top:12px;right:14px;font-size:20px;color:var(--t3);cursor:pointer;background:none;border:none}
+.mh{font-family:"Syne",sans-serif;font-size:18px;font-weight:900;color:var(--t1);margin-bottom:4px}
+.msub{font-size:11px;color:var(--t3);margin-bottom:14px}
+.mtabs{display:flex;background:var(--bg3);padding:3px;border-radius:10px;border:1px solid var(--border);margin-bottom:14px}
+.mtab{flex:1;padding:7px;border-radius:7px;font-size:12px;font-weight:700;color:var(--t3);cursor:pointer;background:none;border:none;transition:all .2s}
+.mtab.active{background:var(--card);color:var(--t1)}
+.merr{font-size:11px;color:#f87171;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);padding:8px 10px;border-radius:8px;margin-bottom:8px;display:none}
+.mok{font-size:11px;color:#4ade80;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);padding:8px 10px;border-radius:8px;margin-bottom:8px;display:none}
+.mbtn{width:100%;background:var(--lime);color:#060a12;font-family:"Syne",sans-serif;font-weight:900;font-size:14px;padding:12px;border-radius:10px;cursor:pointer;border:none;margin-top:4px}
+.mbtn:hover{background:var(--lime2)}
+.mbtn-ghost{width:100%;background:none;border:1px solid var(--border2);color:var(--t3);font-size:12px;padding:10px;border-radius:10px;cursor:pointer;margin-top:10px}
+.prof-top{text-align:center;margin-bottom:14px}
+.prof-av{width:52px;height:52px;background:linear-gradient(135deg,var(--lime),#3ecf4c);color:#060a12;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;margin:0 auto 8px}
+.prof-name{font-family:"Syne",sans-serif;font-size:16px;font-weight:900;color:var(--t1)}
+.prof-email{font-size:10px;color:var(--t4);font-family:monospace}
+.pstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.pstat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.pstat-n{font-family:"Syne",sans-serif;font-size:20px;font-weight:900;color:var(--t1)}
+.pstat-l{font-size:9px;color:var(--t4);font-family:monospace;text-transform:uppercase;margin-top:2px}
+.s-lbl{font-size:9px;color:var(--t4);font-family:monospace;text-transform:uppercase;letter-spacing:1px;margin:10px 0 4px}
+.edit-row{display:flex;gap:6px;margin-bottom:8px}
+.edit-save{background:var(--lime);color:#060a12;font-weight:900;font-size:12px;padding:8px 12px;border-radius:8px;cursor:pointer;border:none;white-space:nowrap}
+.ph-empty{font-size:11px;color:var(--t4);font-family:monospace;text-align:center;padding:8px}
+.nav-user{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--t2)}
+.nav-user-dot{width:7px;height:7px;background:var(--lime);border-radius:50%;animation:ping 1.5s infinite}
+.nav-logout{width:32px;height:32px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--t3);cursor:pointer;transition:all .2s}
+.nav-logout:hover{color:var(--t1)}
 </style>
 </head>
 <body>
@@ -461,7 +490,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 <div id="toastWrap"></div>
 
 <!-- AUTH MODAL -->
-<div id="authModal" class="modal-overlay hidden">
+<div id="authModal" class="overlay hidden">
   <div class="modal-box">
     <div class="modal-top">
       <div class="modal-title">GarageIQ Account</div>
@@ -488,7 +517,7 @@ input[type=range]{accent-color:var(--lime);width:100%}
 </div>
 
 <!-- PROFILE MODAL -->
-<div id="profileModal" class="hidden">
+<div id="profileModal" class="overlay hidden">
   <div class="modal-box" style="max-width:400px">
     <div class="modal-top">
       <div style="display:flex;align-items:center;gap:10px">
@@ -579,13 +608,13 @@ input[type=range]{accent-color:var(--lime);width:100%}
       </button>
 
       <!-- GUEST -->
-      <div class="nav-guest" id="navGuest">
+      <div id="navGuest" style="display:flex;gap:8px">
         <button class="btn-ghost" id="btnLogin">Sign In</button>
         <button class="btn-primary-sm" id="btnSignup">Get Started</button>
       </div>
 
       <!-- LOGGED IN -->
-      <div class="nav-logged hidden" id="navLoggedIn">
+      <div id="navLoggedIn" class="hidden" style="display:flex;align-items:center;gap:10px">
         <div class="prof-wrap">
           <button class="prof-btn" id="btnAvatar">
             <div class="prof-av" id="navAv">AP</div>
@@ -1069,10 +1098,8 @@ function runPreset(reg){document.getElementById('regInput').value=reg;document.g
   bc.innerHTML=widths.map(function(w){return'<span style="width:'+w+'px"></span>'}).join('');
 })();
 </script>
-<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
-if(!window.supabase){var _nr=function(){var o={then:function(f){try{f&&f({data:{session:null,user:null}});}catch(e){}return o;},catch:function(){return o;},maybeSingle:function(){return o;},eq:function(){return o;},select:function(){return o;},upsert:function(){return o;},update:function(){return o;},insert:function(){return o;}};return o;};window.supabase={createClient:function(){return{auth:{onAuthStateChange:function(){},signInWithPassword:function(){return _nr();},signUp:function(){return _nr();},signOut:function(){return _nr();}},from:function(){return _nr();}};};}
-</script>
-<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js" defer></script>
+<div style="display:none"><div id="featGrid"></div><div id="specHighlights"></div><div id="co2BandWrap"><div id="co2BandMarker"></div></div><div id="specGearbox"></div><div id="specMpg"></div><div id="pbBhpVal"></div><div id="pbBhp"></div><div id="pbTqVal"></div><div id="pbTq"></div><div id="pbZeroVal"></div><div id="pbZero"></div><div id="pbTopVal"></div><div id="pbTop"></div><div id="depF"></div></div>
 </body>
 </html>
