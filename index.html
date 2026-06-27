@@ -1061,7 +1061,7 @@ function switchMode(m){
   document.getElementById('regMode').style.display=isReg?'block':'none';
   document.getElementById('vinMode').style.display=isReg?'none':'block';
 }
-function runPreset(reg){el('regInput').value=reg;el('runBtn').click();}
+function runPreset(reg){document.getElementById('regInput').value=reg;document.getElementById('runBtn').click();}
 // VIN barcode decoration
 (function(){
   var bc=document.getElementById('vinBarcode');
