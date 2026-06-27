@@ -64,25 +64,21 @@ function fetchVehiclePhoto(make,model,year){
   else if(u==='MAZDA'){if(/CX/.test(mo))wq='Mazda CX-5';else if(/MX/.test(mo))wq='Mazda MX-5';else wq='Mazda '+mo.split(' ')[0];}
   else if(mo&&mo.length>1&&mo!==mk.toUpperCase())wq=mk+' '+mo.split(' ')[0];
   
-  if(!wq)return; /* no match — keep gradient, no bare-make fallback */
-
-  fetch('https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(wq)+'&prop=pageimages&format=json&pithumbsize=900&origin=*')
+  /* Use /api/photo for reliable Unsplash car photos */
+  fetch(VERCEL+'/api/photo?make='+encodeURIComponent(mk)+'&model='+encodeURIComponent(mo))
     .then(function(r){return r.json();})
     .then(function(d){
-      var pages=d&&d.query&&d.query.pages?d.query.pages:{};
-      var p=Object.values(pages)[0];
-      if(!p||!p.thumbnail||!p.pageid||p.pageid<=0)return;
+      if(!d||!d.url)return;
       var real=el('vehPhotoReal');
       if(!real)return;
       real.onload=function(){
-        /* MUST be landscape — filters out circular logos and square images */
-        if(real.naturalWidth>=200&&real.naturalWidth>=real.naturalHeight*0.9){
+        if(real.naturalWidth>=200){
           var bg=wrap.querySelector('.veh-photo-bg');
           if(bg)bg.style.display='none';
           real.style.display='block';
         }
       };
-      real.src=p.thumbnail.source;
+      real.src=d.url;
     }).catch(function(){});
 }
 
