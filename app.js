@@ -64,21 +64,25 @@ function fetchVehiclePhoto(make,model,year){
   else if(u==='MAZDA'){if(/CX/.test(mo))wq='Mazda CX-5';else if(/MX/.test(mo))wq='Mazda MX-5';else wq='Mazda '+mo.split(' ')[0];}
   else if(mo&&mo.length>1&&mo!==mk.toUpperCase())wq=mk+' '+mo.split(' ')[0];
   
-  /* Use /api/photo for curated Unsplash car photos */
-  fetch(VERCEL+'/api/photo?make='+encodeURIComponent(mk))
+  if(!wq)return; /* no match — keep gradient, no bare-make fallback */
+
+  fetch('https://en.wikipedia.org/w/api.php?action=query&titles='+encodeURIComponent(wq)+'&prop=pageimages&format=json&pithumbsize=900&origin=*')
     .then(function(r){return r.json();})
     .then(function(d){
-      if(!d||!d.url)return;
+      var pages=d&&d.query&&d.query.pages?d.query.pages:{};
+      var p=Object.values(pages)[0];
+      if(!p||!p.thumbnail||!p.pageid||p.pageid<=0)return;
       var real=el('vehPhotoReal');
       if(!real)return;
       real.onload=function(){
-        if(real.naturalWidth>=200){
+        /* MUST be landscape — filters out circular logos and square images */
+        if(real.naturalWidth>=200&&real.naturalWidth>real.naturalHeight*1.2){
           var bg=wrap.querySelector('.veh-photo-bg');
           if(bg)bg.style.display='none';
           real.style.display='block';
         }
       };
-      real.src=d.url;
+      real.src=p.thumbnail.source;
     }).catch(function(){});
 }
 
@@ -205,12 +209,28 @@ function renderUlezVed(d){
 }
 
 window.addEventListener('load',function(){
-  sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
-  sb.auth.onAuthStateChange(function(ev,session){
-    currentUser=session?session.user:null;
-    if(currentUser){var pu=localStorage.getItem('giq_pu_'+currentUser.id);if(pu)tryCreateProfile(currentUser.id,pu);else loadProfile();if(motTests.length)setTimeout(showIntelReport,120);}
-    else{currentProfile=null;renderNav();if(motTests.length)showIntelReport();}
-  });
+  /* PATCH: Supabase init can no longer take the whole page down with it.
+     If the CDN is slow/blocked, every button below still gets wired up —
+     auth just won't work until supabase loads (and we retry once). */
+  function initSupabase(){
+    if(!window.supabase){return false;}
+    try{
+      sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+      sb.auth.onAuthStateChange(function(ev,session){
+        currentUser=session?session.user:null;
+        if(currentUser){var pu=localStorage.getItem('giq_pu_'+currentUser.id);if(pu)tryCreateProfile(currentUser.id,pu);else loadProfile();if(motTests.length)setTimeout(showIntelReport,120);}
+        else{currentProfile=null;renderNav();if(motTests.length)showIntelReport();}
+      });
+      return true;
+    }catch(e){console.error('Supabase init failed:',e);return false;}
+  }
+  if(!initSupabase()){
+    var tries=0;
+    var retry=setInterval(function(){
+      tries++;
+      if(initSupabase()||tries>20)clearInterval(retry); /* stop after ~10s */
+    },500);
+  }
   el('btnLogin').onclick=function(){openAuth('login');};
   el('btnSignup').onclick=function(){openAuth('signup');};
   el('btnAvatar').onclick=openProfileModal;
@@ -474,8 +494,6 @@ function renderMot(raw){
   else if(Array.isArray(raw)&&raw[0]&&raw[0].motTests)tests=raw[0].motTests;
   else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate)tests=raw;
   if(!tests.length){renderDemoMot();return;}
-  /* Normalise DVSA API v6 rfrAndComments → defects */
-  tests=tests.map(function(t){return Object.assign({},t,{defects:(t.defects||(t.rfrAndComments||[]).map(function(r){return{type:r.dangerous?'DANGEROUS':r.type||'ADVISORY',text:r.text||''};}))});});
   motTests=tests;
   if(!vehicleData.model||vehicleData.model.length<=2){var mm=(raw&&raw.model)?raw.model:'';if(mm&&mm.length>2){vehicleData.model=mm.toUpperCase();if(el('statModel'))el('statModel').textContent=vehicleData.model;}}
   buildMotSummary(tests);buildMotRows(tests);buildMileageChart(tests);buildMotTimeline(tests);renderValuation();showIntelReport();
@@ -613,37 +631,6 @@ function calcFinance(){
   if(el('finTotal'))el('finTotal').textContent='£'+Math.round(monthly*term+dep).toLocaleString();
   if(el('finInterest'))el('finInterest').textContent='£'+Math.max(0,Math.round(monthly*term-loan)).toLocaleString();
   if(el('finLoan'))el('finLoan').textContent='£'+loan.toLocaleString();
-  /* Finance donut + balance chart */
-  var totalInterest=Math.max(0,Math.round(monthly*term-loan)),totalRepay=Math.round(monthly*term+dep);
-  var fg=el('finGraph');
-  if(fg&&price>0){
-    var circ=213.6,totalCost=price+totalInterest,vPct=totalCost>0?price/totalCost:1;
-    var vDash=Math.round(circ*vPct),iDash=Math.round(circ*(1-vPct));
-    fg.innerHTML='<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:14px">'+
-      '<div style="position:relative;width:80px;height:80px;flex-shrink:0">'+
-      '<svg viewBox="0 0 88 88" style="width:80px;height:80px;transform:rotate(-90deg)">'+
-      '<circle cx="44" cy="44" r="34" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="10"/>'+
-      '<circle cx="44" cy="44" r="34" fill="none" stroke="#a3f32c" stroke-width="10" stroke-dasharray="'+vDash+' '+circ+'" stroke-linecap="round"/>'+
-      (totalInterest>0?'<circle cx="44" cy="44" r="34" fill="none" stroke="#EF4444" stroke-width="10" stroke-dasharray="'+iDash+' '+circ+'" stroke-dashoffset="-'+vDash+'" stroke-linecap="round"/>':'')+
-      '</svg><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">'+
-      '<div style="font-size:11px;font-weight:800;color:var(--t1)">'+Math.round(vPct*100)+'%</div>'+
-      '<div style="font-size:7px;color:var(--t4)">Car</div></div></div>'+
-      '<div style="flex:1;min-width:110px">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:#a3f32c"></div><span style="font-size:10px;color:var(--t3)">Vehicle price</span></div><span style="font-size:10px;font-weight:700;color:var(--t1)">£'+price.toLocaleString()+'</span></div>'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="display:flex;align-items:center;gap:5px"><div style="width:7px;height:7px;border-radius:50%;background:#EF4444"></div><span style="font-size:10px;color:var(--t3)">Total interest</span></div><span style="font-size:10px;font-weight:700;color:#EF4444">£'+totalInterest.toLocaleString()+'</span></div>'+
-      '<div style="height:1px;background:rgba(255,255,255,.06);margin:7px 0"></div>'+
-      '<div style="display:flex;justify-content:space-between"><span style="font-size:9px;color:var(--t4)">Total cost</span><span style="font-size:11px;font-weight:800;color:var(--t1)">£'+totalRepay.toLocaleString()+'</span></div></div></div>';
-  }
-  var bc2=el('finBalChart');
-  if(bc2&&loan>0&&monthly>0){
-    var W=260,H=48,bal=loan,bars='',n=Math.min(term,40),step=term/n;
-    for(var mi=0;mi<n;mi++){for(var si=0;si<step;si++){var im2=bal*mr;bal=Math.max(0,bal-(monthly-im2));}
-    var bh=Math.max(1,Math.round((bal/loan)*H)),bw=Math.max(2,Math.floor((W-n)/n));
-    bars+='<rect x="'+(mi*(bw+1))+'" y="'+(H-bh)+'" width="'+bw+'" height="'+bh+'" fill="#a3f32c" opacity="'+(0.25+0.75*(1-mi/n)).toFixed(2)+'" rx="1"/>';}
-    bc2.innerHTML='<div style="font-size:8px;color:var(--t4);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.5px">Balance over '+term+' months</div>'+
-      '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:'+H+'px;display:block">'+bars+'</svg>'+
-      '<div style="display:flex;justify-content:space-between;font-size:8px;color:var(--t4);margin-top:3px"><span>£'+loan.toLocaleString()+'</span><span>£0</span></div>';
-  }
 }
 
 var VIP=['bravemalek2020@gmail.com','waelmoh1983@gmail.com'];
