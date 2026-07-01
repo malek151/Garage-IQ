@@ -194,9 +194,9 @@ nav{
 .veh-stat-val.ok{color:var(--green3)}.veh-stat-val.bad{color:var(--red3)}.veh-stat-val.warn{color:var(--gold)}
 
 /* ── TABS ── */
-.tab-rail{background:rgba(6,10,18,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:62px;z-index:300;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:10px 14px;display:flex;gap:8px;align-items:center}.tab-rail::-webkit-scrollbar{display:none}
-.tab-rail.hidden{display:none}
-.tab-track{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab-rail{background:rgba(6,10,18,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:sticky;top:62px;z-index:300;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:10px 0;display:block}.tab-rail::-webkit-scrollbar{display:none}
+  .tab-rail.hidden{display:none}
+  .tab-track{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tab-track::-webkit-scrollbar{display:none}
 .tab-inner{display:flex;max-width:900px;margin:0 auto;padding:0 1.5rem}
 .pill-tab{font-family:'Syne',sans-serif;font-size:10.5px;font-weight:800;letter-spacing:.4px;display:inline-flex;align-items:center;gap:5px;padding:7px 16px;border:1.5px solid var(--border);border-radius:30px;background:transparent;color:var(--t3);cursor:pointer;white-space:nowrap;transition:all .2s;-webkit-tap-highlight-color:transparent;text-transform:uppercase;flex-shrink:0}
@@ -736,7 +736,7 @@ html[data-theme="light"] .fraud-alert-text{color:#991b1b}
 html[data-theme="light"] .veh-photo-wrap img{filter:brightness(.95)}
 html[data-theme="light"] #heroCanvas{opacity:.3}
 
-/* ════════════════════════════
+/* ════════════════════��═══════
    FUTURISTIC ANIMATIONS
    ════════════════════════════ */
 @keyframes borderPulse{0%,100%{box-shadow:0 0 0 0 rgba(59,123,246,0)}60%{box-shadow:0 0 0 6px rgba(59,123,246,.12)}}
@@ -1181,14 +1181,12 @@ nav{background:rgba(0,0,0,.6);backdrop-filter:blur(30px) saturate(1.8);-webkit-b
 
 <!-- TABS -->
 <div class="tab-rail hidden" id="tabsWrap">
-  <div class="tab-track" style="display:flex;gap:8px;align-items:center">
-    <div class="tab-inner">
-      <button class="pill-tab active" data-tab="overview"><i class="ti ti-car"></i><span>Overview</span></button>
-      <button class="pill-tab" data-tab="history"><i class="ti ti-history"></i><span>MOT</span></button>
-      <button class="pill-tab" data-tab="report"><i class="ti ti-shield-search"></i><span>Report</span></button>
-      <button class="pill-tab" data-tab="valuation"><i class="ti ti-currency-pound"></i><span>Value</span></button>
-      <button class="pill-tab" data-tab="mods"><i class="ti ti-bolt"></i><span>Mods</span></button>
-    </div>
+  <div class="tab-inner">
+    <button class="pill-tab active" data-tab="overview"><i class="ti ti-car"></i><span>Overview</span></button>
+    <button class="pill-tab" data-tab="history"><i class="ti ti-history"></i><span>MOT</span></button>
+    <button class="pill-tab" data-tab="report"><i class="ti ti-shield-search"></i><span>Report</span></button>
+    <button class="pill-tab" data-tab="valuation"><i class="ti ti-currency-pound"></i><span>Value</span></button>
+    <button class="pill-tab" data-tab="mods"><i class="ti ti-bolt"></i><span>Mods</span></button>
   </div>
 </div>
 
