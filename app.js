@@ -495,15 +495,9 @@ function renderMot(raw){
   else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate)tests=raw;
   if(!tests.length){renderDemoMot();return;}
   motTests=tests;
-  /* Normalise DVSA v6 rfrAndComments -> defects so buildMotRows works */
-  tests=tests.map(function(t){
-    return Object.assign({},t,{defects:t.defects&&t.defects.length?t.defects:(t.rfrAndComments||[]).map(function(r){
-      return{type:r.dangerous?'DANGEROUS':(r.type||'ADVISORY').toUpperCase(),text:r.text||''};
-    })});
-  });
-  /* raw.model is undefined when DVSA returns an array - use raw[0].model */
+  /* Fix: raw[0].model not raw.model — DVSA returns an array */
   if(!vehicleData.model||vehicleData.model.length<=2){
-    var mm=Array.isArray(raw)&&raw[0]?raw[0].model:(raw&&raw.model?raw.model:'');
+    var mm=Array.isArray(raw)&&raw[0]?raw[0].model||'':(raw&&raw.model?raw.model:'');
     if(mm&&mm.length>2){
       vehicleData.model=mm.toUpperCase();
       if(el('statModel'))el('statModel').textContent=vehicleData.model;
