@@ -1,10 +1,17 @@
-async function groq(messages) {
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+// GPT-5 via Vercel AI Gateway (OpenAI-compatible endpoint, zero-config auth).
+async function ai(messages) {
+  const r = await fetch('https://ai-gateway.vercel.sh/v1/chat/completions', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'openai/gpt-oss-20b', max_tokens: 600, temperature: 0, messages })
+    headers: { Authorization: `Bearer ${process.env.AI_GATEWAY_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'openai/gpt-5.5',
+      max_completion_tokens: 3000,
+      reasoning_effort: 'low',
+      response_format: { type: 'json_object' },
+      messages,
+    }),
   });
-  if (!r.ok) throw new Error('Groq ' + r.status);
+  if (!r.ok) throw new Error('Gateway ' + r.status + ' ' + (await r.text()).slice(0, 300));
   return (await r.json()).choices?.[0]?.message?.content || '';
 }
 function parseJSON(raw) {
@@ -31,7 +38,7 @@ Major failures: ${majors.length?majors.join('; '):'None'}
 Return ONLY this JSON:
 {"overallVerdict":"<CLEAN|SUSPICIOUS|HIGH RISK>","keyFindings":["<finding>","<finding>","<finding>"],"stolenRisk":"<Low|Medium|High>","stolenNote":"<15 words>","cloneRisk":"<Low|Medium|High>","cloneNote":"<15 words>","mileageVerdict":"<Consistent|Suspicious|Fraudulent>","buyerAdvice":"<2 practical UK sentences>"}`;
   try {
-    return res.status(200).json(parseJSON(await groq([
+    return res.status(200).json(parseJSON(await ai([
       { role: 'system', content: 'UK car fraud detection AI. Return only raw JSON, no markdown.' },
       { role: 'user', content: prompt }
     ])));

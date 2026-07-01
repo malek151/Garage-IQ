@@ -11,20 +11,22 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060A12;--bg2:#0C1220;--bg3:#111827;
-  --card:rgba(255,255,255,.04);--card2:rgba(255,255,255,.07);
-  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.14);
-  --blue:#3B7BF6;--blue2:#5B92FF;--blue3:rgba(59,123,246,.15);
-  --gold:#F5A623;--gold2:#FFB84D;--gold3:rgba(245,166,35,.12);
-  --green:#10B981;--green2:rgba(16,185,129,.12);--green3:#34D399;
-  --red:#EF4444;--red2:rgba(239,68,68,.12);--red3:#F87171;
-  --amber:#F59E0B;--amber2:rgba(245,158,11,.12);
-  --t1:#F8FAFC;--t2:#CBD5E1;--t3:#64748B;--t4:#334155;
-  --ink:#060A12;
-  --r:16px;--rs:12px;--rxs:8px;
-  --s1:0 0 0 1px rgba(255,255,255,.06),0 4px 24px rgba(0,0,0,.4);
-  --s2:0 0 0 1px rgba(59,123,246,.2),0 8px 40px rgba(59,123,246,.15);
-  --glow:0 0 40px rgba(59,123,246,.3);
+  /* Apple-style dark system palette */
+  --bg:#000000;--bg2:#141416;--bg3:#1c1c1e;
+  --card:rgba(255,255,255,.055);--card2:rgba(255,255,255,.1);
+  --border:rgba(255,255,255,.1);--border2:rgba(255,255,255,.2);
+  --blue:#0A84FF;--blue2:#409CFF;--blue3:rgba(10,132,255,.15);
+  --gold:#FFB340;--gold2:#FFC470;--gold3:rgba(255,179,64,.14);
+  --green:#30D158;--green2:rgba(48,209,88,.14);--green3:#41DA6A;
+  --red:#FF453A;--red2:rgba(255,69,58,.14);--red3:#FF6961;
+  --amber:#FF9F0A;--amber2:rgba(255,159,10,.14);
+  --t1:#F5F5F7;--t2:rgba(235,235,245,.7);--t3:rgba(235,235,245,.45);--t4:rgba(235,235,245,.28);
+  --ink:#000000;
+  --r:22px;--rs:16px;--rxs:11px;
+  --ease:cubic-bezier(.32,.72,0,1);
+  --s1:0 0 0 1px rgba(255,255,255,.05),0 10px 34px rgba(0,0,0,.55);
+  --s2:0 0 0 1px rgba(10,132,255,.25),0 12px 44px rgba(10,132,255,.2);
+  --glow:0 0 44px rgba(10,132,255,.3);
 }
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;color-scheme:dark}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;overflow-x:hidden;font-size:14px}
@@ -948,6 +950,74 @@ html[data-theme="light"] .cv-chip{background:#F1F5F9;border-color:rgba(30,58,138
 /* spin used in carcheck loading badges */
 .spin{width:14px;height:14px;border:2px solid rgba(163,243,44,.2);border-top-color:var(--lime,#a3f32c);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* ══════════════════════════════════════════════
+   APPLE-STYLE REFINEMENT LAYER
+   SF system typography, vibrancy materials, spring motion
+   ══════════════════════════════════════════════ */
+:root{--sf:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',system-ui,sans-serif;
+  --sfd:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',system-ui,sans-serif}
+
+/* Typography — SF everywhere (replaces Syne/Inter) */
+body,input,select,textarea,button,p,span,div,a,li{font-family:var(--sf)}
+h1,h2,h3,h4,.nav-logo-name,.veh-name,.hero h1,.stat-card-val,.mot-sn,.tech-val,.sval,
+.veh-stat-val,.tl-mi,.pill-tab,.card-title,.chip,.badge,.btn-ghost,.btn-primary,.reg-input,
+.reg-go,.pw-title,.pay-btn,.ulez-val,.gauge-lbl,.sect-lbl,.ai-title,.hs-n,.reg-toggle-btn,
+.search-toggle-btn,.mbtn,.mh,.hl-t,.how-t,.how-n,.val-hero *{font-family:var(--sfd)}
+body{letter-spacing:-.01em;font-size:15px}
+
+/* Headings — Apple weight & tracking */
+.hero h1{font-weight:700;letter-spacing:-.035em;line-height:1.04}
+.hero h1 .hl{background:none!important;background-image:linear-gradient(120deg,#0A84FF,#5AC8FA)!important;-webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;color:transparent}
+.veh-name{font-weight:700;letter-spacing:-.03em}
+.nav-logo-name{font-weight:700;letter-spacing:-.02em}
+.pw-title,.mh{font-weight:700;letter-spacing:-.02em}
+.hs-n,.stat-card-val,.mot-sn,.ulez-val{font-weight:700;letter-spacing:-.02em}
+
+/* Spring easing on every interactive surface */
+a,button,.card,.pill-tab,.mod-btn,.hrow,.stat-card,.sbox,.tech-item,.mot-sb,.ulez-card,
+.feat-card,.how-card,.reg-toggle-btn,.search-toggle-btn,.dm-toggle,.btn-ghost,.btn-primary,
+.reg-go,.pay-btn,.chk,.tl-body,.nav-logout,.mbtn,.hs{transition:all .4s var(--ease)!important}
+
+/* Pill buttons — classic Apple radius */
+.btn-primary,.btn-ghost,.pay-btn,.reg-go,.mbtn,.pill-tab,.reg-toggle,.search-toggle,.vs-badge,
+.hero-eyebrow,.chip,.badge{border-radius:980px}
+.btn-primary,.pay-btn{background:var(--blue);box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.btn-primary:hover,.pay-btn:hover{background:var(--blue2);transform:translateY(-1px);box-shadow:0 8px 26px rgba(10,132,255,.4)}
+.reg-go{background:var(--blue)}
+.reg-go:hover{background:var(--blue2)}
+
+/* Vibrancy / frosted materials */
+nav{background:rgba(0,0,0,.6);backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8)}
+.tab-rail{background:rgba(0,0,0,.55)!important;backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8)}
+.card,.intel-card,.ai-box,.ulez-card{backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6)}
+.search-box{border-radius:20px;backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6)}
+.modal,.overlay .modal{border-radius:26px}
+.overlay{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+
+/* Softer card hover lift */
+.card:hover,.hrow:hover,.ulez-card:hover,.feat-card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.5)}
+
+/* Tabs — Apple segmented feel */
+.pill-tab{text-transform:none;letter-spacing:-.01em;font-weight:600;border-width:1px}
+.pill-tab.active{background:var(--blue);border-color:var(--blue);box-shadow:0 4px 16px rgba(10,132,255,.35)}
+.nav-logo-icon{border-radius:12px;background:var(--blue);box-shadow:0 4px 14px rgba(10,132,255,.4)}
+
+/* Nav buttons */
+.nav-logo-sub{text-transform:none;letter-spacing:.2px}
+.card-title,.sect-lbl,.ai-title,.stat-card-lbl,.tech-lbl,.veh-stat-lbl{text-transform:none;letter-spacing:0}
+.card-title{font-size:12px;font-weight:600;color:var(--t2)}
+.card-title i{color:var(--blue)}
+
+/* Focus ring — subtle Apple blue halo */
+:focus-visible{outline:none!important;box-shadow:0 0 0 4px rgba(10,132,255,.35);border-radius:8px}
+
+/* Refined scrollbar */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:rgba(235,235,245,.2);border-radius:8px}
+
+/* Reduced-motion respect */
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
@@ -1046,9 +1116,9 @@ html[data-theme="light"] .cv-chip{background:#F1F5F9;border-color:rgba(30,58,138
   <div class="hero-glow-1"></div>
   <div class="hero-glow-2"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow"><i class="ti ti-shield-check"></i> Trusted Vehicle Intelligence</div>
+    <div class="hero-eyebrow"><i class="ti ti-sparkles"></i> Powered by GPT-5</div>
     <h1>Know Any Car.<br/><span class="hl">Anywhere.</span></h1>
-    <p class="hero-sub">UK reg plates · International VINs · Full MOT history · AI risk analysis · Real valuations</p>
+    <p class="hero-sub">UK reg plates · International VINs · Full MOT history · GPT-5 risk analysis · Real valuations</p>
     <div class="vs-row">
       <span class="vs-badge">vs CarVertical</span>
       Same DVLA data · Better design · <strong style="color:var(--gold)">£1.99 vs £16+</strong>
@@ -1077,7 +1147,7 @@ html[data-theme="light"] .cv-chip{background:#F1F5F9;border-color:rgba(30,58,138
       <div class="hs-div"></div>
       <div class="hs"><div class="hs-n">100%</div><div class="hs-l">DVLA Data</div></div>
       <div class="hs-div"></div>
-      <div class="hs"><div class="hs-n">AI</div><div class="hs-l">Risk Engine</div></div>
+      <div class="hs"><div class="hs-n">GPT-5</div><div class="hs-l">Risk Engine</div></div>
     </div>
   </div>
 </section>
@@ -1263,7 +1333,7 @@ html[data-theme="light"] .cv-chip{background:#F1F5F9;border-color:rgba(30,58,138
           <div class="gauge-row"><div class="gauge-svg-wrap" id="riskGaugeSvg"></div><div><div class="gauge-lbl" id="riskLbl">—</div><div class="gauge-sub" id="riskSub">—</div></div></div>
           <div class="checks" id="intelChecks"></div>
           <div class="ai-box">
-            <div class="ai-head"><div class="ai-title"><i class="ti ti-brain" style="color:var(--blue2);font-size:13px"></i> AI Assessment</div><div class="chip chip-b" id="aiRiskChip">Analysing...</div></div>
+            <div class="ai-head"><div class="ai-title"><i class="ti ti-brain" style="color:var(--blue2);font-size:13px"></i> GPT-5 Assessment</div><div class="chip chip-b" id="aiRiskChip">Analysing...</div></div>
             <div id="aiRiskContent"><div class="loading-box" style="padding:.85rem"><div class="spin"></div></div></div>
           </div>
           <div class="sect-lbl">Damage & Defect Zones</div>
@@ -1354,10 +1424,10 @@ html[data-theme="light"] .cv-chip{background:#F1F5F9;border-color:rgba(30,58,138
   <div id="tab-mods" class="tab-panel">
     <div class="highlight-box reveal" style="background:rgba(59,123,246,.06);border-color:rgba(59,123,246,.2)">
       <div class="hl-ic"><i class="ti ti-sparkles" style="color:var(--blue2)"></i></div>
-      <div><div class="hl-t">AI Mod Analyser — Free</div><div class="hl-d">Select any modification and get an instant AI report: power gains, sound rating, value impact, MOT risk, insurance impact and UK buyer verdict.</div></div>
+      <div><div class="hl-t">GPT-5 Mod Analyser — Free</div><div class="hl-d">Select any modification and get an instant GPT-5 report: power gains, sound rating, value impact, MOT risk, insurance impact and UK buyer verdict.</div></div>
     </div>
     <div class="card">
-      <div class="card-head"><div class="card-title"><i class="ti ti-settings-2"></i> Mod Analyser</div><div class="chip chip-b">AI · Free</div></div>
+      <div class="card-head"><div class="card-title"><i class="ti ti-settings-2"></i> Mod Analyser</div><div class="chip chip-b">GPT-5 · Free</div></div>
       <div class="sect-lbl" style="margin-top:4px">Engine & Power</div>
       <div class="mods-g">
         <div class="mod-btn" data-mod="ECU remap"><div class="mod-ic"><i class="ti ti-cpu"></i></div><div class="mod-nm">ECU Remap</div><div class="mod-tg">HP · Torque · Economy</div></div>

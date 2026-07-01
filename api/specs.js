@@ -1,5 +1,5 @@
 // API Ninjas gives us accurate base specs (displacement, cylinders, transmission, drive, mpg)
-// Groq fills the missing performance fields (bhp, torque, 0-62, top speed, co2)
+// GPT-5 fills the missing performance fields (bhp, torque, 0-62, top speed, co2)
 // using the confirmed real data from Ninja as context — far more accurate than AI alone.
 
 const NINJA_KEY = process.env.NINJA_API_KEY || 'WeMnxdGjK00FQeHxNs9cMSf780diF0CjKYLtSdOR';
@@ -24,21 +24,23 @@ async function getNinja(make, model, year, fuel) {
   } catch { return null; }
 }
 
-async function groq(prompt) {
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+// GPT-5 via Vercel AI Gateway (OpenAI-compatible endpoint, zero-config auth).
+async function ai(prompt) {
+  const r = await fetch('https://ai-gateway.vercel.sh/v1/chat/completions', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${process.env.AI_GATEWAY_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'openai/gpt-oss-20b',
-      max_tokens: 350,
-      temperature: 0,
+      model: 'openai/gpt-5.5',
+      max_completion_tokens: 3000,
+      reasoning_effort: 'low',
+      response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: 'You are a UK automotive database. Return ONLY a raw JSON object, no markdown, no explanation.' },
         { role: 'user', content: prompt }
       ],
     }),
   });
-  if (!r.ok) throw new Error('Groq ' + r.status);
+  if (!r.ok) throw new Error('Gateway ' + r.status + ' ' + (await r.text()).slice(0, 300));
   return (await r.json()).choices?.[0]?.message?.content || '';
 }
 
@@ -83,7 +85,7 @@ export default async function handler(req, res) {
   // Step 1: Get accurate base data from API Ninjas
   const ninja = await getNinja(make, model, year, fuelClean);
 
-  // Build verified context string for Groq
+  // Build verified context string for GPT-5
   const ninjaContext = ninja ? [
     `Displacement: ${ninja.displacement}L`,
     ninja.cylinders ? `Cylinders: ${ninja.cylinders}` : '',
@@ -92,7 +94,7 @@ export default async function handler(req, res) {
     ninja.combination_mpg ? `MPG (US): ${ninja.combination_mpg} (~${usToUkMpg(ninja.combination_mpg)} UK)` : '',
   ].filter(Boolean).join(', ') : `Engine: ${litres}L ${fuelClean}`;
 
-  // Step 2: Ask Groq for performance specs using the confirmed base data
+  // Step 2: Ask GPT-5 for performance specs using the confirmed base data
   const prompt = `Give me the exact UK factory performance specs for the ${year || ''} ${make} ${model || ''} ${litres ? litres + 'L' : ''} ${fuelClean}.
 Confirmed technical data from database: ${ninjaContext}.
 Use these confirmed values — do NOT override displacement, cylinders, transmission or drive type.
@@ -100,7 +102,7 @@ Return ONLY this JSON:
 {"bhp":<int>,"torqueNm":<int>,"zeroToSixty":<float 0-62mph>,"topSpeedMph":<int>,"gearbox":"<e.g. 6-speed Manual>","consumptionCombined":${isEV ? '0' : `<int UK mpg>${ninja?.combination_mpg ? ', hint: ~' + usToUkMpg(ninja.combination_mpg) + ' UK mpg' : ''}`},"cylinders":${ninja?.cylinders || '<int>'},"driveType":"${ninja?.drive ? mapDrive(ninja.drive) : '<FWD|RWD|AWD|4WD>'}","co2gkm":${isEV ? '0' : '<int>'},"co2Label":"<A-G>"}`;
 
   try {
-    const raw = await groq(prompt);
+    const raw = await ai(prompt);
     const specs = parseJSON(raw);
 
     if (!specs.bhp || specs.bhp < 30) throw new Error('Bad BHP');
@@ -120,7 +122,7 @@ Return ONLY this JSON:
 
     return res.status(200).json(specs);
   } catch (err) {
-    // Fallback: if Groq fails entirely, return what we know from Ninja
+    // Fallback: if GPT-5 fails entirely, return what we know from Ninja
     if (ninja) {
       return res.status(200).json({
         bhp: 0, torqueNm: 0, zeroToSixty: 0, topSpeedMph: 0,

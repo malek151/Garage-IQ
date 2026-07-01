@@ -1,10 +1,17 @@
-async function groq(messages) {
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+// GPT-5 via Vercel AI Gateway (OpenAI-compatible endpoint, zero-config auth).
+async function ai(messages) {
+  const r = await fetch('https://ai-gateway.vercel.sh/v1/chat/completions', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'openai/gpt-oss-20b', max_tokens: 600, temperature: 0.1, messages })
+    headers: { Authorization: `Bearer ${process.env.AI_GATEWAY_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'openai/gpt-5.5',
+      max_completion_tokens: 3000,
+      reasoning_effort: 'low',
+      response_format: { type: 'json_object' },
+      messages,
+    }),
   });
-  if (!r.ok) throw new Error('Groq ' + r.status);
+  if (!r.ok) throw new Error('Gateway ' + r.status + ' ' + (await r.text()).slice(0, 300));
   return (await r.json()).choices?.[0]?.message?.content || '';
 }
 function parseJSON(raw) {
@@ -25,7 +32,7 @@ export default async function handler(req, res) {
 Return ONLY this JSON:
 {"hpGain":<int>,"torqueGain":<int>,"newHp":<int>,"newTorque":<int>,"newValue":<int GBP>,"soundRating":<1-10>,"soundDesc":"<6 words>","valueChange":"<e.g. +£500>","valueChangeDirection":"<up|down|neutral>","installCost":"<e.g. £150–£350 fitted>","insuranceImpact":"<12 words>","motRisk":"<Low|Medium|High>","motNote":"<15 words>","failureRisk":"<Low|Medium|High>","verdict":"<2 honest UK sentences>"}`;
   try {
-    return res.status(200).json(parseJSON(await groq([
+    return res.status(200).json(parseJSON(await ai([
       { role: 'system', content: 'UK automotive expert. Return only raw JSON, no markdown.' },
       { role: 'user', content: prompt }
     ])));
