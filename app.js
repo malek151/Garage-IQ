@@ -495,15 +495,22 @@ function renderMot(raw){
   else if(Array.isArray(raw)&&raw[0]&&raw[0].completedDate)tests=raw;
   if(!tests.length){renderDemoMot();return;}
   motTests=tests;
-  if(!vehicleData.model||vehicleData.model.length<=2){var mm=(raw&&raw.model)?raw.model:'';if(mm&&mm.length>2){
-    vehicleData.model=mm.toUpperCase();
-    if(el('statModel'))el('statModel').textContent=vehicleData.model;
-    /* PATCH: photo + specs both fired earlier with an empty model (DVLA never
-       returns one) and silently gave up / guessed badly. Now that MOT data
-       has supplied the real model, run them again properly. */
-    fetchVehiclePhoto(vehicleData.make,vehicleData.model,vehicleData.yearOfManufacture);
-    loadSpecs();
-  }}
+  /* Normalise DVSA v6 rfrAndComments -> defects so buildMotRows works */
+  tests=tests.map(function(t){
+    return Object.assign({},t,{defects:t.defects&&t.defects.length?t.defects:(t.rfrAndComments||[]).map(function(r){
+      return{type:r.dangerous?'DANGEROUS':(r.type||'ADVISORY').toUpperCase(),text:r.text||''};
+    })});
+  });
+  /* raw.model is undefined when DVSA returns an array - use raw[0].model */
+  if(!vehicleData.model||vehicleData.model.length<=2){
+    var mm=Array.isArray(raw)&&raw[0]?raw[0].model:(raw&&raw.model?raw.model:'');
+    if(mm&&mm.length>2){
+      vehicleData.model=mm.toUpperCase();
+      if(el('statModel'))el('statModel').textContent=vehicleData.model;
+      fetchVehiclePhoto(vehicleData.make,vehicleData.model,vehicleData.yearOfManufacture);
+      loadSpecs();
+    }
+  }
   buildMotSummary(tests);buildMotRows(tests);buildMileageChart(tests);buildMotTimeline(tests);renderValuation();showIntelReport();
 }
 function renderDemoMot(){
