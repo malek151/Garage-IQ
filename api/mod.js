@@ -57,6 +57,7 @@ Return ONLY this JSON:
 {"hpGain":<int>,"torqueGain":<int>,"newHp":<int>,"newTorque":<int>,"newValue":<int GBP>,"soundRating":<1-10>,"soundDesc":"<6 words>","valueChange":"<e.g. +£500>","valueChangeDirection":"<up|down|neutral>","installCost":"<e.g. £150–£350 fitted>","insuranceImpact":"<12 words>","motRisk":"<Low|Medium|High>","motNote":"<15 words>","failureRisk":"<Low|Medium|High>","verdict":"<2 honest UK sentences>"}`;
 
   try {
+    if (!process.env.ANTHROPIC_API_KEY) throw new Error('no anthropic key');
     return res.status(200).json(parseJSON(await askAnthropic(prompt)));
   } catch (_) {
     try {
