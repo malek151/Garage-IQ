@@ -54,19 +54,6 @@ function fetchVehiclePhoto(make,model,year){
 
 
 
-(function(){
-  var saved=localStorage.getItem('giq_theme')||'light';
-  document.documentElement.setAttribute('data-theme',saved);
-  var icon=document.getElementById('dmIcon');
-  if(icon)icon.className=saved==='dark'?'ti ti-sun':'ti ti-moon';
-})();
-function toggleDark(){
-  var html=document.documentElement,isDark=html.getAttribute('data-theme')==='dark',next=isDark?'light':'dark';
-  html.setAttribute('data-theme',next);localStorage.setItem('giq_theme',next);
-  var icon=el('dmIcon');if(icon)icon.className=next==='dark'?'ti ti-sun':'ti ti-moon';
-}
-/* light mode handled in CSS */
-
 function setSearchMode(m){
   SEARCH_MODE=m;
   el('modeReg').classList.toggle('active',m==='reg');
@@ -198,7 +185,6 @@ window.addEventListener('load',function(){
   el('btnLogout').onclick=doLogout;
   if(el('btnLogoutNav'))el('btnLogoutNav').onclick=doLogout;
   el('runBtn').onclick=lookupVehicle;
-  if(el('dmToggle'))el('dmToggle').onclick=toggleDark;
   el('regInput').onkeydown=function(e){if(e.key==='Enter')lookupVehicle();};
   el('regInput').oninput=function(){var v=this.value.trim();if(v.length===17&&/^[A-HJ-NPR-Z0-9]{17}$/i.test(v.replace(/\s/g,'')))setSearchMode('vin');};
   el('analyzeBtn').onclick=analyseMod;
