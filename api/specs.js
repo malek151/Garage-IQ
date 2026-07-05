@@ -82,6 +82,7 @@ Return ONLY this JSON:
 
   try {
     // Try Anthropic first (most accurate)
+    if (!process.env.ANTHROPIC_API_KEY) throw new Error('no anthropic key');
     const raw = await askAnthropic(prompt);
     const specs = parseJSON(raw);
     if (ninja?.cylinders) specs.cylinders = ninja.cylinders;
