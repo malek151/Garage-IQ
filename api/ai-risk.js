@@ -63,6 +63,7 @@ Return ONLY this JSON:
 {"overallVerdict":"<CLEAN|SUSPICIOUS|HIGH RISK>","keyFindings":["<finding>","<finding>","<finding>"],"stolenRisk":"<Low|Medium|High>","stolenNote":"<15 words>","cloneRisk":"<Low|Medium|High>","cloneNote":"<15 words>","mileageVerdict":"<Consistent|Suspicious|Fraudulent>","buyerAdvice":"<2 practical UK sentences>"}`;
 
   try {
+    if (!process.env.ANTHROPIC_API_KEY) throw new Error('no anthropic key');
     return res.status(200).json(parseJSON(await askAnthropic(prompt)));
   } catch (_) {
     try {
