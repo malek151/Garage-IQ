@@ -5,8 +5,12 @@ async function getDvsaToken() {
     client_secret: process.env.DVSA_CLIENT_SECRET,
     scope: process.env.DVSA_SCOPE,
   });
+  // DVSA emails a full token URL unique to your account (contains YOUR tenant ID).
+  // Set DVSA_TOKEN_URL in Vercel to that exact URL. Falls back to a generic guess otherwise.
+  const tokenUrl = process.env.DVSA_TOKEN_URL ||
+    'https://login.microsoftonline.com/a455b827-244d-4b5a-9e25-604a4a3c5a4b/oauth2/v2.0/token';
   const r = await fetch(
-    'https://login.microsoftonline.com/a455b827-244d-4b5a-9e25-604a4a3c5a4b/oauth2/v2.0/token',
+    tokenUrl,
     { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: params.toString() }
   );
   if (!r.ok) throw new Error('DVSA token ' + r.status);
