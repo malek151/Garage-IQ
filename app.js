@@ -23,15 +23,15 @@ function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()
 function fetchVehiclePhoto(make,model,year){
   var wrap=el('vehPhotoWrap');
   if(!wrap||!make)return;
-  var bc=getBrandColor(make)||'#3B7BF6';
+  var bc=getBrandColor(make)||'#0071e3';
   var logo=getBrandLogo(make);
   var mk=(make||'').trim();
   var mo=(model||'').trim().split(' ')[0].toUpperCase();
   var label=esc([mk.toUpperCase(),mo,(year||'')].filter(Boolean).join(' '));
   wrap.style.position='relative';
-  wrap.innerHTML='<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'55 0%,'+bc+'18 55%,rgba(6,10,18,.9) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;overflow:hidden">'
+  wrap.innerHTML='<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'55 0%,'+bc+'18 55%,rgba(29,29,31,.85) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;overflow:hidden">'
     +'<div style="font-size:64px;filter:drop-shadow(0 0 28px '+bc+'cc);line-height:1">'+logo+'</div>'
-    +'<div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.2)">'+label+'</div>'
+    +'<div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.65)">'+label+'</div>'
     +'</div>'
     +'<img id="vehPhotoReal" style="display:none;width:100%;height:170px;object-fit:cover;object-position:center 25%;filter:brightness(.85);transition:opacity .4s ease;opacity:0" alt="'+label+'">';
   wrap.classList.add('loaded');
@@ -69,7 +69,7 @@ function fetchVehiclePhoto(make,model,year){
 })();
 
 (function(){
-  var saved=localStorage.getItem('giq_theme')||'dark';
+  var saved=localStorage.getItem('giq_theme')||'light';
   document.documentElement.setAttribute('data-theme',saved);
   var icon=document.getElementById('dmIcon');
   if(icon)icon.className=saved==='dark'?'ti ti-sun':'ti ti-moon';
@@ -501,7 +501,7 @@ function buildMotSummary(tests){
   if(el('reliabilityChip')){el('reliabilityChip').textContent=relLabel+' ('+rel+'/100)';el('reliabilityChip').className='chip '+(rel>=80?'chip-gr':rel>=65?'chip-b':rel>=50?'chip-g':'chip-r');}
   if(el('reliabilityContent')){
     el('reliabilityContent').innerHTML='<div style="padding:.25rem 0"><div style="display:flex;justify-content:space-between;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t4);margin-bottom:5px"><span>Reliability Score</span><span>'+rel+'/100</span></div>'
-      +'<div style="height:8px;background:rgba(255,255,255,.06);border-radius:6px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:'+rel+'%;border-radius:6px;background:linear-gradient(90deg,'+(rel>=80?'var(--green),var(--green3)':rel>=65?'var(--blue),var(--blue2)':'var(--amber),#FCD34D')+');transition:width 1.2s ease"></div></div>'
+      +'<div style="height:8px;background:rgba(110,110,115,.15);border-radius:6px;overflow:hidden;margin-bottom:12px"><div style="height:100%;width:'+rel+'%;border-radius:6px;background:linear-gradient(90deg,'+(rel>=80?'var(--green),var(--green3)':rel>=65?'var(--blue),var(--blue2)':'var(--amber),#FCD34D')+');transition:width 1.2s ease"></div></div>'
       +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px"><div class="mot-sb"><div class="mot-sn" style="font-size:20px;color:var(--red3)">'+majors+'</div><div class="mot-sl">Major Fails</div></div>'
       +'<div class="mot-sb"><div class="mot-sn" style="font-size:20px;color:var(--amber)">'+advisories+'</div><div class="mot-sl">Advisories</div></div>'
       +'<div class="mot-sb"><div class="mot-sn" style="font-size:20px;color:var(--green3)">'+rate+'%</div><div class="mot-sl">Pass Rate</div></div></div></div>';
@@ -533,12 +533,12 @@ function buildMileageChart(tests){
   var maxMi=Math.max.apply(null,pts.map(function(p){return p.mi;}))||1,minYr=carYear,maxYr=Math.max(2026,pts[pts.length-1].yr||2026),yrSpan=Math.max(1,maxYr-minYr);
   var W=680,H=190,PL=50,PR=10,PT=10,PB=28,CW=W-PL-PR,CH=H-PT-PB;
   function px(yr){return PL+(yr-minYr)/yrSpan*CW;}function py(mi){return PT+CH-(mi/maxMi)*CH;}
-  var yGrid='';[0,.25,.5,.75,1].forEach(function(f){var mi=Math.round(maxMi*f),y=PT+CH-f*CH,lbl=mi>=1000?Math.round(mi/1000)+'k':String(mi);yGrid+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="rgba(255,255,255,.06)" stroke-width="1"'+(f>0?' stroke-dasharray="3,4"':'')+'/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="9" fill="rgba(255,255,255,.25)" font-family="Inter,sans-serif">'+lbl+'</text>';});
-  var xGrid='',step=Math.max(1,Math.ceil(yrSpan/7));for(var y=minYr;y<=maxYr;y+=step)xGrid+='<text x="'+px(y)+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.25)" font-family="Inter,sans-serif">'+y+'</text>';
+  var yGrid='';[0,.25,.5,.75,1].forEach(function(f){var mi=Math.round(maxMi*f),y=PT+CH-f*CH,lbl=mi>=1000?Math.round(mi/1000)+'k':String(mi);yGrid+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="rgba(110,110,115,.25)" stroke-width="1"'+(f>0?' stroke-dasharray="3,4"':'')+'/><text x="'+(PL-5)+'" y="'+(y+4)+'" text-anchor="end" font-size="9" fill="rgba(110,110,115,.7)" font-family="Inter,sans-serif">'+lbl+'</text>';});
+  var xGrid='',step=Math.max(1,Math.ceil(yrSpan/7));for(var y=minYr;y<=maxYr;y+=step)xGrid+='<text x="'+px(y)+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="rgba(110,110,115,.7)" font-family="Inter,sans-serif">'+y+'</text>';
   var areaD='M'+px(pts[0].yr)+','+py(0)+' ';pts.forEach(function(p){areaD+='L'+px(p.yr)+','+py(p.mi)+' ';});areaD+='L'+px(pts[pts.length-1].yr)+','+py(0)+'Z';
   var lineD='M';pts.forEach(function(p,i){lineD+=(i>0?' L':'')+px(p.yr)+','+py(p.mi);});
-  var dotsHtml=pts.map(function(p,idx){var fraud=!p.reg&&idx>0&&p.mi<pts[idx-1].mi,col=p.reg?'#10B981':fraud?'#EF4444':p.passed===false?'#F97316':'#3B7BF6',cx=px(p.yr),cy=py(p.mi),lbl=p.reg?'REG: 0 miles':(p.mi.toLocaleString()+' mi');return'<circle cx="'+cx+'" cy="'+cy+'" r="'+(p.reg?6:4.5)+'" fill="'+col+'" stroke="rgba(6,10,18,1)" stroke-width="2"><title>'+esc(lbl)+'</title></circle>'+(p.reg?'<text x="'+cx+'" y="'+(cy-11)+'" text-anchor="middle" font-size="8.5" font-weight="800" fill="#10B981" font-family="Syne,sans-serif">REG</text>':'')+(fraud?'<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="none" stroke="#EF4444" stroke-width="1.5" opacity=".5"/>':'');}).join('');
-  el('mileChartWrap').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;overflow:visible;display:block" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B7BF6" stop-opacity="0.15"/><stop offset="100%" stop-color="#3B7BF6" stop-opacity="0.01"/></linearGradient></defs><line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,.08)" stroke-width="1"/><line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,.08)" stroke-width="1"/>'+yGrid+xGrid+'<path d="'+areaD+'" fill="url(#gfill)"/><path d="'+lineD+'" fill="none" stroke="#3B7BF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+dotsHtml+'</svg>';
+  var dotsHtml=pts.map(function(p,idx){var fraud=!p.reg&&idx>0&&p.mi<pts[idx-1].mi,col=p.reg?'#10B981':fraud?'#EF4444':p.passed===false?'#F97316':'#0071e3',cx=px(p.yr),cy=py(p.mi),lbl=p.reg?'REG: 0 miles':(p.mi.toLocaleString()+' mi');return'<circle cx="'+cx+'" cy="'+cy+'" r="'+(p.reg?6:4.5)+'" fill="'+col+'" stroke="#ffffff" stroke-width="2"><title>'+esc(lbl)+'</title></circle>'+(p.reg?'<text x="'+cx+'" y="'+(cy-11)+'" text-anchor="middle" font-size="8.5" font-weight="800" fill="#10B981" font-family="Syne,sans-serif">REG</text>':'')+(fraud?'<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="none" stroke="#EF4444" stroke-width="1.5" opacity=".5"/>':'');}).join('');
+  el('mileChartWrap').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;overflow:visible;display:block" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0071e3" stop-opacity="0.15"/><stop offset="100%" stop-color="#0071e3" stop-opacity="0.01"/></linearGradient></defs><line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(H-PB)+'" stroke="rgba(110,110,115,.3)" stroke-width="1"/><line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="rgba(110,110,115,.3)" stroke-width="1"/>'+yGrid+xGrid+'<path d="'+areaD+'" fill="url(#gfill)"/><path d="'+lineD+'" fill="none" stroke="#0071e3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+dotsHtml+'</svg>';
 }
 
 function buildMotTimeline(tests){
@@ -619,10 +619,10 @@ function buildGauge(score){
   return'<svg viewBox="0 0 200 115" style="width:100%;max-width:150px;display:block;margin:0 auto">'
     +arcPath(-180,-120,'rgba(16,185,129,.15)')+arcPath(-120,-60,'rgba(245,158,11,.15)')+arcPath(-60,0,'rgba(239,68,68,.15)')
     +(score>0?arcPath(-180,Math.min(-0.5,angDeg),col):'')
-    +'<line x1="'+cx+'" y1="'+cy+'" x2="'+nx+'" y2="'+ny+'" stroke="rgba(255,255,255,.9)" stroke-width="2" stroke-linecap="round"/>'
-    +'<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="rgba(255,255,255,.9)"/>'
+    +'<line x1="'+cx+'" y1="'+cy+'" x2="'+nx+'" y2="'+ny+'" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round"/>'
+    +'<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#1d1d1f"/>'
     +'<text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" font-family="Syne,sans-serif" font-size="22" font-weight="800" fill="'+col+'">'+score+'</text>'
-    +'<text x="'+cx+'" y="'+(cy+28)+'" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,.35)" font-weight="700" letter-spacing="1">RISK SCORE</text></svg>';
+    +'<text x="'+cx+'" y="'+(cy+28)+'" text-anchor="middle" font-size="7.5" fill="rgba(110,110,115,.8)" font-weight="700" letter-spacing="1">RISK SCORE</text></svg>';
 }
 
 function showIntelReport(){
@@ -749,7 +749,7 @@ function buildIntelReport(tests){
     /* Score */
     +'<div class="cv-score-row">'
     +'<div class="cv-score-ring"><svg viewBox="0 0 64 64" width="72" height="72">'
-    +'<circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="6"/>'
+    +'<circle cx="32" cy="32" r="28" fill="none" stroke="rgba(110,110,115,.2)" stroke-width="6"/>'
     +'<circle cx="32" cy="32" r="28" fill="none" stroke="'+scoreCol+'" stroke-width="6" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+dash+'" style="transition:stroke-dashoffset 1.2s ease"/>'
     +'</svg><div class="cv-score-num"><div class="cv-score-big" style="color:'+scoreCol+'">'+score+'</div><div class="cv-score-denom">/100</div></div></div>'
     +'<div class="cv-score-text">'
