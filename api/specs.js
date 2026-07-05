@@ -96,6 +96,7 @@ Return ONLY this JSON:
       if (ninja?.cylinders) specs.cylinders = ninja.cylinders;
       return res.status(200).json(specs);
     } catch (err) {
+      console.error('api/specs.js failed:', err.message);
       return res.status(500).json({ error: err.message });
     }
   }
