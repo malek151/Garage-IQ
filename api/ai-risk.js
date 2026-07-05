@@ -69,6 +69,7 @@ Return ONLY this JSON:
     try {
       return res.status(200).json(parseJSON(await askGroq(prompt)));
     } catch (err) {
+      console.error('api/ai-risk.js failed:', err.message);
       return res.status(500).json({ error: err.message });
     }
   }
