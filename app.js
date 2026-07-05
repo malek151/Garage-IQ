@@ -53,20 +53,6 @@ function fetchVehiclePhoto(make,model,year){
 }
 
 
-(function(){
-  var canvas=document.getElementById('heroCanvas');if(!canvas)return;
-  var ctx=canvas.getContext('2d'),particles=[];
-  function resize(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;}
-  resize();window.addEventListener('resize',resize);
-  for(var i=0;i<70;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.3,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,a:Math.random()*.5+.1});
-  function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    particles.forEach(function(p){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(59,123,246,'+p.a+')';ctx.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;});
-    for(var i=0;i<particles.length;i++)for(var j=i+1;j<particles.length;j++){var dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<100){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle='rgba(59,123,246,'+(0.06*(1-d/100))+')';ctx.lineWidth=0.5;ctx.stroke();}}
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
 
 (function(){
   var saved=localStorage.getItem('giq_theme')||'light';
