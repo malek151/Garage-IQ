@@ -25,7 +25,9 @@ async function askGroq(prompt) {
     headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'openai/gpt-oss-20b',
-      max_tokens: 300,
+      max_tokens: 800,
+      reasoning_effort: 'low',
+      response_format: { type: 'json_object' },
       temperature: 0,
       messages: [
         { role: 'system', content: 'Return ONLY raw JSON, no markdown.' },
