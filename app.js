@@ -98,7 +98,7 @@ function hideLoadingOverlay(){
   setTimeout(function(){['lstep1','lstep2','lstep3'].forEach(function(id){var s=el(id);if(s){s.classList.remove('active');s.classList.add('done');}});setTimeout(function(){ov.classList.add('hidden');},400);},200);
 }
 
-function estVal(d){
+function estVal(d,mileage){
   var y=parseInt(d.yearOfManufacture)||2015,age=Math.max(0,2026-y),cc=parseInt(d.engineCapacity)||1600,fuel=(d.fuelType||'').toUpperCase(),make=(d.make||'').toUpperCase();
   var PREMIUM=['BMW','MERCEDES-BENZ','MERCEDES','AUDI','JAGUAR','LAND ROVER','RANGE ROVER','PORSCHE','LEXUS','VOLVO','MINI','TESLA','ALFA ROMEO'];
   var BUDGET=['DACIA','MG','CHEVROLET','SSANGYONG'];
@@ -107,7 +107,13 @@ function estVal(d){
   if(fuel.indexOf('ELECTRIC')>=0)base=Math.max(base,32000);
   base=Math.round(base*mult);
   var retain=[1,.76,.64,.55,.48,.42,.37,.33,.29,.26,.23,.20,.18];
-  return Math.max(600,Math.round(base*retain[Math.min(age,retain.length-1)]));
+  var val=Math.max(600,Math.round(base*retain[Math.min(age,retain.length-1)]));
+  if(mileage&&age>0){
+    var expected=age*8000,diff=(expected-mileage)/expected;
+    var adj=1+Math.max(-.3,Math.min(.25,diff*.4));
+    val=Math.round(val*adj);
+  }
+  return Math.max(500,val);
 }
 function estHp(d){
   var c=parseInt(d.engineCapacity)||1600,f=(d.fuelType||'').toUpperCase();
@@ -552,7 +558,11 @@ function calcAnnualMi(){
 
 function renderValuation(){
   var d=vehicleData,yr=parseInt(d.yearOfManufacture)||0,age=yr?2026-yr:0,base=d.value||null;
-  if(!base){var est=estVal(d);if(el('valPrice'))el('valPrice').textContent='Unavailable';if(el('finPrice'))el('finPrice').value=est;if(el('finDeposit'))el('finDeposit').value=Math.round(est*.15);calcFinance();return;}
+  if(!base){
+    var latestMi=motTests.length?parseInt(motTests[0].odometerValue||motTests[motTests.length-1].odometerValue||0):0;
+    var est=estVal(d,latestMi);
+    if(el('valPrice'))el('valPrice').textContent='Unavailable';if(el('finPrice'))el('finPrice').value=est;if(el('finDeposit'))el('finDeposit').value=Math.round(est*.15);calcFinance();return;
+  }
   if(el('valPrice'))el('valPrice').textContent='£'+base.toLocaleString();
   if(el('valPrivate'))el('valPrivate').textContent='£'+Math.round(base*.88).toLocaleString()+'–£'+Math.round(base*1.12).toLocaleString();
   if(el('valTrade'))el('valTrade').textContent='£'+Math.round(base*.82).toLocaleString();
@@ -737,8 +747,8 @@ function buildIntelReport(tests){
   html+='<div class="cv-card" id="cc-stolen">'
     +'<div class="cv-card-title">Theft check</div>'
     +'<div id="cc-stolen-badge"><div class="cv-badge cv-pend"><div class="spin" style="width:10px;height:10px;flex-shrink:0"></div>Checking...</div></div>'
-    +'<div class="cv-card-desc" id="cc-stolen-d">Querying UK police and database records via carcheck.co.uk</div>'
-    +'<a href="https://www.carcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="cv-ext-link"><i class="ti ti-external-link" style="font-size:11px"></i>Open on carcheck.co.uk</a>'
+    +'<div class="cv-card-desc" id="cc-stolen-d">Cross-referencing UK police and database records</div>'
+    +''
     +'</div>';
 
   /* Finance — loading */
@@ -746,7 +756,7 @@ function buildIntelReport(tests){
     +'<div class="cv-card-title">Financial and legal status check</div>'
     +'<div id="cc-finance-badge"><div class="cv-badge cv-pend"><div class="spin" style="width:10px;height:10px;flex-shrink:0"></div>Checking...</div></div>'
     +'<div class="cv-card-desc" id="cc-finance-d">Checking finance, HPI and legal status records</div>'
-    +'<a href="https://www.carcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="cv-ext-link"><i class="ti ti-external-link" style="font-size:11px"></i>Open on carcheck.co.uk</a>'
+    +''
     +'</div>';
 
   /* Write-off — loading */
@@ -754,7 +764,7 @@ function buildIntelReport(tests){
     +'<div class="cv-card-title">Insurance write-off status</div>'
     +'<div id="cc-writeoff-badge"><div class="cv-badge cv-pend"><div class="spin" style="width:10px;height:10px;flex-shrink:0"></div>Checking...</div></div>'
     +'<div class="cv-card-desc" id="cc-writeoff-d">Checking Cat A, B, S and N insurance records</div>'
-    +'<a href="https://www.carcheck.co.uk/'+regEnc+'" target="_blank" rel="noopener" class="cv-ext-link"><i class="ti ti-external-link" style="font-size:11px"></i>Open on carcheck.co.uk</a>'
+    +''
     +'</div>';
 
   /* DVLA export flag */
@@ -788,9 +798,8 @@ function buildIntelReport(tests){
 
   html+=card('Theft records',
     badge('pend','clock','Checking...'),
-    'Theft and police records are checked via isitnicked.com and carcheck.co.uk. Results will appear in the Financial status card above once loaded.',
-    'If the automated check cannot confirm status, use the carcheck.co.uk link to verify manually — this is a free check.',
-    'https://www.carcheck.co.uk/'+regEnc,'Verify on carcheck.co.uk');
+    'Theft and finance records are cross-referenced against UK vehicle databases. Results appear in the Financial status card above once loaded.',
+    'If the automated check is inconclusive, a full HPI check is recommended before purchase.');
 
   /* SECTION: NATURAL DISASTER / FLOOD */
   html+=sep('Environmental Exposure');
@@ -845,7 +854,7 @@ function buildIntelReport(tests){
 
   /* CHECKLIST */
   html+=sep('Pre-Purchase Checklist');
-  var actions=['Run the carcheck.co.uk free check for stolen, finance and write-off confirmation'];
+  var actions=['Run a full HPI check for stolen, finance and write-off confirmation'];
   if(accScore>=15)actions.push('Book a pre-purchase inspection — RAC/AA inspector or independent mechanic (~£100–150)');
   if(structItems.length>0||airbagItems.length>0)actions.push('Ask for the car to go on a ramp — check sills, floor pan and subframe');
   actions.push('Verify the physical V5C is in the seller\'s name — never accept a photocopy');
@@ -881,24 +890,24 @@ function buildIntelReport(tests){
       upd('cc-stolen','cc-stolen-badge','cc-stolen-d',
         d.stolen===false,d.stolen===true,'Theft recorded',
         'No theft records found. No stolen marker found in database records.',
-        'Automated check inconclusive. Click the link below to verify on carcheck.co.uk — free check.',
+        'Automated check inconclusive — a full HPI check is recommended to confirm.',
         'STOLEN MARKER FOUND — Do not purchase. Contact the police immediately.');
       upd('cc-finance','cc-finance-badge','cc-finance-d',
         d.finance===false,d.finance===true,'Finance outstanding',
         'No financial or legal risk records found. No outstanding finance detected.',
-        'Automated check inconclusive. Verify on carcheck.co.uk to confirm no finance is outstanding.',
+        'Automated check inconclusive — a full HPI check is recommended to confirm no finance is outstanding.',
         'OUTSTANDING FINANCE DETECTED — The finance company legally owns this car. Do not purchase.');
       upd('cc-writeoff','cc-writeoff-badge','cc-writeoff-d',
         d.writeOff==='NONE',d.writeOff&&d.writeOff!=='NONE',d.writeOff||'Write-off recorded',
         'No write-off records found. No insurance loss record for this vehicle.',
-        'Automated check inconclusive. Verify write-off status on carcheck.co.uk.',
+        'Automated check inconclusive — a full HPI check is recommended to confirm write-off status.',
         'WRITE-OFF RECORDED: '+(d.writeOff||'')+(d.writeOff&&(d.writeOff.indexOf('A')>=0||d.writeOff.indexOf('B')>=0)?' — Cat A/B must be scrapped. This car cannot legally drive.':(d.writeOff?' — Cat S/N can be re-sold but has structural or cosmetic damage history. Get full repair records.':'')));
     })
     .catch(function(){
       ['cc-stolen','cc-finance','cc-writeoff'].forEach(function(id){
         var b=el(id+'_badge')||el(id)&&el(id).querySelector('[id$="-badge"]');
         var crd=el(id);
-        if(crd){var badge2=crd.querySelector('[id$="-badge"]');if(badge2)badge2.innerHTML='<div class="cv-badge cv-info"><i class="ti ti-info-circle"></i>Verify manually</div>';var desc2=crd.querySelector('[id$="-d"]');if(desc2)desc2.textContent='Automated check unavailable. Use the carcheck.co.uk link below to check manually.';}
+        if(crd){var badge2=crd.querySelector('[id$="-badge"]');if(badge2)badge2.innerHTML='<div class="cv-badge cv-info"><i class="ti ti-info-circle"></i>Verify manually</div>';var desc2=crd.querySelector('[id$="-d"]');if(desc2)desc2.textContent='Automated check unavailable. A full HPI check is recommended before purchase.';}
       });
     });
 }
