@@ -23,7 +23,7 @@ function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()
 function fetchVehiclePhoto(make,model,year){
   var wrap=el('vehPhotoWrap');
   if(!wrap||!make)return;
-  var bc=getBrandColor(make)||'#0071e3';
+  var bc=getBrandColor(make)||'#5b7c99';
   var logo=getBrandLogo(make);
   var mk=(make||'').trim();
   var mo=(model||'').trim().split(' ')[0].toUpperCase();
@@ -31,7 +31,7 @@ function fetchVehiclePhoto(make,model,year){
   wrap.style.position='relative';
   wrap.innerHTML='<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'55 0%,'+bc+'18 55%,rgba(29,29,31,.85) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;overflow:hidden">'
     +'<div style="font-size:64px;filter:drop-shadow(0 0 28px '+bc+'cc);line-height:1">'+logo+'</div>'
-    +'<div style="font-family:Syne,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.65)">'+label+'</div>'
+    +'<div style="font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif;font-size:9px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.65)">'+label+'</div>'
     +'</div>'
     +'<img id="vehPhotoReal" style="display:none;width:100%;height:170px;object-fit:cover;object-position:center 25%;filter:brightness(.85);transition:opacity .4s ease;opacity:0" alt="'+label+'">';
   wrap.classList.add('loaded');
@@ -515,8 +515,8 @@ function buildMileageChart(tests){
   var xGrid='',step=Math.max(1,Math.ceil(yrSpan/7));for(var y=minYr;y<=maxYr;y+=step)xGrid+='<text x="'+px(y)+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="rgba(110,110,115,.7)" font-family="Inter,sans-serif">'+y+'</text>';
   var areaD='M'+px(pts[0].yr)+','+py(0)+' ';pts.forEach(function(p){areaD+='L'+px(p.yr)+','+py(p.mi)+' ';});areaD+='L'+px(pts[pts.length-1].yr)+','+py(0)+'Z';
   var lineD='M';pts.forEach(function(p,i){lineD+=(i>0?' L':'')+px(p.yr)+','+py(p.mi);});
-  var dotsHtml=pts.map(function(p,idx){var fraud=!p.reg&&idx>0&&p.mi<pts[idx-1].mi,col=p.reg?'#10B981':fraud?'#EF4444':p.passed===false?'#F97316':'#0071e3',cx=px(p.yr),cy=py(p.mi),lbl=p.reg?'REG: 0 miles':(p.mi.toLocaleString()+' mi');return'<circle cx="'+cx+'" cy="'+cy+'" r="'+(p.reg?6:4.5)+'" fill="'+col+'" stroke="#ffffff" stroke-width="2"><title>'+esc(lbl)+'</title></circle>'+(p.reg?'<text x="'+cx+'" y="'+(cy-11)+'" text-anchor="middle" font-size="8.5" font-weight="800" fill="#10B981" font-family="Syne,sans-serif">REG</text>':'')+(fraud?'<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="none" stroke="#EF4444" stroke-width="1.5" opacity=".5"/>':'');}).join('');
-  el('mileChartWrap').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;overflow:visible;display:block" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0071e3" stop-opacity="0.15"/><stop offset="100%" stop-color="#0071e3" stop-opacity="0.01"/></linearGradient></defs><line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(H-PB)+'" stroke="rgba(110,110,115,.3)" stroke-width="1"/><line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="rgba(110,110,115,.3)" stroke-width="1"/>'+yGrid+xGrid+'<path d="'+areaD+'" fill="url(#gfill)"/><path d="'+lineD+'" fill="none" stroke="#0071e3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+dotsHtml+'</svg>';
+  var dotsHtml=pts.map(function(p,idx){var fraud=!p.reg&&idx>0&&p.mi<pts[idx-1].mi,col=p.reg?'#10B981':fraud?'#EF4444':p.passed===false?'#F97316':'#5b7c99',cx=px(p.yr),cy=py(p.mi),lbl=p.reg?'REG: 0 miles':(p.mi.toLocaleString()+' mi');return'<circle cx="'+cx+'" cy="'+cy+'" r="'+(p.reg?6:4.5)+'" fill="'+col+'" stroke="#ffffff" stroke-width="2"><title>'+esc(lbl)+'</title></circle>'+(p.reg?'<text x="'+cx+'" y="'+(cy-11)+'" text-anchor="middle" font-size="8.5" font-weight="800" fill="#10B981" font-family="-apple-system,BlinkMacSystemFont,Inter,sans-serif">REG</text>':'')+(fraud?'<circle cx="'+cx+'" cy="'+cy+'" r="9" fill="none" stroke="#EF4444" stroke-width="1.5" opacity=".5"/>':'');}).join('');
+  el('mileChartWrap').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;overflow:visible;display:block" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5b7c99" stop-opacity="0.15"/><stop offset="100%" stop-color="#5b7c99" stop-opacity="0.01"/></linearGradient></defs><line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(H-PB)+'" stroke="rgba(110,110,115,.3)" stroke-width="1"/><line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="rgba(110,110,115,.3)" stroke-width="1"/>'+yGrid+xGrid+'<path d="'+areaD+'" fill="url(#gfill)"/><path d="'+lineD+'" fill="none" stroke="#5b7c99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+dotsHtml+'</svg>';
 }
 
 function buildMotTimeline(tests){
@@ -603,7 +603,7 @@ function buildGauge(score){
     +(score>0?arcPath(-180,Math.min(-0.5,angDeg),col):'')
     +'<line x1="'+cx+'" y1="'+cy+'" x2="'+nx+'" y2="'+ny+'" stroke="#1d1d1f" stroke-width="2" stroke-linecap="round"/>'
     +'<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="#1d1d1f"/>'
-    +'<text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" font-family="Syne,sans-serif" font-size="22" font-weight="800" fill="'+col+'">'+score+'</text>'
+    +'<text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Inter,sans-serif" font-size="22" font-weight="800" fill="'+col+'">'+score+'</text>'
     +'<text x="'+cx+'" y="'+(cy+28)+'" text-anchor="middle" font-size="7.5" fill="rgba(110,110,115,.8)" font-weight="700" letter-spacing="1">RISK SCORE</text></svg>';
 }
 
@@ -1036,7 +1036,7 @@ function renderResult(r){
 function renderMultiResult(results,baseHp,baseTq,baseVal){
   var totalHp=results.reduce(function(s,r){return s+(parseInt(r.hpGain)||0);},0),totalTq=results.reduce(function(s,r){return s+(parseInt(r.torqueGain)||0);},0);
   var highestRisk=results.some(function(r){return r.motRisk==='High';})?'High':results.some(function(r){return r.motRisk==='Medium';})?'Medium':'Low';
-  var modCards=results.map(function(r){var hg=parseInt(r.hpGain)||0;return'<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;margin-bottom:7px"><div style="font-family:Syne,sans-serif;font-size:12px;font-weight:800;color:var(--t1);margin-bottom:7px">'+esc(r.mod)+'</div><div class="drow"><span class="dlbl">HP gain</span><span class="dval">'+(hg?'+'+hg+' BHP':'None')+'</span></div><div class="drow"><span class="dlbl">Cost</span><span class="dval">'+esc(r.installCost||'—')+'</span></div><div style="font-size:10px;color:var(--t3);line-height:1.5;margin-top:7px;padding-top:7px;border-top:1px solid var(--border)">'+esc(r.verdict)+'</div></div>';}).join('');
+  var modCards=results.map(function(r){var hg=parseInt(r.hpGain)||0;return'<div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--rs);padding:10px 12px;margin-bottom:7px"><div style="font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif;font-size:12px;font-weight:800;color:var(--t1);margin-bottom:7px">'+esc(r.mod)+'</div><div class="drow"><span class="dlbl">HP gain</span><span class="dval">'+(hg?'+'+hg+' BHP':'None')+'</span></div><div class="drow"><span class="dlbl">Cost</span><span class="dval">'+esc(r.installCost||'—')+'</span></div><div style="font-size:10px;color:var(--t3);line-height:1.5;margin-top:7px;padding-top:7px;border-top:1px solid var(--border)">'+esc(r.verdict)+'</div></div>';}).join('');
   el('resultSection').innerHTML='<div class="res-card"><div class="res-title"><span>'+results.length+' MODS COMBINED</span></div>'
     +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px"><div class="mot-sb"><div class="mot-sn" style="color:var(--green3);font-size:22px">+'+(totalHp||0)+'</div><div class="mot-sl">Total BHP</div></div><div class="mot-sb"><div class="mot-sn" style="color:var(--blue2);font-size:22px">+'+(totalTq||0)+'</div><div class="mot-sl">Total Nm</div></div><div class="mot-sb"><div class="mot-sn" style="color:var(--amber);font-size:14px">'+highestRisk+' Risk</div><div class="mot-sl">MOT</div></div></div>'
     +modCards+'<button class="share-btn" onclick="shareResult()"><i class="ti ti-share" style="margin-right:5px"></i>Share Build</button></div>';
