@@ -1,4 +1,44 @@
 const NINJA_KEY = process.env.NINJA_API_KEY || 'WeMnxdGjK00FQeHxNs9cMSf780diF0CjKYLtSdOR';
+const SUPA_URL = 'https://hbfntnxawwavttzvxdde.supabase.co';
+const SUPA_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiZm50bnhhd3dhdnR0enZ4ZGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5MjA3NTYsImV4cCI6MjA5NDQ5Njc1Nn0.PtGE3zS40b8VBozDcl93-sNVx1wN29-sKvZzje--s10';
+
+function cacheKey(make, model, year, cc, fuel) {
+  return [make, model, year, cc, fuel].map(v => (v || '').toString().trim().toLowerCase()).join('|');
+}
+
+async function getCached(key) {
+  try {
+    const r = await fetch(`${SUPA_URL}/rest/v1/specs_cache?cache_key=eq.${encodeURIComponent(key)}&select=*&limit=1`, {
+      headers: { apikey: SUPA_ANON, Authorization: `Bearer ${SUPA_ANON}` },
+    });
+    if (!r.ok) return null;
+    const rows = await r.json();
+    if (!rows?.[0]) return null;
+    const row = rows[0];
+    return {
+      bhp: row.bhp, torqueNm: row.torque_nm, zeroToSixty: row.zero_to_sixty, topSpeedMph: row.top_speed_mph,
+      gearbox: row.gearbox, consumptionCombined: row.mpg, cylinders: row.cylinders, driveType: row.drive_type,
+      co2gkm: row.co2_gkm, co2Label: row.co2_label,
+    };
+  } catch { return null; }
+}
+
+async function setCached(key, make, model, year, cc, fuel, specs) {
+  const svcKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!svcKey) return; // no service key configured — skip persisting, still returns this response
+  try {
+    await fetch(`${SUPA_URL}/rest/v1/specs_cache`, {
+      method: 'POST',
+      headers: { apikey: svcKey, Authorization: `Bearer ${svcKey}`, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates' },
+      body: JSON.stringify({
+        cache_key: key, make, model, year, cc, fuel,
+        bhp: specs.bhp, torque_nm: specs.torqueNm, zero_to_sixty: specs.zeroToSixty, top_speed_mph: specs.topSpeedMph,
+        gearbox: specs.gearbox, mpg: specs.consumptionCombined, cylinders: specs.cylinders, drive_type: specs.driveType,
+        co2_gkm: specs.co2gkm, co2_label: specs.co2Label,
+      }),
+    });
+  } catch { /* non-fatal */ }
+}
 
 async function askAnthropic(prompt) {
   const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -11,6 +51,7 @@ async function askAnthropic(prompt) {
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 300,
+      temperature: 0,
       messages: [{ role: 'user', content: prompt }]
     })
   });
@@ -68,11 +109,16 @@ export default async function handler(req, res) {
   const { make, model, year, cc, fuel } = req.body || {};
   if (!make) return res.status(400).json({ error: 'No make' });
 
+  const key = cacheKey(make, model, year, cc, fuel);
+
+  // Same car looked up before? Return the exact same numbers every time.
+  const cached = await getCached(key);
+  if (cached) return res.status(200).json(cached);
+
   const litres = cc ? (cc / 1000).toFixed(1) + 'L' : '';
   const fuelStr = (fuel || '').toUpperCase();
   const isEV = fuelStr.includes('ELECTRIC');
 
-  // Get verified base data from API Ninjas
   const ninja = await getNinja(make, model, year);
   const ninjaCtx = ninja
     ? `Confirmed: ${ninja.displacement || ''}L, ${ninja.cylinders || ''} cyl, ${ninja.transmission || ''}, ${ninja.drive || ''}, ${ninja.combination_mpg || ''}mpg(US)`
@@ -82,24 +128,22 @@ export default async function handler(req, res) {
 Return ONLY this JSON:
 {"bhp":<int>,"torqueNm":<int>,"zeroToSixty":<float>,"topSpeedMph":<int>,"gearbox":"<e.g. 6-speed Manual>","consumptionCombined":${isEV ? 0 : '<int UK mpg>'},"cylinders":${ninja?.cylinders || '<int>'},"driveType":"<FWD|RWD|AWD|4WD>","co2gkm":${isEV ? 0 : '<int>'},"co2Label":"<A-G>"}`;
 
+  let specs;
   try {
-    // Try Anthropic first (most accurate)
     if (!process.env.ANTHROPIC_API_KEY) throw new Error('no anthropic key');
-    const raw = await askAnthropic(prompt);
-    const specs = parseJSON(raw);
-    if (ninja?.cylinders) specs.cylinders = ninja.cylinders;
-    if (ninja?.combination_mpg && !isEV) specs.consumptionCombined = Math.round(ninja.combination_mpg * 1.201);
-    return res.status(200).json(specs);
+    specs = parseJSON(await askAnthropic(prompt));
   } catch (_) {
     try {
-      // Fallback to Groq
-      const raw = await askGroq(prompt);
-      const specs = parseJSON(raw);
-      if (ninja?.cylinders) specs.cylinders = ninja.cylinders;
-      return res.status(200).json(specs);
+      specs = parseJSON(await askGroq(prompt));
     } catch (err) {
       console.error('api/specs.js failed:', err.message);
       return res.status(500).json({ error: err.message });
     }
   }
+
+  if (ninja?.cylinders) specs.cylinders = ninja.cylinders;
+  if (ninja?.combination_mpg && !isEV) specs.consumptionCombined = Math.round(ninja.combination_mpg * 1.201);
+
+  await setCached(key, make, model, year, cc, fuel, specs);
+  return res.status(200).json(specs);
 }
