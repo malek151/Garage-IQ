@@ -5,14 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>GarageIQ — Global Vehicle Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 <style>
 
 /* ══════════════════════════════════════════════════════════════════
    GarageIQ — Apple-style light UI
    ══════════════════════════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',system-ui,sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;transition:background-color .3s ease,color .3s ease}
@@ -27,8 +26,8 @@ img{display:block;max-width:100%}
 
 /* ── TOKENS ── */
 :root{
-  --blue:#0071e3;--blue2:#0077ed;--blue-soft:#eaf3fe;
-  --bg:#f5f5f7;--bg2:#ffffff;--bg3:#ffffff;--bg4:#f0f0f2;
+  --blue:#5b7c99;--blue2:#4a6b85;--blue-soft:#eaf0ee;
+  --bg:#f6f2ea;--bg2:#fdfaf5;--bg3:#fdfaf5;--bg4:#efe8db;
   --t1:#1d1d1f;--t2:#333336;--t3:#6e6e73;--t4:#86868b;--t5:#aeaeb2;
   --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.13);
   --green:#34c759;--green-soft:#e6f9ea;
@@ -37,7 +36,7 @@ img{display:block;max-width:100%}
   --gold:#f5a623;
   --r-sm:12px;--r-md:16px;--r-lg:20px;--r-xl:26px;
   --sh-1:0 1px 3px rgba(0,0,0,.05);--sh-2:0 8px 30px rgba(0,0,0,.07);--sh-3:0 20px 50px rgba(0,0,0,.1);
-  --glass-bg:rgba(255,255,255,.62);--glass-border:rgba(255,255,255,.6);--glass-blur:blur(24px) saturate(180%);
+  --glass-bg:rgba(253,250,245,.65);--glass-border:rgba(255,252,246,.65);--glass-blur:blur(24px) saturate(160%);
 }
 /* ── UTILS ── */
 .hidden{display:none!important}
@@ -122,7 +121,7 @@ main{max-width:1100px;margin:0 auto;padding:0 20px 56px}
 .app{}.errbox{background:var(--red-soft);border:1px solid rgba(255,59,48,.2);border-radius:var(--r-md);padding:15px;font-size:13px;color:var(--red);margin-bottom:14px}
 
 /* ── HERO ── */
-.hero{position:relative;text-align:center;padding:64px 20px 44px;overflow:hidden;transition:padding .4s ease}
+.hero{position:relative;text-align:center;padding:44px 20px 32px;overflow:hidden;transition:padding .4s ease}
 #heroSection.searched{padding:14px 16px 4px}
 #heroSection.searched .hero-eyebrow,#heroSection.searched h1,#heroSection.searched .hero-sub,
 #heroSection.searched .vs-row,#heroSection.searched .hero-stats,
@@ -138,11 +137,11 @@ main{max-width:1100px;margin:0 auto;padding:0 20px 56px}
 .hero-glow-1{width:480px;height:480px;top:-140px;left:50%;transform:translateX(-50%);opacity:.7}
 .hero-glow-2{width:280px;height:280px;bottom:-40px;right:8%;opacity:.5}
 .hero-inner{position:relative;z-index:1;max-width:700px;margin:0 auto}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:50px;font-size:12px;font-weight:600;color:var(--blue);margin-bottom:22px;box-shadow:var(--sh-1)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:50px;font-size:12px;font-weight:600;color:var(--blue);margin-bottom:16px;box-shadow:var(--sh-1)}
 .hero h1{font-size:clamp(32px,5vw,54px);font-weight:700;line-height:1.08;letter-spacing:-.03em;color:var(--t1);margin-bottom:14px}
 .hero h1 .hl{color:var(--blue)}
-.hero-sub{font-size:16px;color:var(--t3);max-width:480px;margin:0 auto 14px;line-height:1.55}
-.vs-row{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:30px;flex-wrap:wrap;font-size:13px;color:var(--t3)}
+.hero-sub{font-size:16px;color:var(--t3);max-width:480px;margin:0 auto 10px;line-height:1.55}
+.vs-row{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:18px;flex-wrap:wrap;font-size:13px;color:var(--t3)}
 .vs-badge{font-size:11px;font-weight:600;color:var(--t3);background:var(--bg2);border:1px solid var(--border);padding:4px 11px;border-radius:50px;text-transform:none}
 
 /* ── SEARCH ── */
@@ -202,7 +201,7 @@ main{max-width:1100px;margin:0 auto;padding:0 20px 56px}
 .pill-tab i{font-size:15px;transition:transform .3s cubic-bezier(.34,1.3,.64,1)}
 .pill-tab:hover{color:var(--t1)}
 .pill-tab.active{color:var(--blue)}
-.pill-tab.active::before{content:'';position:absolute;inset:0;background:#fff;border-radius:50px;box-shadow:0 2px 8px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.8);z-index:-1;animation:tabPop .35s cubic-bezier(.34,1.3,.64,1)}
+.pill-tab.active::before{content:'';position:absolute;inset:0;background:#fdfaf5;border-radius:50px;box-shadow:0 2px 8px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.9);z-index:-1;animation:tabPop .35s cubic-bezier(.34,1.3,.64,1)}
 .pill-tab.active i{transform:scale(1.08)}
 @keyframes tabPop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
 .tab-panel{display:none}.tab-panel.active{display:block;animation:fadeUp .3s ease}
