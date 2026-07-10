@@ -195,8 +195,8 @@ main{max-width:1100px;margin:0 auto;padding:0 20px 56px}
 /* ── TABS ── */
 .tab-rail{margin-top:16px;margin-bottom:18px}
 .tab-rail.hidden{display:none}
-.tab-track{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.tab-inner{display:flex;gap:2px;background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:50px;padding:5px;box-shadow:var(--sh-1),inset 0 1px 0 rgba(255,255,255,.5)}
+.tab-track{overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%}
+.tab-inner{display:flex;gap:2px;background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:50px;padding:5px;box-shadow:var(--sh-1),inset 0 1px 0 rgba(255,255,255,.5);width:100%;max-width:560px;margin:0 auto}
 .pill-tab{position:relative;flex:1;min-width:64px;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 14px;border-radius:50px;font-size:12.5px;font-weight:600;color:var(--t3);white-space:nowrap;transition:color .3s ease}
 .pill-tab i{font-size:15px;transition:transform .3s cubic-bezier(.34,1.3,.64,1)}
 .pill-tab:hover{color:var(--t1)}
@@ -520,7 +520,7 @@ footer{text-align:center;padding:40px 20px 32px;border-top:1px solid var(--borde
 <div class="toast-wrap" id="toastWrap"></div>
 
 <!-- LOADING OVERLAY -->
-<div class="loading-overlay hidden" id="loadingOverlay">
+<div class="overlay loading-overlay hidden" id="loadingOverlay">
   <div class="loading-logo">🔍 <span>GarageIQ</span></div>
   <div class="loading-ring"></div>
   <div class="loading-reg" id="loadingReg">Searching...</div>
@@ -607,7 +607,6 @@ footer{text-align:center;padding:40px 20px 32px;border-top:1px solid var(--borde
 
 <!-- HERO -->
 <section class="hero" id="heroSection">
-  <canvas id="heroCanvas"></canvas>
   <div class="hero-glow-1"></div>
   <div class="hero-glow-2"></div>
   <div class="hero-inner">
@@ -676,7 +675,7 @@ footer{text-align:center;padding:40px 20px 32px;border-top:1px solid var(--borde
 
 <!-- TABS -->
 <div class="tab-rail hidden" id="tabsWrap">
-  <div class="tab-track" style="display:flex;gap:8px;align-items:center">
+  <div class="tab-track">
     <div class="tab-inner">
       <button class="pill-tab active" data-tab="overview"><i class="ti ti-car"></i><span>Overview</span></button>
       <button class="pill-tab" data-tab="history"><i class="ti ti-history"></i><span>MOT</span></button>
