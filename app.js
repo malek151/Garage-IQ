@@ -20,13 +20,14 @@ var BRAND_COLORS={'BMW':'#1c69d4','MERCEDES-BENZ':'#333','AUDI':'#bb0a14','VOLKS
 function getBrandLogo(make){return BRAND_LOGOS[(make||'').toUpperCase().trim()]||'🚗';}
 function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()]||null;}
 
-function fetchVehiclePhoto(make,model,year){
+function fetchVehiclePhoto(make,model,year,cc){
   var wrap=el('vehPhotoWrap');
   if(!wrap||!make)return;
   var bc=getBrandColor(make)||'#5b7c99';
   var logo=getBrandLogo(make);
   var mk=(make||'').trim();
-  var mo=(model||'').trim().split(' ')[0].toUpperCase();
+  var moFull=(model||'').trim();
+  var mo=moFull.split(' ')[0].toUpperCase();
   var label=esc([mk.toUpperCase(),mo,(year||'')].filter(Boolean).join(' '));
   wrap.style.position='relative';
   wrap.innerHTML='<div class="veh-photo-bg" style="width:100%;height:170px;background:linear-gradient(135deg,'+bc+'55 0%,'+bc+'18 55%,rgba(29,29,31,.85) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;overflow:hidden">'
@@ -36,7 +37,7 @@ function fetchVehiclePhoto(make,model,year){
     +'<img id="vehPhotoReal" style="display:none;width:100%;height:170px;object-fit:cover;object-position:center 25%;filter:brightness(.85);transition:opacity .4s ease;opacity:0" alt="'+label+'">';
   wrap.classList.add('loaded');
 
-  fetch(VERCEL+'/api/photo?make='+encodeURIComponent(mk)+'&model='+encodeURIComponent(mo))
+  fetch(VERCEL+'/api/photo?make='+encodeURIComponent(mk)+'&model='+encodeURIComponent(moFull)+'&year='+encodeURIComponent(year||'')+'&cc='+encodeURIComponent(cc||''))
     .then(function(r){return r.json();})
     .then(function(d){
       if(!d||!d.url)return;
@@ -358,7 +359,7 @@ function renderVehicle(d){
   if(el('vehHeader'))el('vehHeader').classList.add('visible');
   var logo=el('vehLogo');
   if(logo){logo.textContent=getBrandLogo(d.make);var bc=getBrandColor(d.make);if(bc)logo.style.background='linear-gradient(135deg,'+bc+'22,'+bc+'11)';}
-  fetchVehiclePhoto(d.make,d.model||d.modelSeries||'',d.yearOfManufacture);
+  fetchVehiclePhoto(d.make,d.model||d.modelSeries||'',d.yearOfManufacture,d.engineCapacity);
   var taxOk=(d.taxStatus||'').toLowerCase().indexOf('taxed')>=0,taxSorn=(d.taxStatus||'').toLowerCase().indexOf('sorn')>=0;
   if(el('vehTaxBadge')){el('vehTaxBadge').textContent=taxOk?'Taxed':taxSorn?'SORN':'Untaxed';el('vehTaxBadge').className='veh-status-badge '+(taxOk?'vsb-taxed':taxSorn?'vsb-sorn':'vsb-not-taxed');}
   var chips=[{ic:'ti-calendar',v:d.yearOfManufacture||'—'},{ic:'ti-gas-station',v:fmt(d.fuelType)},{ic:'ti-palette',v:fmt(d.colour||d.primaryColour)},{ic:'ti-engine',v:(d.engineCapacity||d.engineSize)?((d.engineCapacity||d.engineSize)+'cc'):'—'}];
@@ -445,7 +446,7 @@ function renderMot(raw){
     if(mm&&mm.length>2){
       vehicleData.model=mm.toUpperCase();
       if(el('statModel'))el('statModel').textContent=vehicleData.model;
-      fetchVehiclePhoto(vehicleData.make,vehicleData.model,vehicleData.yearOfManufacture);
+      fetchVehiclePhoto(vehicleData.make,vehicleData.model,vehicleData.yearOfManufacture,vehicleData.engineCapacity);
       loadSpecs();
     }
   }
@@ -679,12 +680,21 @@ function buildIntelReport(tests){
   var regYear2=regYearCode>=51?2000+regYearCode-51+1:regYearCode>0?2000+regYearCode:0;
   var plateMismatch=regYear2>0&&carYear>0&&Math.abs(regYear2-carYear)>2;
 
+  var miReadings=sorted.map(function(t){return parseInt(t.odometerValue)||0;}).filter(Boolean);
+  var mileageDrops=0;for(var mi=1;mi<miReadings.length;mi++){if(miReadings[mi]<miReadings[mi-1])mileageDrops++;}
+
   var accScore=Math.min(100,(structItems.length*28)+(airbagItems.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).length*35)+(airbagItems.filter(function(d){return d.type==='ADVISORY';}).length*15)+(bodyItems.filter(function(d){return d.type==='MAJOR'||d.type==='DANGEROUS';}).length*20)+(bodyItems.filter(function(d){return d.type==='ADVISORY';}).length*8)+(corrMajor*10));
-  var score=Math.min(100,Math.round((accScore*.5)+(recurring.length*10)+(escalated*8)+(gaps.length*5)+(passRate<60?20:passRate<75?8:0)+(plateMismatch?12:0)+(markedExport?25:0)));
+  var score=Math.min(100,Math.round((accScore*.5)+(recurring.length*10)+(escalated*8)+(gaps.length*5)+(passRate<60?20:passRate<75?8:0)+(plateMismatch?12:0)+(markedExport?25:0)+(mileageDrops*18)));
   var lv=score>=55?'high':score>=20?'med':'low';
 
-  var fa=el('fraudAlert'),fat=el('fraudAlertText');
-  if(fa&&(markedExport||accScore>=20||recurring.length>1)){fa.classList.remove('hidden');fat.textContent=markedExport?'DVLA: Marked for export — verify before purchase.':accScore>=45?'Crash indicators in MOT history — inspection essential.':'Concerns detected — arrange inspection before purchase.';}else if(fa)fa.classList.add('hidden');
+  var fa=el('fraudAlert'),fat=el('fraudAlertText'),fati=el('fraudAlertTitle');
+  if(fa&&(markedExport||mileageDrops>0||accScore>=20||recurring.length>1)){
+    fa.classList.remove('hidden');
+    if(mileageDrops>0){fati.textContent='Mileage Rollback Detected';fat.textContent='Odometer reading decreased between MOT tests ('+mileageDrops+' instance'+(mileageDrops>1?'s':'')+') — possible clocking.';}
+    else if(markedExport){fati.textContent='Marked For Export';fat.textContent='DVLA: Marked for export — verify before purchase.';}
+    else if(accScore>=45){fati.textContent='Crash Indicators Found';fat.textContent='Crash indicators in MOT history — inspection essential.';}
+    else{fati.textContent='Vehicle History Concern';fat.textContent='Concerns detected — arrange inspection before purchase.';}
+  }else if(fa)fa.classList.add('hidden');
 
   el('riskGaugeSvg').innerHTML=buildGauge(score);
   el('riskLbl').textContent=lv==='low'?'LOW RISK':lv==='med'?'MODERATE RISK':'HIGH RISK';
