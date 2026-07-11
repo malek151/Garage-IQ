@@ -66,7 +66,27 @@ function setSearchMode(m){
 }
 function detectInputType(v){return /^[A-HJ-NPR-Z0-9]{17}$/i.test(v.replace(/\s/g,''))?'vin':'reg';}
 
-var WMI_MAP={'SA':'United Kingdom','SB':'United Kingdom','SC':'United Kingdom','SD':'United Kingdom','WA':'Germany','WB':'Germany','WC':'Germany','WD':'Germany','WF':'Germany','WP':'Germany','VF':'France','VG':'France','VR':'France','ZA':'Italy','ZB':'Italy','ZF':'Italy','VS':'Spain','VT':'Spain','JA':'Japan','JF':'Japan','JH':'Japan','JN':'Japan','JT':'Japan','KL':'South Korea','KM':'South Korea','KN':'South Korea','1A':'United States','1C':'United States','1F':'United States','1G':'United States','1N':'United States','2A':'Canada','2F':'Canada','3A':'Mexico','3F':'Mexico','3N':'Mexico','9A':'Brazil','9B':'Brazil','6F':'Australia','6G':'Australia','LA':'China','LB':'China','LC':'China','LD':'China','LE':'China','LV':'China','MA':'India','MB':'India','MC':'India','JS':'Japan','KP':'South Korea','YS':'Sweden','YT':'Sweden','YV':'Sweden','TA':'Switzerland','TJ':'Czech Republic','TK':'Czech Republic','TM':'Hungary','TP':'Portugal','XW':'Russia','XY':'Russia'};
+var WMI_MAP={
+'SAJ':'United Kingdom','SAL':'United Kingdom','SAX':'United Kingdom','SAR':'United Kingdom','SAD':'United Kingdom','SAP':'United Kingdom','SCA':'United Kingdom','SCB':'United Kingdom','SCC':'United Kingdom','SCE':'United Kingdom','SCF':'United Kingdom','SB1':'United Kingdom','SDB':'United Kingdom','SUL':'United Kingdom','SJN':'United Kingdom','SKF':'United Kingdom',
+'WBA':'Germany','WBS':'Germany','WBW':'Germany','WBX':'Germany','WBY':'Germany','WAU':'Germany','WA1':'Germany','WDB':'Germany','WDC':'Germany','WDD':'Germany','WDF':'Germany','WMW':'Germany','WVW':'Germany','WV1':'Germany','WV2':'Germany','WP0':'Germany','WP1':'Germany','W0L':'Germany','WME':'Germany',
+'VF1':'France','VF3':'France','VF6':'France','VF7':'France','VF8':'France','VG1':'France','VR1':'France','VR3':'France','VR7':'France',
+'ZFA':'Italy','ZFC':'Italy','ZFF':'Italy','ZAM':'Italy','ZAR':'Italy','ZLA':'Italy',
+'VSS':'Spain','VS6':'Spain','VSE':'Spain',
+'JHM':'Japan','JHL':'Japan','JHN':'Japan','JN1':'Japan','JN6':'Japan','JN8':'Japan','JT2':'Japan','JT3':'Japan','JT4':'Japan','JT6':'Japan','JTD':'Japan','JTE':'Japan','JTG':'Japan','JF1':'Japan','JF2':'Japan','JA3':'Japan','JA4':'Japan','JM1':'Japan','JM3':'Japan','JM7':'Japan','JS1':'Japan','JS2':'Japan','JS3':'Japan','JSA':'Japan','JSK':'Japan','JSL':'Japan',
+'KMH':'South Korea','KMF':'South Korea','KMJ':'South Korea','KM8':'South Korea','KNA':'South Korea','KND':'South Korea','KNM':'South Korea','KNC':'South Korea','KL1':'South Korea','KLA':'South Korea','KPT':'South Korea',
+'1FA':'United States','1FB':'United States','1FC':'United States','1FM':'United States','1FT':'United States','1G1':'United States','1G6':'United States','1GC':'United States','1GT':'United States','1HD':'United States','1HG':'United States','1J4':'United States','1N4':'United States','1N6':'United States','1C3':'United States','1C4':'United States','1C6':'United States','4T1':'United States','4T3':'United States','5YJ':'United States',
+'2FA':'Canada','2FM':'Canada','2FT':'Canada','2G1':'Canada','2HG':'Canada','2T1':'Canada',
+'3FA':'Mexico','3FE':'Mexico','3G1':'Mexico','3N1':'Mexico','3VW':'Mexico',
+'9BW':'Brazil','9BD':'Brazil','9BF':'Brazil',
+'6FP':'Australia','6H8':'Australia',
+'LFV':'China','LSV':'China','LVS':'China','LGB':'China','LBV':'China','LDC':'China','LJD':'China','LSG':'China','LB2':'China',
+'MA1':'India','MA3':'India','MA6':'India','MAT':'India','MBJ':'India','MB1':'India',
+'YS3':'Sweden','YV1':'Sweden','YV4':'Sweden',
+'TRU':'Austria','TMB':'Czech Republic','TMK':'Czech Republic','TSM':'Hungary','TW1':'Hungary','XW8':'Russia','XTA':'Russia','X4X':'Russia','X7L':'Russia',
+'RL4':'Thailand','MMB':'Thailand','MMT':'Thailand','MHF':'Thailand',
+'PL1':'Malaysia','PE1':'Indonesia',
+};
+
 var COUNTRY_FLAGS={'United Kingdom':'🇬🇧','Germany':'🇩🇪','France':'🇫🇷','Italy':'🇮🇹','Spain':'🇪🇸','Japan':'🇯🇵','South Korea':'🇰🇷','United States':'🇺🇸','Canada':'🇨🇦','Mexico':'🇲🇽','China':'🇨🇳','India':'🇮🇳','Sweden':'🇸🇪','Brazil':'🇧🇷','Australia':'🇦🇺','Switzerland':'🇨🇭','Czech Republic':'🇨🇿','Hungary':'🇭🇺','Portugal':'🇵🇹','Russia':'🇷🇺'};
 var VIN_YEARS={'A':1980,'B':1981,'C':1982,'D':1983,'E':1984,'F':1985,'G':1986,'H':1987,'J':1988,'K':1989,'L':1990,'M':1991,'N':1992,'P':1993,'R':1994,'S':1995,'T':1996,'V':1997,'W':1998,'X':1999,'Y':2000,'1':2001,'2':2002,'3':2003,'4':2004,'5':2005,'6':2006,'7':2007,'8':2008,'9':2009};
 
@@ -79,7 +99,7 @@ function vinCheckDigit(vin){
 }
 function decodeVin(vin){
   vin=vin.replace(/\s/g,'').toUpperCase();if(vin.length!==17)return null;
-  var wmi=vin.slice(0,3),wmi2=vin.slice(0,2),country=WMI_MAP[wmi]||WMI_MAP[wmi2]||'Unknown';
+  var wmi=vin.slice(0,3),country=WMI_MAP[wmi]||'Unknown';
   var flag=COUNTRY_FLAGS[country]||'🌍',yc=vin[9],year=VIN_YEARS[yc]||null;
   if(year&&year>=2000){var y2=year+10;if(y2<=2026)year=y2;}
   var chk=vinCheckDigit(vin);
@@ -295,22 +315,33 @@ function saveUsername(){
   });
 }
 function loadProfileHistory(){
-  sb.from('car_history').select('reg,make,model,year,colour,fuel,looked_up_at').eq('user_id',currentUser.id).order('looked_up_at',{ascending:false}).limit(200).then(function(r){
+  sb.from('car_history').select('reg,make,model,year,colour,fuel,looked_up_at,times_searched').eq('user_id',currentUser.id).order('looked_up_at',{ascending:false}).limit(200).then(function(r){
     if(r.error){el('profHistory').innerHTML='<div class="ph-empty">Error loading.</div>';return;}
-    var rows=r.data||[];el('profLookups').textContent=rows.length;
+    var rows=r.data||[];
     var seen={},unique=[];rows.forEach(function(x){if(!seen[x.reg]){seen[x.reg]=true;unique.push(x);}});
+    el('profLookups').textContent=unique.length;
     el('profUnique').textContent=unique.length;
-    if(!rows.length){el('profHistory').innerHTML='<div class="ph-empty">No cars yet.</div>';return;}
-    el('profHistory').innerHTML=unique.map(function(row){
-      var date=row.looked_up_at?new Date(row.looked_up_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
-      var car=[(row.make||''),(row.model||''),(row.year||'')].filter(Boolean).join(' ')||'Unknown';
-      return'<div class="ph-item" data-reg="'+esc(row.reg)+'">'
-        +'<div class="ph-reg">'+esc(row.reg)+'</div>'
-        +'<div style="flex:1;min-width:0"><div class="ph-car">'+esc(car)+'</div><div class="ph-meta">'+esc([row.colour,row.fuel,date].filter(Boolean).join(' · '))+'</div></div>'
-        +'<i class="ti ti-chevron-right" style="color:var(--t4);font-size:12px"></i></div>';
-    }).join('');
-    qsa('#profHistory .ph-item').forEach(function(item){item.onclick=function(){el('regInput').value=item.getAttribute('data-reg');closeProfileModal();lookupVehicle();};});
+    if(!unique.length){el('profHistory').innerHTML='<div class="ph-empty">No cars yet.</div>';return;}
+    renderHistoryPage(unique,5);
   }).catch(function(){el('profHistory').innerHTML='<div class="ph-empty">Could not load.</div>';});
+}
+function renderHistoryPage(unique,showCount){
+  var toShow=unique.slice(0,showCount);
+  var html=toShow.map(function(row){
+    var date=row.looked_up_at?new Date(row.looked_up_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+    var car=[(row.make||''),(row.model||''),(row.year||'')].filter(Boolean).join(' ')||'Unknown';
+    var times=row.times_searched>1?' · searched '+row.times_searched+'x':'';
+    return'<div class="ph-item" data-reg="'+esc(row.reg)+'">'
+      +'<div class="ph-reg">'+esc(row.reg)+'</div>'
+      +'<div style="flex:1;min-width:0"><div class="ph-car">'+esc(car)+'</div><div class="ph-meta">'+esc([row.colour,row.fuel,date].filter(Boolean).join(' · '))+esc(times)+'</div></div>'
+      +'<i class="ti ti-chevron-right" style="color:var(--t4);font-size:12px"></i></div>';
+  }).join('');
+  if(unique.length>showCount){
+    html+='<button id="btnHistMore" style="width:100%;text-align:center;padding:9px;font-size:11.5px;font-weight:600;color:var(--blue);background:var(--bg4);border:1px solid var(--border);border-radius:var(--r-sm);margin-top:6px">Show '+(unique.length-showCount)+' more</button>';
+  }
+  el('profHistory').innerHTML=html;
+  qsa('#profHistory .ph-item').forEach(function(item){item.onclick=function(){el('regInput').value=item.getAttribute('data-reg');closeProfileModal();lookupVehicle();};});
+  var more=el('btnHistMore');if(more)more.onclick=function(){renderHistoryPage(unique,showCount+10);};
 }
 
 function lookupVehicle(){
@@ -396,7 +427,7 @@ function renderVehicle(d){
 }
 function saveToHistory(){
   if(!currentUser)return;
-  sb.from('car_history').insert({user_id:currentUser.id,reg:vehicleData.reg,make:vehicleData.make||null,model:vehicleData.model||null,year:vehicleData.yearOfManufacture?String(vehicleData.yearOfManufacture):null,colour:vehicleData.colour||vehicleData.primaryColour||null,fuel:vehicleData.fuelType||null,hp:vehicleData.hp||null,value:vehicleData.value||null}).then(function(){}).catch(function(){});
+  sb.rpc('upsert_car_history',{p_user_id:currentUser.id,p_reg:vehicleData.reg,p_make:vehicleData.make||null,p_model:vehicleData.model||null,p_year:vehicleData.yearOfManufacture?String(vehicleData.yearOfManufacture):null,p_colour:vehicleData.colour||vehicleData.primaryColour||null,p_fuel:vehicleData.fuelType||null,p_hp:vehicleData.hp||null,p_value:vehicleData.value||null}).then(function(){}).catch(function(){});
 }
 
 function applySpecs(s){
