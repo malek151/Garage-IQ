@@ -1,6 +1,5 @@
 const NINJA_KEY = process.env.NINJA_API_KEY || 'WeMnxdGjK00FQeHxNs9cMSf780diF0CjKYLtSdOR';
 
-// Per-make fallback (only used if nothing more specific can be found)
 const PHOTOS = {
   'FORD':'photo-1494976388531-d1058494cdd8','VOLKSWAGEN':'photo-1502877338535-766e1452684a','VW':'photo-1502877338535-766e1452684a',
   'BMW':'photo-1555215695-3004980ad54e','MERCEDES':'photo-1618843479313-40f8afb4b4d8','MERCEDES-BENZ':'photo-1618843479313-40f8afb4b4d8',
@@ -16,25 +15,34 @@ const PHOTOS = {
   'ALFA ROMEO':'photo-1503376780353-7e6692767b70','DEFAULT':'photo-1494976388531-d1058494cdd8',
 };
 
+// Reject values that can't be a real model name (EU type-approval codes like
+// M1/N1, single letters, empty). This is what let "BMW M1" (a regulatory
+// category code, not the supercar) leak into photo/spec lookups before.
+function sanitizeModel(m) {
+  const v = (m || '').toString().trim();
+  if (v.length < 3) return '';
+  if (/^[A-Z]\d$/i.test(v)) return '';
+  return v;
+}
+
 async function guessModelFromNinja(make, year, cc) {
   try {
-    const p = new URLSearchParams({ make: make.toLowerCase(), limit: '1' });
+    const p = new URLSearchParams({ make: make.toLowerCase(), limit: '10' });
     if (year) p.set('year', String(year));
     const r = await fetch(`https://api.api-ninjas.com/v1/cars?${p}`, { headers: { 'X-Api-Key': NINJA_KEY } });
     if (!r.ok) return null;
     const data = await r.json();
     if (!Array.isArray(data) || !data.length) return null;
-    // pick closest displacement match if cc given, else just the first result
     if (cc) {
       const target = cc / 1000;
       data.sort((a, b) => Math.abs((a.displacement || 99) - target) - Math.abs((b.displacement || 99) - target));
     }
-    return data[0]?.model || null;
+    return sanitizeModel(data[0]?.model) || null;
   } catch { return null; }
 }
 
 async function wikiPhoto(make, model) {
-  if (!model || model.length < 2) return null;
+  if (!model || model.length < 3) return null;
   const title = `${make} ${model}`;
   try {
     const r = await fetch(
@@ -54,13 +62,12 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 's-maxage=86400');
   const make = (req.query.make || '').toUpperCase().trim();
-  let model = (req.query.model || '').trim();
+  let model = sanitizeModel(req.query.model);
   const year = parseInt(req.query.year) || 0;
   const cc = parseInt(req.query.cc) || 0;
 
-  // DVSA didn't give us a model — ask API Ninjas for a plausible one from make+year+engine size
   let modelSource = 'dvsa';
-  if ((!model || model.length < 2) && make) {
+  if (!model && make) {
     const guessed = await guessModelFromNinja(make, year, cc);
     if (guessed) { model = guessed; modelSource = 'ninja-inferred'; }
   }
