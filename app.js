@@ -15,9 +15,8 @@ function showOk(id,msg){var e=el(id);if(!e)return;e.textContent=msg;e.style.disp
 function hideMsg(id){var e=el(id);if(!e)return;e.textContent='';e.style.display='none';}
 function hideFeatGrid(){var fg=el('featGrid');if(fg)fg.style.display='none';}
 
-var BRAND_LOGOS={'FORD':'🔵','VOLKSWAGEN':'⚫','BMW':'⚪','MERCEDES-BENZ':'⭐','AUDI':'⚪','TOYOTA':'🔴','HONDA':'🔴','NISSAN':'🔴','HYUNDAI':'🔵','KIA':'🔴','VAUXHALL':'⚡','PEUGEOT':'🦁','RENAULT':'🔷','CITROEN':'🔷','FIAT':'🔵','MAZDA':'🔴','SUBARU':'⭐','MITSUBISHI':'🔷','VOLVO':'⚫','MINI':'⚪','JAGUAR':'🐆','LAND ROVER':'🟢','RANGE ROVER':'🟢','TESLA':'🔴','PORSCHE':'⭐','ALFA ROMEO':'🔴','SKODA':'🟢','SEAT':'🔵','LEXUS':'⬛','SUZUKI':'🔵','DACIA':'🔵','MG':'🔴','JEEP':'⬛','DODGE':'🔴','CHEVROLET':'⭐'};
-var BRAND_COLORS={'BMW':'#1c69d4','MERCEDES-BENZ':'#333','AUDI':'#bb0a14','VOLKSWAGEN':'#001e50','FORD':'#003478','TOYOTA':'#eb0a1e','HONDA':'#cc0000','TESLA':'#e82127','PORSCHE':'#d5001c','JAGUAR':'#003399','LAND ROVER':'#005a2b'};
-function getBrandLogo(make){return BRAND_LOGOS[(make||'').toUpperCase().trim()]||'🚗';}
+var BRAND_COLORS={'BMW':'#1c69d4','MERCEDES-BENZ':'#333333','AUDI':'#bb0a14','VOLKSWAGEN':'#001e50','FORD':'#003478','TOYOTA':'#eb0a1e','HONDA':'#cc0000','TESLA':'#e82127','PORSCHE':'#d5001c','JAGUAR':'#1e3a5f','LAND ROVER':'#005a2b','RANGE ROVER':'#0d1f14','VAUXHALL':'#c8102e','PEUGEOT':'#0c0c0c','RENAULT':'#ffcc00','CITROEN':'#a3040c','FIAT':'#941b1e','MAZDA':'#8c0028','VOLVO':'#003057','MINI':'#1e3a5f','SKODA':'#0e3a2f','SEAT':'#e6002e','LEXUS':'#1a1a1a','SUZUKI':'#e30613','DACIA':'#5c7a5c','MG':'#c8102e','JEEP':'#3c3c3c','HYUNDAI':'#002c5f','KIA':'#bb162b','NISSAN':'#c3002f','MITSUBISHI':'#e60012','SUBARU':'#1c3f94','ALFA ROMEO':'#a6112c','DODGE':'#941e1e','CHEVROLET':'#d1b000'};
+function getBrandLogo(make){return (make||'').trim().charAt(0).toUpperCase()||'?';}
 function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()]||null;}
 
 function fetchVehiclePhoto(make,model,year,cc){
@@ -363,7 +362,7 @@ function lookupVehicle(){
   fetch(VERCEL+'/api/vehicle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({registrationNumber:clean})})
     .then(function(r){if(!r.ok)throw new Error('DVLA error '+r.status);return r.json();})
     .then(function(d){
-      var model=d.model||d.modelSeries||d.typeApproval||d.vehicleDescription||'';
+      var model=d.model||d.modelSeries||d.vehicleDescription||'';
       if(model&&model.length<=2)model='';
       vehicleData=Object.assign({},d,{reg:clean,model:model,hp:estHp(d),torque:estTq(d),value:estVal(d)});
       renderVehicle(vehicleData);renderUlezVed(vehicleData);saveToHistory();loadSpecs();loadMot(clean);renderValuation();hideFeatGrid();hideLoadingOverlay();
@@ -395,7 +394,7 @@ function renderVehicle(d){
   if(el('vehTaxBadge')){el('vehTaxBadge').textContent=taxOk?'Taxed':taxSorn?'SORN':'Untaxed';el('vehTaxBadge').className='veh-status-badge '+(taxOk?'vsb-taxed':taxSorn?'vsb-sorn':'vsb-not-taxed');}
   var chips=[{ic:'ti-calendar',v:d.yearOfManufacture||'—'},{ic:'ti-gas-station',v:fmt(d.fuelType)},{ic:'ti-palette',v:fmt(d.colour||d.primaryColour)},{ic:'ti-engine',v:(d.engineCapacity||d.engineSize)?((d.engineCapacity||d.engineSize)+'cc'):'—'}];
   if(el('vehChips'))el('vehChips').innerHTML=chips.map(function(ch,i){return(i>0?'<span class="veh-chip-div">·</span>':'')+'<span class="veh-chip"><i class="ti '+ch.ic+'"></i>'+esc(String(ch.v))+'</span>';}).join('');
-  var mk=fmt(d.make),mo=d.model||d.modelSeries||d.typeApproval||d.vehicleDescription||'';
+  var mk=fmt(d.make),mo=d.model||d.modelSeries||d.vehicleDescription||'';
   if(mo&&mo.length<=2)mo='';
   if(el('vehName'))el('vehName').textContent=(mk+(mo?' '+fmt(mo):'')).trim()||'Unknown Vehicle';
   var motOk=(d.motStatus||'').toLowerCase().indexOf('valid')>=0;
@@ -406,7 +405,7 @@ function renderVehicle(d){
   var euro=yr2>=2015?'Euro 6':yr2>=2011?'Euro 5':yr2>=2006?'Euro 4':yr2>=2001?'Euro 3':'Pre-Euro 3';
   if(el('vehEuro'))el('vehEuro').textContent=euro;
   el('statMake').textContent=fmt(d.make);
-  var m2=d.model||d.modelSeries||d.typeApproval||d.vehicleDescription||'';if(m2&&m2.length<=2)m2='';
+  var m2=d.model||d.modelSeries||d.vehicleDescription||'';if(m2&&m2.length<=2)m2='';
   el('statModel').textContent=m2?fmt(m2):'-';
   el('statYear').textContent=d.yearOfManufacture||d.monthOfFirstRegistration||'-';
   el('statEngine').textContent=(d.engineCapacity||d.engineSize)?((d.engineCapacity||d.engineSize)+'cc'):'-';
@@ -452,7 +451,7 @@ function applySpecs(s){
 }
 function loadSpecs(){
   if(el('specsStatus')){el('specsStatus').textContent='Loading...';el('specsStatus').className='chip chip-b';}
-  var payload={make:vehicleData.make,model:vehicleData.model||vehicleData.modelSeries||vehicleData.typeApproval||'',year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity||vehicleData.engineSize,fuel:vehicleData.fuelType};
+  var payload={make:vehicleData.make,model:vehicleData.model||vehicleData.modelSeries||'',year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity||vehicleData.engineSize,fuel:vehicleData.fuelType};
   var key=[payload.make,payload.model,payload.year,payload.cc].join('_');
   if(_specCache[key]){applySpecs(_specCache[key]);return;}
   fetch(VERCEL+'/api/specs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
