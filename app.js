@@ -9,6 +9,22 @@ var SEARCH_MODE='reg';
 function el(id){return document.getElementById(id);}
 function qsa(s){return document.querySelectorAll(s);}
 function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):''}
+// DVLA/DVSA sometimes return a bare model number ("218", "150") missing the
+// trim/fuel suffix letter that makes it a real model name ("218d", "C150").
+// Complete it using fuel type we DO reliably know, rather than discarding it.
+function completeModelNumber(m,fuelType){
+  var v=(m||'').toString().trim();
+  if(!/^\d{2,4}$/.test(v))return v; // only touch bare-numeric fragments
+  var f=(fuelType||'').toUpperCase();
+  if(f.indexOf('DIESEL')>=0)return v+'d';
+  if(f.indexOf('ELECTRIC')>=0)return v+'e';
+  if(f.indexOf('HYBRID')>=0)return v+'e';
+  return v+'i'; // default to petrol suffix
+}
+// Reject values that can genuinely never be a model name (EU type-approval
+// category codes like M1/N1 — one letter plus one digit, appears on almost
+// every UK car — not a real model fragment like "218" or "C150").
+function isRegCategoryCode(m){return /^[A-Z]\d$/i.test((m||'').trim());}
 function fmt(s){return s?String(s).toUpperCase():'-'}
 function showErr(id,msg){var e=el(id);if(!e)return;e.textContent=msg;e.style.display='block';}
 function showOk(id,msg){var e=el(id);if(!e)return;e.textContent=msg;e.style.display='block';}
@@ -363,6 +379,8 @@ function lookupVehicle(){
     .then(function(r){if(!r.ok)throw new Error('DVLA error '+r.status);return r.json();})
     .then(function(d){
       var model=d.model||d.modelSeries||d.vehicleDescription||'';
+      if(isRegCategoryCode(model))model='';
+      model=completeModelNumber(model,d.fuelType);
       if(model&&model.length<=2)model='';
       vehicleData=Object.assign({},d,{reg:clean,model:model,hp:estHp(d),torque:estTq(d),value:estVal(d)});
       renderVehicle(vehicleData);renderUlezVed(vehicleData);saveToHistory();loadSpecs();loadMot(clean);renderValuation();hideFeatGrid();hideLoadingOverlay();
@@ -389,12 +407,12 @@ function renderVehicle(d){
   if(el('vehHeader'))el('vehHeader').classList.add('visible');
   var logo=el('vehLogo');
   if(logo){logo.textContent=getBrandLogo(d.make);var bc=getBrandColor(d.make);if(bc)logo.style.background='linear-gradient(135deg,'+bc+'22,'+bc+'11)';}
-  fetchVehiclePhoto(d.make,d.model||d.modelSeries||'',d.yearOfManufacture,d.engineCapacity);
+  fetchVehiclePhoto(d.make,model||'',d.yearOfManufacture,d.engineCapacity);
   var taxOk=(d.taxStatus||'').toLowerCase().indexOf('taxed')>=0,taxSorn=(d.taxStatus||'').toLowerCase().indexOf('sorn')>=0;
   if(el('vehTaxBadge')){el('vehTaxBadge').textContent=taxOk?'Taxed':taxSorn?'SORN':'Untaxed';el('vehTaxBadge').className='veh-status-badge '+(taxOk?'vsb-taxed':taxSorn?'vsb-sorn':'vsb-not-taxed');}
   var chips=[{ic:'ti-calendar',v:d.yearOfManufacture||'—'},{ic:'ti-gas-station',v:fmt(d.fuelType)},{ic:'ti-palette',v:fmt(d.colour||d.primaryColour)},{ic:'ti-engine',v:(d.engineCapacity||d.engineSize)?((d.engineCapacity||d.engineSize)+'cc'):'—'}];
   if(el('vehChips'))el('vehChips').innerHTML=chips.map(function(ch,i){return(i>0?'<span class="veh-chip-div">·</span>':'')+'<span class="veh-chip"><i class="ti '+ch.ic+'"></i>'+esc(String(ch.v))+'</span>';}).join('');
-  var mk=fmt(d.make),mo=d.model||d.modelSeries||d.vehicleDescription||'';
+  var mk=fmt(d.make),mo=d.model||d.modelSeries||d.vehicleDescription||'';if(isRegCategoryCode(mo))mo='';mo=completeModelNumber(mo,d.fuelType);
   if(mo&&mo.length<=2)mo='';
   if(el('vehName'))el('vehName').textContent=(mk+(mo?' '+fmt(mo):'')).trim()||'Unknown Vehicle';
   var motOk=(d.motStatus||'').toLowerCase().indexOf('valid')>=0;
@@ -405,7 +423,7 @@ function renderVehicle(d){
   var euro=yr2>=2015?'Euro 6':yr2>=2011?'Euro 5':yr2>=2006?'Euro 4':yr2>=2001?'Euro 3':'Pre-Euro 3';
   if(el('vehEuro'))el('vehEuro').textContent=euro;
   el('statMake').textContent=fmt(d.make);
-  var m2=d.model||d.modelSeries||d.vehicleDescription||'';if(m2&&m2.length<=2)m2='';
+  var m2=d.model||d.modelSeries||d.vehicleDescription||'';if(isRegCategoryCode(m2))m2='';m2=completeModelNumber(m2,d.fuelType);if(m2&&m2.length<=1)m2='';
   el('statModel').textContent=m2?fmt(m2):'-';
   el('statYear').textContent=d.yearOfManufacture||d.monthOfFirstRegistration||'-';
   el('statEngine').textContent=(d.engineCapacity||d.engineSize)?((d.engineCapacity||d.engineSize)+'cc'):'-';
@@ -442,16 +460,16 @@ function applySpecs(s){
   if(el('specCyl'))el('specCyl').textContent=s.cylinders!=null?String(s.cylinders):'—';
   if(el('specDrive'))el('specDrive').textContent=s.driveType||'—';
   if(el('specMpg'))el('specMpg').textContent=s.consumptionCombined?s.consumptionCombined+' mpg':s.consumptionCombined===0?'EV':'—';
-  if(s.co2gkm===0){if(el('specCo2'))el('specCo2').innerHTML='0 g/km <span style="background:var(--green);color:#fff;font-size:8px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:3px">A</span>';}
-  else if(s.co2gkm){if(el('specCo2'))el('specCo2').textContent=s.co2gkm+' g/km'+(s.co2Label?' ('+s.co2Label+')':'');}
-  else{if(el('specCo2'))el('specCo2').textContent='—';}
+  if(s.co2gkm===0){if(el('specCo2'))el('specCo2').textContent='0 g/km';if(el('specCo2Band'))el('specCo2Band').innerHTML='<span style="background:var(--green);color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:5px">A</span>';}
+  else if(s.co2gkm){if(el('specCo2'))el('specCo2').textContent=s.co2gkm+' g/km';if(el('specCo2Band'))el('specCo2Band').innerHTML=s.co2Label?'<span style="background:var(--bg4);border:1px solid var(--border);color:var(--t1);font-size:11px;font-weight:800;padding:2px 8px;border-radius:5px">'+esc(s.co2Label)+'</span>':'—';}
+  else{if(el('specCo2'))el('specCo2').textContent='—';if(el('specCo2Band'))el('specCo2Band').textContent='—';}
   if(s.bhp)vehicleData.hp=parseInt(s.bhp);
   if(s.torqueNm)vehicleData.torque=parseInt(s.torqueNm);
   if(el('specsStatus')){el('specsStatus').textContent='Loaded';el('specsStatus').className='chip chip-gr';}
 }
 function loadSpecs(){
   if(el('specsStatus')){el('specsStatus').textContent='Loading...';el('specsStatus').className='chip chip-b';}
-  var payload={make:vehicleData.make,model:vehicleData.model||vehicleData.modelSeries||'',year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity||vehicleData.engineSize,fuel:vehicleData.fuelType};
+  var payload={make:vehicleData.make,model:completeModelNumber(vehicleData.model||vehicleData.modelSeries||'',vehicleData.fuelType),year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity||vehicleData.engineSize,fuel:vehicleData.fuelType};
   var key=[payload.make,payload.model,payload.year,payload.cc].join('_');
   if(_specCache[key]){applySpecs(_specCache[key]);return;}
   fetch(VERCEL+'/api/specs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
@@ -473,6 +491,8 @@ function renderMot(raw){
   /* Fix: raw[0].model not raw.model — DVSA returns an array */
   if(!vehicleData.model||vehicleData.model.length<=2){
     var mm=Array.isArray(raw)&&raw[0]?raw[0].model||'':(raw&&raw.model?raw.model:'');
+    if(isRegCategoryCode(mm))mm='';
+    mm=completeModelNumber(mm,vehicleData.fuelType);
     if(mm&&mm.length>2){
       vehicleData.model=mm.toUpperCase();
       if(el('statModel'))el('statModel').textContent=vehicleData.model;
