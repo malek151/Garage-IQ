@@ -390,7 +390,12 @@ function lookupVehicle(){
     })
     .catch(function(e){
       el('loadbox').classList.add('hidden');hideLoadingOverlay();
-      el('errbox').textContent='Could not fetch vehicle — check the reg and try again.';
+      console.error('lookupVehicle failed:',e);
+      var msg='Could not fetch vehicle — check the reg and try again.';
+      if(e instanceof TypeError||/network|fetch/i.test(e.message||'')){msg='Connection problem — check your signal/wifi and try again.';}
+      else if(/DVLA error 404/.test(e.message||'')){msg='Registration not found — check it is entered correctly.';}
+      else if(/DVLA error/.test(e.message||'')){msg='DVLA service issue — please try again in a moment.';}
+      el('errbox').textContent=msg;
       el('errbox').classList.remove('hidden');
     });
 }
