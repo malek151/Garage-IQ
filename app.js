@@ -376,7 +376,16 @@ function lookupVehicle(){
   el('motTimeline').innerHTML='<div class="loading-box"><div class="spin"></div></div>';
   switchMainTab('overview');
   fetch(VERCEL+'/api/vehicle',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({registrationNumber:clean})})
-    .then(function(r){if(!r.ok)throw new Error('DVLA error '+r.status);return r.json();})
+    .then(function(r){
+      if(!r.ok){
+        return r.text().then(function(body){
+          var e=new Error('HTTP '+r.status+(body?': '+body.slice(0,200):''));
+          e.status=r.status;
+          throw e;
+        });
+      }
+      return r.json();
+    })
     .then(function(d){
       var model=d.model||d.modelSeries||d.vehicleDescription||'';
       if(isRegCategoryCode(model))model='';
@@ -385,16 +394,16 @@ function lookupVehicle(){
       vehicleData=Object.assign({},d,{reg:clean,model:model,hp:estHp(d),torque:estTq(d),value:estVal(d)});
       renderVehicle(vehicleData);renderUlezVed(vehicleData);saveToHistory();loadSpecs();loadMot(clean);renderValuation();hideFeatGrid();hideLoadingOverlay();
       el('loadbox').classList.add('hidden');
-      var tr=el('tabsWrap');if(tr)tr.scrollIntoView({behavior:'smooth',block:'start'});
+      var tr=el('tabsWrap');if(tr&&tr.scrollIntoView){try{tr.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}}
       showIntelReport();
     })
     .catch(function(e){
       el('loadbox').classList.add('hidden');hideLoadingOverlay();
-      console.error('lookupVehicle failed:',e);
+      console.error('lookupVehicle failed:',e); // full detail always logged for debugging
       var msg='Could not fetch vehicle — check the reg and try again.';
       if(e instanceof TypeError||/network|fetch/i.test(e.message||'')){msg='Connection problem — check your signal/wifi and try again.';}
-      else if(/DVLA error 404/.test(e.message||'')){msg='Registration not found — check it is entered correctly.';}
-      else if(/DVLA error/.test(e.message||'')){msg='DVLA service issue — please try again in a moment.';}
+      else if(e.status===404){msg='Registration not found — check it is entered correctly.';}
+      else if(e.status){msg='DVLA service issue — please try again in a moment.';}
       el('errbox').textContent=msg;
       el('errbox').classList.remove('hidden');
     });
@@ -412,7 +421,7 @@ function renderVehicle(d){
   if(el('vehHeader'))el('vehHeader').classList.add('visible');
   var logo=el('vehLogo');
   if(logo){logo.textContent=getBrandLogo(d.make);var bc=getBrandColor(d.make);if(bc)logo.style.background='linear-gradient(135deg,'+bc+'22,'+bc+'11)';}
-  fetchVehiclePhoto(d.make,model||'',d.yearOfManufacture,d.engineCapacity);
+  fetchVehiclePhoto(d.make,d.model||'',d.yearOfManufacture,d.engineCapacity);
   var taxOk=(d.taxStatus||'').toLowerCase().indexOf('taxed')>=0,taxSorn=(d.taxStatus||'').toLowerCase().indexOf('sorn')>=0;
   if(el('vehTaxBadge')){el('vehTaxBadge').textContent=taxOk?'Taxed':taxSorn?'SORN':'Untaxed';el('vehTaxBadge').className='veh-status-badge '+(taxOk?'vsb-taxed':taxSorn?'vsb-sorn':'vsb-not-taxed');}
   var chips=[{ic:'ti-calendar',v:d.yearOfManufacture||'—'},{ic:'ti-gas-station',v:fmt(d.fuelType)},{ic:'ti-palette',v:fmt(d.colour||d.primaryColour)},{ic:'ti-engine',v:(d.engineCapacity||d.engineSize)?((d.engineCapacity||d.engineSize)+'cc'):'—'}];
@@ -1096,7 +1105,7 @@ function renderResult(r){
     +'<div class="drow"><span class="dlbl">MOT Risk</span><span class="dval"><span style="color:'+mc+';font-weight:700">'+esc(r.motRisk)+'</span></span></div>'
     +'<div class="verdict"><strong>Verdict:</strong> '+esc(r.verdict)+'</div>'
     +'<button class="share-btn" onclick="shareResult()"><i class="ti ti-share" style="margin-right:5px"></i>Share</button></div>';
-  el('resultSection').classList.remove('hidden');el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+  el('resultSection').classList.remove('hidden');try{el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}
 }
 function renderMultiResult(results,baseHp,baseTq,baseVal){
   var totalHp=results.reduce(function(s,r){return s+(parseInt(r.hpGain)||0);},0),totalTq=results.reduce(function(s,r){return s+(parseInt(r.torqueGain)||0);},0);
@@ -1105,7 +1114,7 @@ function renderMultiResult(results,baseHp,baseTq,baseVal){
   el('resultSection').innerHTML='<div class="res-card"><div class="res-title"><span>'+results.length+' MODS COMBINED</span></div>'
     +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px"><div class="mot-sb"><div class="mot-sn" style="color:var(--green3);font-size:22px">+'+(totalHp||0)+'</div><div class="mot-sl">Total BHP</div></div><div class="mot-sb"><div class="mot-sn" style="color:var(--blue2);font-size:22px">+'+(totalTq||0)+'</div><div class="mot-sl">Total Nm</div></div><div class="mot-sb"><div class="mot-sn" style="color:var(--amber);font-size:14px">'+highestRisk+' Risk</div><div class="mot-sl">MOT</div></div></div>'
     +modCards+'<button class="share-btn" onclick="shareResult()"><i class="ti ti-share" style="margin-right:5px"></i>Share Build</button></div>';
-  el('resultSection').classList.remove('hidden');el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});
+  el('resultSection').classList.remove('hidden');try{el('resultSection').scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}
 }
 function shareResult(){
   var text='GarageIQ — '+(vehicleData.make||'')+' '+(vehicleData.model||'')+'\nMods: '+Array.from(selectedMods).join(', ')+'\nwww.garageiq.org.uk';
