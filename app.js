@@ -31,7 +31,35 @@ function showOk(id,msg){var e=el(id);if(!e)return;e.textContent=msg;e.style.disp
 function hideMsg(id){var e=el(id);if(!e)return;e.textContent='';e.style.display='none';}
 function hideFeatGrid(){var fg=el('featGrid');if(fg)fg.style.display='none';}
 
-var BRAND_COLORS={'BMW':'#1c69d4','MERCEDES-BENZ':'#333333','AUDI':'#bb0a14','VOLKSWAGEN':'#001e50','FORD':'#003478','TOYOTA':'#eb0a1e','HONDA':'#cc0000','TESLA':'#e82127','PORSCHE':'#d5001c','JAGUAR':'#1e3a5f','LAND ROVER':'#005a2b','RANGE ROVER':'#0d1f14','VAUXHALL':'#c8102e','PEUGEOT':'#0c0c0c','RENAULT':'#ffcc00','CITROEN':'#a3040c','FIAT':'#941b1e','MAZDA':'#8c0028','VOLVO':'#003057','MINI':'#1e3a5f','SKODA':'#0e3a2f','SEAT':'#e6002e','LEXUS':'#1a1a1a','SUZUKI':'#e30613','DACIA':'#5c7a5c','MG':'#c8102e','JEEP':'#3c3c3c','HYUNDAI':'#002c5f','KIA':'#bb162b','NISSAN':'#c3002f','MITSUBISHI':'#e60012','SUBARU':'#1c3f94','ALFA ROMEO':'#a6112c','DODGE':'#941e1e','CHEVROLET':'#d1b000'};
+var BRAND_COLORS={'BMW':'#0166B1','MERCEDES-BENZ':'#000000','AUDI':'#F50537','VOLKSWAGEN':'#001e50','FORD':'#004377','TOYOTA':'#D90123','HONDA':'#cc0000','TESLA':'#e82127','PORSCHE':'#d5001c','JAGUAR':'#1e3a5f','LAND ROVER':'#016452','RANGE ROVER':'#0d1f14','VAUXHALL':'#c8102e','PEUGEOT':'#0c0c0c','RENAULT':'#ffcc00','CITROEN':'#a3040c','FIAT':'#941b1e','MAZDA':'#8c0028','VOLVO':'#003057','MINI':'#1e3a5f','SKODA':'#0e3a2f','SEAT':'#e6002e','LEXUS':'#1a1a1a','SUZUKI':'#e30613','DACIA':'#5c7a5c','MG':'#c8102e','JEEP':'#3c3c3c','HYUNDAI':'#002c5f','KIA':'#bb162b','NISSAN':'#c3002f','MITSUBISHI':'#e60012','SUBARU':'#1c3f94','ALFA ROMEO':'#a6112c','DODGE':'#941e1e','CHEVROLET':'#d1b000'};
+var BRAND_WIKI={'BMW':'BMW','MERCEDES-BENZ':'Mercedes-Benz','AUDI':'Audi','VOLKSWAGEN':'Volkswagen','FORD':'Ford Motor Company','TOYOTA':'Toyota','HONDA':'Honda','TESLA':'Tesla, Inc.','PORSCHE':'Porsche','JAGUAR':'Jaguar Cars','LAND ROVER':'Land Rover','RANGE ROVER':'Land Rover','VAUXHALL':'Vauxhall Motors','PEUGEOT':'Peugeot','RENAULT':'Renault','CITROEN':'Citroën','FIAT':'Fiat','MAZDA':'Mazda','VOLVO':'Volvo Cars','MINI':'Mini (marque)','SKODA':'Škoda Auto','SEAT':'SEAT','LEXUS':'Lexus','SUZUKI':'Suzuki','DACIA':'Dacia','MG':'MG Motor','JEEP':'Jeep','HYUNDAI':'Hyundai Motor Company','KIA':'Kia Corporation','NISSAN':'Nissan','MITSUBISHI':'Mitsubishi Motors','SUBARU':'Subaru','ALFA ROMEO':'Alfa Romeo','DODGE':'Dodge','CHEVROLET':'Chevrolet'};
+var _logoCache={};
+function applyBrandLogo(make,targetEl){
+  if(!targetEl||!make)return;
+  var key=make.toUpperCase().trim();
+  if(_logoCache[key]){
+    if(_logoCache[key]!=='none'&&targetEl===el('vehLogo')&&vehicleData.make&&vehicleData.make.toUpperCase().trim()!==key)return;
+    if(_logoCache[key]!=='none')targetEl.innerHTML='<img src="'+_logoCache[key]+'" alt="'+key+'" style="width:62%;height:62%;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,.35))" onerror="this.parentNode.textContent=\''+getBrandLogo(make)+'\';">';
+    return;
+  }
+  var stored;
+  try{stored=localStorage.getItem('giq_logo_'+key);}catch(e){}
+  if(stored){_logoCache[key]=stored;applyBrandLogo(make,targetEl);return;}
+  var title=BRAND_WIKI[key];
+  var qs=title?('titles='+encodeURIComponent(title)):('generator=search&gsrsearch='+encodeURIComponent(key+' car manufacturer')+'&gsrlimit=1');
+  fetch('https://en.wikipedia.org/w/api.php?action=query&'+qs+'&prop=pageimages&piprop=thumbnail&pithumbsize=160&redirects=1&format=json&origin=*')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var pages=d&&d.query&&d.query.pages;
+      var page=pages&&Object.values(pages)[0];
+      if(!page||!page.thumbnail||!page.thumbnail.source)throw 0;
+      var url=page.thumbnail.source;
+      _logoCache[key]=url;
+      try{localStorage.setItem('giq_logo_'+key,url);}catch(e){}
+      applyBrandLogo(make,targetEl);
+    })
+    .catch(function(){_logoCache[key]='none';});
+}
 function getBrandLogo(make){return (make||'').trim().charAt(0).toUpperCase()||'?';}
 function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()]||null;}
 
@@ -284,12 +312,14 @@ function switchAuthTab(t){
   ['authErr','authOk'].forEach(hideMsg);
 }
 function doLogin(){
+  if(!sb){showErr('authErr','Still connecting — try again in a second.');return;}
   var email=el('loginEmail').value.trim(),pass=el('loginPass').value;
   if(!email||!pass){showErr('authErr','Enter email and password.');return;}
   var btn=el('btnDoLogin');btn.disabled=true;btn.textContent='...';
   sb.auth.signInWithPassword({email:email,password:pass}).then(function(r){btn.disabled=false;btn.textContent='Log In';if(r.error)showErr('authErr',r.error.message);else closeAuth();});
 }
 function doSignup(){
+  if(!sb){showErr('authErr','Still connecting — try again in a second.');return;}
   var username=el('signupUser').value.trim().toUpperCase().replace(/[^A-Z0-9_]/g,''),email=el('signupEmail').value.trim(),pass=el('signupPass').value;
   if(!username){showErr('authErr','Enter a username.');return;}
   if(!email){showErr('authErr','Enter your email.');return;}
@@ -420,7 +450,7 @@ function renderVehicle(d){
   if(el('vehReg'))el('vehReg').textContent=regFmt;
   if(el('vehHeader'))el('vehHeader').classList.add('visible');
   var logo=el('vehLogo');
-  if(logo){logo.textContent=getBrandLogo(d.make);var bc=getBrandColor(d.make);if(bc)logo.style.background='linear-gradient(135deg,'+bc+'22,'+bc+'11)';}
+  if(logo){logo.textContent=getBrandLogo(d.make);var bc=getBrandColor(d.make);if(bc)logo.style.background='linear-gradient(135deg,'+bc+'22,'+bc+'11)';applyBrandLogo(d.make,logo);}
   fetchVehiclePhoto(d.make,d.model||'',d.yearOfManufacture,d.engineCapacity);
   var taxOk=(d.taxStatus||'').toLowerCase().indexOf('taxed')>=0,taxSorn=(d.taxStatus||'').toLowerCase().indexOf('sorn')>=0;
   if(el('vehTaxBadge')){el('vehTaxBadge').textContent=taxOk?'Taxed':taxSorn?'SORN':'Untaxed';el('vehTaxBadge').className='veh-status-badge '+(taxOk?'vsb-taxed':taxSorn?'vsb-sorn':'vsb-not-taxed');}
@@ -479,6 +509,7 @@ function applySpecs(s){
   else{if(el('specCo2'))el('specCo2').textContent='—';if(el('specCo2Band'))el('specCo2Band').textContent='—';}
   if(s.bhp)vehicleData.hp=parseInt(s.bhp);
   if(s.torqueNm)vehicleData.torque=parseInt(s.torqueNm);
+  if((s.bhp||s.torqueNm)&&vehicleData.reg===currentReg)saveToHistory(); /* re-sync history with corrected specs, not the early estimate */
   if(el('specsStatus')){el('specsStatus').textContent='Loaded';el('specsStatus').className='chip chip-gr';}
 }
 function loadSpecs(){
