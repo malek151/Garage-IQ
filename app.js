@@ -53,7 +53,9 @@ function applyBrandLogo(make,targetEl){
       var pages=d&&d.query&&d.query.pages;
       var page=pages&&Object.values(pages)[0];
       if(!page||!page.thumbnail||!page.thumbnail.source)throw 0;
-      var url=page.thumbnail.source;
+      var th=page.thumbnail;
+      if(th.width&&th.height&&(th.width/th.height)>2.2)throw 0;
+      var url=th.source;
       _logoCache[key]=url;
       try{localStorage.setItem('giq_logo_'+key,url);}catch(e){}
       applyBrandLogo(make,targetEl);
@@ -316,7 +318,7 @@ function doLogin(){
   var email=el('loginEmail').value.trim(),pass=el('loginPass').value;
   if(!email||!pass){showErr('authErr','Enter email and password.');return;}
   var btn=el('btnDoLogin');btn.disabled=true;btn.textContent='...';
-  sb.auth.signInWithPassword({email:email,password:pass}).then(function(r){btn.disabled=false;btn.textContent='Log In';if(r.error)showErr('authErr',r.error.message);else closeAuth();});
+  sb.auth.signInWithPassword({email:email,password:pass}).then(function(r){btn.disabled=false;btn.textContent='Log In';if(r.error)showErr('authErr',r.error.message);else closeAuth();}).catch(function(){btn.disabled=false;btn.textContent='Log In';showErr('authErr','Connection failed — check your internet and try again.');});
 }
 function doSignup(){
   if(!sb){showErr('authErr','Still connecting — try again in a second.');return;}
@@ -333,8 +335,8 @@ function doSignup(){
       var uid=r.data&&r.data.user?r.data.user.id:null;
       if(uid){localStorage.setItem('giq_pu_'+uid,username);sb.from('profiles').upsert([{id:uid,username:username}],{onConflict:'id'}).then(function(){localStorage.removeItem('giq_pu_'+uid);currentUser=r.data.user;currentProfile={id:uid,username:username};renderNav();closeAuth();}).catch(function(){showOk('authOk','Account created! Log in to continue.');});}
       else showOk('authOk','Check your email to confirm, then log in!');
-    });
-  });
+    }).catch(function(){btn.disabled=false;btn.textContent='Create Free Account';showErr('authErr','Connection failed — check your internet and try again.');});
+  }).catch(function(){btn.disabled=false;btn.textContent='Create Free Account';showErr('authErr','Connection failed — check your internet and try again.');});
 }
 function doLogout(){sb.auth.signOut().then(function(){currentUser=null;currentProfile=null;renderNav();closeProfileModal();el('intelPaywall').style.display='block';el('intelContent').style.display='none';});}
 
