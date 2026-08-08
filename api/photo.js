@@ -41,20 +41,20 @@ async function guessModelFromNinja(make, year, cc) {
   } catch { return null; }
 }
 
-async function wikiPhoto(make, model) {
+async function wikiPhoto(make, model, year) {
   if (!model || model.length < 3) return null;
-  const title = `${make} ${model}`;
+  const q = [make, model, year].filter(Boolean).join(' ');
   try {
     const r = await fetch(
-      `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(title)}&prop=pageimages&format=json&pithumbsize=900&redirects=1&origin=*`
+      `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=900&format=json&origin=*`
     );
     if (!r.ok) return null;
     const d = await r.json();
-    const pages = d?.query?.pages || {};
-    const page = Object.values(pages)[0];
-    if (!page || page.pageid <= 0 || !page.thumbnail) return null;
-    if (page.thumbnail.width < 300) return null;
-    return page.thumbnail.source;
+    const pages = Object.values(d?.query?.pages || {});
+    if (!pages.length) return null;
+    pages.sort((a, b) => (a.index || 99) - (b.index || 99));
+    const best = pages.find(p => p.thumbnail && p.thumbnail.width >= 300);
+    return best ? best.thumbnail.source : null;
   } catch { return null; }
 }
 
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
     if (guessed) { model = guessed; modelSource = 'ninja-inferred'; }
   }
 
-  const wiki = await wikiPhoto(make, model);
+  const wiki = await wikiPhoto(make, model, year);
   if (wiki) return res.status(200).json({ url: wiki, source: 'wikipedia', modelUsed: model, modelSource });
 
   const id = PHOTOS[make] || PHOTOS[make.split(' ')[0]] || PHOTOS['DEFAULT'];
