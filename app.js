@@ -424,7 +424,8 @@ function lookupVehicle(){
       model=completeModelNumber(model,d.fuelType);
       if(model&&model.length<=2)model='';
       vehicleData=Object.assign({},d,{reg:clean,model:model,hp:estHp(d),torque:estTq(d),value:estVal(d)});
-      renderVehicle(vehicleData);renderUlezVed(vehicleData);saveToHistory();loadSpecs();loadMot(clean);renderValuation();hideFeatGrid();hideLoadingOverlay();
+      [renderVehicle,renderUlezVed].forEach(function(fn){try{fn(vehicleData);}catch(e){}});
+      [saveToHistory,loadSpecs,function(){loadMot(clean);},renderValuation,hideFeatGrid,hideLoadingOverlay].forEach(function(fn){try{fn();}catch(e){}});
       el('loadbox').classList.add('hidden');
       var tr=el('tabsWrap');if(tr&&tr.scrollIntoView){try{tr.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}}
       showIntelReport();
@@ -515,6 +516,10 @@ function applySpecs(s){
   if(el('specsStatus')){el('specsStatus').textContent='Loaded';el('specsStatus').className='chip chip-gr';}
 }
 function loadSpecs(){
+  if(!vehicleData.model||vehicleData.model.length<=2){
+    if(el('specsStatus')){el('specsStatus').textContent='Waiting for model...';el('specsStatus').className='chip chip-b';}
+    return; /* MOT data will supply a real model and re-trigger this */
+  }
   if(el('specsStatus')){el('specsStatus').textContent='Loading...';el('specsStatus').className='chip chip-b';}
   var payload={make:vehicleData.make,model:completeModelNumber(vehicleData.model||vehicleData.modelSeries||'',vehicleData.fuelType),year:vehicleData.yearOfManufacture,cc:vehicleData.engineCapacity||vehicleData.engineSize,fuel:vehicleData.fuelType};
   var key=[payload.make,payload.model,payload.year,payload.cc].join('_');
