@@ -44,17 +44,18 @@ async function guessModelFromNinja(make, year, cc) {
 async function wikiPhoto(make, model, year) {
   if (!model || model.length < 3) return null;
   const q = [make, model, year, 'car'].filter(Boolean).join(' ');
-  const BAD_TITLE = /\b(engine|powertrain|transmission|gearbox|drivetrain|motor family|straight-\d|V\d engine)\b/i;
+  const BAD_TITLE = /\b(engine|powertrain|transmission|gearbox|drivetrain|motor family|straight-\d|V\d engine|inline-\d)\b/i;
+  const makeWord = new RegExp('\\b' + make.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
   try {
     const r = await fetch(
-      `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=5&prop=pageimages&piprop=thumbnail&pithumbsize=900&format=json&origin=*`
+      `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=6&prop=pageimages&piprop=thumbnail&pithumbsize=900&format=json&origin=*`
     );
     if (!r.ok) return null;
     const d = await r.json();
     const pages = Object.values(d?.query?.pages || {});
     if (!pages.length) return null;
     pages.sort((a, b) => (a.index || 99) - (b.index || 99));
-    const best = pages.find(p => p.thumbnail && p.thumbnail.width >= 300 && !BAD_TITLE.test(p.title || ''));
+    const best = pages.find(p => p.thumbnail && p.thumbnail.width >= 300 && makeWord.test(p.title || '') && !BAD_TITLE.test(p.title || ''));
     return best ? best.thumbnail.source : null;
   } catch { return null; }
 }
