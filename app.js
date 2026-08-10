@@ -32,35 +32,13 @@ function hideMsg(id){var e=el(id);if(!e)return;e.textContent='';e.style.display=
 function hideFeatGrid(){var fg=el('featGrid');if(fg)fg.style.display='none';}
 
 var BRAND_COLORS={'BMW':'#0166B1','MERCEDES-BENZ':'#000000','AUDI':'#F50537','VOLKSWAGEN':'#001e50','FORD':'#004377','TOYOTA':'#D90123','HONDA':'#cc0000','TESLA':'#e82127','PORSCHE':'#d5001c','JAGUAR':'#1e3a5f','LAND ROVER':'#016452','RANGE ROVER':'#0d1f14','VAUXHALL':'#c8102e','PEUGEOT':'#0c0c0c','RENAULT':'#ffcc00','CITROEN':'#a3040c','FIAT':'#941b1e','MAZDA':'#8c0028','VOLVO':'#003057','MINI':'#1e3a5f','SKODA':'#0e3a2f','SEAT':'#e6002e','LEXUS':'#1a1a1a','SUZUKI':'#e30613','DACIA':'#5c7a5c','MG':'#c8102e','JEEP':'#3c3c3c','HYUNDAI':'#002c5f','KIA':'#bb162b','NISSAN':'#c3002f','MITSUBISHI':'#e60012','SUBARU':'#1c3f94','ALFA ROMEO':'#a6112c','DODGE':'#941e1e','CHEVROLET':'#d1b000'};
-var BRAND_WIKI={'BMW':'BMW','MERCEDES-BENZ':'Mercedes-Benz','AUDI':'Audi','VOLKSWAGEN':'Volkswagen','FORD':'Ford Motor Company','TOYOTA':'Toyota','HONDA':'Honda','TESLA':'Tesla, Inc.','PORSCHE':'Porsche','JAGUAR':'Jaguar Cars','LAND ROVER':'Land Rover','RANGE ROVER':'Land Rover','VAUXHALL':'Vauxhall Motors','PEUGEOT':'Peugeot','RENAULT':'Renault','CITROEN':'Citroën','FIAT':'Fiat','MAZDA':'Mazda','VOLVO':'Volvo Cars','MINI':'Mini (marque)','SKODA':'Škoda Auto','SEAT':'SEAT','LEXUS':'Lexus','SUZUKI':'Suzuki','DACIA':'Dacia','MG':'MG Motor','JEEP':'Jeep','HYUNDAI':'Hyundai Motor Company','KIA':'Kia Corporation','NISSAN':'Nissan','MITSUBISHI':'Mitsubishi Motors','SUBARU':'Subaru','ALFA ROMEO':'Alfa Romeo','DODGE':'Dodge','CHEVROLET':'Chevrolet'};
-var _logoCache={};
+var BRAND_SLUG={'BMW':'bmw','MERCEDES-BENZ':'mercedes','AUDI':'audi','VOLKSWAGEN':'volkswagen','FORD':'ford','TOYOTA':'toyota','HONDA':'honda','TESLA':'tesla','PORSCHE':'porsche','JAGUAR':'jaguar','LAND ROVER':'landrover','RANGE ROVER':'landrover','VAUXHALL':'vauxhall','PEUGEOT':'peugeot','RENAULT':'renault','CITROEN':'citroen','FIAT':'fiat','MAZDA':'mazda','VOLVO':'volvo','MINI':'mini','SKODA':'skoda','SEAT':'seat','LEXUS':'lexus','SUZUKI':'suzuki','DACIA':'dacia','MG':'mg','JEEP':'jeep','HYUNDAI':'hyundai','KIA':'kia','NISSAN':'nissan','MITSUBISHI':'mitsubishi','SUBARU':'subaru','ALFA ROMEO':'alfaromeo','DODGE':'dodge','CHEVROLET':'chevrolet'};
 function applyBrandLogo(make,targetEl){
   if(!targetEl||!make)return;
   var key=make.toUpperCase().trim();
-  if(_logoCache[key]){
-    if(_logoCache[key]!=='none'&&targetEl===el('vehLogo')&&vehicleData.make&&vehicleData.make.toUpperCase().trim()!==key)return;
-    if(_logoCache[key]!=='none')targetEl.innerHTML='<img src="'+_logoCache[key]+'" alt="'+key+'" style="width:62%;height:62%;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,.35))" onerror="this.parentNode.textContent=\''+getBrandLogo(make)+'\';">';
-    return;
-  }
-  var stored;
-  try{stored=localStorage.getItem('giq_logo_'+key);}catch(e){}
-  if(stored){_logoCache[key]=stored;applyBrandLogo(make,targetEl);return;}
-  var title=BRAND_WIKI[key];
-  var qs=title?('titles='+encodeURIComponent(title)):('generator=search&gsrsearch='+encodeURIComponent(key+' car manufacturer')+'&gsrlimit=1');
-  fetch('https://en.wikipedia.org/w/api.php?action=query&'+qs+'&prop=pageimages&piprop=thumbnail&pithumbsize=160&redirects=1&format=json&origin=*')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      var pages=d&&d.query&&d.query.pages;
-      var page=pages&&Object.values(pages)[0];
-      if(!page||!page.thumbnail||!page.thumbnail.source)throw 0;
-      var th=page.thumbnail;
-      if(th.width&&th.height&&(th.width/th.height)>2.2)throw 0;
-      var url=th.source;
-      _logoCache[key]=url;
-      try{localStorage.setItem('giq_logo_'+key,url);}catch(e){}
-      applyBrandLogo(make,targetEl);
-    })
-    .catch(function(){_logoCache[key]='none';});
+  var slug=BRAND_SLUG[key];
+  if(!slug)return;
+  targetEl.innerHTML='<img src="https://cdn.simpleicons.org/'+slug+'" alt="'+key+'" style="width:62%;height:62%;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,.35))" onerror="this.parentNode.textContent=\''+getBrandLogo(make)+'\';">';
 }
 function getBrandLogo(make){return (make||'').trim().charAt(0).toUpperCase()||'?';}
 function getBrandColor(make){return BRAND_COLORS[(make||'').toUpperCase().trim()]||null;}
