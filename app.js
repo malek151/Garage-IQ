@@ -1155,10 +1155,39 @@ function toast(msg,type,dur){
   setTimeout(function(){t.style.animation='toastOut .3s ease forwards';setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},300);},(dur||3000));
 }
 
+/* ============ Spring engine (Apple Design skill: interruptible physical motion) ============ */
+var REDUCE_MOTION=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function Spring(stiffness,damping,mass){this.k=stiffness;this.c=damping;this.m=mass||1;this.pos=0;this.vel=0;this.target=0;}
+Spring.prototype.step=function(dt){var F=-this.k*(this.pos-this.target)-this.c*this.vel;this.vel+=(F/this.m)*dt;this.pos+=this.vel*dt;return this.pos;};
+Spring.prototype.settled=function(eps){eps=eps||0.01;return Math.abs(this.pos-this.target)<eps&&Math.abs(this.vel)<eps;};
+Spring.prototype.retarget=function(t){this.target=t;};
+function animateSpring(spring,onUpdate,onDone){
+  var last=null;
+  function frame(t){
+    if(last===null)last=t;
+    var dt=Math.min((t-last)/1000,1/30);last=t;
+    spring.step(dt);onUpdate(spring.pos);
+    if(!spring.settled(0.001)){spring._raf=requestAnimationFrame(frame);}
+    else{onUpdate(spring.target);if(onDone)onDone();}
+  }
+  if(spring._raf)cancelAnimationFrame(spring._raf);
+  spring._raf=requestAnimationFrame(frame);
+}
+function materialize(target){
+  if(!target)return;
+  if(REDUCE_MOTION){target.style.opacity=1;target.style.transform='none';target.style.filter='none';return;}
+  var s=new Spring(210,24);s.pos=0;s.retarget(1);
+  animateSpring(s,function(v){
+    target.style.opacity=v;
+    target.style.transform='scale('+(0.96+v*0.04)+') translateY('+((1-v)*8)+'px)';
+    target.style.filter='blur('+((1-v)*4)+'px)';
+  });
+}
 (function(){
   if(!window.IntersectionObserver)return;
-  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:.1});
-  function observe(){qsa('.reveal').forEach(function(el){obs.observe(el);});}
+  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');materialize(e.target);obs.unobserve(e.target);}});},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  function observe(){qsa('.reveal').forEach(function(el){if(!el.classList.contains('in'))obs.observe(el);});}
+  window.reobserveReveals=observe;
   observe();
   document.addEventListener('click',function(e){if(e.target.closest('.pill-tab'))setTimeout(observe,100);});
 })();
