@@ -130,7 +130,9 @@ main{max-width:1100px;margin:0 auto;padding:0 20px 56px}
 #heroSection.searched .search-wrap{max-width:520px;padding:14px 16px;box-shadow:var(--sh-1)}
 #heroSection.searched .reg-toggle,#heroSection.searched .search-note{display:none}
 #heroSection.searched .search-box{flex-direction:row;align-items:center;gap:8px}
-#heroSection.searched .reg-badge{min-height:0;padding:8px 12px;flex:1}
+#heroSection.searched .reg-badge{min-height:0;flex:1}
+#heroSection.searched .reg-strip{padding:5px 0}
+#heroSection.searched .reg-input{padding:8px 10px 8px 4px}
 #heroSection.searched .reg-input{font-size:16px;letter-spacing:3px}
 #heroSection.searched .reg-go{width:auto;padding:10px 16px;flex-shrink:0}
 #heroSection.searched .reg-go span{display:none}
@@ -151,8 +153,11 @@ main{max-width:1100px;margin:0 auto;padding:0 20px 56px}
 .reg-toggle-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;border-radius:10px;font-size:13px;font-weight:600;color:var(--t3);transition:all .25s}
 .reg-toggle-btn.active{background:var(--blue);color:#fff}
 .search-box{display:flex;flex-direction:column;gap:10px}
-.reg-badge{position:relative;background:#ffcc00;border:3px solid #e6b800;border-radius:var(--r-md);min-height:76px;display:flex;align-items:center;padding:10px 14px;overflow:hidden;box-shadow:var(--sh-1)}
-.reg-input{flex:1;text-align:center;font-size:clamp(22px,4.5vw,30px);font-weight:700;letter-spacing:6px;text-transform:uppercase;background:none;border:none;outline:none;color:#111;caret-color:var(--blue);width:100%}
+.reg-badge{position:relative;background:#ffd42b;border-radius:var(--r-md);min-height:76px;display:flex;align-items:stretch;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 20px -8px rgba(0,0,0,.18),inset 0 0 0 1px rgba(0,0,0,.06)}
+.reg-strip{flex-shrink:0;width:34px;background:linear-gradient(180deg,#1447a8,#0d3585);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 0}
+.reg-strip svg{width:15px;height:10px;border-radius:1px}
+.reg-strip span{color:#fff;font-size:9px;font-weight:800;letter-spacing:.03em}
+.reg-input{flex:1;text-align:center;font-size:clamp(22px,4.5vw,30px);font-weight:700;letter-spacing:6px;text-transform:uppercase;background:none;border:none;outline:none;color:#111;caret-color:var(--blue);width:100%;padding:10px 14px 10px 6px;font-family:-apple-system,BlinkMacSystemFont,'Inter',system-ui,sans-serif}
 .reg-input::placeholder{opacity:.25}
 .vin-strip{font-size:11px;color:var(--t4);text-align:center;margin-top:6px}
 .reg-go{width:100%;background:linear-gradient(180deg,rgba(255,255,255,.25),transparent 55%),var(--blue);position:relative;color:#fff;font-size:15px;font-weight:600;padding:15px;border-radius:var(--r-md);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 16px rgba(0,113,227,.25)}
@@ -627,8 +632,7 @@ footer{text-align:center;padding:40px 20px 32px;border-top:1px solid var(--borde
       </div>
       <div class="search-box">
         <div class="reg-badge" id="regBadge">
-          <svg width="18" height="12" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg>
-          <span id="regBadgeTxt">UK</span>
+          <div class="reg-strip"><svg viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="5"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="8"/></svg><span id="regBadgeTxt">UK</span></div>
           <input class="reg-input" id="regInput" placeholder="AB12 CDE" maxlength="20"/>
         </div>
         <button class="reg-go" id="runBtn"><i class="ti ti-search"></i> <span>SEARCH</span></button>
@@ -857,13 +861,6 @@ footer{text-align:center;padding:40px 20px 32px;border-top:1px solid var(--borde
               <div class="dmg-list" id="dmgList"><div style="font-size:11px;color:var(--t4);padding:.9rem;text-align:center">Loading...</div></div>
             </div>
             <div class="info-box" style="margin-top:7px"><i class="ti ti-info-circle"></i> Zones from MOT data only. <strong>Full accident history</strong> requires an HPI check.</div>
-          </div>
-          <div class="sect-lbl reveal">Stolen, Clone & Plate Risk</div>
-          <div class="card reveal" style="margin-bottom:.85rem">
-            <div class="hrow"><div class="hic hi-r"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Stolen Vehicle Check</div><div class="hrow-d">DVLA/DVSA records do not include stolen status. A full HPI check is the only way to verify.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g">HPI →</div></a></div></div>
-            <div class="hrow"><div class="hic hi-g"><i class="ti ti-license-plate"></i></div><div style="flex:1"><div class="hrow-t">Cloned Plate Detection</div><div class="hrow-d" id="cloneText">Analysing registration patterns...</div></div><div><div class="chip" id="cloneChip">Checking...</div></div></div>
-            <div class="hrow"><div class="hic hi-b"><i class="ti ti-writing"></i></div><div style="flex:1"><div class="hrow-t">Write-Off Category</div><div class="hrow-d">Cat A/B/S/N not in DVLA public data. Requires HPI check.</div></div><div><div class="chip chip-b">HPI Only</div></div></div>
-            <div class="hrow"><div class="hic hi-gr"><i class="ti ti-world"></i></div><div style="flex:1"><div class="hrow-t">Imported Vehicle Check</div><div class="hrow-d" id="importText">Checking registration pattern...</div></div><div><div class="chip" id="importChip">Checking...</div></div></div>
           </div>
           <div class="sect-lbl reveal">Ownership & Insurance</div>
           <div class="card reveal" style="margin-bottom:.85rem">
