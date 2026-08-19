@@ -40,8 +40,9 @@ img{display:block;max-width:100%}
 }
 /* ── UTILS ── */
 .hidden{display:none!important}
-.reveal{opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s}
-.reveal.in{opacity:1;transform:none}
+.reveal{opacity:0;transform:translateY(14px) scale(.98);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1),filter .6s cubic-bezier(.22,1,.36,1);filter:blur(3px)}
+.reveal.in{opacity:1;transform:none;filter:blur(0)}
+@media (prefers-reduced-motion: reduce){.reveal{transition:opacity .15s linear;transform:none;filter:none}}
 .spin{width:15px;height:15px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -823,14 +824,14 @@ footer{text-align:center;padding:40px 20px 32px;border-top:1px solid var(--borde
             <i class="ti ti-alert-triangle" style="color:var(--red3);font-size:16px;flex-shrink:0;margin-top:1px"></i>
             <div><div style="font-size:12px;font-weight:700;color:var(--red3);margin-bottom:2px" id="fraudAlertTitle">Vehicle History Concern</div><div style="font-size:10px;color:var(--t2);line-height:1.5" id="fraudAlertText">—</div></div>
           </div>
-          <div class="gauge-row"><div class="gauge-svg-wrap" id="riskGaugeSvg"></div><div><div class="gauge-lbl" id="riskLbl">—</div><div class="gauge-sub" id="riskSub">—</div></div></div>
-          <div class="checks" id="intelChecks"></div>
-          <div class="ai-box">
+          <div class="gauge-row reveal"><div class="gauge-svg-wrap" id="riskGaugeSvg"></div><div><div class="gauge-lbl" id="riskLbl">—</div><div class="gauge-sub" id="riskSub">—</div></div></div>
+          <div class="checks reveal" id="intelChecks"></div>
+          <div class="ai-box reveal">
             <div class="ai-head"><div class="ai-title"><i class="ti ti-brain" style="color:var(--blue2);font-size:13px"></i> AI Assessment</div><div class="chip chip-b" id="aiRiskChip">Analysing...</div></div>
             <div id="aiRiskContent"><div class="loading-box" style="padding:.85rem"><div class="spin"></div></div></div>
           </div>
-          <div class="sect-lbl">Damage & Defect Zones</div>
-          <div class="card" style="margin-bottom:.85rem">
+          <div class="sect-lbl reveal">Damage & Defect Zones</div>
+          <div class="card reveal" style="margin-bottom:.85rem">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)">MOT Damage Map</span><div class="chip chip-b" id="dmgChip">From MOT records</div></div>
             <div class="dmg-wrap">
               <div class="dmg-car-w">
@@ -857,15 +858,15 @@ footer{text-align:center;padding:40px 20px 32px;border-top:1px solid var(--borde
             </div>
             <div class="info-box" style="margin-top:7px"><i class="ti ti-info-circle"></i> Zones from MOT data only. <strong>Full accident history</strong> requires an HPI check.</div>
           </div>
-          <div class="sect-lbl">Stolen, Clone & Plate Risk</div>
-          <div class="card" style="margin-bottom:.85rem">
+          <div class="sect-lbl reveal">Stolen, Clone & Plate Risk</div>
+          <div class="card reveal" style="margin-bottom:.85rem">
             <div class="hrow"><div class="hic hi-r"><i class="ti ti-alert-triangle"></i></div><div style="flex:1"><div class="hrow-t">Stolen Vehicle Check</div><div class="hrow-d">DVLA/DVSA records do not include stolen status. A full HPI check is the only way to verify.</div></div><div><a href="https://www.hpicheck.com" target="_blank" style="text-decoration:none"><div class="chip chip-g">HPI →</div></a></div></div>
             <div class="hrow"><div class="hic hi-g"><i class="ti ti-license-plate"></i></div><div style="flex:1"><div class="hrow-t">Cloned Plate Detection</div><div class="hrow-d" id="cloneText">Analysing registration patterns...</div></div><div><div class="chip" id="cloneChip">Checking...</div></div></div>
             <div class="hrow"><div class="hic hi-b"><i class="ti ti-writing"></i></div><div style="flex:1"><div class="hrow-t">Write-Off Category</div><div class="hrow-d">Cat A/B/S/N not in DVLA public data. Requires HPI check.</div></div><div><div class="chip chip-b">HPI Only</div></div></div>
             <div class="hrow"><div class="hic hi-gr"><i class="ti ti-world"></i></div><div style="flex:1"><div class="hrow-t">Imported Vehicle Check</div><div class="hrow-d" id="importText">Checking registration pattern...</div></div><div><div class="chip" id="importChip">Checking...</div></div></div>
           </div>
-          <div class="sect-lbl">Ownership & Insurance</div>
-          <div class="card" style="margin-bottom:.85rem">
+          <div class="sect-lbl reveal">Ownership & Insurance</div>
+          <div class="card reveal" style="margin-bottom:.85rem">
             <div class="hrow"><div class="hic hi-b"><i class="ti ti-truck"></i></div><div style="flex:1"><div class="hrow-t" id="commUseTitle">Commercial Use Check</div><div class="hrow-d" id="commUseText">Analysing...</div></div><div><div class="chip chip-b" id="commUseChip">—</div></div></div>
             <div class="hrow"><div class="hic hi-b"><i class="ti ti-shield"></i></div><div style="flex:1"><div class="hrow-t">ABI Insurance Group</div><div class="hrow-d" id="insuranceGroupText">—</div></div><div><div class="chip chip-b" id="insuranceGroupChip">—</div></div></div>
             <div class="hrow"><div class="hic hi-g"><i class="ti ti-currency-pound"></i></div><div style="flex:1"><div class="hrow-t">Estimated Annual Premium</div><div class="hrow-d" id="insuranceCostText">—</div></div><div><div class="chip chip-g" id="insuranceCostChip">—</div></div></div>
