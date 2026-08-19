@@ -1018,9 +1018,9 @@ function renderAiRisk(r){
   var vc=r.overallVerdict||'UNKNOWN';
   el('aiRiskChip').textContent=vc;el('aiRiskChip').className='chip '+(vc==='CLEAN'?'chip-gr':vc==='HIGH RISK'?'chip-r':'chip-g');
   var html=(r.keyFindings||[]).map(function(f){return'<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;color:var(--t2)"><i class="ti ti-point-filled" style="color:var(--blue);font-size:8px;flex-shrink:0"></i>'+esc(f)+'</div>';}).join('');
-  [{l:'Stolen Risk',v:'Cannot verify',n:'HPI check required',c:'g'},{l:'Finance / Write-Off',v:'Cannot verify',n:'HPI check required',c:'g'},{l:'Clone / Plate',v:'Cannot verify',n:'HPI check required',c:'g'},{l:'Mileage',v:r.mileageVerdict||'—',n:'',c:r.mileageVerdict==='Consistent'?'gr':r.mileageVerdict==='Fraudulent'?'r':'g'}].forEach(function(row){html+='<div class="hrow"><div class="hic hi-'+row.c+'"><i class="ti ti-'+(row.c==='gr'?'check':'alert-circle')+'"></i></div><div style="flex:1"><div class="hrow-t">'+esc(row.l)+'</div>'+(row.n?'<div class="hrow-d">'+esc(row.n)+'</div>':'')+'</div><div><div class="chip chip-'+row.c+'">'+esc(row.v)+'</div></div></div>';});
+  html+='<div class="hrow"><div class="hic hi-'+(r.mileageVerdict==='Consistent'?'gr':r.mileageVerdict==='Fraudulent'?'r':'g')+'"><i class="ti ti-'+(r.mileageVerdict==='Consistent'?'check':'alert-circle')+'"></i></div><div style="flex:1"><div class="hrow-t">Mileage</div></div><div><div class="chip chip-'+(r.mileageVerdict==='Consistent'?'gr':r.mileageVerdict==='Fraudulent'?'r':'g')+'">'+esc(r.mileageVerdict||'—')+'</div></div></div>';
   if(r.buyerAdvice)html+='<div class="verdict"><strong>Advice:</strong> '+esc(r.buyerAdvice)+'</div>';
-  html+='<div class="info-box" style="margin-top:7px"><i class="ti ti-info-circle"></i> <strong>Always run an HPI check</strong> before purchasing.</div>';
+  html+='<div class="info-box" style="margin-top:7px"><i class="ti ti-info-circle"></i> Theft, finance &amp; write-off aren\'t in DVLA/DVSA data — <strong>run an HPI check</strong> before purchasing.</div>';
   el('aiRiskContent').innerHTML=html;
 }
 function renderAiRiskFallback(drops,passRate,annMi,majors){
@@ -1033,8 +1033,7 @@ function renderAiRiskFallback(drops,passRate,annMi,majors){
   if(majors.length)findings.push(majors.length+' major/dangerous failure(s) on record');
   if(!findings.length)findings.push('No major red flags from DVLA/DVSA data');
   var html=findings.map(function(f){return'<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;color:var(--t2)"><i class="ti ti-point-filled" style="color:var(--blue);font-size:8px;flex-shrink:0"></i>'+esc(f)+'</div>';}).join('');
-  html+='<div class="hrow" style="margin-top:9px"><div class="hic hi-g"><i class="ti ti-coins"></i></div><div style="flex:1"><div class="hrow-t">Finance & Theft</div><div class="hrow-d">Cannot verify from DVLA/DVSA. HPI check required.</div></div><div><a href="https://www.hpicheck.com" target="_blank"><div class="chip chip-g">HPI →</div></a></div></div>';
-  html+='<div class="info-box" style="margin-top:7px"><i class="ti ti-info-circle"></i> <strong>Always run an HPI check</strong> before purchasing.</div>';
+  html+='<div class="info-box" style="margin-top:7px"><i class="ti ti-info-circle"></i> Theft, finance &amp; write-off aren\'t in DVLA/DVSA data — <strong>run an HPI check</strong> before purchasing.</div>';
   el('aiRiskContent').innerHTML=html;
 }
 
