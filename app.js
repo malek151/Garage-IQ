@@ -135,7 +135,7 @@ function showLoadingOverlay(reg){
   var lr=el('loadingReg');if(lr)lr.textContent=reg.toUpperCase();
   ['lstep1','lstep2','lstep3'].forEach(function(id){var s=el(id);if(s){s.classList.remove('active','done');}});
   function activate(id,delay,prev){setTimeout(function(){if(prev){var p=el(prev);if(p){p.classList.remove('active');p.classList.add('done');}}var s=el(id);if(s)s.classList.add('active');},delay);}
-  activate('lstep1',0);activate('lstep2',900,'lstep1');activate('lstep3',1800,'lstep2');
+  activate('lstep1',0);activate('lstep2',450,'lstep1');activate('lstep3',900,'lstep2');
 }
 function hideLoadingOverlay(){
   var ov=el('loadingOverlay');if(!ov)return;
@@ -198,6 +198,13 @@ function renderUlezVed(d){
 }
 
 window.addEventListener('load',function(){
+  ['runBtn'].forEach(function(id){
+    var b=el(id);if(!b)return;
+    b.addEventListener('pointerdown',function(){b.classList.add('pressed');});
+    ['pointerup','pointerleave','pointercancel'].forEach(function(ev){b.addEventListener(ev,function(){b.classList.remove('pressed');});});
+  });
+  var sw=document.querySelector('.search-wrap');
+  if(sw&&!REDUCE_MOTION){materialize(sw);}
   /* PATCH: Supabase init can no longer take the whole page down with it.
      If the CDN is slow/blocked, every button below still gets wired up —
      auth just won't work until supabase loads (and we retry once). */
